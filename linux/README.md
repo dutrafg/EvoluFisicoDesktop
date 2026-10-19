@@ -70,3 +70,10 @@ Revisão estática identificou e corrigiu:
 - Backups preservam os novos dados; restauração rejeita esquemas sem as tabelas.
 - **As novas operações ainda são APIs internas, não formulários GTK4.**
 - **Nenhuma criptografia foi implementada nesta rodada.** Não utilizar dados reais, senhas ou informações clínicas. Não confundir validação de entradas com conformidade LGPD.
+
+## Etapas 61–70 — formulários GTK4
+
+- Avaliações: ID de cliente, data ISO, peso em kg, altura em cm, gravação e consulta de histórico.
+- Cobranças: ID de cliente, valor em **centavos inteiros**, descrição, gravação e consulta.
+- A seleção por ID é provisória. Não há autenticação, criptografia, relatórios PDF ou validação visual em desktop físico.
+- Não use dados reais de pacientes ou clientes. Os testes usam registros fictícios.
