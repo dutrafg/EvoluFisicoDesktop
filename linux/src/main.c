@@ -394,6 +394,14 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),show_assessments_button);
       g_signal_connect(show_assessments_button,"clicked",G_CALLBACK(show_assessments),state);
       gtk_widget_set_sensitive(show_assessments_button,state->store.db!=NULL);
+      state->assessment_delete_id=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_delete_id),"ID da avaliação a excluir");
+      gtk_box_append(GTK_BOX(page),state->assessment_delete_id);
+      GtkWidget *delete_assessment_button=gtk_button_new_with_label("Excluir avaliação...");
+      g_object_set_data(G_OBJECT(delete_assessment_button),"assessment",GINT_TO_POINTER(TRUE));
+      g_signal_connect(delete_assessment_button,"clicked",G_CALLBACK(delete_record_clicked),state);
+      gtk_widget_set_sensitive(delete_assessment_button,state->store.db!=NULL);
+      gtk_box_append(GTK_BOX(page),delete_assessment_button);
       state->assessment_list=gtk_list_box_new();
       gtk_box_append(GTK_BOX(page),state->assessment_list);
       g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
