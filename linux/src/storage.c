@@ -185,6 +185,16 @@ gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
     if(!ok && error && !*error)g_set_error_literal(error,ef_error(),25,"Versão de esquema do backup incompatível");
   }
   if(ok) {
+    sqlite3_stmt *probe=NULL;
+    if(sqlite3_prepare_v2(incoming,"SELECT id,name FROM clients LIMIT 1",-1,&probe,NULL)!=SQLITE_OK)ok=FALSE;
+    else {
+      int probe_rc=sqlite3_step(probe);
+      ok=probe_rc==SQLITE_ROW || probe_rc==SQLITE_DONE;
+      sqlite3_finalize(probe);
+    }
+    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),26,"Estrutura de clientes do backup inválida");
+  }
+  if(ok) {
     sqlite3 *rollback=NULL;
     if(sqlite3_open(":memory:",&rollback)!=SQLITE_OK) {
       g_set_error_literal(error,ef_error(),21,"Falha ao reservar cópia de segurança para restauração");
