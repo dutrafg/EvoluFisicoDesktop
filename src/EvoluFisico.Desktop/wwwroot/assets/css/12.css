@@ -1,0 +1,194 @@
+/* 12-styles.css */
+/* ==========================================================================
+   ALINHAMENTO & DESIGN RESPONSIVO PREMIUM DO PAINEL / NAVBAR (v8.9 ESTÁVEL)
+   ========================================================================== */
+
+/* Barra Superior Fixa e Alinhada */
+.top-navbar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 0.65rem 1rem !important;
+    padding: 0.65rem 1.25rem !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.08)) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+/* Marca / Logo alinhada */
+.brand-wrapper {
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    text-decoration: none !important;
+}
+
+/* Botões de Ações Rápidas (Tema, Cofre, Profissional, etc.) */
+.nav-actions {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 0.45rem !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    max-width: 100% !important;
+    padding: 2px 0 !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+.nav-actions::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Container Unificado de Abas de Navegação */
+.nav-tabs {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    gap: 5px !important;
+    padding: 4px 6px !important;
+    background: rgba(118, 118, 128, 0.12) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: static !important; /* Desativa position:fixed que causava desordem */
+    box-shadow: none !important;
+}
+.nav-tabs::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Botões de Aba (.nav-tab-btn) - Altura, Alinhamento e Espaçamento Idênticos */
+.nav-tab-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-direction: row !important; /* Garante ícone e texto lado a lado */
+    gap: 6px !important;
+    padding: 0.5rem 0.9rem !important;
+    border-radius: 8px !important;
+    border: none !important;
+    background: transparent !important;
+    color: var(--slate-700, #3a3a3c) !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important; /* Impede quebra de linha de Nova Avaliação / Histórico */
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    line-height: 1 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    box-sizing: border-box !important;
+}
+
+.nav-tab-btn span {
+    display: inline-flex !important;
+    align-items: center !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    font-size: inherit !important;
+}
+
+.nav-tab-btn > span:first-child {
+    font-size: 1.05rem !important; /* Ícone com proporção correta */
+}
+
+.nav-tab-btn:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: var(--slate-900, #1d1d1f) !important;
+}
+
+.nav-tab-btn:active {
+    transform: scale(0.97) !important;
+}
+
+/* Aba Ativa (Destaque em Branco com Sombra Apple) */
+.nav-tab-btn.active {
+    background: #ffffff !important;
+    color: #007aff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 0.5px 1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Modo Escuro */
+html.ef-dark-mode .top-navbar,
+body.dark-mode .top-navbar {
+    background: rgba(24, 24, 28, 0.94) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html.ef-dark-mode .nav-tabs,
+body.dark-mode .nav-tabs {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+html.ef-dark-mode .nav-tab-btn,
+body.dark-mode .nav-tab-btn {
+    color: #a1a1a6 !important;
+}
+
+html.ef-dark-mode .nav-tab-btn:hover,
+body.dark-mode .nav-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #f5f5f7 !important;
+}
+
+html.ef-dark-mode .nav-tab-btn.active,
+body.dark-mode .nav-tab-btn.active {
+    background: #2c2c2e !important;
+    color: #2997ff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Comportamento Responsivo em Mobile e Tablets (<= 900px) */
+@media (max-width: 900px) {
+    .top-navbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.6rem !important;
+        padding: 0.6rem 0.85rem !important;
+    }
+    
+    .top-navbar > .brand-wrapper {
+        justify-content: flex-start !important;
+        width: 100% !important;
+    }
+
+    .top-navbar > .nav-actions {
+        order: 2 !important;
+        width: 100% !important;
+        justify-content: flex-start !important;
+    }
+
+    .top-navbar > .nav-tabs {
+        order: 3 !important;
+        width: 100% !important;
+        justify-content: flex-start !important;
+        padding: 4px 6px !important;
+    }
+    
+    .nav-tab-btn {
+        padding: 0.45rem 0.75rem !important;
+        font-size: 0.8rem !important;
+        height: 34px !important;
+        min-height: 34px !important;
+    }
+}
