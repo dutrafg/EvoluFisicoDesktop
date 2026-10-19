@@ -17,7 +17,8 @@ const expectations=[
  ['SQLite evaluation read',/storage\.readJSON\(id\)/],
  ['SQLite evaluation write',/efNativeEvalStore\(\)\.writeJSON\(/],
  ['SQLite evaluation delete',/efNativeEvalStore\(\)\.delete\(/],
- ['legacy billing localStorage',/localStorage\.setItem\(DB_KEY,raw\)/],
+ ['SQLite billing read',/billingNativeStore\(\)\.readJSON\(EF_NATIVE_BILLING_KEY\)/],
+ ['SQLite billing write',/billingNativeStore\(\)\.writeJSON\(EF_NATIVE_BILLING_KEY,packet\)/],
  ['legacy billing encryption',/EF_Security\.encryptObject|security\.encryptObject/],
  ['new SQLite copy does not delete legacy',/originalsPreserved:true/],
  ['new SQLite copy rejects changed record',/Cópia existente diferente/]
