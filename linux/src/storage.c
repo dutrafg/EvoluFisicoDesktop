@@ -2,6 +2,7 @@
 #include <glib/gstdio.h>
 #include <unistd.h>
 #include <errno.h>
+#include <math.h>
 static GQuark ef_error(void) { return g_quark_from_static_string("evolufisico-storage"); }
 static gboolean sql_error(EfStore *store, GError **error) {
   g_set_error(error, ef_error(), 1, "%s", sqlite3_errmsg(store->db)); return FALSE;
@@ -39,6 +40,12 @@ gboolean ef_store_open(EfStore *store, GError **error) {
   } else if(schema_version!=1) {
     g_set_error(error,ef_error(),27,"Versão de banco não suportada: %d",schema_version);
     ef_store_close(store);return FALSE;
+  }
+  if(sqlite3_exec(store->db,
+    "CREATE TABLE IF NOT EXISTS assessments(id INTEGER PRIMARY KEY,client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,assessment_date TEXT NOT NULL,weight_kg REAL NOT NULL,height_cm REAL NOT NULL,created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);"
+    "CREATE TABLE IF NOT EXISTS charges(id INTEGER PRIMARY KEY,client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,amount_cents INTEGER NOT NULL CHECK(amount_cents>0),description TEXT NOT NULL,created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);",
+    NULL,NULL,NULL)!=SQLITE_OK) {
+    sql_error(store,error);ef_store_close(store);return FALSE;
   }
   return TRUE;
 }
