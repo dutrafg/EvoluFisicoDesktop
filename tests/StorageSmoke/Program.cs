@@ -44,6 +44,19 @@ try
     var batch = new System.Collections.Generic.Dictionary<string, byte[]> { ["batch-a"] = sample, ["batch-b"] = Encoding.UTF8.GetBytes("fictitious record") };
     store.ImportBatch(batch);
     Check(batch.All(item => item.Value.SequenceEqual(store.Load(item.Key)!)), "Transactional encrypted batch migration");
+    try
+    {
+        store.ImportBatch(new System.Collections.Generic.Dictionary<string, byte[]>
+        {
+            ["new-before-collision"] = sample,
+            ["patient-001"] = Encoding.UTF8.GetBytes("must not overwrite")
+        });
+        throw new Exception("Conflicting batch should fail");
+    }
+    catch (InvalidDataException) { Console.WriteLine("PASS: Duplicate identifier blocks migration"); }
+    Check(store.Load("new-before-collision") is null, "Conflicting migration rolls back earlier inserts");
+    Check(Encoding.UTF8.GetString(store.Load("patient-001")!) == "updated", "Existing patient record remains unchanged");
+
     try { store.ImportBatch(new System.Collections.Generic.Dictionary<string, byte[]> { ["valid"] = sample, [""] = sample }); throw new Exception("Invalid batch should fail"); }
     catch (ArgumentException) { Console.WriteLine("PASS: Invalid batch rejected"); }
     Check(store.Load("valid") is null, "Failed batch leaves database unchanged");
