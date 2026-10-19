@@ -1,0 +1,151 @@
+/* 18-styles.css */
+/* Correção cirúrgica de modo escuro: somente Painel, Histórico e Comparar Evolução.
+   Paleta e superfícies seguem o padrão escuro do módulo Lab. */
+html.ef-dark-mode #tab-painel,
+html.ef-dark-mode #tab-historico,
+html.ef-dark-mode #tab-comparison {
+  color:#e8eef7 !important;
+}
+
+/* PAINEL */
+html.ef-dark-mode #tab-painel #ef55-painel,
+html.ef-dark-mode #tab-painel .ef55-head,
+html.ef-dark-mode #tab-painel .ef55-head h1,
+html.ef-dark-mode #tab-painel .ef55-card h3,
+html.ef-dark-mode #tab-painel .ef55-row .t b,
+html.ef-dark-mode #tab-painel .ef55-kpi b {
+  color:#e8eef7 !important;
+}
+html.ef-dark-mode #tab-painel .ef55-head p,
+html.ef-dark-mode #tab-painel .ef55-kpi small,
+html.ef-dark-mode #tab-painel .ef55-kpi span,
+html.ef-dark-mode #tab-painel .ef55-row .t span,
+html.ef-dark-mode #tab-painel .ef55-empty {
+  color:#a8b4c5 !important;
+}
+html.ef-dark-mode #tab-painel .ef55-card,
+html.ef-dark-mode #tab-painel .ef55-cols > *,
+html.ef-dark-mode #tab-painel .ef55-kpis > * {
+  background:#1b2432 !important;
+  color:#e8eef7 !important;
+  border:1px solid #344256 !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.16) !important;
+}
+html.ef-dark-mode #tab-painel .ef55-row { border-top-color:#344256 !important; }
+html.ef-dark-mode #tab-painel .ef55-row:hover { background:#26364a !important; }
+html.ef-dark-mode #tab-painel .ef55-pill { background:#344256 !important; color:#e2e9f2 !important; }
+html.ef-dark-mode #tab-painel .ef55-pill.ok { background:rgba(52,199,89,.16) !important; color:#86efac !important; }
+html.ef-dark-mode #tab-painel .ef55-pill.bad { background:rgba(255,59,48,.16) !important; color:#fca5a5 !important; }
+html.ef-dark-mode #tab-painel .ef55-pill.warn { background:rgba(255,159,10,.16) !important; color:#fcd34d !important; }
+html.ef-dark-mode #tab-painel .ef55-card h3 em { background:#344256 !important; color:#cbd5e1 !important; }
+
+/* HISTÓRICO DE AVALIAÇÕES */
+html.ef-dark-mode #tab-historico .kpi-card,
+html.ef-dark-mode #tab-historico .history-card,
+html.ef-dark-mode #tab-historico .stat-card,
+html.ef-dark-mode #tab-historico .card,
+html.ef-dark-mode #tab-historico .dashboard-kpi-grid .kpi-card {
+  background:#1b2432 !important;
+  color:#e8eef7 !important;
+  border:1px solid #344256 !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.16) !important;
+}
+html.ef-dark-mode #tab-historico .kpi-title,
+html.ef-dark-mode #tab-historico .history-meta,
+html.ef-dark-mode #tab-historico .history-meta strong,
+html.ef-dark-mode #tab-historico .h-lbl,
+html.ef-dark-mode #tab-historico .card p,
+html.ef-dark-mode #tab-historico .empty-state,
+html.ef-dark-mode #tab-historico .search-bar-container label {
+  color:#a8b4c5 !important;
+}
+html.ef-dark-mode #tab-historico .kpi-value,
+html.ef-dark-mode #tab-historico .history-client-name,
+html.ef-dark-mode #tab-historico .history-card h2,
+html.ef-dark-mode #tab-historico .history-card h3,
+html.ef-dark-mode #tab-historico .history-card strong,
+html.ef-dark-mode #tab-historico .h-val {
+  color:#e8eef7 !important;
+}
+html.ef-dark-mode #tab-historico .history-stat-mini,
+html.ef-dark-mode #tab-historico .search-input-box input,
+html.ef-dark-mode #tab-historico input,
+html.ef-dark-mode #tab-historico select,
+html.ef-dark-mode #tab-historico textarea {
+  background:#111b2a !important;
+  color:#f3f6fb !important;
+  border-color:#46566d !important;
+}
+html.ef-dark-mode #tab-historico .history-card-header { border-color:#344256 !important; }
+html.ef-dark-mode #tab-historico .history-badge { background:#263b55 !important; color:#93c5fd !important; }
+html.ef-dark-mode #tab-historico .history-card button { color:inherit; }
+
+/* COMPARAR EVOLUÇÃO */
+html.ef-dark-mode #tab-comparison .comparison-selector-grid,
+html.ef-dark-mode #tab-comparison .card,
+html.ef-dark-mode #tab-comparison .stat-card,
+html.ef-dark-mode #tab-comparison .chart-box,
+html.ef-dark-mode #tab-comparison .comparison-table-wrapper,
+html.ef-dark-mode #tab-comparison .comparison-profile-card,
+html.ef-dark-mode #tab-comparison .comparison-section,
+html.ef-dark-mode #tab-comparison .photo-comparison-container {
+  background:#1b2432 !important;
+  color:#e8eef7 !important;
+  border-color:#344256 !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.16) !important;
+}
+html.ef-dark-mode #tab-comparison .card-header,
+html.ef-dark-mode #tab-comparison .card-title,
+html.ef-dark-mode #tab-comparison .card h2,
+html.ef-dark-mode #tab-comparison .card h3,
+html.ef-dark-mode #tab-comparison .card h4,
+html.ef-dark-mode #tab-comparison .card strong,
+html.ef-dark-mode #tab-comparison .stat-value,
+html.ef-dark-mode #tab-comparison #comp-client-name {
+  color:#e8eef7 !important;
+}
+html.ef-dark-mode #tab-comparison .card p,
+html.ef-dark-mode #tab-comparison .stat-label,
+html.ef-dark-mode #tab-comparison .stat-diff,
+html.ef-dark-mode #tab-comparison label,
+html.ef-dark-mode #tab-comparison .card small {
+  color:#a8b4c5 !important;
+}
+html.ef-dark-mode #tab-comparison .input-group input,
+html.ef-dark-mode #tab-comparison .input-group select,
+html.ef-dark-mode #tab-comparison .input-group textarea,
+html.ef-dark-mode #tab-comparison select,
+html.ef-dark-mode #tab-comparison input,
+html.ef-dark-mode #tab-comparison textarea {
+  background:#111b2a !important;
+  color:#f3f6fb !important;
+  border-color:#46566d !important;
+  color-scheme:dark;
+}
+html.ef-dark-mode #tab-comparison .comparison-table { background:#1b2432 !important; color:#e8eef7 !important; }
+html.ef-dark-mode #tab-comparison .comparison-table th,
+html.ef-dark-mode #tab-comparison .comparison-table thead th {
+  background:#202c3d !important;
+  color:#cbd8e8 !important;
+  border-color:#344256 !important;
+}
+html.ef-dark-mode #tab-comparison .comparison-table td,
+html.ef-dark-mode #tab-comparison .comparison-table tr,
+html.ef-dark-mode #tab-comparison .comparison-table tbody tr {
+  background-color:#1b2432 !important;
+  color:#e8eef7 !important;
+  border-color:#344256 !important;
+}
+html.ef-dark-mode #tab-comparison .comparison-table tbody tr:hover td { background:#26364a !important; }
+html.ef-dark-mode #tab-comparison .ba-segmented-tabs { background:#111b2a !important; }
+html.ef-dark-mode #tab-comparison .ba-tab-btn { color:#cbd5e1 !important; }
+html.ef-dark-mode #tab-comparison .ba-tab-btn.active { background:#344256 !important; color:#f3f6fb !important; }
+html.ef-dark-mode #tab-comparison .delta-neutral { background:#344256 !important; color:#cbd5e1 !important; }
+html.ef-dark-mode #tab-comparison .comparison-table-wrapper { border-color:#344256 !important; }
+
+/* Não aplicar estas regras ao documento de impressão dos relatórios. */
+@media print {
+  html.ef-dark-mode #tab-painel,
+  html.ef-dark-mode #tab-historico,
+  html.ef-dark-mode #tab-comparison { color:inherit !important; }
+}
