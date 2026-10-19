@@ -151,6 +151,18 @@ int main(void) {
   g_assert_false(ef_store_snapshot_to_folder(&store,linked_folder,&bad_copy,&error));
   g_assert_null(bad_copy);g_clear_error(&error);
   g_unlink(linked_folder);g_free(linked_folder);
+  char *real_parent=g_build_filename(tmp,"real-parent",NULL);
+  g_assert_cmpint(g_mkdir(real_parent,0700),==,0);
+  char *parent_alias=g_build_filename(tmp,"parent-alias",NULL);
+  g_assert_cmpint(symlink(real_parent,parent_alias),==,0);
+  char *nested_folder=g_build_filename(parent_alias,"nested",NULL);
+  char *real_nested=g_build_filename(real_parent,"nested",NULL);
+  g_assert_cmpint(g_mkdir(real_nested,0700),==,0);
+  g_assert_false(ef_store_snapshot_to_folder(&store,nested_folder,&bad_copy,&error));
+  g_clear_error(&error);
+  g_assert_null(bad_copy);
+  g_rmdir(real_nested);g_unlink(parent_alias);g_rmdir(real_parent);
+  g_free(real_nested);g_free(nested_folder);g_free(parent_alias);g_free(real_parent);
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
   sqlite3_stmt *backup_read=NULL;
