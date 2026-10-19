@@ -1,0 +1,303 @@
+/* ==========================================================================
+   EvoluFísico 9.0 — camada "Aurora"
+   Somente visual (sem mudar marcação, IDs ou lógica). Carrega por último.
+   1) Nova paleta (esmeralda profundo + lima elétrico + neutros frios)
+   2) Barra lateral única: Diagnóstico/Configurações iguais aos demais botões
+   3) Cartões, KPIs e controles com profundidade suave
+   ========================================================================== */
+
+/* ---------- 1. Paleta ---------- */
+body.ef-simple-ui {
+  --ef-page: #f3f6f4;
+  --ef-surface: #ffffff;
+  --ef-ink: #0c1a14;
+  --ef-muted: #5d6f66;
+  --ef-line: #e1e9e4;
+  --ef-fir: #0a5c43;
+  --ef-fir-2: #12805c;
+  --ef-lime: #c6f35a;
+  --ef-lime-ink: #1a2a06;
+  --ef-accent: #0a5c43;
+  --ef-accent-hover: #12805c;
+  --ef-soft: #e6f3ec;
+  --ef-success: #16a36f;
+  --ef-success-soft: #dcf5e8;
+  --ef-warning: #c98a1a;
+  --ef-danger: #d1433a;
+  --ef-radius-lg: 22px;
+  --ef-radius-md: 14px;
+  --ef-radius-sm: 10px;
+  --ef-shadow-sm: 0 1px 2px rgba(12, 26, 20, .05), 0 1px 1px rgba(12, 26, 20, .03);
+  --ef-shadow-md: 0 6px 18px -8px rgba(12, 26, 20, .14);
+  --ef-shadow-lg: 0 24px 48px -20px rgba(12, 26, 20, .28);
+  --ef-primary-bg: linear-gradient(135deg, #0a5c43, #12805c);
+  --ef-primary-ink: #ffffff;
+  --ef-nav-active-bg: rgba(198, 243, 90, .14);
+  --ef-nav-active-ink: #d9f77f;
+  --ef-ease: cubic-bezier(.22, .8, .3, 1);
+  --primary: #0a5c43;
+  --primary-hover: #12805c;
+  --primary-light: #e6f3ec;
+  --primary-glow: rgba(10, 92, 67, .2);
+  --bg-color: #f3f6f4;
+  --border-color: #e1e9e4;
+}
+html.ef-dark-mode body.ef-simple-ui,
+body.ef-simple-ui.dark-mode {
+  --ef-page: #08100c;
+  --ef-surface: #101a15;
+  --ef-ink: #e8f1ec;
+  --ef-muted: #8fa398;
+  --ef-line: #1f2e26;
+  --ef-fir: #6ee7b7;
+  --ef-fir-2: #8df0c8;
+  --ef-accent: #6ee7b7;
+  --ef-accent-hover: #8df0c8;
+  --ef-soft: #16271f;
+  --ef-success: #4ade9b;
+  --ef-success-soft: #123424;
+  --ef-warning: #f0c15a;
+  --ef-danger: #f58a82;
+  --ef-shadow-md: 0 6px 18px -8px rgba(0, 0, 0, .6);
+  --ef-shadow-lg: 0 24px 48px -20px rgba(0, 0, 0, .7);
+  --ef-primary-bg: linear-gradient(135deg, #6ee7b7, #a3f0cf);
+  --ef-primary-ink: #04150d;
+  --bg-color: #08100c;
+  --border-color: #1f2e26;
+}
+html:not(.ef-dark-mode) { background: #f3f6f4; }
+html.ef-dark-mode { background: #08100c !important; }
+
+/* ---------- 2. Cartões e controles ---------- */
+@media screen {
+  body.ef-simple-ui { -webkit-font-smoothing: antialiased; }
+  body.ef-simple-ui :is(.ef55-card, .history-card, .cob-card, .form-container) {
+    box-shadow: var(--ef-shadow-sm) !important;
+    transition: box-shadow .25s var(--ef-ease), border-color .25s var(--ef-ease), transform .25s var(--ef-ease);
+  }
+  body.ef-simple-ui :is(.ef55-card, .history-card):hover {
+    box-shadow: var(--ef-shadow-md) !important;
+    transform: translateY(-2px);
+  }
+  body.ef-simple-ui .ef55-kpi b { letter-spacing: -.03em; }
+  body.ef-simple-ui .btn { transition: transform .15s var(--ef-ease), box-shadow .2s var(--ef-ease), background .2s var(--ef-ease), filter .2s; }
+  body.ef-simple-ui .btn:active { transform: scale(.97); }
+  body.ef-simple-ui .btn-primary { box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--ef-fir) 70%, transparent) !important; }
+  body.ef-simple-ui .btn-primary:hover { filter: brightness(1.06); }
+  body.ef-simple-ui :is(input, select, textarea) { transition: border-color .2s var(--ef-ease), box-shadow .2s var(--ef-ease); }
+  body.ef-simple-ui #ef-workspace-heading { backdrop-filter: blur(10px); }
+  body.ef-simple-ui #ef-workspace-heading small {
+    background: var(--ef-lime) !important;
+    color: var(--ef-lime-ink) !important;
+    font-weight: 700;
+  }
+}
+
+/* ---------- 3. Navegação: um único sistema de botões ---------- */
+/* Diagnóstico e Configurações = mesmos botões da lista (mesma altura, raio,
+   fonte, hover, transição, ícone). Sem caixa, sem borda, sem divisória. */
+@media screen {
+  body.ef-simple-ui #ef-tools { border: 0 !important; }
+  body.ef-simple-ui #ef-tools-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100%;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 14px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    color: var(--ef-muted) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    box-sizing: border-box;
+    transition: background .2s var(--ef-ease), color .2s var(--ef-ease), transform .15s var(--ef-ease) !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    background: currentColor;
+    -webkit-mask: var(--ef-ico) center / contain no-repeat;
+    mask: var(--ef-ico) center / contain no-repeat;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary::after {
+    margin-left: auto !important;
+    margin-right: 2px !important;
+    opacity: .7;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary:hover {
+    background: var(--ef-soft) !important;
+    color: var(--ef-ink) !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary:active { transform: scale(.98); }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section[open] > summary {
+    background: transparent !important;
+    color: var(--ef-ink) !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+  }
+  body.ef-simple-ui #ef-support-section { --ef-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12h4l2.5-6 5 12L17 12h4'/%3E%3C/svg%3E"); }
+  body.ef-simple-ui #ef-preferences-section { --ef-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h9M17 7h3M4 17h3M11 17h9'/%3E%3Ccircle cx='15' cy='7' r='2'/%3E%3Ccircle cx='9' cy='17' r='2'/%3E%3C/svg%3E"); }
+
+  /* itens internos: lista limpa, sem moldura de botão */
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > .ef-tools-group {
+    padding: 2px 0 4px 20px !important;
+    margin: 0 0 0 22px !important;
+    width: auto !important;
+    gap: 2px !important;
+    border-left: 1.5px solid var(--ef-line);
+    animation: ef-reveal .25s var(--ef-ease);
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section button {
+    min-height: 36px !important;
+    padding: 6px 12px !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    color: var(--ef-muted) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+    transition: background .2s var(--ef-ease), color .2s var(--ef-ease), transform .15s var(--ef-ease) !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section button:hover {
+    background: var(--ef-soft) !important;
+    color: var(--ef-ink) !important;
+    border: 0 !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section button:active { transform: scale(.98); }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section button.active {
+    background: var(--ef-nav-active-bg) !important;
+    color: var(--ef-nav-active-ink) !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+  @keyframes ef-reveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+  /* mesma resposta de toque nos botões principais */
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn {
+    transition: background .2s var(--ef-ease), color .2s var(--ef-ease), transform .15s var(--ef-ease) !important;
+  }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn:active { transform: scale(.98); }
+}
+
+/* ---------- 4. Desktop: painel lateral escuro contínuo ---------- */
+@media screen and (min-width: 1200px) {
+  body.ef-simple-ui { --ef-sidebar: 256px; }
+  body.ef-simple-ui .top-navbar {
+    /* tokens locais: tudo dentro da barra usa a paleta escura */
+    --ef-ink: #eef6f1;
+    --ef-muted: #96ab9f;
+    --ef-line: rgba(255, 255, 255, .08);
+    --ef-soft: rgba(255, 255, 255, .07);
+    --ef-accent: #c6f35a;
+    background:
+      radial-gradient(120% 60% at 0% 0%, rgba(198, 243, 90, .10), transparent 55%),
+      linear-gradient(180deg, #0d1e17 0%, #08130e 100%) !important;
+    border-right: 1px solid rgba(255, 255, 255, .06) !important;
+    gap: 6px !important;
+    padding: 24px 14px !important;
+  }
+  body.ef-simple-ui .top-navbar > .brand-wrapper { padding: 0 8px 22px !important; }
+  body.ef-simple-ui .top-navbar .brand-title { color: #ffffff !important; }
+  body.ef-simple-ui .top-navbar > .nav-tabs { gap: 6px !important; }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn.active {
+    background: var(--ef-nav-active-bg) !important;
+    color: var(--ef-nav-active-ink) !important;
+    box-shadow: inset 0 0 0 1px rgba(198, 243, 90, .18) !important;
+  }
+  body.ef-simple-ui .top-navbar .ef-nav-count {
+    background: rgba(198, 243, 90, .18) !important;
+    color: #d9f77f !important;
+    border: 0 !important;
+  }
+  body.ef-simple-ui #ef-tools { padding-top: 0 !important; margin-top: 0 !important; }
+  body.ef-simple-ui .top-navbar::-webkit-scrollbar { width: 0; }
+}
+
+/* ---------- 5. Celular/tablet: barra inferior em vidro ---------- */
+@media screen and (max-width: 1199px) {
+  body.ef-simple-ui .top-navbar > .nav-tabs {
+    background: color-mix(in srgb, var(--ef-surface) 82%, transparent) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid var(--ef-line) !important;
+    box-shadow: var(--ef-shadow-lg) !important;
+  }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn.active {
+    background: var(--ef-fir) !important;
+    color: var(--ef-primary-ink) !important;
+  }
+  /* sem separação: Diagnóstico/Configurações no mesmo formato dos botões */
+  body.ef-simple-ui #ef-tools-content {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary {
+    background: var(--ef-soft) !important;
+    justify-content: flex-start;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section[open] { grid-column: 1 / -1; }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > .ef-tools-group {
+    margin-left: 14px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.ef-simple-ui #ef-tools-content * { animation: none !important; transition: none !important; }
+}
+
+@media screen and (max-width: 1199px) {
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* ---------- Botão para esconder/mostrar a barra lateral (desktop) ---------- */
+#ef-sidebar-toggle { display: none; }
+@media screen and (min-width: 1200px) {
+  body.ef-simple-ui #ef-sidebar-toggle {
+    display: inline-grid; place-items: center; flex: 0 0 auto;
+    width: 36px; height: 36px; margin-left: -8px;
+    border: 0; border-radius: 10px; background: transparent;
+    color: var(--ef-muted); cursor: pointer;
+    transition: background .2s var(--ef-ease), color .2s var(--ef-ease), transform .15s var(--ef-ease);
+  }
+  body.ef-simple-ui #ef-sidebar-toggle:hover { background: var(--ef-soft); color: var(--ef-ink); }
+  body.ef-simple-ui #ef-sidebar-toggle:active { transform: scale(.94); }
+  body.ef-simple-ui #ef-sidebar-toggle:focus-visible { outline: 2px solid var(--ef-fir-2); outline-offset: 2px; }
+
+  body.ef-simple-ui .top-navbar { transition: transform .3s var(--ef-ease), visibility 0s linear 0s; }
+  body.ef-simple-ui #ef-workspace-heading,
+  body.ef-simple-ui .app-container { transition: left .3s var(--ef-ease), margin .3s var(--ef-ease), width .3s var(--ef-ease); }
+
+  body.ef-simple-ui.ef-sidebar-hidden { --ef-sidebar: 0px; }
+  body.ef-simple-ui.ef-sidebar-hidden .top-navbar {
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform .3s var(--ef-ease), visibility 0s linear .3s;
+  }
+  body.ef-simple-ui.ef-sidebar-hidden #ef-workspace-heading { padding-left: 40px; }
+}
+@media print { #ef-sidebar-toggle { display: none !important; } }
