@@ -162,12 +162,12 @@ static void delete_record_confirmed(GtkDialog *dialog,gint response,gpointer dat
   GtkWidget *picker=assessment ? state->assessment_picker : state->charge_picker;
   gint64 id=0,client=0;
   if(!read_id(field,&id) || !read_picker_id(picker,&client)) {
-    gtk_label_set_text(GTK_LABEL(status),"Selecione um cliente e informe o ID do registro.");return;
+    gtk_label_set_text(GTK_LABEL(status),"Selecione um cliente e informe o ID do registro.");gtk_window_destroy(GTK_WINDOW(dialog));return;
   }
   gint64 confirmed_id=*(gint64*)g_object_get_data(G_OBJECT(dialog),"record-id");
   gint64 confirmed_client=*(gint64*)g_object_get_data(G_OBJECT(dialog),"selected-client-id");
   if(id!=confirmed_id || client!=confirmed_client) {
-    gtk_label_set_text(GTK_LABEL(status),"Seleção alterada. Confirme novamente a exclusão.");return;
+    gtk_label_set_text(GTK_LABEL(status),"Seleção alterada. Confirme novamente a exclusão.");gtk_window_destroy(GTK_WINDOW(dialog));return;
   }
   GError *error=NULL;
   gtk_window_destroy(GTK_WINDOW(dialog));
