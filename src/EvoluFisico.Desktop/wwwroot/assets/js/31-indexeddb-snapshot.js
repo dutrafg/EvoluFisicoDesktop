@@ -66,10 +66,13 @@ async function snapshot(onProgress){
  active=true;
  try{
  const inventory=await window.EFDesktopIndexedDBInventory.inventory();
+ // Preserve legacy encrypted envelopes exactly as stored. No implicit decrypt/re-encrypt.
+ // Activation requires a separate verified adapter for the legacy application vault.
  if(!Array.isArray(inventory))throw new Error('Inventário IndexedDB inválido');
  let copied=0,alreadyCopied=0;
  let checked=0;
  const total=inventory.reduce((n,db)=>n+db.stores.reduce((sum,s)=>sum+s.count,0),0);
+ if(total>1000000)throw new Error('Inventário muito grande para cópia segura nesta versão beta.');
  if(!Number.isSafeInteger(total)||total<0)throw new Error('Contagem IndexedDB inválida');
  for(const info of inventory){
   if(typeof info.name!=='string'||!info.name||!Array.isArray(info.stores))throw new Error('Banco IndexedDB inválido');
