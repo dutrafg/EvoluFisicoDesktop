@@ -1,1 +1,11 @@
-<Window x:Class="EvoluFisico.Desktop.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" Title="EvoluFisico Desktop 9.0" Height="820" Width="1280" MinHeight="600" MinWidth="900"><DockPanel><StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#172B25"><Button Content="Início" Click="Home_Click" Margin="8" Padding="12,6"/><Button Content="Atualizar" Click="Reload_Click" Margin="8" Padding="12,6"/><Button Content="Imprimir / PDF" Click="Print_Click" Margin="8" Padding="12,6"/></StackPanel><wv2:WebView2 x:Name="Browser"/></DockPanel></Window>
+<Window x:Class="EvoluFisico.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="EvoluFisico Desktop 9.0"
+        Height="820" Width="1280" MinHeight="600" MinWidth="900"
+        Background="#FFFFFF">
+    <Grid>
+        <wv2:WebView2 x:Name="Browser"/>
+    </Grid>
+</Window>
