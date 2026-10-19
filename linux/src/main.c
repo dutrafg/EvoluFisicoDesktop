@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include "storage.h"
+#include <errno.h>
 
 typedef struct {
   EfStore store;
@@ -12,6 +13,17 @@ typedef struct {
   GtkWidget *restore_entry;
   GtkWidget *client_edit_entry;
   GtkWidget *client_id_entry;
+  GtkWidget *assessment_client;
+  GtkWidget *assessment_date;
+  GtkWidget *assessment_weight;
+  GtkWidget *assessment_height;
+  GtkWidget *assessment_status;
+  GtkWidget *assessment_list;
+  GtkWidget *charge_client;
+  GtkWidget *charge_cents;
+  GtkWidget *charge_description;
+  GtkWidget *charge_status;
+  GtkWidget *charge_list;
 } AppState;
 
 static void refresh_clients(AppState *state) {
