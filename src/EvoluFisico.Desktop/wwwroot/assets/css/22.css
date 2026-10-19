@@ -1,0 +1,511 @@
+/* 20-styles.css */
+/* Correção isolada: Comparar Evolução > Análise Clínica das Dobras Cutâneas.
+   Não altera os demais cartões nem os outros módulos. */
+html.ef-dark-mode #tab-comparison #dobras-analise-box {
+  background:#111c2e !important;
+  color:#e8eef7 !important;
+  border-left-color:#60a5fa !important;
+  border-top-color:#29384d !important;
+  border-right-color:#29384d !important;
+  border-bottom-color:#29384d !important;
+  box-shadow:0 4px 16px rgba(0,0,0,.16) !important;
+}
+html.ef-dark-mode #tab-comparison #dobras-analise-box > strong,
+html.ef-dark-mode #tab-comparison #dobras-analise-texto,
+html.ef-dark-mode #tab-comparison #dobras-analise-texto * {
+  color:#e8eef7 !important;
+}
+html.ef-dark-mode #tab-comparison #dobras-analise-texto a {
+  color:#93c5fd !important;
+}
+html.ef-dark-mode #tab-comparison #dobras-analise-texto :is(code,pre) {
+  background:#1e293b !important;
+  color:#e8eef7 !important;
+  border-color:#334155 !important;
+}
+
+
+/* ==========================================================================
+   CORREÇÃO COMPLETA DE MODO ESCURO (v8.9.1 Teste)
+   Foco em Inputs/Selects (:focus), Dropdowns (<option>), Cobrança e Modais
+   ========================================================================== */
+
+/* 1. INPUTS, SELECTS E TEXTAREAS EM GERAL (NORMAL E COM FOCO) */
+html.ef-dark-mode input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.ef-dark-mode select,
+html.ef-dark-mode textarea,
+body.dark-mode input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: #111b2a !important;
+    color: #f8fafc !important;
+    border-color: #3b4d66 !important;
+    color-scheme: dark !important;
+}
+
+html.ef-dark-mode input:focus,
+html.ef-dark-mode select:focus,
+html.ef-dark-mode textarea:focus,
+html.ef-dark-mode .input-group input:focus,
+html.ef-dark-mode .input-group select:focus,
+html.ef-dark-mode .input-group textarea:focus,
+html.ef-dark-mode .search-input-box input:focus,
+html.ef-dark-mode .search-input-box select:focus,
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus,
+body.dark-mode .input-group input:focus,
+body.dark-mode .input-group select:focus,
+body.dark-mode .input-group textarea:focus,
+body.dark-mode .search-input-box input:focus,
+body.dark-mode .search-input-box select:focus {
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border-color: #007aff !important;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.35) !important;
+    outline: none !important;
+}
+
+/* 2. SELECTS COM ÍCONE DE SETA ESCURA E OPTIONS DO POPUP */
+html.ef-dark-mode .input-group select,
+body.dark-mode .input-group select {
+    background-color: #111b2a !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%2394a3b8' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M2 2l4 4 4-4'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.8rem center !important;
+    color: #f8fafc !important;
+    color-scheme: dark !important;
+}
+
+html.ef-dark-mode .input-group select:focus,
+body.dark-mode .input-group select:focus {
+    background-color: #1e293b !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%2360a5fa' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M2 2l4 4 4-4'/%3E%3C/svg%3E") !important;
+    color: #f8fafc !important;
+    color-scheme: dark !important;
+}
+
+html.ef-dark-mode select option,
+html.ef-dark-mode option,
+body.dark-mode select option,
+body.dark-mode option {
+    background-color: #1a2332 !important;
+    color: #f8fafc !important;
+}
+
+html.ef-dark-mode select optgroup,
+body.dark-mode select optgroup {
+    background-color: #111823 !important;
+    color: #94a3b8 !important;
+}
+
+html.ef-dark-mode select option:hover,
+html.ef-dark-mode select option:focus,
+html.ef-dark-mode select option:checked,
+body.dark-mode select option:hover,
+body.dark-mode select option:focus,
+body.dark-mode select option:checked {
+    background-color: #007aff !important;
+    color: #ffffff !important;
+}
+
+/* 3. MÓDULO DE COBRANÇA, PRECIFICAÇÃO E HISTÓRICO (#tab-cobranca) */
+html.ef-dark-mode #tab-cobranca,
+body.dark-mode #tab-cobranca {
+    color-scheme: dark;
+}
+html.ef-dark-mode .cob-card,
+body.dark-mode .cob-card {
+    background: #1b2432 !important;
+    border-color: #344256 !important;
+    color: #f8fafc !important;
+}
+html.ef-dark-mode .cob-card-title,
+body.dark-mode .cob-card-title {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode .cob-card label,
+html.ef-dark-mode .cob-card label span,
+body.dark-mode .cob-card label,
+body.dark-mode .cob-card label span {
+    color: #e2e8f0 !important;
+}
+html.ef-dark-mode .cob-card .input-group span[style*="color:var(--text-muted)"],
+body.dark-mode .cob-card .input-group span[style*="color:var(--text-muted)"] {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode #cob-aluno2-wrapper,
+body.dark-mode #cob-aluno2-wrapper {
+    border-top-color: #344256 !important;
+}
+html.ef-dark-mode .cob-segmented,
+body.dark-mode .cob-segmented {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode .cob-seg-btn,
+body.dark-mode .cob-seg-btn {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode .cob-seg-btn.active,
+body.dark-mode .cob-seg-btn.active {
+    background: #253346 !important;
+    color: #60a5fa !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+html.ef-dark-mode .cob-duo-banner,
+body.dark-mode .cob-duo-banner {
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.12) 0%, rgba(139, 92, 246, 0.12) 100%) !important;
+    border-color: rgba(96, 165, 250, 0.3) !important;
+    color: #e2e8f0 !important;
+}
+html.ef-dark-mode .cob-duo-banner strong,
+body.dark-mode .cob-duo-banner strong {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode .cob-duo-banner button,
+html.ef-dark-mode .cob-duo-banner button[style*="background:#ffffff"],
+body.dark-mode .cob-duo-banner button,
+body.dark-mode .cob-duo-banner button[style*="background:#ffffff"] {
+    background: #1e293b !important;
+    border-color: #3b82f6 !important;
+    color: #60a5fa !important;
+}
+html.ef-dark-mode .cob-duo-banner button:hover,
+body.dark-mode .cob-duo-banner button:hover {
+    background: #253346 !important;
+    color: #93c5fd !important;
+}
+html.ef-dark-mode .cob-chip,
+body.dark-mode .cob-chip {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+html.ef-dark-mode .cob-chip:hover,
+body.dark-mode .cob-chip:hover {
+    background: #253346 !important;
+    border-color: #007aff !important;
+    color: #60a5fa !important;
+}
+html.ef-dark-mode .cob-chip.active,
+body.dark-mode .cob-chip.active {
+    background: #007aff !important;
+    border-color: #007aff !important;
+    color: #ffffff !important;
+}
+html.ef-dark-mode .cob-kpi-card,
+body.dark-mode .cob-kpi-card {
+    background: #1b2432 !important;
+    border-color: #344256 !important;
+}
+html.ef-dark-mode .cob-kpi-label,
+body.dark-mode .cob-kpi-label {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode .cob-kpi-val,
+body.dark-mode .cob-kpi-val {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode .cob-kpi-icon,
+body.dark-mode .cob-kpi-icon {
+    filter: brightness(0.85) contrast(1.2);
+}
+html.ef-dark-mode .cob-search-input,
+body.dark-mode .cob-search-input {
+    background-color: #111b2a !important;
+    color: #f8fafc !important;
+    border-color: #3b4d66 !important;
+}
+html.ef-dark-mode .cob-search-input:focus,
+body.dark-mode .cob-search-input:focus {
+    background-color: #1e293b !important;
+    border-color: #007aff !important;
+}
+html.ef-dark-mode .cob-view-toggle,
+body.dark-mode .cob-view-toggle {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode .cob-view-btn,
+body.dark-mode .cob-view-btn {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode .cob-view-btn.active,
+body.dark-mode .cob-view-btn.active {
+    background: #253346 !important;
+    color: #60a5fa !important;
+}
+html.ef-dark-mode .cob-empty,
+body.dark-mode .cob-empty {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode .cob-empty strong,
+body.dark-mode .cob-empty strong {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode .cob-table th,
+body.dark-mode .cob-table th {
+    background: #141c28 !important;
+    color: #cbd5e1 !important;
+    border-bottom-color: #2d3a4e !important;
+}
+html.ef-dark-mode .cob-table td,
+body.dark-mode .cob-table td {
+    background: #1b2432 !important;
+    color: #f1f5f9 !important;
+    border-bottom-color: #243042 !important;
+}
+html.ef-dark-mode .cob-table tr:hover td,
+body.dark-mode .cob-table tr:hover td {
+    background: #223044 !important;
+}
+html.ef-dark-mode .cob-table tfoot td,
+body.dark-mode .cob-table tfoot td {
+    background: #141c28 !important;
+    color: #f8fafc !important;
+    border-top-color: #2d3a4e !important;
+}
+html.ef-dark-mode .cob-table th[style*="color:#0f172a"],
+html.ef-dark-mode .cob-table th[style*="color:#047857"],
+body.dark-mode .cob-table th[style*="color:#0f172a"],
+body.dark-mode .cob-table th[style*="color:#047857"] {
+    color: #f8fafc !important;
+}
+
+/* 4. MODAL CENTRAL DE BACKUP (#modal-central-backup) & ABA SAÚDE DOS DADOS */
+html.ef-dark-mode #modal-central-backup div[style*="border-radius:12px"],
+body.dark-mode #modal-central-backup div[style*="border-radius:12px"] {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode #modal-central-backup div[style*="border-radius:12px"] h4,
+body.dark-mode #modal-central-backup div[style*="border-radius:12px"] h4 {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode #modal-central-backup div[style*="border-radius:12px"] p,
+body.dark-mode #modal-central-backup div[style*="border-radius:12px"] p {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode #modal-central-backup .btn-secondary,
+body.dark-mode #modal-central-backup .btn-secondary {
+    background: #253346 !important;
+    border: 1px solid #3b4d66 !important;
+    color: #f8fafc !important;
+}
+html.ef-dark-mode #modal-central-backup .btn-secondary:hover,
+body.dark-mode #modal-central-backup .btn-secondary:hover {
+    background: #33435c !important;
+    color: #ffffff !important;
+}
+html.ef-dark-mode #modal-central-backup .btn-outline,
+body.dark-mode #modal-central-backup .btn-outline {
+    background: transparent !important;
+    border: 1px solid #3b82f6 !important;
+    color: #60a5fa !important;
+}
+html.ef-dark-mode #modal-central-backup .btn-outline:hover,
+body.dark-mode #modal-central-backup .btn-outline:hover {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #93c5fd !important;
+}
+
+/* Boas práticas de backup texto */
+html.ef-dark-mode #modal-central-backup div[style*="line-height:1.5"],
+body.dark-mode #modal-central-backup div[style*="line-height:1.5"] {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode #modal-central-backup div[style*="line-height:1.5"] strong,
+body.dark-mode #modal-central-backup div[style*="line-height:1.5"] strong {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode #modal-central-backup div[style*="line-height:1.5"] li,
+body.dark-mode #modal-central-backup div[style*="line-height:1.5"] li {
+    color: #cbd5e1 !important;
+}
+
+/* Todos os blocos com background:#f8fafc dentro do modal de backup */
+html.ef-dark-mode #modal-central-backup div[style*="background:#f8fafc"],
+html.ef-dark-mode #modal-central-backup div[style*="background: #f8fafc"],
+body.dark-mode #modal-central-backup div[style*="background:#f8fafc"],
+body.dark-mode #modal-central-backup div[style*="background: #f8fafc"] {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode #modal-central-backup div[style*="background:#f8fafc"] *,
+html.ef-dark-mode #modal-central-backup div[style*="background: #f8fafc"] *,
+body.dark-mode #modal-central-backup div[style*="background:#f8fafc"] *,
+body.dark-mode #modal-central-backup div[style*="background: #f8fafc"] * {
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-resumo-banco,
+body.dark-mode #modal-central-backup #bkp-resumo-banco {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-prev-nome-arquivo,
+html.ef-dark-mode #modal-central-backup #bkp-prev-qtd-avaliacoes,
+html.ef-dark-mode #modal-central-backup #bkp-prev-qtd-alunos,
+html.ef-dark-mode #modal-central-backup #bkp-prev-qtd-fotos,
+body.dark-mode #modal-central-backup #bkp-prev-nome-arquivo,
+body.dark-mode #modal-central-backup #bkp-prev-qtd-avaliacoes,
+body.dark-mode #modal-central-backup #bkp-prev-qtd-alunos,
+body.dark-mode #modal-central-backup #bkp-prev-qtd-fotos {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-prev-meta-info,
+body.dark-mode #modal-central-backup #bkp-prev-meta-info {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-dropzone,
+body.dark-mode #modal-central-backup #bkp-dropzone {
+    background: #161f2e !important;
+    border-color: #3b4d66 !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-dropzone strong,
+body.dark-mode #modal-central-backup #bkp-dropzone strong {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-dropzone span,
+body.dark-mode #modal-central-backup #bkp-dropzone span {
+    color: #94a3b8 !important;
+}
+html.ef-dark-mode #modal-central-backup div[style*="background:linear-gradient(135deg,#eff6ff,#f0fdf4)"],
+body.dark-mode #modal-central-backup div[style*="background:linear-gradient(135deg,#eff6ff,#f0fdf4)"] {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-rollback-banner,
+body.dark-mode #modal-central-backup #bkp-rollback-banner {
+    background: #172554 !important;
+    border-color: #1e40af !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-rollback-banner *,
+body.dark-mode #modal-central-backup #bkp-rollback-banner * {
+    color: #93c5fd !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-prev-conflitos-box,
+body.dark-mode #modal-central-backup #bkp-prev-conflitos-box {
+    background: #142820 !important;
+    border-color: #166534 !important;
+    color: #86efac !important;
+}
+html.ef-dark-mode #modal-central-backup #bkp-prev-alunos-box,
+html.ef-dark-mode #modal-central-backup #bkp-prev-config-box,
+body.dark-mode #modal-central-backup #bkp-prev-alunos-box,
+body.dark-mode #modal-central-backup #bkp-prev-config-box {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+    color: #cbd5e1 !important;
+}
+html.ef-dark-mode #modal-central-backup .bkp-option-card,
+body.dark-mode #modal-central-backup .bkp-option-card {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode #modal-central-backup .bkp-option-card:hover,
+body.dark-mode #modal-central-backup .bkp-option-card:hover {
+    background: #1c273a !important;
+    border-color: #007aff !important;
+}
+html.ef-dark-mode #modal-central-backup .bkp-option-card.selected,
+body.dark-mode #modal-central-backup .bkp-option-card.selected {
+    background: rgba(0, 122, 255, 0.15) !important;
+    border-color: #007aff !important;
+}
+html.ef-dark-mode #modal-central-backup .bkp-option-card div[style*="font-weight:700"],
+body.dark-mode #modal-central-backup .bkp-option-card div[style*="font-weight:700"] {
+    color: #f8fafc !important;
+}
+html.ef-dark-mode #modal-central-backup .bkp-option-card div[style*="color:#64748b"],
+body.dark-mode #modal-central-backup .bkp-option-card div[style*="color:#64748b"] {
+    color: #94a3b8 !important;
+}
+
+/* 5. DEMAIS MODAIS (PROFISSIONAL, COFRE, VISUALIZAÇÃO) */
+html.ef-dark-mode #modal-config-profissional .modal-footer,
+body.dark-mode #modal-config-profissional .modal-footer {
+    background: #141c28 !important;
+    border-top-color: #2d3a4e !important;
+}
+html.ef-dark-mode #ef-security-modal div[style*="background:#ffffff"],
+html.ef-dark-mode #ef-security-modal div[style*="background: #ffffff"],
+html.ef-dark-mode #ef-security-modal div[style*="background:#fff"],
+body.dark-mode #ef-security-modal div[style*="background:#ffffff"],
+body.dark-mode #ef-security-modal div[style*="background: #ffffff"],
+body.dark-mode #ef-security-modal div[style*="background:#fff"] {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+}
+html.ef-dark-mode #ef-security-modal div[style*="background:#fff7ed"],
+body.dark-mode #ef-security-modal div[style*="background:#fff7ed"] {
+    background: #2a1b12 !important;
+    border-color: #7c2d12 !important;
+}
+html.ef-dark-mode #ef-security-modal div[style*="background:#fffbeb"],
+body.dark-mode #ef-security-modal div[style*="background:#fffbeb"] {
+    background: #2b2310 !important;
+    border-color: #78350f !important;
+}
+html.ef-dark-mode .photo-upload-card,
+html.ef-dark-mode .photo-thumb,
+body.dark-mode .photo-upload-card,
+body.dark-mode .photo-thumb {
+    background: #161f2e !important;
+    border-color: #2d3a4e !important;
+    color: #cbd5e1 !important;
+}
+
+
+/* Impressão Limpa do Laboratório (A4 Oficial) */
+@media print {
+    body.ef77-printing > *:not(#ef77-print) {
+        display: none !important;
+    }
+    body.ef77-printing,
+    html.ef-dark-mode body.ef77-printing {
+        background: #ffffff !important;
+        color: #000000 !important;
+        color-scheme: light !important;
+    }
+    body.ef77-printing #ef77-print {
+        display: block !important;
+        position: static !important;
+        width: 210mm !important;
+        margin: 0 auto !important;
+        padding: 9mm 12mm !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        color-scheme: light !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    body.ef77-printing #ef77-print * {
+        color-scheme: light !important;
+    }
+    body.ef77-printing #ef77-print .lb-card {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-color: #dbe4f0 !important;
+    }
+    body.ef77-printing #ef77-print .lb-h {
+        color: #0f172a !important;
+    }
+    body.ef77-printing #ef77-print .lb-table th {
+        background: #edf3fb !important;
+        color: #334155 !important;
+    }
+    body.ef77-printing #ef77-print .lb-table td {
+        color: #0f172a !important;
+        border-bottom-color: #eef2f7 !important;
+    }
+    body.ef77-printing #ef77-print .lb-table tbody tr:nth-child(even) {
+        background: #f8fafc !important;
+    }
+    body.ef77-printing #ef77-print .lb-table tbody tr.sel {
+        background: #dbeafe !important;
+    }
+}
