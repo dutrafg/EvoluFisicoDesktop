@@ -1,0 +1,117 @@
+/* 05-styles.css */
+/* ===== EvoluFísico — Camada de design "iOS" (apenas visual, sem alterar lógica) ===== */
+@media screen{
+:root{
+ --ios-bg:#f2f2f7; --ios-card:#fff; --ios-fill:rgba(118,118,128,.12); --ios-sep:rgba(60,60,67,.12);
+ --ios-blue:#007aff; --ios-green:#34c759; --ios-red:#ff3b30; --ios-orange:#ff9500;
+ --ios-r:22px; --ios-r-sm:14px;
+ --ios-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+ --ios-shadow-hover:0 2px 4px rgba(0,0,0,.05),0 16px 36px rgba(0,0,0,.09);
+ --spring:cubic-bezier(.32,.72,0,1);
+ --radius-lg:16px; --radius-xl:22px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--ios-bg)!important;background-image:radial-gradient(900px 420px at 12% -8%,rgba(0,122,255,.09),transparent 60%),radial-gradient(700px 380px at 95% -4%,rgba(175,82,222,.07),transparent 60%)!important;background-repeat:no-repeat!important;font-size:15.5px;line-height:1.45}
+.app-container{max-width:1160px;padding:1.75rem 1.25rem 4rem}
+
+/* Barra superior — vidro */
+.top-navbar{background:rgba(242,242,247,.74)!important;backdrop-filter:saturate(200%) blur(28px)!important;-webkit-backdrop-filter:saturate(200%) blur(28px)!important;border-bottom:.5px solid var(--ios-sep)!important;gap:.75rem;flex-wrap:wrap;padding:.6rem 1.25rem!important}
+.brand-icon-box{width:38px;height:38px;border-radius:11px!important;background:linear-gradient(145deg,#5ac8fa 0%,#007aff 55%,#5856d6 100%)!important;color:#fff!important;font-weight:700;letter-spacing:-.02em;box-shadow:0 4px 12px rgba(0,122,255,.35),inset 0 1px 0 rgba(255,255,255,.35)!important}
+.brand-title{font-size:1.05rem!important;font-weight:700!important;letter-spacing:-.025em}
+.brand-badge{border-radius:999px!important;padding:.15rem .6rem!important;font-size:.66rem!important}
+
+/* Abas — controle segmentado */
+.nav-tabs{background:var(--ios-fill)!important;border-radius:12px!important;padding:3px!important;gap:2px!important}
+.nav-tab-btn{border-radius:9px!important;padding:.45rem .9rem!important;font-weight:500!important;color:var(--slate-700)!important;transition:background .25s var(--spring),box-shadow .25s var(--spring),color .2s!important}
+.nav-tab-btn.active{background:#fff!important;color:#000!important;font-weight:600!important;box-shadow:0 3px 8px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.04)!important}
+
+/* Botões — pílulas */
+.btn{border-radius:999px!important;font-weight:600!important;letter-spacing:-.01em;padding:.62rem 1.25rem;transition:transform .2s var(--spring),background .2s,box-shadow .2s,opacity .2s!important}
+.btn-sm{padding:.42rem .85rem!important;font-size:.82rem}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:scale(.96)!important}
+.btn-primary,.btn-next{background:linear-gradient(180deg,#2b8cff,#007aff)!important;box-shadow:0 4px 14px rgba(0,122,255,.32),inset 0 1px 0 rgba(255,255,255,.25)!important}
+.btn-success,.btn-submit{background:linear-gradient(180deg,#46d36a,#34c759)!important;box-shadow:0 4px 14px rgba(52,199,89,.32),inset 0 1px 0 rgba(255,255,255,.25)!important}
+.btn-danger{background:var(--ios-red)!important;color:#fff!important}
+.btn-warning{background:rgba(255,149,0,.14)!important;color:#b25f00!important}
+.btn[disabled],.btn:disabled{opacity:.45;transform:none!important;box-shadow:none!important}
+.folder-status-pill,.btn-pro-pill{border-radius:999px!important;border:0!important;background:var(--ios-fill)!important}
+
+/* Cartões — grouped inset */
+.form-container,.card,.wizard-header-card,.kpi-card,.history-card,.stat-card,.ef55-card,.patient-view-container{background:var(--ios-card)!important;border:0!important;border-radius:var(--ios-r)!important;box-shadow:var(--ios-shadow)!important}
+.form-container{padding:2.25rem 2.5rem!important}
+.history-card,.kpi-card,.stat-card{transition:transform .35s var(--spring),box-shadow .35s var(--spring)!important}
+.history-card:hover,.kpi-card:hover,.stat-card:hover{transform:translateY(-3px);box-shadow:var(--ios-shadow-hover)!important}
+.wizard-header-card{background:linear-gradient(160deg,#fff,#f7f9ff)!important}
+.card-header{border-bottom:.5px solid var(--ios-sep)!important}
+.form-header h1{font-size:2.1rem!important;font-weight:800!important;letter-spacing:-.04em!important;background:linear-gradient(180deg,#1d1d1f,#3a3a3c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.step-title{font-weight:700!important;letter-spacing:-.03em!important}
+.kpi-value,.stat-value{font-weight:700!important;letter-spacing:-.035em!important;font-variant-numeric:tabular-nums}
+.kpi-title,.stat-label{text-transform:uppercase;font-size:.68rem!important;letter-spacing:.06em!important;font-weight:600!important;color:var(--text-muted)!important}
+.kpi-icon-box{border-radius:14px!important}
+.live-kpi-summary{background:linear-gradient(160deg,#2c2c2e,#1c1c1e)!important;border-radius:var(--ios-r)!important;box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.08)!important}
+
+/* Campos — estilo preenchido */
+.input-group label{font-size:.76rem!important;font-weight:600!important;color:var(--text-muted)!important;letter-spacing:.01em;margin-bottom:.35rem}
+.input-group input,.input-group select,.input-group textarea,.search-input-box input,.search-input-box select,input.form-control,select.form-control{background:var(--ios-fill)!important;border:1.5px solid transparent!important;border-radius:var(--ios-r-sm)!important;padding:.7rem .9rem!important;color:var(--text-main);min-height:44px;transition:background .2s,border-color .2s,box-shadow .2s!important}
+.input-group textarea{min-height:96px}
+.input-group input:hover,.input-group select:hover,.input-group textarea:hover{background:rgba(118,118,128,.16)!important}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus,.search-input-box input:focus{background:#fff!important;border-color:var(--ios-blue)!important;box-shadow:0 0 0 4px rgba(0,122,255,.18)!important;outline:none!important}
+.input-group input::placeholder,.input-group textarea::placeholder{color:#a1a1a6}
+input[type=checkbox],input[type=radio]{accent-color:var(--ios-blue);width:1.15rem;height:1.15rem}
+:focus-visible{outline:3px solid rgba(0,122,255,.45);outline-offset:2px;border-radius:8px}
+.info-box,.edit-mode-banner,.help-text{border-radius:var(--ios-r-sm)!important}
+.info-box{background:rgba(0,122,255,.07)!important;border:0!important}
+
+/* Stepper */
+.stepper-progress-bg{height:6px!important;border-radius:999px!important;background:var(--ios-fill)!important}
+.stepper-progress-fill{border-radius:999px!important;background:linear-gradient(90deg,#5ac8fa,#007aff,#5856d6)!important;transition:width .6s var(--spring)!important}
+.step-dot{border-radius:50%!important;transition:all .35s var(--spring)!important}
+.step-indicator.active .step-dot{background:var(--ios-blue)!important;transform:scale(1.08);box-shadow:0 0 0 5px rgba(0,122,255,.2)!important}
+.step-label{font-weight:600!important;letter-spacing:-.01em}
+
+/* Tabelas */
+.table-responsive,.comparison-table-wrapper{border-radius:var(--ios-r-sm);overflow:auto}
+.comparison-table th,.print-table th{background:var(--ios-fill)!important;text-transform:uppercase;font-size:.7rem!important;letter-spacing:.06em;color:var(--text-muted)!important;font-weight:700!important;border:0!important}
+.comparison-table td{border-color:var(--ios-sep)!important}
+.comparison-table tbody tr{transition:background .2s}
+.comparison-table tbody tr:hover{background:rgba(0,122,255,.05)}
+.delta-badge,.history-badge,.ef55-pill,.ef6-badge{border-radius:999px!important;font-weight:600!important}
+
+/* Histórico e upload */
+.history-client-name{font-weight:700!important;letter-spacing:-.025em}
+.photo-upload-card,.bkp-option-card{border-radius:var(--ios-r-sm)!important;border:1.5px dashed rgba(60,60,67,.25)!important;background:rgba(118,118,128,.05)!important;transition:all .3s var(--spring)!important}
+.photo-upload-card:hover,.bkp-option-card:hover{border-color:var(--ios-blue)!important;background:rgba(0,122,255,.06)!important;transform:translateY(-2px)}
+
+/* Modais — sheet de vidro */
+.modal-overlay{background:rgba(0,0,0,.32)!important;backdrop-filter:blur(14px) saturate(160%)!important;-webkit-backdrop-filter:blur(14px) saturate(160%)!important}
+.modal-card,.modal-content{border-radius:28px!important;background:rgba(255,255,255,.86)!important;backdrop-filter:saturate(200%) blur(40px)!important;-webkit-backdrop-filter:saturate(200%) blur(40px)!important;box-shadow:0 30px 80px rgba(0,0,0,.28),0 0 0 .5px rgba(0,0,0,.08)!important;animation:iosSheet .5s var(--spring) both}
+.modal-title{font-weight:700!important;letter-spacing:-.03em}
+.modal-close-btn{width:30px;height:30px;border-radius:50%!important;background:var(--ios-fill)!important;color:var(--text-muted)!important;border:0!important;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,transform .2s var(--spring)}
+.modal-close-btn:hover{background:rgba(118,118,128,.24)!important;transform:rotate(90deg)}
+@keyframes iosSheet{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+
+/* Transição entre abas e toasts */
+.tab-panel{animation:iosFade .5s var(--spring) both}
+@keyframes iosFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.ef55-toast{border-radius:999px!important;background:rgba(28,28,30,.88)!important;color:#fff!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 10px 30px rgba(0,0,0,.25)!important;padding:.7rem 1.2rem!important;font-weight:500}
+.success-icon{filter:drop-shadow(0 8px 18px rgba(52,199,89,.35))}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2);border-radius:999px;border:3px solid transparent;background-clip:content-box}
+
+/* Celular — barra de abas inferior (estilo iOS) */
+@media (max-width:760px){
+ .app-container{padding:1rem .85rem calc(6.5rem + env(safe-area-inset-bottom))}
+ .form-container{padding:1.35rem 1.1rem!important}
+ .form-header h1{font-size:1.6rem!important}
+ .top-navbar{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(242,242,247,.95)!important}
+ .brand-subtitle,.brand-badge{display:none!important}
+ .top-navbar>.nav-tabs{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:90;width:auto;display:flex!important;padding:6px!important;border-radius:26px!important;background:rgba(250,250,252,.82)!important;backdrop-filter:saturate(200%) blur(30px);-webkit-backdrop-filter:saturate(200%) blur(30px);box-shadow:0 12px 36px rgba(0,0,0,.2),0 0 0 .5px rgba(0,0,0,.08)}
+ .top-navbar>.nav-tabs .nav-tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:.45rem .2rem!important;font-size:.64rem!important;line-height:1.15;text-align:center;border-radius:20px!important;min-width:0}
+ .top-navbar>.nav-tabs .nav-tab-btn>span:first-child{font-size:1.3rem}
+ .top-navbar>.nav-tabs .nav-tab-btn.active{color:var(--ios-blue)!important;background:rgba(0,122,255,.12)!important;box-shadow:none!important}
+ .modal-card{border-radius:28px 28px 0 0!important}
+ .modal-overlay{align-items:flex-end!important;padding:0!important}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+}
