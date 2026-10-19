@@ -53,6 +53,32 @@ static gboolean read_positive_double(GtkWidget *entry,double *out) {
   if(errno==ERANGE || !end || *end || !isfinite(parsed) || parsed<=0)return FALSE;
   *out=parsed;return TRUE;
 }
+static void refresh_pickers(AppState *state) {
+  if(!state->assessment_picker || !state->charge_picker || !state->store.db)return;
+  GtkComboBoxText *a=GTK_COMBO_BOX_TEXT(state->assessment_picker);
+  GtkComboBoxText *b=GTK_COMBO_BOX_TEXT(state->charge_picker);
+  char *selected_a=g_strdup(gtk_combo_box_get_active_id(GTK_COMBO_BOX(a)));
+  char *selected_b=g_strdup(gtk_combo_box_get_active_id(GTK_COMBO_BOX(b)));
+  gtk_combo_box_text_remove_all(a);gtk_combo_box_text_remove_all(b);
+  GError *error=NULL;
+  GPtrArray *rows=ef_store_client_choices(&state->store,&error);
+  if(!rows) {g_warning("Erro ao atualizar seleção: %s",error->message);g_clear_error(&error);}
+  else {
+    for(guint i=0;i<rows->len;i++) {
+      const char *row=g_ptr_array_index(rows,i);
+      char *end=NULL;gint64 id=g_ascii_strtoll(row,&end,10);
+      if(id<=0 || !end || *end!=' ')continue;
+      char *key=g_strdup_printf("%" G_GINT64_FORMAT,id);
+      gtk_combo_box_text_append(a,key,row);
+      gtk_combo_box_text_append(b,key,row);
+      g_free(key);
+    }
+    g_ptr_array_unref(rows);
+  }
+  if(selected_a)gtk_combo_box_set_active_id(GTK_COMBO_BOX(a),selected_a);
+  if(selected_b)gtk_combo_box_set_active_id(GTK_COMBO_BOX(b),selected_b);
+  g_free(selected_a);g_free(selected_b);
+}
 static void refresh_clients(AppState *state) {
   GtkWidget *child;
   while ((child=gtk_widget_get_first_child(state->client_list)))
@@ -72,6 +98,7 @@ static void refresh_clients(AppState *state) {
     gtk_list_box_append(GTK_LIST_BOX(state->client_list),label);
   }
   g_ptr_array_unref(clients);
+  refresh_pickers(state);
 }
 static void fill_list(GtkWidget *list,GPtrArray *rows) {
   GtkWidget *child=NULL;
