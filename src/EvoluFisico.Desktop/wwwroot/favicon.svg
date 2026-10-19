@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+        <defs><linearGradient id="efGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0071e3"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs>
+        <rect width="512" height="512" rx="112" fill="url(#efGrad)"/>
+        <circle cx="256" cy="256" r="165" stroke="rgba(255,255,255,0.4)" stroke-width="26" fill="none"/>
+        <path d="M 256 91 A 165 165 0 0 1 410 320" stroke="#34c759" stroke-width="26" stroke-linecap="round" fill="none"/>
+        <rect x="174" y="180" width="30" height="152" rx="15" fill="#ffffff"/>
+        <rect x="174" y="180" width="82" height="30" rx="15" fill="#ffffff"/>
+        <rect x="174" y="241" width="66" height="30" rx="15" fill="#ffffff"/>
+        <rect x="174" y="302" width="82" height="30" rx="15" fill="#ffffff"/>
+        <rect x="276" y="180" width="30" height="152" rx="15" fill="#34c759"/>
+        <rect x="276" y="180" width="82" height="30" rx="15" fill="#34c759"/>
+        <rect x="276" y="241" width="62" height="30" rx="15" fill="#34c759"/>
+        <circle cx="370" cy="185" r="18" fill="#ff3b30"/>
+    </svg>
