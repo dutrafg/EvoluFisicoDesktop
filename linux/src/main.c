@@ -63,6 +63,29 @@ static void refresh_clients(AppState *state) {
   }
   g_ptr_array_unref(clients);
 }
+static void fill_list(GtkWidget *list,GPtrArray *rows) {
+  GtkWidget *child=NULL;
+  while((child=gtk_widget_get_first_child(list)))gtk_list_box_remove(GTK_LIST_BOX(list),child);
+  for(guint i=0;i<rows->len;i++) {
+    GtkWidget *label=gtk_label_new(g_ptr_array_index(rows,i));
+    gtk_widget_set_halign(label,GTK_ALIGN_START);
+    gtk_widget_set_margin_top(label,7);
+    gtk_widget_set_margin_bottom(label,7);
+    gtk_list_box_append(GTK_LIST_BOX(list),label);
+  }
+}
+static void refresh_assessments(AppState *state,gint64 client_id) {
+  GError *error=NULL;
+  GPtrArray *rows=ef_store_list_assessments(&state->store,client_id,&error);
+  if(rows) {fill_list(state->assessment_list,rows);g_ptr_array_unref(rows);}
+  else {gtk_label_set_text(GTK_LABEL(state->assessment_status),error->message);g_clear_error(&error);}
+}
+static void refresh_charges(AppState *state,gint64 client_id) {
+  GError *error=NULL;
+  GPtrArray *rows=ef_store_list_charges(&state->store,client_id,&error);
+  if(rows) {fill_list(state->charge_list,rows);g_ptr_array_unref(rows);}
+  else {gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);g_clear_error(&error);}
+}
 static void rename_client_clicked(GtkButton *button,gpointer data) {
   (void)button;
   AppState *state=data;
