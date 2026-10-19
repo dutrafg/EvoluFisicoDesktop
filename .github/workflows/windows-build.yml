@@ -33,6 +33,12 @@ jobs:
         shell: pwsh
         run: ./scripts/build-windows.ps1
 
+      - name: Run native encrypted SQLite integration tests
+        shell: pwsh
+        run: |
+          dotnet run --project tests/StorageSmoke/StorageSmoke.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Encrypted SQLite integration tests failed' }
+
       - name: Verify Windows application icon
         shell: pwsh
         run: |
