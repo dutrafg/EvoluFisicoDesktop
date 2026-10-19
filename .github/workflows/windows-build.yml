@@ -36,7 +36,7 @@ jobs:
       - name: Protect legacy evaluation, billing and master password compatibility
         run: node tests/legacy-vault-compatibility.cjs
 
-      - name: Run 30 Windows stability safety gates
+      - name: Run 34 Windows stability safety gates
         run: node tests/windows-stable-gates.cjs
 
       - name: Validate migration JavaScript syntax
