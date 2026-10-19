@@ -49,5 +49,5 @@ check('30 SQLite-only build excludes legacy migration scripts',()=>{assert.doesN
 check('31 Native backup uses Windows save dialog',()=>assert.match(native,/new Microsoft\.Win32\.SaveFileDialog/));
 check('32 Native backup verifies encrypted snapshot',()=>assert.match(native,/store\.BackupTo\(dialog\.FileName\)/));
 check('33 UI exposes backup action',()=>assert.match(ui,/ef-desktop-native-backup/));
-check('34 Native bridge exposes backup method',()=>assert.match(bridge,/async backup\(\)/));
+check('34 Native bridge exposes backup method',()=>assert.match(bridge,/backup:\s*\(\)\s*=>\s*call\('backup'\)/));
 console.log('34/34 Windows desktop migration safety contract checks passed.');
