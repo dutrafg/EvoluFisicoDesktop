@@ -278,7 +278,7 @@ GPtrArray *ef_store_search_clients(EfStore *store, const char *query, GError **e
   GPtrArray *list=g_ptr_array_new_with_free_func(g_free);
   int rc;
   while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
-    char *line=g_strdup_printf("%" G_GINT64_FORMAT " — %s",sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1));
+    char *line=g_strdup_printf("%" G_GINT64_FORMAT " — %s",(gint64)sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1));
     g_ptr_array_add(list,line);
   }
   sqlite3_finalize(stmt);
@@ -298,7 +298,7 @@ GPtrArray *ef_store_list_client_rows(EfStore *store, GError **error) {
   GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);
   int rc;
   while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
-    char *line=g_strdup_printf("%" G_GINT64_FORMAT " — %s",sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1));
+    char *line=g_strdup_printf("%" G_GINT64_FORMAT " — %s",(gint64)sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1));
     g_ptr_array_add(rows,line);
   }
   sqlite3_finalize(stmt);
@@ -368,7 +368,7 @@ GPtrArray *ef_store_list_charges(EfStore *store,gint64 client_id,GError **error)
   GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);
   int rc;
   while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
-    gint64 cents=sqlite3_column_int64(stmt,0);
+    gint64 cents=(gint64)sqlite3_column_int64(stmt,0);
     g_ptr_array_add(rows,g_strdup_printf("R$ %" G_GINT64_FORMAT ",%02" G_GINT64_FORMAT " | %s",cents/100,cents%100,(const char*)sqlite3_column_text(stmt,1)));
   }
   sqlite3_finalize(stmt);
@@ -407,7 +407,7 @@ GPtrArray *ef_store_list_assessment_rows(EfStore *store,gint64 client_id,GError 
   sqlite3_bind_int64(stmt,1,client_id);
   GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);int rc;
   while((rc=sqlite3_step(stmt))==SQLITE_ROW)
-    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — %s | %.1f kg | %.1f cm",sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1),sqlite3_column_double(stmt,2),sqlite3_column_double(stmt,3)));
+    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — %s | %.1f kg | %.1f cm",(gint64)sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1),sqlite3_column_double(stmt,2),sqlite3_column_double(stmt,3)));
   sqlite3_finalize(stmt);
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
   return rows;
@@ -420,7 +420,7 @@ GPtrArray *ef_store_list_charge_rows(EfStore *store,gint64 client_id,GError **er
   GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);int rc;
   while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
     gint64 cents=sqlite3_column_int64(stmt,1);
-    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — R$ %" G_GINT64_FORMAT ",%02" G_GINT64_FORMAT " | %s",sqlite3_column_int64(stmt,0),cents/100,cents%100,(const char*)sqlite3_column_text(stmt,2)));
+    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — R$ %" G_GINT64_FORMAT ",%02" G_GINT64_FORMAT " | %s",(gint64)sqlite3_column_int64(stmt,0),cents/100,cents%100,(const char*)sqlite3_column_text(stmt,2)));
   }
   sqlite3_finalize(stmt);
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
