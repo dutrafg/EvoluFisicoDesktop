@@ -53,11 +53,14 @@ async function snapshot(){
     const rows=await readStore(db,store.name);
     if(rows.length!==store.count)throw new Error('Quantidade de registros mudou durante a cópia');
     for(let offset=0;offset<rows.length;offset+=100){
+     let batchBytes=0;
      const batch={};
      const end=Math.min(offset+100,rows.length);
      for(let i=offset;i<end;i++){
       const record=encoder.encode(JSON.stringify({database:info.name,store:store.name,entry:JSON.parse(rows[i])}));
       if(record.byteLength>8_000_000)throw new Error('Registro excede o limite: '+store.name);
+      batchBytes+=record.byteLength;
+      if(batchBytes>24_000_000)throw new Error('Lote excede o limite seguro de 24 MB; reduza o tamanho do lote.');
       // IDs are deterministic and bounded; collisions are rejected by verification.
       const id=await stableId(info.name,store.name,JSON.parse(rows[i]).key);
       const existing=await window.EFNativeStorage.read(id);
