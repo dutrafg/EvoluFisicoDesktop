@@ -139,9 +139,26 @@ function mount(){
        btn.disabled=false;
        status.textContent=m.message||'';
        if(m.downloadUrl && /^https:\/\/github\.com\/dutrafg\/EvoluFisicoDesktop\/releases\/download\//.test(m.downloadUrl)){
+         let banner=$('ef-desktop-update-banner');
+         if(!banner){
+           banner=document.createElement('div');
+           banner.id='ef-desktop-update-banner';
+           banner.setAttribute('role','status');
+           banner.style.cssText='position:fixed;right:20px;bottom:20px;z-index:10000;max-width:390px;padding:16px;border-radius:10px;background:#16263c;color:white;box-shadow:0 8px 28px #0005;font:14px/1.5 system-ui,sans-serif';
+           document.body.append(banner);
+         }
+         banner.replaceChildren();
+         const title=document.createElement('strong');title.textContent='Atualização disponível';banner.append(title);
+         const description=document.createElement('p');description.textContent=m.message||'Uma nova versão está disponível.';banner.append(description);
+         const download=document.createElement('a');download.href=m.downloadUrl;download.target='_blank';download.rel='noopener noreferrer';download.textContent='Baixar nova versão';download.style.cssText='color:#a9d7ff;text-decoration:underline;margin-right:18px';banner.append(download);
+         const close=document.createElement('button');close.type='button';close.textContent='Agora não';close.style.cssText='border:0;background:transparent;color:white;cursor:pointer';close.addEventListener('click',()=>banner.remove());banner.append(close);
+       }
+       if(m.downloadUrl && /^https:\/\/github\.com\/dutrafg\/EvoluFisicoDesktop\/releases\/download\//.test(m.downloadUrl)){
          const a=document.createElement('a');a.href=m.downloadUrl;a.textContent='Baixar instalador';a.target='_blank';a.rel='noopener noreferrer';status.append(' ',a);
        }
      });
+     // Check once when the desktop UI starts; never download or install without consent.
+     window.chrome.webview.postMessage('check-updates-auto');
    }
  }
  oldActions.remove();
