@@ -199,6 +199,8 @@ static void save_assessment(GtkButton *button,gpointer data) {
   if(ef_store_add_assessment(&state->store,id,date,weight,height,&error)) {
     gtk_label_set_text(GTK_LABEL(state->assessment_status),"Avaliação registrada (sem criptografia).");
     refresh_assessments(state,id);
+    gtk_editable_set_text(GTK_EDITABLE(state->assessment_weight),"");
+    gtk_editable_set_text(GTK_EDITABLE(state->assessment_height),"");
   }else{
     gtk_label_set_text(GTK_LABEL(state->assessment_status),error->message);
     g_clear_error(&error);
@@ -214,6 +216,8 @@ static void save_charge(GtkButton *button,gpointer data) {
   if(ef_store_add_charge(&state->store,id,cents,description,&error)) {
     gtk_label_set_text(GTK_LABEL(state->charge_status),"Cobrança registrada (sem criptografia).");
     refresh_charges(state,id);
+    gtk_editable_set_text(GTK_EDITABLE(state->charge_cents),"");
+    gtk_editable_set_text(GTK_EDITABLE(state->charge_description),"");
   }else{
     gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);
     g_clear_error(&error);
