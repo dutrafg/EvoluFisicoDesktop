@@ -94,3 +94,12 @@ Revisão estática identificou e corrigiu:
 - Índices SQLite otimizam consultas por cliente.
 - **Risco residual:** a API interna de exclusão por ID não incorpora cliente; a validação está na interface e pode ser melhorada com exclusão SQL atômica por `id` e `client_id`.
 - Banco e backups seguem **sem criptografia**. Uso restrito a dados fictícios.
+
+## Etapas 101–113 — revisão de segurança e usabilidade
+
+- Permissões locais restritas a usuário, bloqueio de links simbólicos para banco e backups.
+- Exclusão de cliente com confirmação explícita e aviso de exclusão em cascata.
+- Listas roláveis, data de avaliação pré-preenchida e limpeza de formulário após salvar.
+- Verificação da versão de esquema antes de criar tabelas.
+- Testes adicionais de permissões, symlinks, versões e compilação estrita.
+- **Não há criptografia de dados em repouso**; permissões POSIX não substituem criptografia, autenticação ou controles LGPD.
