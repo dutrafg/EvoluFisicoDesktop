@@ -10,6 +10,12 @@ foreach ($size in @('192','512')) {
     if (!(Test-Path $encoded)) { throw "Icone ausente: icon-$size.png" }
     [System.IO.File]::WriteAllBytes($output,[Convert]::FromBase64String(([IO.File]::ReadAllText($encoded)).Trim()))
   }
+  $bytes = [System.IO.File]::ReadAllBytes($output)
+  if ($bytes.Length -lt 100 -or
+      $bytes[0] -ne 137 -or $bytes[1] -ne 80 -or
+      $bytes[2] -ne 78 -or $bytes[3] -ne 71) {
+    throw "Arquivo PNG invalido: $output"
+  }
 }
 dotnet restore $project
 if ($LASTEXITCODE -ne 0) { throw 'Falha no restore' }
