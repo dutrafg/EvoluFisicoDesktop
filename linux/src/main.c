@@ -1,5 +1,11 @@
 #include <gtk/gtk.h>
 
+static void navigate(GtkButton *button, gpointer user_data) {
+  GtkStack *stack = GTK_STACK(user_data);
+  GtkWidget *page = GTK_WIDGET(g_object_get_data(G_OBJECT(button), "target-page"));
+  gtk_stack_set_visible_child(stack, page);
+}
+
 static void activate(GtkApplication *app, gpointer user_data) {
   (void)user_data;
   GtkWidget *window = gtk_application_window_new(app);
@@ -32,8 +38,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_box_append(GTK_BOX(page), note);
     char *name = g_strdup_printf("page-%u", i);
     gtk_stack_add_named(GTK_STACK(stack), page, name);
-    g_object_set_data_full(G_OBJECT(button), "page-name", name, g_free);
-    g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_stack_set_visible_child), page);
+    g_free(name);
+    g_object_set_data(G_OBJECT(button), "target-page", page);
+    g_signal_connect(button, "clicked", G_CALLBACK(navigate), stack);
     gtk_box_append(GTK_BOX(sidebar), button);
   }
   gtk_box_append(GTK_BOX(root), sidebar);
