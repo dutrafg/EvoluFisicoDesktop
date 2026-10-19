@@ -35,6 +35,13 @@ jobs:
       - name: Build installer
         shell: pwsh
         run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\EvoluFisico.iss'
+      - name: Verify installer output
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem installer-output -Filter '*.exe' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $installer) { throw 'Instalador EXE nao foi gerado' }
+          if ($installer.Length -lt 100KB) { throw 'Instalador suspeitamente pequeno' }
+          Write-Host "Instalador gerado: $($installer.Name) ($($installer.Length) bytes)"
       - uses: actions/upload-artifact@v4
         with:
           name: EvoluFisicoDesktop-9.0-Windows-Setup
