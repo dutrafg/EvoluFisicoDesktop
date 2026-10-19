@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <math.h>
+#include <gio/gio.h>
 static gboolean apply_key(sqlite3 *db,GError **error) {
   const char *passphrase=g_getenv("EVOLUFISICO_DB_PASSPHRASE");
   if(!passphrase || strlen(passphrase)<12) {
@@ -166,132 +167,101 @@ static gboolean copy_database(sqlite3 *source, sqlite3 *target, GError **error) 
   }
   return TRUE;
 }
-gboolean ef_store_backup(EfStore *store, const char *destination, GError **error) {
-  if(!store || !store->db || !destination || !*destination) {
-    g_set_error_literal(error,ef_error(),13,"Destino de backup inválido"); return FALSE;
-  }
-  if(!ef_store_check_integrity(store,error)) return FALSE;
-  if(!g_path_is_absolute(destination)) {
-    g_set_error_literal(error,ef_error(),22,"Backup exige caminho absoluto");
-    return FALSE;
-  }
-  if(g_file_test(destination,G_FILE_TEST_EXISTS) || g_file_test(destination,G_FILE_TEST_IS_SYMLINK)) {
-    g_set_error_literal(error,ef_error(),20,"Destino já existe: backup não sobrescrito");
-    return FALSE;
-  }
-  char *uuid=g_uuid_string_random();
-  char *temporary=g_strdup_printf("%s.tmp-%s",destination,uuid);
-  g_free(uuid);
-  sqlite3 *target=NULL;
-  if(sqlite3_open_v2(temporary,&target,SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE,NULL)!=SQLITE_OK) {
-    g_set_error_literal(error,ef_error(),14,"Não foi possível criar backup temporário");
-    if(target)sqlite3_close(target);
-    g_unlink(temporary);g_free(temporary);return FALSE;
-  }
-  gboolean ok=apply_key(target,error);
-  if(ok)ok=copy_database(store->db,target,error);
-  if(sqlite3_close(target)!=SQLITE_OK)ok=FALSE;
-  if(ok) {
-    sqlite3 *verify=NULL;
-    if(sqlite3_open_v2(temporary,&verify,SQLITE_OPEN_READONLY,NULL)!=SQLITE_OK)ok=FALSE;
-    else if(!apply_key(verify,error)) {sqlite3_close(verify);ok=FALSE;}
-    else {
-      EfStore snapshot={verify};
-      ok=ef_store_check_integrity(&snapshot,error);
-      sqlite3_close(verify);
-    }
-  }
-  if(ok)g_chmod(temporary,0600);
-  if(ok && link(temporary,destination)!=0) {
-    g_set_error(error,ef_error(),15,"Não foi possível finalizar backup sem sobrescrever: %s",g_strerror(errno));ok=FALSE;
-  }
-  g_unlink(temporary);
-  g_free(temporary);
+static gboolean encrypted_file_copy(const char *source,const char *destination,GError **error) {
+  GFile *src=g_file_new_for_path(source),*dst=g_file_new_for_path(destination);
+  gboolean ok=g_file_copy(src,dst,G_FILE_COPY_NONE,NULL,NULL,NULL,error);
+  g_object_unref(src);g_object_unref(dst);
   return ok;
 }
-gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
-  if(!store || !store->db || !source || !*source || !g_path_is_absolute(source)) {
-    g_set_error_literal(error,ef_error(),16,"Origem de restauração inválida");return FALSE;
+static gboolean verify_encrypted_snapshot(const char *path,GError **error) {
+  sqlite3 *db=NULL;
+  if(sqlite3_open_v2(path,&db,SQLITE_OPEN_READONLY,NULL)!=SQLITE_OK) {
+    if(db)sqlite3_close(db);
+    g_set_error_literal(error,ef_error(),70,"Não foi possível abrir backup criptografado");return FALSE;
   }
-  const char *live=sqlite3_db_filename(store->db,"main");
-  char *source_canonical=g_canonicalize_filename(source,NULL);
-  char *live_canonical=live ? g_canonicalize_filename(live,NULL) : NULL;
-  gboolean same=g_strcmp0(source_canonical,live_canonical)==0;
-  g_free(source_canonical);g_free(live_canonical);
-  if(same) {
-    g_set_error_literal(error,ef_error(),24,"Não é permitido restaurar a partir do banco ativo");
-    return FALSE;
+  gboolean ok=apply_key(db,error);
+  if(ok) {
+    EfStore check={db};
+    ok=ef_store_check_integrity(&check,error);
   }
-  if(g_file_test(source,G_FILE_TEST_IS_SYMLINK)) {
-    g_set_error_literal(error,ef_error(),52,"Backup não pode ser link simbólico");
-    return FALSE;
-  }
-  sqlite3 *incoming=NULL;
-  if(sqlite3_open_v2(source,&incoming,SQLITE_OPEN_READONLY,NULL)!=SQLITE_OK) {
-    g_set_error_literal(error,ef_error(),17,"Backup não encontrado ou inválido");
-    if(incoming)sqlite3_close(incoming);
-    return FALSE;
-  }
-  gboolean ok=apply_key(incoming,error);
-  EfStore snapshot={incoming};
-  if(ok)ok=ef_store_check_integrity(&snapshot,error);
   if(ok) {
     sqlite3_stmt *stmt=NULL;
-    if(sqlite3_prepare_v2(incoming,"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='clients'",-1,&stmt,NULL)!=SQLITE_OK)ok=FALSE;
+    if(sqlite3_prepare_v2(db,"SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN ('clients','assessments','charges')",-1,&stmt,NULL)!=SQLITE_OK)ok=FALSE;
     else {
-      ok=sqlite3_step(stmt)==SQLITE_ROW && sqlite3_column_int(stmt,0)==1;
+      ok=sqlite3_step(stmt)==SQLITE_ROW && sqlite3_column_int(stmt,0)==3;
       sqlite3_finalize(stmt);
     }
-    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),18,"Backup sem esquema de clientes");
+    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),71,"Esquema do backup incompatível");
   }
   if(ok) {
-    sqlite3_stmt *version=NULL;
-    if(sqlite3_prepare_v2(incoming,"PRAGMA user_version",-1,&version,NULL)!=SQLITE_OK)ok=FALSE;
-    else {
-      ok=sqlite3_step(version)==SQLITE_ROW && sqlite3_column_int(version,0)==1;
-      sqlite3_finalize(version);
-    }
-    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),25,"Versão de esquema do backup incompatível");
+    sqlite3_stmt *stmt=NULL;
+    if(sqlite3_prepare_v2(db,"PRAGMA user_version",-1,&stmt,NULL)!=SQLITE_OK)ok=FALSE;
+    else {ok=sqlite3_step(stmt)==SQLITE_ROW && sqlite3_column_int(stmt,0)==1;sqlite3_finalize(stmt);}
+    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),72,"Versão do backup incompatível");
+  }
+  sqlite3_close(db);
+  return ok;
+}
+gboolean ef_store_backup(EfStore *store,const char *destination,GError **error) {
+  if(!store || !store->db || !destination || !g_path_is_absolute(destination)) {
+    g_set_error_literal(error,ef_error(),73,"Destino de backup absoluto obrigatório");return FALSE;
+  }
+  if(g_file_test(destination,G_FILE_TEST_EXISTS) || g_file_test(destination,G_FILE_TEST_IS_SYMLINK)) {
+    g_set_error_literal(error,ef_error(),74,"Backup existente não pode ser sobrescrito");return FALSE;
+  }
+  if(!ef_store_check_integrity(store,error))return FALSE;
+  const char *live=sqlite3_db_filename(store->db,"main");
+  if(!live)return FALSE;
+  char *temporary=g_strdup_printf("%s.tmp-%s",destination,g_uuid_string_random());
+  gboolean ok=encrypted_file_copy(live,temporary,error);
+  if(ok)ok=verify_encrypted_snapshot(temporary,error);
+  if(ok && g_chmod(temporary,0600)!=0) {
+    g_set_error_literal(error,ef_error(),75,"Falha ao proteger backup");ok=FALSE;
+  }
+  if(ok && link(temporary,destination)!=0) {
+    g_set_error(error,ef_error(),76,"Falha ao finalizar backup: %s",g_strerror(errno));ok=FALSE;
+  }
+  g_unlink(temporary);g_free(temporary);
+  return ok;
+}
+gboolean ef_store_restore(EfStore *store,const char *source,GError **error) {
+  if(!store || !store->db || !source || !g_path_is_absolute(source) || g_file_test(source,G_FILE_TEST_IS_SYMLINK)) {
+    g_set_error_literal(error,ef_error(),77,"Origem de restauração inválida");return FALSE;
+  }
+  const char *filename=sqlite3_db_filename(store->db,"main");
+  if(!filename)return FALSE;
+  char *live=g_strdup(filename);
+  GStatBuf live_stat,source_stat;
+  if(g_stat(live,&live_stat)!=0 || g_stat(source,&source_stat)!=0 ||
+    (live_stat.st_dev==source_stat.st_dev && live_stat.st_ino==source_stat.st_ino)) {
+    g_set_error_literal(error,ef_error(),78,"Backup inexistente ou igual ao banco ativo");
+    g_free(live);return FALSE;
+  }
+  if(!verify_encrypted_snapshot(source,error)){g_free(live);return FALSE;}
+  char *rollback=g_strdup_printf("%s.rollback-%s",live,g_uuid_string_random());
+  char *replacement=g_strdup_printf("%s.restore-%s",live,g_uuid_string_random());
+  gboolean ok=ef_store_check_integrity(store,error);
+  if(ok)ok=encrypted_file_copy(live,rollback,error);
+  if(ok)ok=encrypted_file_copy(source,replacement,error);
+  if(ok && g_chmod(replacement,0600)!=0) {
+    g_set_error_literal(error,ef_error(),79,"Não foi possível proteger restauração");ok=FALSE;
   }
   if(ok) {
-    sqlite3_stmt *probe=NULL;
-    if(sqlite3_prepare_v2(incoming,"SELECT id,name FROM clients LIMIT 1",-1,&probe,NULL)!=SQLITE_OK)ok=FALSE;
-    else {
-      int probe_rc=sqlite3_step(probe);
-      ok=probe_rc==SQLITE_ROW || probe_rc==SQLITE_DONE;
-      sqlite3_finalize(probe);
+    ef_store_close(store);
+    if(g_rename(replacement,live)!=0) {
+      g_set_error_literal(error,ef_error(),80,"Falha ao substituir banco");ok=FALSE;
     }
-    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),26,"Estrutura de clientes do backup inválida");
-  }
-  if(ok) {
-    sqlite3_stmt *tables=NULL;
-    if(sqlite3_prepare_v2(incoming,
-      "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('assessments','charges')",
-      -1,&tables,NULL)!=SQLITE_OK)ok=FALSE;
-    else {
-      ok=sqlite3_step(tables)==SQLITE_ROW && sqlite3_column_int(tables,0)==2;
-      sqlite3_finalize(tables);
-    }
-    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),34,"Backup sem tabelas de avaliações e cobranças");
-  }
-  if(ok) {
-    sqlite3 *rollback=NULL;
-    if(sqlite3_open(":memory:",&rollback)!=SQLITE_OK) {
-      g_set_error_literal(error,ef_error(),21,"Falha ao reservar cópia de segurança para restauração");
-      ok=FALSE;
-    } else {
-      ok=copy_database(store->db,rollback,error);
-      if(ok && !copy_database(incoming,store->db,error)) {
-        GError *rollback_error=NULL;
-        if(!copy_database(rollback,store->db,&rollback_error))
-          g_warning("Falha crítica ao reverter restauração: %s",rollback_error->message);
-        g_clear_error(&rollback_error);
-        ok=FALSE;
-      }
-      sqlite3_close(rollback);
+    if(ok && !ef_store_open(store,error))ok=FALSE;
+    if(!ok) {
+      g_rename(rollback,live);
+      GError *recovery=NULL;
+      if(!store->db && !ef_store_open(store,&recovery))
+        g_warning("Falha crítica ao reabrir banco anterior: %s",recovery ? recovery->message : "erro");
+      g_clear_error(&recovery);
     }
   }
-  sqlite3_close(incoming);
+  g_unlink(rollback);g_unlink(replacement);
+  g_free(rollback);g_free(replacement);g_free(live);
   return ok;
 }
 GPtrArray *ef_store_search_clients(EfStore *store, const char *query, GError **error) {
