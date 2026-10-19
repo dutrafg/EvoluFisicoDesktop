@@ -80,6 +80,45 @@ internal sealed class EncryptedSqliteStore
         return result is byte[] bytes ? ProtectedVault.Decrypt(bytes, masterPassword) : null;
     }
 
+    /// <summary>Imports a verified snapshot atomically. Existing records remain intact on failure.</summary>
+    internal void ImportBatch(System.Collections.Generic.IReadOnlyDictionary<string, byte[]> records, string? masterPassword = null)
+    {
+        ArgumentNullException.ThrowIfNull(records);
+        if (records.Count == 0) return;
+        var encrypted = new System.Collections.Generic.Dictionary<string, byte[]>(StringComparer.Ordinal);
+        foreach (var pair in records)
+        {
+            if (string.IsNullOrWhiteSpace(pair.Key) || pair.Key.Length > 128)
+                throw new ArgumentException("Identificador inválido na importação.");
+            ArgumentNullException.ThrowIfNull(pair.Value);
+            encrypted.Add(pair.Key, ProtectedVault.Encrypt(pair.Value, masterPassword));
+        }
+        using var db = Open();
+        using var tx = db.BeginTransaction();
+        foreach (var pair in encrypted)
+        {
+            using var cmd = db.CreateCommand();
+            cmd.Transaction = tx;
+            cmd.CommandText = """
+                INSERT INTO protected_records(record_id, encrypted_payload, updated_utc)
+                VALUES ($id, $data, $time)
+                ON CONFLICT(record_id) DO UPDATE SET
+                encrypted_payload=excluded.encrypted_payload, updated_utc=excluded.updated_utc
+                """;
+            cmd.Parameters.AddWithValue("$id", pair.Key);
+            cmd.Parameters.AddWithValue("$data", pair.Value);
+            cmd.Parameters.AddWithValue("$time", DateTimeOffset.UtcNow.ToString("O"));
+            cmd.ExecuteNonQuery();
+        }
+        tx.Commit();
+        foreach (var pair in records)
+        {
+            var restored = Load(pair.Key, masterPassword);
+            if (restored is null || !System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(restored, pair.Value))
+                throw new InvalidDataException("Falha na conferência da importação criptografada.");
+        }
+    }
+
     /// <summary>Creates a consistent SQLite snapshot without exposing decrypted patient data.</summary>
     internal void BackupTo(string destination)
     {
