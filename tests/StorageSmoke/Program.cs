@@ -53,7 +53,7 @@ try
     Check(!store.Delete("batch-a"), "Repeated deletion is idempotent");
     Check(!store.ListRecordIds().Contains("batch-a"), "Deleted record absent from listing");
     var futureDatabase = Path.Combine(dir, "future.sqlite");
-    using (var future = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + futureDatabase))
+    using (var future = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + futureDatabase + ";Pooling=False"))
     {
         future.Open();
         using var setVersion = future.CreateCommand();
@@ -62,7 +62,7 @@ try
     }
     try { new EncryptedSqliteStore(futureDatabase).VerifyIntegrity(); throw new Exception("Future schema must be rejected"); }
     catch (InvalidDataException) { Console.WriteLine("PASS: Newer SQLite schema rejected without downgrade"); }
-    using (var future = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + futureDatabase))
+    using (var future = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + futureDatabase + ";Pooling=False"))
     {
         future.Open();
         using var checkVersion = future.CreateCommand();
@@ -81,5 +81,9 @@ try
     try { store.BackupTo(Path.Combine(dir, "test.sqlite")); throw new Exception("Backup must reject source overwrite"); }
     catch (ArgumentException) { Console.WriteLine("PASS: Active database overwrite rejected"); }
 }
-finally { Directory.Delete(dir, true); }
+finally
+{
+    Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+    Directory.Delete(dir, true);
+}
 Console.WriteLine("Encrypted SQLite smoke tests completed.");
