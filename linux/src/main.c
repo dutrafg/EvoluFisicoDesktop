@@ -169,8 +169,10 @@ static void delete_record_clicked(GtkButton *button,gpointer data) {
   gboolean assessment=GPOINTER_TO_INT(g_object_get_data(G_OBJECT(button),"assessment"));
   GtkWidget *field=assessment ? state->assessment_delete_id : state->charge_delete_id;
   gint64 id=0;
-  if(!read_id(field,&id)) {
-    gtk_label_set_text(GTK_LABEL(assessment ? state->assessment_status : state->charge_status),"Informe um ID de registro válido.");
+  gint64 selected_client=0;
+  GtkWidget *picker=assessment ? state->assessment_picker : state->charge_picker;
+  if(!read_id(field,&id) || !read_picker_id(picker,&selected_client)) {
+    gtk_label_set_text(GTK_LABEL(assessment ? state->assessment_status : state->charge_status),"Selecione o cliente e informe um ID válido.");
     return;
   }
   GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
