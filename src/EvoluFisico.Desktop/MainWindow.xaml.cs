@@ -149,7 +149,9 @@ public partial class MainWindow : Window
                 return;
             var id = root.GetProperty("requestId").GetString();
             var action = root.GetProperty("action").GetString();
-            if (string.IsNullOrWhiteSpace(id) || id.Length > 80) return;
+            if (string.IsNullOrWhiteSpace(id) || id.Length > 80
+                || !id.All(ch => char.IsAsciiLetterOrDigit(ch) || ch is '-' or '_'))
+                return;
             string? result = null;
             var store = new EncryptedSqliteStore();
             switch (action)
