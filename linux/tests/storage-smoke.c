@@ -112,7 +112,7 @@ int main(void) {
   sqlite3_finalize(injected_charge);
   g_assert_true(ef_store_delete_charge_for_client(&store,injected_id,2,&error));g_assert_no_error(error);
   /* Reject invalid UTF-8 and nonfinite measurements without corrupting the store. */
-  g_assert_false(ef_store_add_charge(&store,2,100,"\\xFF",&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_charge(&store,2,100,"\xFF",&error));g_clear_error(&error);
   g_assert_false(ef_store_add_assessment(&store,2,"2026-10-19",NAN,170,&error));g_clear_error(&error);
   g_assert_false(ef_store_add_assessment(&store,2,"2026-10-19",70,INFINITY,&error));g_clear_error(&error);
   g_assert_true(ef_store_check_integrity(&store,&error));g_assert_no_error(error);
