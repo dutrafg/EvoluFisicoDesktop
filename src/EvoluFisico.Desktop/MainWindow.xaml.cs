@@ -25,6 +25,17 @@ public partial class MainWindow : Window
         }
         catch { return ""; }
     }
+    private static DateTimeOffset? InstalledBuildTime()
+    {
+        try
+        {
+            var file = Path.Combine(AppContext.BaseDirectory, "wwwroot", "desktop-version.json");
+            using var doc = JsonDocument.Parse(File.ReadAllText(file));
+            var value = doc.RootElement.GetProperty("built_at").GetString();
+            return DateTimeOffset.TryParse(value, out var parsed) ? parsed : null;
+        }
+        catch { return null; }
+    }
     private static readonly HttpClient UpdateClient = new() { Timeout = TimeSpan.FromSeconds(15) };
     private bool _checkingUpdates;
 
@@ -150,7 +161,9 @@ public partial class MainWindow : Window
                     }
                 }
                 var installed = InstalledTag();
-                if (installed == tag)
+                var publishedAt = DateTimeOffset.TryParse(latest.GetProperty("published_at").GetString(), out var published) ? published : (DateTimeOffset?)null;
+                var installedAt = InstalledBuildTime();
+                if (installed == tag || (installedAt.HasValue && publishedAt.HasValue && publishedAt.Value <= installedAt.Value))
                 {
                     message = $"Você já utiliza a versão mais recente ({CurrentVersion}, {tag}).";
                     downloadUrl = null;
