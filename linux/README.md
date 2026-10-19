@@ -122,3 +122,10 @@ Revisão estática identificou e corrigiu:
 - Diálogos de exclusão e restauração usam `GtkAlertDialog` (GTK 4.10+).
 - CI executa captura de tela via Xvfb e publica um artefato visual. **Xvfb não é um computador Linux físico e não prova interação visual manual**.
 - A proteção permanece experimental: faltam testes de concorrência, recuperação após queda de energia, políticas de credenciais, migração, autenticação de usuários e homologação presencial. Não utilizar dados clínicos reais.
+
+## Rodada final de endurecimento e homologação
+
+- A tela de desbloqueio limpa a entrada após erro e limita cinco tentativas malsucedidas com espera de 30 segundos (somente por processo, não é proteção contra ataques offline).
+- A cópia de backup criptografado recusa modo SQLite WAL para não ignorar transações existentes no arquivo auxiliar.
+- O teste automatizado de interface utiliza Xvfb e gera screenshot no GitHub Actions. Para homologação em Linux físico ainda são necessários instalação real, interação humana com todas as páginas, verificação de DPI e fontes, reinício, backup e restauração em disco externo, testes de suspensão e desligamento inesperado.
+- **Atenção:** ainda não há contas individuais, controle de acesso por perfil, cofre de credenciais, migração de banco legado ou recuperação segura de senha. Uma única senha protege o banco local. O sistema permanece **não homologado para dados clínicos reais**.
