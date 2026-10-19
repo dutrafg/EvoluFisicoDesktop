@@ -29,6 +29,9 @@ jobs:
         shell: pwsh
         run: node tests/desktop-integration.cjs
 
+      - name: Validate branded installer shortcut configuration
+        run: node tests/installer-icon.cjs
+
       - name: Build Windows executable
         shell: pwsh
         run: ./scripts/build-windows.ps1
