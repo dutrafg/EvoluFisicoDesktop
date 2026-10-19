@@ -18,7 +18,7 @@ function requireJSON(value,seen=new WeakSet()){
     value instanceof Blob || value instanceof Map || value instanceof Set)
   throw new Error('Registro IndexedDB contém valor não compatível com JSON');
  seen.add(value);
- if(!Array.isArray(value) && Object.getPrototypeOf(value)!==Object.prototype)
+ if(!Array.isArray(value) && Object.prototype.toString.call(value)!=='[object Object]')
   throw new Error('Registro IndexedDB contém objeto não suportado');
  for(const [key,item] of Object.entries(value))requireJSON(item,seen);
  seen.delete(value);
