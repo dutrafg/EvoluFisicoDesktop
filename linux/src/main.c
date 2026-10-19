@@ -86,6 +86,22 @@ static void refresh_charges(AppState *state,gint64 client_id) {
   if(rows) {fill_list(state->charge_list,rows);g_ptr_array_unref(rows);}
   else {gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);g_clear_error(&error);}
 }
+static void save_assessment(GtkButton *button,gpointer data) {
+  (void)button;AppState *state=data;gint64 id=0;double weight=0,height=0;
+  if(!read_id(state->assessment_client,&id) || !read_positive_double(state->assessment_weight,&weight) ||
+     !read_positive_double(state->assessment_height,&height)) {
+    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Confira o ID, peso e altura.");return;
+  }
+  const char *date=gtk_editable_get_text(GTK_EDITABLE(state->assessment_date));
+  GError *error=NULL;
+  if(ef_store_add_assessment(&state->store,id,date,weight,height,&error)) {
+    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Avaliação registrada (sem criptografia).");
+    refresh_assessments(state,id);
+  }else{
+    gtk_label_set_text(GTK_LABEL(state->assessment_status),error->message);
+    g_clear_error(&error);
+  }
+}
 static void rename_client_clicked(GtkButton *button,gpointer data) {
   (void)button;
   AppState *state=data;
