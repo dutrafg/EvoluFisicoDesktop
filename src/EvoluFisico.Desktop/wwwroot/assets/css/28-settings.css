@@ -1,0 +1,54 @@
+/* Configurações integradas ao workspace e navegação direta. */
+@media screen {
+body.ef-simple-ui #ef-tools { display:none !important; }
+body.ef-simple-ui .ef-settings-page { color:var(--ef-ink); }
+body.ef-simple-ui .ef-settings-header { margin:0 0 24px; }
+body.ef-simple-ui .ef-settings-eyebrow { font-size:11px;letter-spacing:.12em;font-weight:750;color:var(--ef-accent); }
+body.ef-simple-ui .ef-settings-header h2 {font-size:clamp(25px,2.5vw,32px);line-height:1.2;letter-spacing:-.045em;margin:9px 0 10px;color:var(--ef-ink);}
+body.ef-simple-ui .ef-settings-header p {font-size:14px;line-height:1.65;max-width:780px;color:var(--ef-muted);margin:0;}
+body.ef-simple-ui .ef-settings-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch;}
+body.ef-simple-ui .ef-settings-card {border:1px solid var(--ef-line);border-radius:var(--ef-radius-lg);background:var(--ef-surface);padding:25px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;box-shadow:none;}
+body.ef-simple-ui .ef-settings-card-wide {grid-column:1/-1;}
+body.ef-simple-ui .ef-settings-card-icon {display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:var(--ef-soft);color:var(--ef-accent);font-size:21px;font-weight:750;margin-bottom:18px;}
+body.ef-simple-ui .ef-settings-card h3 {font-size:17px;font-weight:750;letter-spacing:-.02em;color:var(--ef-ink);margin:0 0 8px;}
+body.ef-simple-ui .ef-settings-card p {color:var(--ef-muted);font-size:13px;line-height:1.65;margin:0 0 20px;max-width:580px;}
+body.ef-simple-ui .ef-settings-card small {font-size:11px;line-height:1.5;color:var(--ef-muted);margin-top:12px;}
+body.ef-simple-ui .ef-settings-controls {display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;width:100%;}
+body.ef-simple-ui .ef-settings-controls .ef-settings-action {display:inline-flex!important;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:10px 16px!important;border:1px solid var(--ef-line)!important;border-radius:9px!important;background:var(--ef-soft)!important;color:var(--ef-ink)!important;box-shadow:none!important;white-space:normal;font-size:13px!important;font-weight:650!important;cursor:pointer;max-width:100%;}
+body.ef-simple-ui .ef-settings-controls .ef-settings-action:hover {border-color:var(--ef-accent)!important;color:var(--ef-accent)!important;}
+body.ef-simple-ui #folder-status-pill {height:auto!important;}
+@media(max-width:760px){body.ef-simple-ui .ef-settings-grid{grid-template-columns:minmax(0,1fr);}body.ef-simple-ui .ef-settings-card{padding:20px;}}
+}
+
+/* Paletas personalizadas: aplicadas à camada visual final, sem alterar o tema. */
+body.ef-simple-ui[data-ef-palette] {
+ --ef-fir:var(--ef-selected-dark);
+ --ef-fir-2:var(--ef-selected-dark);
+ --ef-accent:var(--ef-selected-dark);
+ --ef-accent-hover:var(--ef-selected-dark);
+ --primary:var(--ef-selected-dark);
+ --primary-hover:var(--ef-selected-dark);
+ --ef-lime:var(--ef-selected-color);
+ --ef-primary-bg:var(--ef-selected-dark);
+ --ef-nav-active-ink:var(--ef-selected-color);
+ --ef-primary-ink:#ffffff;
+ --primary-glow:color-mix(in srgb,var(--ef-selected-color) 26%,transparent);
+ --ef-soft:color-mix(in srgb,var(--ef-selected-color) 14%,var(--ef-surface));
+}
+html.ef-dark-mode body.ef-simple-ui[data-ef-palette] {
+ --ef-fir:var(--ef-selected-color);
+ --ef-fir-2:var(--ef-selected-color);
+ --ef-accent:var(--ef-selected-color);
+ --ef-accent-hover:var(--ef-selected-color);
+ --primary:var(--ef-selected-color);
+ --primary-hover:var(--ef-selected-color);
+ --ef-lime:var(--ef-selected-color);
+ --ef-primary-bg:var(--ef-selected-color);
+ --ef-primary-ink:#07130f;
+}
+body.ef-simple-ui[data-ef-palette] :is(.btn-primary,.ef90-form button[type=submit],.ef90-tasks-add){background:var(--ef-primary-bg)!important;border-color:var(--ef-accent)!important;color:var(--ef-primary-ink)!important}
+body.ef-simple-ui[data-ef-palette] #ef-workspace-heading small{background:var(--ef-selected-color)!important;color:#102019!important}
+body.ef-simple-ui[data-ef-palette] .ef90-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--ef-selected-dark) 70%,#071b16),color-mix(in srgb,var(--ef-selected-dark) 80%,#142c34))!important}
+body.ef-simple-ui[data-ef-palette] .ef90-cal-day.selected{background:color-mix(in srgb,var(--ef-selected-color) 22%,var(--ef-surface))!important}
+body.ef-simple-ui[data-ef-palette] :is(.ef-nav-count,.nav-tab-btn.active,.ef-settings-card-icon){accent-color:var(--ef-selected-color)}
+body.ef-simple-ui[data-ef-palette] :is(input,select,textarea):focus{border-color:var(--ef-accent)!important}
