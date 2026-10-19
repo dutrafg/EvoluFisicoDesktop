@@ -115,8 +115,8 @@ Revisão estática identificou e corrigiu:
 
 ## Segurança experimental SQLCipher e GTK4 (outubro de 2026)
 
-- O banco passou a usar **SQLCipher** e exige `EVOLUFISICO_DB_PASSPHRASE` com pelo menos 12 caracteres. Sem chave ou com chave errada, a abertura é recusada. **Não é um login gráfico**: a autenticação por usuário e a gestão de credenciais continuam pendentes.
-- **Atenção:** variáveis de ambiente podem expor a senha a processos e ferramentas de diagnóstico. Não coloque senhas em scripts versionados. A próxima fase deve usar diálogo de desbloqueio e armazenamento seguro de chaves (Secret Service/libsecret), com testes de segurança.
+- O banco passou a usar **SQLCipher** e exige `EVOLUFISICO_DB_PASSPHRASE` com pelo menos 12 caracteres. Sem chave ou com chave errada, a abertura é recusada. **Há agora um diálogo GTK4 de desbloqueio por senha**. Ainda não há contas individuais, permissões por usuário ou recuperação de senha.
+- **Atenção:** variáveis de ambiente podem expor a senha a processos e ferramentas de diagnóstico. Não coloque senhas em scripts versionados. A próxima fase deve eliminar o caminho legado por variável de ambiente e integrar armazenamento seguro de chaves (Secret Service/libsecret), com testes de segurança.
 - Bancos SQLite legados sem criptografia são recusados. Não há migração automática; preserve backups anteriores até existir um migrador seguro e auditado.
 - Backups são cópias do arquivo já criptografado, verificadas com SQLCipher. A restauração utiliza cópia de reversão e substituição do arquivo, com verificações de integridade.
 - Diálogos de exclusão e restauração usam `GtkAlertDialog` (GTK 4.10+).
