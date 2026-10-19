@@ -384,8 +384,51 @@ static void destroy_state(gpointer data) {
   ef_store_close(&state->store);
   g_free(state);
 }
+typedef struct { GtkApplication *app; GtkWidget *window; GtkWidget *password; GtkWidget *message; } UnlockState;
+static gboolean unlocked_session=FALSE;
+static void activate(GtkApplication *app,gpointer data);
+static void unlock_clicked(GtkButton *button,gpointer data) {
+  (void)button;UnlockState *unlock=data;
+  const char *password=gtk_editable_get_text(GTK_EDITABLE(unlock->password));
+  if(strlen(password)<12) {
+    gtk_label_set_text(GTK_LABEL(unlock->message),"Use uma senha com pelo menos 12 caracteres.");return;
+  }
+  ef_store_set_passphrase(password);
+  EfStore probe={0};GError *error=NULL;
+  if(!ef_store_open(&probe,&error)) {
+    gtk_label_set_text(GTK_LABEL(unlock->message),error ? error->message : "Não foi possível desbloquear.");
+    g_clear_error(&error);ef_store_set_passphrase(NULL);return;
+  }
+  ef_store_close(&probe);
+  unlocked_session=TRUE;
+  gtk_window_destroy(GTK_WINDOW(unlock->window));
+  activate(unlock->app,NULL);
+  g_free(unlock);
+}
+static void show_unlock(GtkApplication *app) {
+  UnlockState *unlock=g_new0(UnlockState,1);
+  unlock->app=app;
+  unlock->window=gtk_application_window_new(app);
+  gtk_window_set_title(GTK_WINDOW(unlock->window),"EvoluFisico — desbloquear");
+  gtk_window_set_default_size(GTK_WINDOW(unlock->window),430,230);
+  GtkWidget *layout=gtk_box_new(GTK_ORIENTATION_VERTICAL,14);
+  gtk_widget_set_margin_start(layout,24);gtk_widget_set_margin_end(layout,24);
+  gtk_widget_set_margin_top(layout,24);gtk_widget_set_margin_bottom(layout,24);
+  gtk_box_append(GTK_BOX(layout),gtk_label_new("Senha de criptografia do banco local"));
+  unlock->password=gtk_password_entry_new();
+  gtk_box_append(GTK_BOX(layout),unlock->password);
+  unlock->message=gtk_label_new("Banco novo: crie uma senha. Banco existente: informe a senha original.");
+  gtk_label_set_wrap(GTK_LABEL(unlock->message),TRUE);
+  gtk_box_append(GTK_BOX(layout),unlock->message);
+  GtkWidget *button=gtk_button_new_with_label("Desbloquear");
+  gtk_box_append(GTK_BOX(layout),button);
+  g_signal_connect(button,"clicked",G_CALLBACK(unlock_clicked),unlock);
+  gtk_window_set_child(GTK_WINDOW(unlock->window),layout);
+  gtk_window_present(GTK_WINDOW(unlock->window));
+}
 static void activate(GtkApplication *app,gpointer data) {
   (void)data;
+  if(!unlocked_session && !g_getenv("EVOLUFISICO_DB_PASSPHRASE")) {show_unlock(app);return;}
   AppState *state=g_new0(AppState,1);
   GError *error=NULL;
   if(!ef_store_open(&state->store,&error)) {
