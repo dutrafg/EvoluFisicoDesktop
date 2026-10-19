@@ -68,6 +68,9 @@ try
         using var checkVersion = future.CreateCommand();
         checkVersion.CommandText = "PRAGMA user_version";
         Check(Convert.ToInt32(checkVersion.ExecuteScalar()) == 99, "Newer schema version preserved");
+        using var schemaCheck = future.CreateCommand();
+        schemaCheck.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='protected_records'";
+        Check(Convert.ToInt32(schemaCheck.ExecuteScalar()) == 0, "Incompatible database schema not modified");
     }
     var snapshot = Path.Combine(dir, "snapshot.sqlite");
     store.BackupTo(snapshot);
