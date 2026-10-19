@@ -199,6 +199,19 @@ function mount(){
          finally{button.disabled=false}
        });
      }
+     if(window.EFNativeStorage && typeof window.EFNativeStorage.backup==='function'){
+       const panel=document.createElement('article');
+       panel.className='ef-settings-card';
+       panel.innerHTML='<h3>Backup criptografado do SQLite</h3><p>Salve uma cópia verificada dos registros nativos. A proteção automática do Windows (DPAPI) pode impedir a abertura em outro computador ou usuário. Este backup não inclui automaticamente os dados ainda armazenados no navegador.</p><button class="btn btn-outline btn-sm ef-settings-action" id="ef-desktop-native-backup" type="button">Salvar backup SQLite</button><p id="ef-desktop-native-backup-status" role="status" aria-live="polite"></p>';
+       grid.append(panel);
+       const button=$('ef-desktop-native-backup'),status=$('ef-desktop-native-backup-status');
+       button.addEventListener('click',async()=>{
+         button.disabled=true;status.textContent='Preparando cópia verificada…';
+         try{const result=await window.EFNativeStorage.backup();status.textContent=result==='saved'?'Backup SQLite salvo e conferido.':result==='cancelled'?'Backup cancelado.':'Resultado inesperado do backup.'}
+         catch(error){status.textContent='Não foi possível salvar o backup SQLite. Verifique o banco e tente novamente.'}
+         finally{button.disabled=false}
+       });
+     }
      const btn=$('ef-desktop-check-update'), status=$('ef-desktop-update-status');
      btn.addEventListener('click',()=>{btn.disabled=true;status.textContent='Consultando versões publicadas…';window.chrome.webview.postMessage('check-updates')});
      window.chrome.webview.addEventListener('message',e=>{
