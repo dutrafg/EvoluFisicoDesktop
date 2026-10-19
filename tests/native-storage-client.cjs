@@ -6,7 +6,7 @@ const sandbox={
   addEventListener:(event,callback)=>{assert.equal(event,'message');listener=callback;},
   postMessage:message=>{posted=message;}
  }}},
- setTimeout,clearTimeout,Uint8Array,atob,btoa,Date,Promise,Error,TypeError
+ setTimeout,clearTimeout,Uint8Array,TextEncoder,TextDecoder,atob,btoa,Date,Promise,Error,TypeError
 };
 vm.runInNewContext(code,sandbox);
 (async()=>{
@@ -26,6 +26,14 @@ vm.runInNewContext(code,sandbox);
  const read=api.read('fake-record');
  listener({data:{type:'native-storage-result',requestId:posted.requestId,data:'AH+A/w==' }});
  assert.deepEqual(Array.from(await read),Array.from(bytes));
+ const jsonWrite=api.writeJSON('fake-json',{name:'Paciente fictício',count:2});
+ assert.equal(posted.action,'write');
+ assert.deepEqual(JSON.parse(Buffer.from(posted.data,'base64').toString('utf8')),{name:'Paciente fictício',count:2});
+ listener({data:{type:'native-storage-result',requestId:posted.requestId,data:'saved'}});
+ await jsonWrite;
+ const jsonRead=api.readJSON('fake-json');
+ listener({data:{type:'native-storage-result',requestId:posted.requestId,data:Buffer.from(JSON.stringify({name:'Paciente fictício',count:2}),'utf8').toString('base64')}});
+ assert.equal((await jsonRead).name,'Paciente fictício');
  const fail=api.delete('fake-record');
  listener({data:{type:'native-storage-result',requestId:posted.requestId,error:'Falha simulada'}});
  await assert.rejects(fail,/Falha simulada/);
