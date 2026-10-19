@@ -24,24 +24,26 @@ $iconPath = Join-Path $iconDir 'EvoluFisico.ico'
 Add-Type -AssemblyName System.Drawing
 $sourcePng = Join-Path $web 'icon-512.png'
 $frames = @()
-foreach ($size in @(16, 24, 32, 48, 64, 128, 256)) {
-  $bitmap = [System.Drawing.Bitmap]::new($size, $size)
-  try {
-    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+$original = [System.Drawing.Image]::FromFile($sourcePng)
+try {
+  foreach ($size in @(16, 24, 32, 48, 64, 128, 256)) {
+    $bitmap = [System.Drawing.Bitmap]::new($size, $size)
     try {
-      $graphics.Clear([System.Drawing.Color]::Transparent)
-      $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-      $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
-      $original = [System.Drawing.Image]::FromFile($sourcePng)
-      try { $graphics.DrawImage($original, 0, 0, $size, $size) } finally { $original.Dispose() }
-    } finally { $graphics.Dispose() }
-    $stream = [System.IO.MemoryStream]::new()
-    try {
-      $bitmap.Save($stream, [System.Drawing.Imaging.ImageFormat]::Png)
-      $frames += ,@{ Size = $size; Bytes = $stream.ToArray() }
-    } finally { $stream.Dispose() }
-  } finally { $bitmap.Dispose() }
-}
+      $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+      try {
+        $graphics.Clear([System.Drawing.Color]::Transparent)
+        $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+        $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
+        $graphics.DrawImage($original, 0, 0, $size, $size)
+      } finally { $graphics.Dispose() }
+      $frameStream = [System.IO.MemoryStream]::new()
+      try {
+        $bitmap.Save($frameStream, [System.Drawing.Imaging.ImageFormat]::Png)
+        $frames += ,@{ Size = $size; Bytes = $frameStream.ToArray() }
+      } finally { $frameStream.Dispose() }
+    } finally { $bitmap.Dispose() }
+  }
+} finally { $original.Dispose() }
 $stream = [System.IO.File]::Create($iconPath)
 try {
   $writer = [System.IO.BinaryWriter]::new($stream)
