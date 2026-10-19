@@ -93,6 +93,18 @@ try
     Check(restored.VerifyIntegrity(), "SQLite snapshot integrity");
     Check(sample.SequenceEqual(restored.Load("patient-002", password)!), "Encrypted record restored from snapshot");
     Check(Encoding.UTF8.GetString(restored.Load("patient-001")!) == "updated", "Latest transactional data preserved in backup");
+    // A verified backup must be a point-in-time copy, not a live database alias.
+    store.Save("patient-001", Encoding.UTF8.GetBytes("post-backup-change"));
+    Check(Encoding.UTF8.GetString(store.Load("patient-001")!) == "post-backup-change",
+        "Live database accepts writes after backup");
+    Check(Encoding.UTF8.GetString(restored.Load("patient-001")!) == "updated",
+        "Recovered snapshot is isolated from later writes");
+    Check(restored.ListRecordIds().Contains("patient-002"),
+        "Recovered snapshot retains all protected record identifiers");
+    try { store.BackupTo(Path.Combine(dir, "requires-password.sqlite")); throw new Exception("Password protected records must block unauthenticated backup"); }
+    catch (InvalidDataException) { Console.WriteLine("PASS: Missing master password blocks verified backup"); }
+    Check(!File.Exists(Path.Combine(dir, "requires-password.sqlite")),
+        "Failed authenticated backup does not publish a partial destination");
     using (var tamper = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + snapshot + ";Pooling=False"))
     {
         tamper.Open();
