@@ -101,7 +101,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = 'desktop-v9.0-beta'
+          $tag = 'desktop-v9.0-beta-' + '${{ github.sha }}'.Substring(0,7)
           gh release view $tag --repo ${{ github.repository }} *> $null
           if ($LASTEXITCODE -ne 0) {
             gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 9.0 beta (Windows)' --notes 'Versao de testes para Windows x64. Instalador e pacote portatil. Faca backup antes de usar dados reais.' --prerelease --latest=false
