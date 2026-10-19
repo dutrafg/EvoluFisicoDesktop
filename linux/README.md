@@ -129,3 +129,22 @@ Revisão estática identificou e corrigiu:
 - A cópia de backup criptografado recusa modo SQLite WAL para não ignorar transações existentes no arquivo auxiliar.
 - O teste automatizado de interface utiliza Xvfb e gera screenshot no GitHub Actions. Para homologação em Linux físico ainda são necessários instalação real, interação humana com todas as páginas, verificação de DPI e fontes, reinício, backup e restauração em disco externo, testes de suspensão e desligamento inesperado.
 - **Atenção:** ainda não há contas individuais, controle de acesso por perfil, cofre de credenciais, migração de banco legado ou recuperação segura de senha. Uma única senha protege o banco local. O sistema permanece **não homologado para dados clínicos reais**.
+
+## Auditoria de pendências — bloqueadores de produção
+
+O aplicativo Linux está em estágio de **prévia técnica**. O pipeline automatizado não equivale à certificação de segurança, nem à homologação LGPD. Não inserir dados clínicos reais.
+
+| Item | Situação |
+| --- | --- |
+| SQLCipher e backups criptografados | Implementados; testes automatizados de chave incorreta, cabeçalho cifrado, integridade e restauração |
+| Backup concorrente | Bloqueio SQLite `BEGIN IMMEDIATE` durante cópia e recusa do modo WAL; testar também processos externos e quedas de energia |
+| Autenticação individual e permissões por usuário | **Pendente** — desbloqueio local usa uma senha compartilhada |
+| Armazenamento de segredo com libsecret | **Pendente** — senha ainda pode ser fornecida por variável de ambiente ou ficar em memória do processo |
+| Migração de SQLite antigo sem criptografia | **Pendente** — versão atual recusa migração automática; preserve cópias legadas |
+| Recuperação de senha | **Pendente** — não há mecanismo seguro de recuperação; perda da senha implica perda de acesso |
+| Segurança e privacidade | **Pendente** — revisão independente, modelo de ameaças, política de retenção e controles LGPD |
+| QA gráfico | Xvfb automatizado concluído; **homologação em Linux físico pendente** |
+| Testes de falha | **Pendente** — interrupção de energia, falta de espaço, disco removido, concorrência multiprocesso, backup externo |
+| Instalação real | **Pendente** — Ubuntu/Debian e demais distribuições, upgrades, dependências e remoção segura |
+
+**Critério para produção:** concluir e registrar evidências de todos os itens pendentes, executar teste de recuperação real com backups fictícios e obter aprovação de segurança e privacidade.
