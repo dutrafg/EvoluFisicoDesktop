@@ -1,0 +1,150 @@
+/* 17-styles.css */
+/* Correção estrutural: layout, navegação, painel e tema escuro */
+html { color-scheme: light; }
+html.ef-dark-mode { color-scheme: dark; }
+body { width:100%; max-width:100%; overflow-x:hidden; }
+.top-navbar { min-width:0; }
+.brand-wrapper, .nav-actions, .nav-tabs { min-width:0; }
+.nav-actions { flex-wrap:wrap !important; }
+.nav-tabs { max-width:100%; }
+.main-wrapper, .form-container, .tab-panel, .cob-container { min-width:0; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block !important; opacity:1; filter:none; }
+.dashboard-kpi-grid, .form-grid, .photo-studio-grid {
+  min-width:0; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));
+}
+.dashboard-kpi-grid > *, .kpi-card, .history-card { min-width:0; }
+img, video, canvas, svg { max-width:100%; }
+button, input, select, textarea { max-width:100%; }
+@media (max-width: 900px) {
+  .top-navbar { align-items:flex-start !important; }
+  .nav-tabs { order:3; width:100%; }
+  .nav-actions { margin-left:auto; }
+}
+@media (max-width: 600px) {
+  .top-navbar { padding:.6rem .75rem !important; }
+  .brand-title { font-size:1rem !important; }
+  .main-wrapper { padding-left:.75rem !important; padding-right:.75rem !important; }
+  .dashboard-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:.65rem !important; }
+  .cob-workspace-grid { grid-template-columns:minmax(0,1fr) !important; }
+  .cob-hero-card { position:static !important; }
+}
+/* Tema escuro redesenhado a partir do padrão visual do módulo Lab (ef77):
+   superfícies sólidas, bordas discretas, texto de alto contraste e azul de destaque.
+   Sem inversão global de cores/filtros, para preservar gráficos, fotos e componentes. */
+html.ef-dark-mode {
+  color-scheme: dark;
+  --bg-color:#111827;
+  --surface-color:#1b2432;
+  --surface-secondary:#202c3d;
+  --surface-card:#1b2432;
+  --bg-card:#1b2432;
+  --border-color:#344256;
+  --text-main:#f3f6fb;
+  --text-muted:#a8b4c5;
+  --text-light:#8796aa;
+  --slate-50:#1b2432;
+  --slate-100:#202c3d;
+  --slate-200:#344256;
+  --slate-300:#46566d;
+  --slate-600:#b9c5d5;
+  --slate-700:#d0d9e5;
+  --slate-800:#e2e9f2;
+  --slate-900:#f3f6fb;
+  background:#111827 !important;
+  color:#f3f6fb;
+}
+html.ef-dark-mode body {
+  background:#111827 !important;
+  color:#f3f6fb !important;
+}
+html.ef-dark-mode .top-navbar {
+  background:rgba(17,24,39,.96) !important;
+  border-bottom-color:#344256 !important;
+  color:#f3f6fb !important;
+}
+html.ef-dark-mode .nav-tabs {
+  background:#1b2432 !important;
+  border-color:#344256 !important;
+}
+html.ef-dark-mode .nav-tab-btn { color:#b9c5d5 !important; }
+html.ef-dark-mode .nav-tab-btn:hover {
+  background:#26364a !important;
+  color:#f3f6fb !important;
+}
+html.ef-dark-mode .nav-tab-btn.active {
+  background:#26364a !important;
+  color:#60a5fa !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.22) !important;
+}
+/* Cartões e painéis principais: equivalente escuro aos cartões claros do Lab. */
+html.ef-dark-mode .kpi-card,
+html.ef-dark-mode .history-card,
+html.ef-dark-mode .wizard-header-card,
+html.ef-dark-mode .form-section,
+html.ef-dark-mode .form-container,
+html.ef-dark-mode .tab-panel,
+html.ef-dark-mode .cob-card,
+html.ef-dark-mode .cob-kpi-card,
+html.ef-dark-mode .ef70-card,
+html.ef-dark-mode .ef71-card,
+html.ef-dark-mode .ef72-card,
+html.ef-dark-mode .ef73-card,
+html.ef-dark-mode .ef77-card,
+html.ef-dark-mode .ef77-wrap .ef77-card,
+html.ef-dark-mode .efdiag-card,
+html.ef-dark-mode .photo-card,
+html.ef-dark-mode .modal-content,
+html.ef-dark-mode .modal-card {
+  background:#1b2432 !important;
+  color:#e8eef7 !important;
+  border-color:#344256 !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.16);
+}
+html.ef-dark-mode .ef77-head h2,
+html.ef-dark-mode .ef77-card h3,
+html.ef-dark-mode .ef77-row,
+html.ef-dark-mode .ef77-card,
+html.ef-dark-mode .ef77-wrap { color:#e8eef7; }
+html.ef-dark-mode .ef77-head p,
+html.ef-dark-mode .ef77-card .sub,
+html.ef-dark-mode .ef77-form label { color:#a8b4c5 !important; }
+html.ef-dark-mode .ef77-form input,
+html.ef-dark-mode .ef77-form select,
+html.ef-dark-mode input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.ef-dark-mode select,
+html.ef-dark-mode textarea {
+  background:#111b2a !important;
+  color:#f3f6fb !important;
+  border-color:#46566d !important;
+  box-shadow:none;
+}
+html.ef-dark-mode input::placeholder,
+html.ef-dark-mode textarea::placeholder { color:#8796aa !important; }
+html.ef-dark-mode .ef77-btn { background:#2b3748; color:#e8eef7; }
+html.ef-dark-mode .ef77-btn.pri { background:#007aff; color:#fff; }
+html.ef-dark-mode .ef77-row { border-bottom-color:#2d3a4e; }
+html.ef-dark-mode .ef77-bar { background:#2d3a4e; }
+html.ef-dark-mode .ef77-pill { background:#344256; color:#e2e9f2; }
+html.ef-dark-mode .ef77-note { background:#3a321f; border-color:#6d5926; color:#fde7a6; }
+html.ef-dark-mode .ef77-note.err { background:#3b242b; border-color:#7f3440; color:#fecdd3; }
+html.ef-dark-mode table,
+html.ef-dark-mode th,
+html.ef-dark-mode td { border-color:#344256 !important; }
+html.ef-dark-mode th { background:#202c3d; color:#dbe6f4; }
+html.ef-dark-mode tr:nth-child(even) { background-color:rgba(148,163,184,.045); }
+html.ef-dark-mode .top-navbar .brand-title,
+html.ef-dark-mode .top-navbar .brand-subtitle,
+html.ef-dark-mode label,
+html.ef-dark-mode .form-section h2,
+html.ef-dark-mode .form-section h3 { color:#e8eef7; }
+html.ef-dark-mode a { color:#60a5fa; }
+html.ef-dark-mode button:focus-visible,
+html.ef-dark-mode input:focus-visible,
+html.ef-dark-mode select:focus-visible,
+html.ef-dark-mode textarea:focus-visible {
+  outline-color:rgba(96,165,250,.8);
+}
+@media (prefers-reduced-motion: reduce) {
+ .tab-panel.active { animation:none !important; transform:none !important; filter:none !important; }
+}
