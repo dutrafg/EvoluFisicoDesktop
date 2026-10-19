@@ -1165,7 +1165,9 @@
             const out=[];
             for(const row of rows){
                 const item=row.__efEncrypted?await EF_Security.decryptObject(row.payload):row;
-                if(item)out.push(item);
+                if(!item || typeof item !== 'object' || !item.id)
+                    throw new Error('Avaliação SQLite não pôde ser recuperada ou descriptografada.');
+                out.push(item);
             }
             out.forEach(a=>EFIdentity.ensure(a,out));out.sort(cmpAval);
             avaliacoes=out;window.avaliacoes=out;
@@ -1204,6 +1206,11 @@
         }
 
         async function deletarAvaliacaoDoDB(id) {
+            // Never begin a multi-record mutation while the frontend vault is locked.
+            // A partial rewrite would leave linked comparisons inconsistent.
+            if (EF_Security.isConfigured() && !EF_Security.key) {
+                throw new Error('Desbloqueie o cofre antes de excluir avaliações.');
+            }
             const target = encontrarAvaliacaoPorId(id);
             if (!target) return;
             const nova = avaliacoes.filter(a => a.id !== target.id).map(a => {
