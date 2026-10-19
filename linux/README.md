@@ -112,3 +112,13 @@ Revisão estática identificou e corrigiu:
 - Compilação estrita mantém **exceção temporária somente para APIs GTK4 de diálogo obsoletas**; a migração dos diálogos ainda é pendente.
 - QA cobre datas inválidas, IDs negativos, integridade, backup e restore.
 - Banco SQLite e backups seguem sem criptografia; usar apenas dados fictícios.
+
+## Segurança experimental SQLCipher e GTK4 (outubro de 2026)
+
+- O banco passou a usar **SQLCipher** e exige `EVOLUFISICO_DB_PASSPHRASE` com pelo menos 12 caracteres. Sem chave ou com chave errada, a abertura é recusada. **Não é um login gráfico**: a autenticação por usuário e a gestão de credenciais continuam pendentes.
+- **Atenção:** variáveis de ambiente podem expor a senha a processos e ferramentas de diagnóstico. Não coloque senhas em scripts versionados. A próxima fase deve usar diálogo de desbloqueio e armazenamento seguro de chaves (Secret Service/libsecret), com testes de segurança.
+- Bancos SQLite legados sem criptografia são recusados. Não há migração automática; preserve backups anteriores até existir um migrador seguro e auditado.
+- Backups são cópias do arquivo já criptografado, verificadas com SQLCipher. A restauração utiliza cópia de reversão e substituição do arquivo, com verificações de integridade.
+- Diálogos de exclusão e restauração usam `GtkAlertDialog` (GTK 4.10+).
+- CI executa captura de tela via Xvfb e publica um artefato visual. **Xvfb não é um computador Linux físico e não prova interação visual manual**.
+- A proteção permanece experimental: faltam testes de concorrência, recuperação após queda de energia, políticas de credenciais, migração, autenticação de usuários e homologação presencial. Não utilizar dados clínicos reais.
