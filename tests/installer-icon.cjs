@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const iss=fs.readFileSync('installer/EvoluFisico.iss','utf8');
+const build=fs.readFileSync('scripts/build-windows.ps1','utf8');
+const workflow=fs.readFileSync('.github/workflows/windows-build.yml','utf8');
+assert.match(iss,/Source: "\.\.\\src\\EvoluFisico\.Desktop\\Assets\\EvoluFisico\.ico"; DestDir: "\{app\}"/);
+assert.match(iss,/Name: "\{autodesktop\}\\\{#MyAppName\}";[^\r\n]*IconFilename: "\{app\}\\EvoluFisico\.ico"/);
+assert.match(iss,/Name: "\{group\}\\\{#MyAppName\}";[^\r\n]*IconFilename: "\{app\}\\EvoluFisico\.ico"/);
+assert.match(build,/foreach \(\$size in @\(16, 24, 32, 48, 64, 128, 256\)\)/);
+assert.match(workflow,/Desktop shortcut target and custom ICO verified/);
+console.log('PASS: Windows installer bundles and assigns branded desktop icon');
