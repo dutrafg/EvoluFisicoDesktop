@@ -156,3 +156,11 @@ O aplicativo Linux está em estágio de **prévia técnica**. O pipeline automat
 - **Avaliações:** o Linux já grava diretamente no SQLite criptografado; a falha JavaScript de `perimetria_soma.toFixed` não se aplica ao formulário nativo atual (que só possui data, peso e altura).
 - **Diferença funcional ainda existente:** o Linux não oferece a escolha e sincronização de pasta física de avaliações do Windows. Portanto, a correção de gravação duplicada na pasta não pode ser considerada portada. A função requer implementação própria, permissões e testes de sincronização.
 - **Uso experimental:** não inserir dados clínicos reais até a homologação de segurança e privacidade.
+
+## Etapas adicionais 1–10 — correções Windows portadas (19/10/2026)
+
+- **Cobranças:** já adaptado e validado no Linux: pagamento pendente para pago, com registro de recebimento e proteção contra repetição.
+- **Avaliações:** ao registrar avaliação, a interface agora aceita opcionalmente um caminho absoluto de pasta existente. Depois da gravação no SQLCipher local, cria um **snapshot criptografado de todo o banco** nessa pasta, com nome único e permissões `0600`. Os dois resultados são informados separadamente: falha na cópia não desfaz nem oculta o salvamento local.
+- A pasta não recebe arquivos individuais legíveis de avaliação: são snapshots SQLCipher do banco inteiro, que exigem a senha original. Não compartilhar essa pasta com pessoas sem autorização.
+- **Limite importante:** esta etapa implementa cópia automática após salvar avaliações **enquanto o aplicativo estiver aberto**. Ainda **não** há monitoramento bidirecional da pasta, importação automática de alterações feitas externamente, agendamento em segundo plano ou sincronização entre dispositivos. Não anunciar sincronização completa.
+- QA cobre cópia válida, permissões do arquivo, pasta inexistente, caminho relativo e link simbólico. A proteção contra concorrência ainda requer homologação multiprocesso e teste de interrupção de energia.
