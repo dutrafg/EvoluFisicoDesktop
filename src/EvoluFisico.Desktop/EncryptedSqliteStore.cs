@@ -156,6 +156,35 @@ internal sealed class EncryptedSqliteStore
         return deleted;
     }
 
+    /// <summary>
+    /// Atomically deletes a set of protected records. Missing IDs abort the whole
+    /// transaction so related evaluation records cannot be partially removed.
+    /// </summary>
+    internal void DeleteBatch(System.Collections.Generic.IReadOnlyCollection<string> recordIds)
+    {
+        ArgumentNullException.ThrowIfNull(recordIds);
+        if (recordIds.Count == 0) return;
+        var unique = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+        foreach (var id in recordIds)
+        {
+            if (string.IsNullOrWhiteSpace(id) || id.Length > 128 || !unique.Add(id))
+                throw new ArgumentException("Identificadores de exclusão inválidos ou duplicados.", nameof(recordIds));
+        }
+        using var db = Open();
+        using var tx = db.BeginTransaction();
+        using var cmd = db.CreateCommand();
+        cmd.Transaction = tx;
+        cmd.CommandText = "DELETE FROM protected_records WHERE record_id=$id";
+        var parameter = cmd.Parameters.Add("$id", SqliteType.Text);
+        foreach (var id in unique)
+        {
+            parameter.Value = id;
+            if (cmd.ExecuteNonQuery() != 1)
+                throw new InvalidDataException("Exclusão cancelada: um registro vinculado não existe. Nenhum registro foi excluído.");
+        }
+        tx.Commit();
+    }
+
     /// <summary>Lists opaque record identifiers without exposing encrypted patient payloads.</summary>
     internal string[] ListRecordIds()
     {
