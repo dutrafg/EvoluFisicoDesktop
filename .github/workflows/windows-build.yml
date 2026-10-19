@@ -57,6 +57,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Service Worker regression failed' }
           node ../../../tests/print-cleanup.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Print regression failed' }
+          node ../../../tests/flows-regression.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Evaluation, PDF and backup flow regression failed' }
 
       - name: Verify executable and resources
         shell: pwsh
