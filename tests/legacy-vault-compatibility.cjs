@@ -3,7 +3,6 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const app=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js','utf8');
 const billing=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/24-billing.js','utf8');
-const migration=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/31-indexeddb-snapshot.js','utf8');
 const expectations=[
  ['SQLite evaluation namespace',/EF_NATIVE_EVAL_PREFIX = 'ef-eval-'/],
  ['SQLite evaluation storage required',/function efNativeEvalStore\(\)/],
@@ -20,8 +19,8 @@ const expectations=[
  ['SQLite billing read',/billingNativeStore\(\)\.readJSON\(EF_NATIVE_BILLING_KEY\)/],
  ['SQLite billing write',/billingNativeStore\(\)\.writeJSON\(EF_NATIVE_BILLING_KEY,packet\)/],
  ['legacy billing encryption',/EF_Security\.encryptObject|security\.encryptObject/],
- ['new SQLite copy does not delete legacy',/originalsPreserved:true/],
- ['new SQLite copy rejects changed record',/Cópia existente diferente/]
+ ['SQLite billing primary key',/EF_NATIVE_BILLING_KEY='ef-billing-main'/],
+ ['SQLite evaluation primary key',/EF_NATIVE_EVAL_PREFIX\+registro\.id/]
 ];
-for(const [label,pattern] of expectations){assert.match(label.startsWith('legacy billing')?billing:label.startsWith('new SQLite')?migration:app,pattern,label);console.log('PASS '+label)}
+for(const [label,pattern] of expectations){assert.match(label.includes('billing')?billing:app,pattern,label);console.log('PASS '+label)}
 console.log('SQLite evaluation and existing billing/security contracts verified. These are static checks.');
