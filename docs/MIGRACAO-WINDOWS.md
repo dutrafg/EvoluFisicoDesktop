@@ -27,3 +27,9 @@ As cópias não alteram o armazenamento original. Não exclua dados do WebView2,
 - QA funcional e instalação/atualização em Windows limpo.
 
 A versão web estável e o projeto Linux não devem ser alterados durante este processo.
+
+## Descoberta do esquema real (revisão de código)
+- O arquivo `assets/js/05-app-runtime.js` contém um cofre de dados legado AES-256-GCM/PBKDF2 e rotinas IndexedDB que podem substituir registros em uma transação. A cópia para SQLite deve preservar os envelopes e exigir desbloqueio autorizado antes de ativar os módulos.
+- O módulo `assets/js/24-billing.js` usa `localStorage` como fonte atual de cobranças; não realizar troca automática antes de confirmar a compatibilidade do cofre e dos dados de cobrança.
+- A migração para SQLite permanece **snapshot sem corte**. Evitar ativar armazenamento duplo de escrita, pois pode causar divergência entre bases.
+- Não declarar homologação estável com base apenas em verificações estáticas ou no resultado verde do GitHub Actions.
