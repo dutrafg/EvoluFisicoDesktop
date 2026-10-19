@@ -17,3 +17,4 @@ gboolean ef_store_add_assessment(EfStore *store, gint64 client_id, const char *d
 GPtrArray *ef_store_list_assessments(EfStore *store, gint64 client_id, GError **error);
 gboolean ef_store_add_charge(EfStore *store, gint64 client_id, gint64 cents, const char *description, GError **error);
 GPtrArray *ef_store_list_charges(EfStore *store, gint64 client_id, GError **error);
+GPtrArray *ef_store_client_choices(EfStore *store,GError **error);
