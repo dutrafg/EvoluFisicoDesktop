@@ -33,6 +33,9 @@ jobs:
         shell: pwsh
         run: ./scripts/build-windows.ps1
 
+      - name: Exercise IndexedDB migration with synthetic records
+        run: node tests/indexeddb-snapshot-runtime.cjs
+
       - name: Test IndexedDB encrypted snapshot safety
         run: node tests/indexeddb-snapshot.cjs
 
