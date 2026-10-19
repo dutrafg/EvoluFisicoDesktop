@@ -1388,6 +1388,8 @@
 
         async function sincronizarArquivosDaPasta(handle, exibirAlerta) {
             var importados = 0;
+            const novos = [];
+            const idsLidos = new Set(avaliacoes.map(a => String(a.id)));
             try {
                 for await (var entry of handle.values()) {
                     if (entry.kind === 'directory') {
@@ -1405,8 +1407,9 @@
                                     }
                                     var rawObj = JSON.parse(rawText);
                                     var obj = sanitizarRegistro(rawObj);
-                                    if (obj && obj.id && !avaliacoes.some(function(a) { return a.id === obj.id; })) {
-                                        avaliacoes.push(obj);
+                                    if (obj && obj.id && !idsLidos.has(String(obj.id))) {
+                                        idsLidos.add(String(obj.id));
+                                        novos.push(obj);
                                         importados++;
                                     }
                                 }
@@ -1418,8 +1421,9 @@
                             var t = await f.text();
                             var r = JSON.parse(t);
                             var o = sanitizarRegistro(r);
-                            if (o && o.id && !avaliacoes.some(function(a) { return a.id === o.id; })) {
-                                avaliacoes.push(o);
+                            if (o && o.id && !idsLidos.has(String(o.id))) {
+                                idsLidos.add(String(o.id));
+                                novos.push(o);
                                 importados++;
                             }
                         } catch (e) { console.warn('Erro lendo arquivo:', entry.name, e); }
@@ -1427,9 +1431,24 @@
                 }
 
                 if (importados > 0) {
-                    avaliacoes.sort(function(a, b) { return new Date(a.data_avaliacao) - new Date(b.data_avaliacao); });
+                    // O SQLite criptografado é a fonte de verdade; confirmar a importação
+                    // em uma transação ANTES de incluir qualquer avaliação na interface.
+                    const lote = avaliacoes.concat(novos);
+                    novos.forEach(item => EFIdentity.ensure(item, lote));
+                    const batch = {};
+                    const encoder = new TextEncoder();
+                    for (const item of novos) {
+                        const registro = sanitizarRegistro(item);
+                        const persistido = EF_Security.enabled
+                            ? { id: registro.id, __efEncrypted: true, payload: await EF_Security.encryptObject(registro) }
+                            : registro;
+                        batch[EF_NATIVE_EVAL_PREFIX + registro.id] = encoder.encode(JSON.stringify(persistido));
+                    }
+                    await efNativeEvalStore().importBatch(batch);
+                    avaliacoes = lote.sort(cmpAval);
+                    window.avaliacoes = avaliacoes;
                     if (window.__EF63_STATE__) window.__EF63_STATE__.touch();
-                    salvarNoLocalStorage();
+                    atualizarContadorHistorico();
                     renderizarHistorico();
                     preencherSeletoresComparacao();
                     if (exibirAlerta) {
@@ -1447,7 +1466,12 @@
                     }
                 }
             } catch(err) {
-                console.warn('[FS] Erro ao sincronizar arquivos:', err);
+                console.error('[FS] Erro ao importar arquivos físicos para o SQLite:', err);
+                if (exibirAlerta) {
+                    const mensagem = 'As avaliações da pasta NÃO foram importadas para o SQLite: ' + err.message;
+                    if (window.efToast) efToast(mensagem, 'warn');
+                    else alert(mensagem);
+                }
             }
         }
 
