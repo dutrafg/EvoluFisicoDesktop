@@ -52,6 +52,29 @@ static void add_client(GtkButton *button, gpointer data) {
   }
   g_free(clean);
 }
+static void backup_clicked(GtkButton *button,gpointer data) {
+  (void)button;
+  AppState *state=data;
+  const char *path=gtk_editable_get_text(GTK_EDITABLE(state->backup_entry));
+  GError *error=NULL;
+  if(ef_store_backup(&state->store,path,&error)) {
+    gtk_label_set_text(GTK_LABEL(state->settings_status),"Backup SQLite criado e validado.");
+  }else{
+    gtk_label_set_text(GTK_LABEL(state->settings_status),error ? error->message : "Erro ao salvar backup.");
+    g_clear_error(&error);
+  }
+}
+static void integrity_clicked(GtkButton *button,gpointer data) {
+  (void)button;
+  AppState *state=data;
+  GError *error=NULL;
+  if(ef_store_check_integrity(&state->store,&error))
+    gtk_label_set_text(GTK_LABEL(state->settings_status),"SQLite íntegro.");
+  else {
+    gtk_label_set_text(GTK_LABEL(state->settings_status),error ? error->message : "Falha de integridade.");
+    g_clear_error(&error);
+  }
+}
 static void navigate(GtkButton *button, gpointer data) {
   GtkStack *stack=GTK_STACK(data);
   gtk_stack_set_visible_child(stack,GTK_WIDGET(g_object_get_data(G_OBJECT(button),"target-page")));
@@ -116,6 +139,21 @@ static void activate(GtkApplication *app,gpointer data) {
       if(state->store.db) refresh_clients(state);
       else gtk_label_set_text(GTK_LABEL(state->status),"Erro ao abrir SQLite. Cadastro indisponível.");
       gtk_widget_set_sensitive(save,state->store.db!=NULL);
+    }else if(i==5){
+      state->backup_entry=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->backup_entry),"Caminho completo do arquivo de backup .sqlite");
+      gtk_box_append(GTK_BOX(page),state->backup_entry);
+      GtkWidget *backup=gtk_button_new_with_label("Criar backup");
+      GtkWidget *integrity=gtk_button_new_with_label("Verificar integridade");
+      gtk_box_append(GTK_BOX(page),backup);
+      gtk_box_append(GTK_BOX(page),integrity);
+      state->settings_status=gtk_label_new("Prévia experimental: backups sem criptografia.");
+      gtk_widget_set_halign(state->settings_status,GTK_ALIGN_START);
+      gtk_box_append(GTK_BOX(page),state->settings_status);
+      g_signal_connect(backup,"clicked",G_CALLBACK(backup_clicked),state);
+      g_signal_connect(integrity,"clicked",G_CALLBACK(integrity_clicked),state);
+      gtk_widget_set_sensitive(backup,state->store.db!=NULL);
+      gtk_widget_set_sensitive(integrity,state->store.db!=NULL);
     }else{
       GtkWidget *note=gtk_label_new("Módulo em desenvolvimento. Não utilize dados clínicos reais.");
       gtk_widget_set_halign(note,GTK_ALIGN_START);
