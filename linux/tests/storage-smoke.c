@@ -104,7 +104,13 @@ int main(void) {
   charges=ef_store_list_charges(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(charges->len,==,2);g_ptr_array_unref(charges);
   g_assert_true(ef_store_delete_client(&store,3,&error));g_assert_no_error(error);
-  g_assert_true(ef_store_delete_charge_for_client(&store,3,2,&error));g_assert_no_error(error);
+  sqlite3_stmt *injected_charge=NULL;
+  g_assert_cmpint(sqlite3_prepare_v2(store.db,"SELECT id FROM charges WHERE client_id=2 AND description=?",-1,&injected_charge,NULL),==,SQLITE_OK);
+  sqlite3_bind_text(injected_charge,1,injection,-1,SQLITE_TRANSIENT);
+  g_assert_cmpint(sqlite3_step(injected_charge),==,SQLITE_ROW);
+  gint64 injected_id=sqlite3_column_int64(injected_charge,0);
+  sqlite3_finalize(injected_charge);
+  g_assert_true(ef_store_delete_charge_for_client(&store,injected_id,2,&error));g_assert_no_error(error);
   /* Reject invalid UTF-8 and nonfinite measurements without corrupting the store. */
   g_assert_false(ef_store_add_charge(&store,2,100,"\\xFF",&error));g_clear_error(&error);
   g_assert_false(ef_store_add_assessment(&store,2,"2026-10-19",NAN,170,&error));g_clear_error(&error);
