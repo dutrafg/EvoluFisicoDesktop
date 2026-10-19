@@ -28,3 +28,6 @@ A automacao em `.github/workflows/windows-build.yml` agora:
 
 ## Novo teste automatizado do instalador (Windows CI)
 O pipeline instala o Setup com `/VERYSILENT` em pasta temporaria, verifica `EvoluFisico.Desktop.exe`, `wwwroot/index.html` e `wwwroot/sw.js`, confirma a presenca do desinstalador e executa a remocao silenciosa. O teste falha se qualquer etapa retornar erro. **Pendente de resultado do runner Windows.**
+
+## Atualizações via Configurações — em desenvolvimento
+A interface Desktop mostra o botão **Verificar atualizações** e usa a ponte WebView2 para consultar GitHub Releases. Por enquanto o botão informa a versão publicada e oferece o link do instalador; **não faz download nem instalação automática**. A identificação instalada `9.0.0-beta.1` ainda é fixa e precisa ser sincronizada com cada build antes de comparar versões. Teste real de compilação, abertura do painel e navegação até o link permanece pendente.
