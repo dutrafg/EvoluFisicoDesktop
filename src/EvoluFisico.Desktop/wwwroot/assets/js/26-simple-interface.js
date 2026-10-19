@@ -193,7 +193,7 @@ function mount(){
          if(!confirm('Criar uma cópia criptografada dos cadastros IndexedDB? Os originais serão mantidos.'))return;
          button.disabled=true;status.textContent='Copiando e conferindo…';
          try{
-           const result=await window.EFDesktopIndexedDBSnapshot.snapshot();
+           const result=await window.EFDesktopIndexedDBSnapshot.snapshot(progress=>{status.textContent='Conferidos '+progress.checked+' de '+progress.total+' registros…';});
            status.textContent=result.copied+' registros copiados; '+result.alreadyCopied+' já conferidos. Originais preservados.';
          }catch(error){status.textContent='Cópia interrompida: '+error.message+'. Originais preservados.'}
          finally{button.disabled=false}
