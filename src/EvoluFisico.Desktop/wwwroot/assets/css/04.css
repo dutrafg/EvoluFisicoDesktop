@@ -1,0 +1,27 @@
+/* 04-styles.css */
+/* ===== v7.4 CENTRAL DE BACKUP & RESTAURAÇÃO ===== */
+.bkp-option-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0.9rem 1.1rem;
+    border: 1.5px solid var(--border-color, #e2e8f0);
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.bkp-option-card:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+.bkp-option-card.active {
+    border-color: var(--primary, #0071e3);
+    background: rgba(0, 113, 227, 0.04);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+}
+#bkp-dropzone.dragover {
+    border-color: var(--primary, #0071e3) !important;
+    background: rgba(0, 113, 227, 0.08) !important;
+    transform: scale(1.01);
+}
