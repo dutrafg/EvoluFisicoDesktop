@@ -20,3 +20,9 @@ Cadastros, avaliações físicas, medidas e histórico podem conter dados pessoa
 - Lei 13.709/2018 (LGPD), arts. 6, 11, 18, 46–49.
 - ANPD: Guia orientativo sobre segurança da informação para agentes de tratamento de pequeno porte: https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-orientativo-sobre-seguranca-da-informacao-para-agentes-de-tratamento-de-pequeno-porte
 - ANPD: Resolução CD/ANPD 2/2022: https://www.gov.br/anpd/pt-br/acesso-a-informacao/institucional/atos-normativos/regulamentacoes_anpd/resolucao-cd-anpd-no-2-de-27-de-janeiro-de-2022
+
+## Implementação incremental — 2026-10-19
+- `ProtectedVault.cs`: primitivas de AES-256-GCM, DPAPI CurrentUser e modo de senha mestre com PBKDF2-SHA256 (600.000 iterações), nonce e sal aleatórios, formato versionado e autenticação.
+- **Ainda não integrado** à persistência WebView2/IndexedDB. Não declarar dados existentes criptografados.
+- **Ainda pendente:** testes automatizados criptográficos (round-trip, senha incorreta, corrupção, conta Windows diferente), migração transacional com rollback, interface para definir/alterar senha mestre, recuperação/exportação entre máquinas e avaliação jurídica/operacional da LGPD.
+- No modo DPAPI, perder o perfil/credenciais Windows pode impedir recuperação; exigir backup portátil independente antes de habilitar.
