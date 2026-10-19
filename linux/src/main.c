@@ -402,6 +402,15 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),edit_row);
       g_signal_connect(rename,"clicked",G_CALLBACK(rename_client_clicked),state);
       gtk_widget_set_sensitive(rename,state->store.db!=NULL);
+      GtkWidget *delete_row=gtk_box_new(GTK_ORIENTATION_HORIZONTAL,8);
+      state->client_delete_id=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->client_delete_id),"ID do cliente a excluir");
+      GtkWidget *delete_client_button=gtk_button_new_with_label("Excluir cliente...");
+      gtk_box_append(GTK_BOX(delete_row),state->client_delete_id);
+      gtk_box_append(GTK_BOX(delete_row),delete_client_button);
+      gtk_box_append(GTK_BOX(page),delete_row);
+      g_signal_connect(delete_client_button,"clicked",G_CALLBACK(delete_client_clicked),state);
+      gtk_widget_set_sensitive(delete_client_button,state->store.db!=NULL);
       state->search_entry=gtk_search_entry_new();
       gtk_box_append(GTK_BOX(page),state->search_entry);
       g_signal_connect(state->search_entry,"search-changed",G_CALLBACK(on_search),state);
