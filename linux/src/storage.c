@@ -43,7 +43,9 @@ gboolean ef_store_open(EfStore *store, GError **error) {
   }
   if(sqlite3_exec(store->db,
     "CREATE TABLE IF NOT EXISTS assessments(id INTEGER PRIMARY KEY,client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,assessment_date TEXT NOT NULL,weight_kg REAL NOT NULL,height_cm REAL NOT NULL,created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);"
-    "CREATE TABLE IF NOT EXISTS charges(id INTEGER PRIMARY KEY,client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,amount_cents INTEGER NOT NULL CHECK(amount_cents>0),description TEXT NOT NULL,created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);",
+    "CREATE TABLE IF NOT EXISTS charges(id INTEGER PRIMARY KEY,client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,amount_cents INTEGER NOT NULL CHECK(amount_cents>0),description TEXT NOT NULL,created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);"
+    "CREATE INDEX IF NOT EXISTS idx_assessments_client_date ON assessments(client_id,assessment_date DESC);"
+    "CREATE INDEX IF NOT EXISTS idx_charges_client ON charges(client_id);",
     NULL,NULL,NULL)!=SQLITE_OK) {
     sql_error(store,error);ef_store_close(store);return FALSE;
   }
