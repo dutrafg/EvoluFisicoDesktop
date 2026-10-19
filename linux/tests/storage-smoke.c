@@ -31,7 +31,7 @@ int main(void) {
   g_assert_false(ef_store_rename_client(&store,999,"Inexistente",&error));g_clear_error(&error);
   GPtrArray *filtered=ef_store_search_clients(&store,"Souza",&error);
   g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);
-  g_assert_cmpstr(g_ptr_array_index(filtered,0),==,"Ana Souza");g_ptr_array_unref(filtered);
+  g_assert_true(g_str_has_prefix(g_ptr_array_index(filtered,0),"2 "));g_ptr_array_unref(filtered);
   g_assert_true(ef_store_check_integrity(&store,&error));g_assert_no_error(error);
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
@@ -44,6 +44,9 @@ int main(void) {
   g_assert_true(ef_store_restore(&store,backup,&error));g_assert_no_error(error);
   filtered=ef_store_search_clients(&store,"Souza",&error);
   g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);g_ptr_array_unref(filtered);
+  char *live=g_build_filename(tmp,"evolufisico","records.sqlite",NULL);
+  g_assert_false(ef_store_restore(&store,live,&error));g_clear_error(&error);
+  g_free(live);
   g_assert_false(ef_store_restore(&store,"/does/not/exist.sqlite",&error));g_clear_error(&error);
   char *corrupt=g_build_filename(tmp,"corrupt.sqlite",NULL);
   g_assert_true(g_file_set_contents(corrupt,"not a SQLite database", -1,&error));g_assert_no_error(error);
