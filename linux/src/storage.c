@@ -160,7 +160,23 @@ gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
     }
     if(!ok && error && !*error)g_set_error_literal(error,ef_error(),18,"Backup sem esquema de clientes");
   }
-  if(ok)ok=copy_database(incoming,store->db,error);
+  if(ok) {
+    sqlite3 *rollback=NULL;
+    if(sqlite3_open(":memory:",&rollback)!=SQLITE_OK) {
+      g_set_error_literal(error,ef_error(),21,"Falha ao reservar cópia de segurança para restauração");
+      ok=FALSE;
+    } else {
+      ok=copy_database(store->db,rollback,error);
+      if(ok && !copy_database(incoming,store->db,error)) {
+        GError *rollback_error=NULL;
+        if(!copy_database(rollback,store->db,&rollback_error))
+          g_warning("Falha crítica ao reverter restauração: %s",rollback_error->message);
+        g_clear_error(&rollback_error);
+        ok=FALSE;
+      }
+      sqlite3_close(rollback);
+    }
+  }
   sqlite3_close(incoming);
   return ok;
 }
