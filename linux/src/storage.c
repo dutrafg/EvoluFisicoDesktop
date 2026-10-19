@@ -233,13 +233,16 @@ GPtrArray *ef_store_search_clients(EfStore *store, const char *query, GError **e
     g_set_error_literal(error,ef_error(),19,"Busca inválida");return NULL;
   }
   sqlite3_stmt *stmt=NULL;
-  if(sqlite3_prepare_v2(store->db,"SELECT name FROM clients WHERE instr(lower(name),lower(?))>0 ORDER BY name COLLATE NOCASE",-1,&stmt,NULL)!=SQLITE_OK) {
+  if(sqlite3_prepare_v2(store->db,"SELECT id,name FROM clients WHERE instr(lower(name),lower(?))>0 ORDER BY name COLLATE NOCASE",-1,&stmt,NULL)!=SQLITE_OK) {
     sql_error(store,error);return NULL;
   }
   sqlite3_bind_text(stmt,1,query,-1,SQLITE_TRANSIENT);
   GPtrArray *list=g_ptr_array_new_with_free_func(g_free);
   int rc;
-  while((rc=sqlite3_step(stmt))==SQLITE_ROW)g_ptr_array_add(list,g_strdup((const char*)sqlite3_column_text(stmt,0)));
+  while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
+    char *line=g_strdup_printf("%" G_GINT64_FORMAT " — %s",sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1));
+    g_ptr_array_add(list,line);
+  }
   sqlite3_finalize(stmt);
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(list);sql_error(store,error);return NULL;}
   return list;
