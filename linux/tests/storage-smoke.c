@@ -40,6 +40,9 @@ int main(void) {
   g_assert_false(ef_store_add_charge(&store,2,100000000001LL,"Valor acima do limite",&error));g_clear_error(&error);
   GPtrArray *charges=ef_store_list_charges(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(charges->len,==,1);g_ptr_array_unref(charges);
+  GPtrArray *choices=ef_store_client_choices(&store,&error);
+  g_assert_no_error(error);g_assert_cmpuint(choices->len,==,1);
+  g_assert_true(g_str_has_prefix(g_ptr_array_index(choices,0),"2 "));g_ptr_array_unref(choices);
   GPtrArray *rows=ef_store_list_client_rows(&store,&error);
   g_assert_no_error(error);g_assert_cmpuint(rows->len,==,1);
   g_assert_true(g_str_has_prefix(g_ptr_array_index(rows,0),"2 "));g_ptr_array_unref(rows);
