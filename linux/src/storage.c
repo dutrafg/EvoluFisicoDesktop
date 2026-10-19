@@ -355,3 +355,7 @@ GPtrArray *ef_store_list_charges(EfStore *store,gint64 client_id,GError **error)
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
   return rows;
 }
+
+GPtrArray *ef_store_client_choices(EfStore *store,GError **error) {
+  return ef_store_list_client_rows(store,error);
+}
