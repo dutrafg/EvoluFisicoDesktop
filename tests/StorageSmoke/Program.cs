@@ -41,6 +41,12 @@ try
     Reject(() => store.Load("patient-002", "wrong-password"), "SQLite rejects wrong password");
     Check(store.Load("not-found") is null, "Missing record returns null");
     Check(store.VerifyIntegrity(), "SQLite integrity after writes");
+    var batch = new System.Collections.Generic.Dictionary<string, byte[]> { ["batch-a"] = sample, ["batch-b"] = Encoding.UTF8.GetBytes("fictitious record") };
+    store.ImportBatch(batch);
+    Check(batch.All(item => item.Value.SequenceEqual(store.Load(item.Key)!)), "Transactional encrypted batch migration");
+    try { store.ImportBatch(new System.Collections.Generic.Dictionary<string, byte[]> { ["valid"] = sample, [""] = sample }); throw new Exception("Invalid batch should fail"); }
+    catch (ArgumentException) { Console.WriteLine("PASS: Invalid batch rejected"); }
+    Check(store.Load("valid") is null, "Failed batch leaves database unchanged");
     var snapshot = Path.Combine(dir, "snapshot.sqlite");
     store.BackupTo(snapshot);
     var restored = new EncryptedSqliteStore(snapshot);
