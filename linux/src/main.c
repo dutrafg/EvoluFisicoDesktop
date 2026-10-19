@@ -429,6 +429,10 @@ static void activate(GtkApplication *app,gpointer data) {
     }else if(i==2){
       state->assessment_picker=gtk_combo_box_text_new();
       state->assessment_date=gtk_entry_new();
+      GDateTime *today=g_date_time_new_now_local();
+      char *today_text=g_date_time_format(today,"%Y-%m-%d");
+      gtk_editable_set_text(GTK_EDITABLE(state->assessment_date),today_text);
+      g_free(today_text);g_date_time_unref(today);
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_date),"Data AAAA-MM-DD");
       state->assessment_weight=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_weight),"Peso em kg (ex.: 70.5)");
