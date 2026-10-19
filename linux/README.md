@@ -77,3 +77,10 @@ Revisão estática identificou e corrigiu:
 - Cobranças: ID de cliente, valor em **centavos inteiros**, descrição, gravação e consulta.
 - A seleção por ID é provisória. Não há autenticação, criptografia, relatórios PDF ou validação visual em desktop físico.
 - Não use dados reais de pacientes ou clientes. Os testes usam registros fictícios.
+
+## Etapas 71–80 — seleção de clientes
+
+- Avaliações e cobranças passam a usar seletores GTK4 com ID estável e nome do cliente.
+- A seleção é atualizada após operações de cadastro e edição, preservando o cliente selecionado quando ainda existir.
+- Nenhum cliente é selecionado automaticamente: é preciso escolher explicitamente.
+- O aplicativo permanece sem criptografia e sem autorização para uso com dados reais.
