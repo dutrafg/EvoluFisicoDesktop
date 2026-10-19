@@ -173,12 +173,19 @@ public partial class MainWindow : Window
         {
             message = "Não foi possível consultar as atualizações: " + ex.Message;
         }
-        if (_ready && Browser.CoreWebView2 is not null)
-            Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
-            {
-                type = "desktop-update", message, downloadUrl
-            }));
-        _checkingUpdates = false;
+        try
+        {
+            if (_ready && Browser.CoreWebView2 is not null)
+                Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
+                {
+                    type = "desktop-update", message, downloadUrl
+                }));
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Falha ao informar resultado da atualização: " + ex.Message);
+        }
+        finally { _checkingUpdates = false; }
     }
 
 }
