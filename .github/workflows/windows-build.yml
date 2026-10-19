@@ -39,20 +39,11 @@ jobs:
       - name: Run 34 Windows stability safety gates
         run: node tests/windows-stable-gates.cjs
 
-      - name: Validate migration JavaScript syntax
+      - name: Validate SQLite-only frontend syntax
         run: |
-          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/29-legacy-migration.js
-          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/30-indexeddb-inventory.js
-          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/31-indexeddb-snapshot.js
-
-      - name: Exercise IndexedDB migration with synthetic records
-        run: node tests/indexeddb-snapshot-runtime.cjs
-
-      - name: Test IndexedDB encrypted snapshot safety
-        run: node tests/indexeddb-snapshot.cjs
-
-      - name: Test opt-in legacy data snapshot
-        run: node tests/legacy-migration.cjs
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/24-billing.js
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/28-native-storage.js
 
       - name: Test desktop SQLite JavaScript bridge
         run: node tests/native-storage-client.cjs
