@@ -17,6 +17,11 @@ foreach ($size in @('192','512')) {
     throw "Arquivo PNG invalido: $output"
   }
 }
+# Identify each beta build so the updater can distinguish installed and published releases.
+$revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0,7).ToLowerInvariant() } else { 'local' }
+$tag = "desktop-v9.0-beta-$revision"
+$versionInfo = @{ tag = $tag; version = '9.0.0-beta.1'; revision = $revision } | ConvertTo-Json -Compress
+[System.IO.File]::WriteAllText((Join-Path $web 'desktop-version.json'), $versionInfo, [System.Text.UTF8Encoding]::new($false))
 dotnet restore $project
 if ($LASTEXITCODE -ne 0) { throw 'Falha no restore' }
 dotnet publish $project -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o (Join-Path $root 'publish/win-x64')
