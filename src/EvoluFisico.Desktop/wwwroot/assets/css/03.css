@@ -1,0 +1,5 @@
+/* 03-styles.css */
+.delta-badge.delta-negative{background:rgba(52,199,89,.14)!important;color:#1f8f3d!important}
+.delta-badge.delta-positive{background:rgba(255,59,48,.14)!important;color:#b91c1c!important}
+#ef70-engine{grid-column:1/-1}
+@media(max-width:640px){.top-navbar{position:static!important}}
