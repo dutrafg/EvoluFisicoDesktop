@@ -40,6 +40,13 @@ int main(void) {
   g_assert_false(ef_store_backup(&store,"relative.sqlite",&error));g_clear_error(&error);
   g_assert_false(ef_store_rename_client(&store,-1,"Inválido",&error));g_clear_error(&error);
   g_assert_false(ef_store_rename_client(&store,2,"",&error));g_clear_error(&error);
+  char *incompatible=g_build_filename(tmp,"incompatible.sqlite",NULL);
+  sqlite3 *future=NULL;
+  g_assert_cmpint(sqlite3_open(incompatible,&future),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_exec(future,"PRAGMA user_version=99;CREATE TABLE clients(id INTEGER PRIMARY KEY,name TEXT)",NULL,NULL,NULL),==,SQLITE_OK);
+  sqlite3_close(future);
+  g_assert_false(ef_store_restore(&store,incompatible,&error));g_clear_error(&error);
+  g_remove(incompatible);g_free(incompatible);
   g_assert_true(ef_store_delete_client(&store,2,&error));g_assert_no_error(error);
   g_assert_true(ef_store_restore(&store,backup,&error));g_assert_no_error(error);
   filtered=ef_store_search_clients(&store,"Souza",&error);
