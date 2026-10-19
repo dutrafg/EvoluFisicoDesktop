@@ -153,24 +153,29 @@ static void show_charges(GtkButton *button,gpointer data) {
   }
   refresh_charges(state,id);
 }
-static void delete_record_confirmed(GtkDialog *dialog,gint response,gpointer data) {
-  AppState *state=data;
-  gboolean assessment=GPOINTER_TO_INT(g_object_get_data(G_OBJECT(dialog),"assessment"));
-  if(response!=GTK_RESPONSE_ACCEPT){gtk_window_destroy(GTK_WINDOW(dialog));return;}
+typedef struct { AppState *state; gint64 record_id; gint64 client_id; gboolean assessment; } RecordDeleteRequest;
+static void delete_record_confirmed(GObject *source,GAsyncResult *result,gpointer data) {
+  RecordDeleteRequest *request=data;
+  AppState *state=request->state;
+  GError *choice_error=NULL;
+  int response=gtk_alert_dialog_choose_finish(GTK_ALERT_DIALOG(source),result,&choice_error);
+  g_clear_error(&choice_error);
+  if(response!=1) {g_free(request);return;}
+  gboolean assessment=request->assessment;
   GtkWidget *field=assessment ? state->assessment_delete_id : state->charge_delete_id;
   GtkWidget *status=assessment ? state->assessment_status : state->charge_status;
   GtkWidget *picker=assessment ? state->assessment_picker : state->charge_picker;
   gint64 id=0,client=0;
   if(!read_id(field,&id) || !read_picker_id(picker,&client)) {
-    gtk_label_set_text(GTK_LABEL(status),"Selecione um cliente e informe o ID do registro.");gtk_window_destroy(GTK_WINDOW(dialog));return;
+    gtk_label_set_text(GTK_LABEL(status),"Selecione um cliente e informe o ID do registro.");g_free(request);return;
   }
-  gint64 confirmed_id=*(gint64*)g_object_get_data(G_OBJECT(dialog),"record-id");
-  gint64 confirmed_client=*(gint64*)g_object_get_data(G_OBJECT(dialog),"selected-client-id");
+  gint64 confirmed_id=request->record_id;
+  gint64 confirmed_client=request->client_id;
   if(id!=confirmed_id || client!=confirmed_client) {
     gtk_label_set_text(GTK_LABEL(status),"Seleção alterada. Confirme novamente a exclusão.");gtk_window_destroy(GTK_WINDOW(dialog));return;
   }
   GError *error=NULL;
-  gtk_window_destroy(GTK_WINDOW(dialog));
+  g_free(request);
   gboolean owns=assessment ? ef_store_assessment_belongs_to(&state->store,id,client,&error) : ef_store_charge_belongs_to(&state->store,id,client,&error);
   if(!owns) {
     gtk_label_set_text(GTK_LABEL(status),error ? error->message : "Registro de outro cliente.");
@@ -197,17 +202,14 @@ static void delete_record_clicked(GtkButton *button,gpointer data) {
     return;
   }
   GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
-  GtkWidget *dialog=gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_MODAL,GTK_MESSAGE_WARNING,GTK_BUTTONS_NONE,
-    "Excluir permanentemente o registro %" G_GINT64_FORMAT "?",id);
-  gtk_dialog_add_button(GTK_DIALOG(dialog),"Cancelar",GTK_RESPONSE_CANCEL);
-  gtk_dialog_add_button(GTK_DIALOG(dialog),"Excluir",GTK_RESPONSE_ACCEPT);
-  g_object_set_data(G_OBJECT(dialog),"assessment",GINT_TO_POINTER(assessment));
-  gint64 *record_copy=g_new(gint64,1);*record_copy=id;
-  gint64 *client_copy=g_new(gint64,1);*client_copy=selected_client;
-  g_object_set_data_full(G_OBJECT(dialog),"record-id",record_copy,g_free);
-  g_object_set_data_full(G_OBJECT(dialog),"selected-client-id",client_copy,g_free);
-  g_signal_connect(dialog,"response",G_CALLBACK(delete_record_confirmed),state);
-  gtk_window_present(GTK_WINDOW(dialog));
+  GtkAlertDialog *dialog=gtk_alert_dialog_new("Excluir permanentemente o registro %" G_GINT64_FORMAT "?",id);
+  const char *buttons[]={"Cancelar","Excluir",NULL};
+  gtk_alert_dialog_set_buttons(dialog,buttons);
+  gtk_alert_dialog_set_cancel_button(dialog,0);
+  RecordDeleteRequest *request=g_new0(RecordDeleteRequest,1);
+  request->state=state;request->record_id=id;request->client_id=selected_client;request->assessment=assessment;
+  gtk_alert_dialog_choose(dialog,GTK_WINDOW(window),NULL,delete_record_confirmed,request);
+  g_object_unref(dialog);
 }
 static void save_assessment(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;double weight=0,height=0;
