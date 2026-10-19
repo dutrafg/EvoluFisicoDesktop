@@ -41,6 +41,14 @@ try
     Reject(() => store.Load("patient-002", "wrong-password"), "SQLite rejects wrong password");
     Check(store.Load("not-found") is null, "Missing record returns null");
     Check(store.VerifyIntegrity(), "SQLite integrity after writes");
+    var snapshot = Path.Combine(dir, "snapshot.sqlite");
+    store.BackupTo(snapshot);
+    var restored = new EncryptedSqliteStore(snapshot);
+    Check(restored.VerifyIntegrity(), "SQLite snapshot integrity");
+    Check(sample.SequenceEqual(restored.Load("patient-002", password)!), "Encrypted record restored from snapshot");
+    Check(Encoding.UTF8.GetString(restored.Load("patient-001")!) == "updated", "Latest transactional data preserved in backup");
+    try { store.BackupTo(Path.Combine(dir, "test.sqlite")); throw new Exception("Backup must reject source overwrite"); }
+    catch (ArgumentException) { Console.WriteLine("PASS: Active database overwrite rejected"); }
 }
 finally { Directory.Delete(dir, true); }
 Console.WriteLine("Encrypted SQLite smoke tests completed.");
