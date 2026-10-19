@@ -216,6 +216,17 @@ gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
     if(!ok && error && !*error)g_set_error_literal(error,ef_error(),26,"Estrutura de clientes do backup inválida");
   }
   if(ok) {
+    sqlite3_stmt *tables=NULL;
+    if(sqlite3_prepare_v2(incoming,
+      "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('assessments','charges')",
+      -1,&tables,NULL)!=SQLITE_OK)ok=FALSE;
+    else {
+      ok=sqlite3_step(tables)==SQLITE_ROW && sqlite3_column_int(tables,0)==2;
+      sqlite3_finalize(tables);
+    }
+    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),34,"Backup sem tabelas de avaliações e cobranças");
+  }
+  if(ok) {
     sqlite3 *rollback=NULL;
     if(sqlite3_open(":memory:",&rollback)!=SQLITE_OK) {
       g_set_error_literal(error,ef_error(),21,"Falha ao reservar cópia de segurança para restauração");
