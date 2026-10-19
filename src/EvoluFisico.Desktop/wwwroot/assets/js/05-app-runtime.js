@@ -1139,38 +1139,40 @@
             return 'eval_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
         }
 
+        // Windows Desktop: SQLite criptografado é a única fonte das avaliações.
+        // Sem migração IndexedDB: esta versão ainda não foi colocada em produção.
+        const EF_NATIVE_EVAL_PREFIX = 'ef-eval-';
+        function efNativeEvalStore() {
+            if (!window.EFNativeStorage) throw new Error('SQLite nativo indisponível. Abra o aplicativo Windows.');
+            return window.EFNativeStorage;
+        }
         async function initDB() {
-            if (window.indexedDB) {
-                db = await new Promise(resolve => {
-                    let request;
-                    try { request=indexedDB.open(DB_NAME,DB_VERSION); } catch(e){resolve(null);return;}
-                    request.onupgradeneeded=e=>{const database=e.target.result;if(!database.objectStoreNames.contains(STORE_NAME)){const store=database.createObjectStore(STORE_NAME,{keyPath:'id'});store.createIndex('data_avaliacao','data_avaliacao',{unique:false});store.createIndex('nome','nome',{unique:false});}};
-                    request.onerror=()=>resolve(null);
-                    request.onsuccess=()=>resolve(request.result);
-                    request.onblocked=()=>{if(window.efToast)efToast('Feche outras abas para liberar o banco local.','warn')};
-                });
-            }
-            await migrarLocalStorageParaIndexedDB();
+            db = null;
+            await efNativeEvalStore().health();
             await carregarAvaliacoesDoDB();
-            return db;
+            return null;
         }
         async function carregarAvaliacoesDoDB() {
-            let rows;
-            if(db) rows=await new Promise((resolve,reject)=>{const tx=db.transaction([STORE_NAME],'readonly');const req=tx.objectStore(STORE_NAME).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error);});
-            else rows=await EF_Security.loadVaultArray();
-            const out=[];let migrated=false;
-            for(const row of rows||[]){const item=row&&row.__efEncrypted?await EF_Security.decryptObject(row.payload):row;if(!item)continue; migrated ||= !item.cliente_id;out.push(item);}
-            out.forEach(a=>EFIdentity.ensure(a,out));out.sort(cmpAval);
-            if(migrated){
-                if(db){const encrypted=[];for(const item of out)encrypted.push(EF_Security.enabled?{id:item.id,__efEncrypted:true,payload:await EF_Security.encryptObject(item)}:item);await EF_Security._idbSubstituirTudo(encrypted);}
-                else await EF_Security.saveVaultArray(out);
+            const storage=efNativeEvalStore();
+            const ids=(await storage.list()).filter(id=>id.startsWith(EF_NATIVE_EVAL_PREFIX));
+            const rows=[];
+            for(const id of ids){
+                const row=await storage.readJSON(id);
+                if(!row || !row.id || id!==EF_NATIVE_EVAL_PREFIX+row.id)
+                    throw new Error('Registro SQLite inválido: '+id);
+                rows.push(row);
             }
+            const out=[];
+            for(const row of rows){
+                const item=row.__efEncrypted?await EF_Security.decryptObject(row.payload):row;
+                if(item)out.push(item);
+            }
+            out.forEach(a=>EFIdentity.ensure(a,out));out.sort(cmpAval);
             avaliacoes=out;window.avaliacoes=out;
             if(window.__EF63_STATE__)window.__EF63_STATE__.touch();
             atualizarContadorHistorico();preencherSeletoresComparacao();renderizarHistorico();
             return out;
         }
-
         async function salvarAvaliacaoNoDB(registro) {
             if (EF_Security.isConfigured() && !EF_Security.key) {
                 const pass = prompt('🔐 O cofre está protegido. Digite a chave mestra para salvar a avaliação de forma criptografada:');
@@ -1191,22 +1193,7 @@
                 registroPersistido = { id: registro.id, __efEncrypted: true, payload: await EF_Security.encryptObject(registro) };
             }
             const nova = avaliacoes.filter(a => a.id !== registro.id).concat(registro).sort(cmpAval);
-            if (db) {
-                try {
-                    await new Promise((resolve, reject) => {
-                        const tx = db.transaction([STORE_NAME], 'readwrite');
-                        tx.objectStore(STORE_NAME).put(registroPersistido);
-                        tx.oncomplete = resolve;
-                        tx.onabort = () => reject(tx.error || new Error('Gravação abortada'));
-                        tx.onerror = () => {}; // onabort rejects once, after rollback
-                    });
-                } catch (error) {
-                    // Do not silently switch authority from IndexedDB to a stale copy.
-                    throw new Error('Avaliação não salva. Tente novamente ou exporte um backup. ' + error.message);
-                }
-            } else {
-                await EF_Security.saveVaultArray(nova);
-            }
+            await efNativeEvalStore().writeJSON(EF_NATIVE_EVAL_PREFIX+registro.id,registroPersistido);
             avaliacoes = nova;
             window.avaliacoes = avaliacoes;
             if (window.__EF63_STATE__) window.__EF63_STATE__.touch();
@@ -1224,11 +1211,15 @@
                 if (out.parecer_comparativo) delete out.parecer_comparativo[target.id];
                 return out;
             });
-            if (db) {
-                const rows=[];
-                for (const item of nova) rows.push(EF_Security.enabled ? {id:item.id,__efEncrypted:true,payload:await EF_Security.encryptObject(item)} : item);
-                await EF_Security._idbSubstituirTudo(rows);
-            } else await EF_Security.saveVaultArray(nova);
+            // Update surviving records first, then delete the target.
+            // Native writes are authenticated; failures keep the in-memory view unchanged.
+            for(const item of nova){
+                const persisted=EF_Security.enabled
+                    ? {id:item.id,__efEncrypted:true,payload:await EF_Security.encryptObject(item)}
+                    : item;
+                await efNativeEvalStore().writeJSON(EF_NATIVE_EVAL_PREFIX+item.id,persisted);
+            }
+            await efNativeEvalStore().delete(EF_NATIVE_EVAL_PREFIX+target.id);
             avaliacoes = nova; window.avaliacoes = nova;
             if (window.__EF63_STATE__) window.__EF63_STATE__.touch();
             atualizarContadorHistorico(); preencherSeletoresComparacao(); renderizarHistorico();
