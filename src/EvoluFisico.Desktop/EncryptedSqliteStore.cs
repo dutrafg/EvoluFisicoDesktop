@@ -40,9 +40,22 @@ internal sealed class EncryptedSqliteStore
               encrypted_payload BLOB NOT NULL,
               updated_utc TEXT NOT NULL
             );
-            PRAGMA user_version=1;
             """;
         setup.ExecuteNonQuery();
+        using var version = db.CreateCommand();
+        version.CommandText = "PRAGMA user_version";
+        var schemaVersion = Convert.ToInt32(version.ExecuteScalar());
+        if (schemaVersion > 1)
+        {
+            db.Dispose();
+            throw new InvalidDataException("Banco criado por uma versão mais recente do EvoluFisico. Atualize o aplicativo antes de abrir.");
+        }
+        if (schemaVersion == 0)
+        {
+            using var initialize = db.CreateCommand();
+            initialize.CommandText = "PRAGMA user_version=1";
+            initialize.ExecuteNonQuery();
+        }
         return db;
     }
 
