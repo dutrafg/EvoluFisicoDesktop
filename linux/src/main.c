@@ -14,13 +14,11 @@ typedef struct {
   GtkWidget *restore_entry;
   GtkWidget *client_edit_entry;
   GtkWidget *client_id_entry;
-  GtkWidget *assessment_client;
   GtkWidget *assessment_date;
   GtkWidget *assessment_weight;
   GtkWidget *assessment_height;
   GtkWidget *assessment_status;
   GtkWidget *assessment_list;
-  GtkWidget *charge_client;
   GtkWidget *charge_cents;
   GtkWidget *charge_description;
   GtkWidget *charge_status;
@@ -126,14 +124,14 @@ static void refresh_charges(AppState *state,gint64 client_id) {
 static void show_assessments(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;
   if(!read_picker_id(state->assessment_picker,&id)) {
-    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Informe o ID do cliente.");return;
+    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Selecione um cliente.");return;
   }
   refresh_assessments(state,id);
 }
 static void show_charges(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;
   if(!read_picker_id(state->charge_picker,&id)) {
-    gtk_label_set_text(GTK_LABEL(state->charge_status),"Informe o ID do cliente.");return;
+    gtk_label_set_text(GTK_LABEL(state->charge_status),"Selecione um cliente.");return;
   }
   refresh_charges(state,id);
 }
@@ -141,7 +139,7 @@ static void save_assessment(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;double weight=0,height=0;
   if(!read_id(state->assessment_client,&id) || !read_positive_double(state->assessment_weight,&weight) ||
      !read_positive_double(state->assessment_height,&height)) {
-    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Confira o ID, peso e altura.");return;
+    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Selecione um cliente e confira peso e altura.");return;
   }
   const char *date=gtk_editable_get_text(GTK_EDITABLE(state->assessment_date));
   GError *error=NULL;
@@ -156,7 +154,7 @@ static void save_assessment(GtkButton *button,gpointer data) {
 static void save_charge(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0,cents=0;
   if(!read_id(state->charge_client,&id) || !read_id(state->charge_cents,&cents)) {
-    gtk_label_set_text(GTK_LABEL(state->charge_status),"Informe ID e valor em centavos inteiros.");return;
+    gtk_label_set_text(GTK_LABEL(state->charge_status),"Selecione um cliente e informe o valor em centavos.");return;
   }
   const char *description=gtk_editable_get_text(GTK_EDITABLE(state->charge_description));
   GError *error=NULL;
