@@ -26,6 +26,7 @@ public partial class MainWindow : Window
         catch { return ""; }
     }
     private static readonly HttpClient UpdateClient = new() { Timeout = TimeSpan.FromSeconds(15) };
+    private bool _checkingUpdates;
 
     public MainWindow()
     {
@@ -112,6 +113,8 @@ public partial class MainWindow : Window
     }
     private async Task CheckUpdatesAsync()
     {
+        if (_checkingUpdates) return;
+        _checkingUpdates = true;
         string message;
         string? downloadUrl = null;
         try
@@ -174,6 +177,7 @@ public partial class MainWindow : Window
             {
                 type = "desktop-update", message, downloadUrl
             }));
+        _checkingUpdates = false;
     }
 
 }
