@@ -423,6 +423,14 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),show_charges_button);
       g_signal_connect(show_charges_button,"clicked",G_CALLBACK(show_charges),state);
       gtk_widget_set_sensitive(show_charges_button,state->store.db!=NULL);
+      state->charge_delete_id=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_delete_id),"ID da cobrança a excluir");
+      gtk_box_append(GTK_BOX(page),state->charge_delete_id);
+      GtkWidget *delete_charge_button=gtk_button_new_with_label("Excluir cobrança...");
+      g_object_set_data(G_OBJECT(delete_charge_button),"assessment",GINT_TO_POINTER(FALSE));
+      g_signal_connect(delete_charge_button,"clicked",G_CALLBACK(delete_record_clicked),state);
+      gtk_widget_set_sensitive(delete_charge_button,state->store.db!=NULL);
+      gtk_box_append(GTK_BOX(page),delete_charge_button);
       state->charge_list=gtk_list_box_new();
       gtk_box_append(GTK_BOX(page),state->charge_list);
       g_signal_connect(save_charge_button,"clicked",G_CALLBACK(save_charge),state);
