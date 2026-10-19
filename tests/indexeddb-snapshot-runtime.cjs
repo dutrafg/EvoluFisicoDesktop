@@ -10,7 +10,7 @@ function db(){
   version:1,close(){},
   transaction(name,mode){
    assert.equal(name,'patients');assert.equal(mode,'readonly');
-   return {objectStore(){return {
+   const tx={objectStore(){return {
     count(){const req={};queueMicrotask(()=>{req.result=rows.length;req.onsuccess()});return req},
     openCursor(){
      const req={};let index=0;
@@ -21,11 +21,13 @@ function db(){
         continue(){index++;next()}
        }:null;
        req.onsuccess();
+       if(req.result===null)queueMicrotask(()=>tx.oncomplete?.());
       });
      }
      next();return req;
     }
    }}};
+   return tx;
   }
  };
 }
