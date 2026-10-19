@@ -86,6 +86,20 @@ static void refresh_charges(AppState *state,gint64 client_id) {
   if(rows) {fill_list(state->charge_list,rows);g_ptr_array_unref(rows);}
   else {gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);g_clear_error(&error);}
 }
+static void show_assessments(GtkButton *button,gpointer data) {
+  (void)button;AppState *state=data;gint64 id=0;
+  if(!read_id(state->assessment_client,&id)) {
+    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Informe o ID do cliente.");return;
+  }
+  refresh_assessments(state,id);
+}
+static void show_charges(GtkButton *button,gpointer data) {
+  (void)button;AppState *state=data;gint64 id=0;
+  if(!read_id(state->charge_client,&id)) {
+    gtk_label_set_text(GTK_LABEL(state->charge_status),"Informe o ID do cliente.");return;
+  }
+  refresh_charges(state,id);
+}
 static void save_assessment(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;double weight=0,height=0;
   if(!read_id(state->assessment_client,&id) || !read_positive_double(state->assessment_weight,&weight) ||
@@ -300,6 +314,9 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),save_assessment_button);
       state->assessment_status=gtk_label_new("Protótipo sem criptografia — apenas dados fictícios.");
       gtk_box_append(GTK_BOX(page),state->assessment_status);
+      GtkWidget *show_assessments_button=gtk_button_new_with_label("Consultar avaliações");
+      gtk_box_append(GTK_BOX(page),show_assessments_button);
+      g_signal_connect(show_assessments_button,"clicked",G_CALLBACK(show_assessments),state);
       state->assessment_list=gtk_list_box_new();
       gtk_box_append(GTK_BOX(page),state->assessment_list);
       g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
@@ -318,6 +335,9 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),save_charge_button);
       state->charge_status=gtk_label_new("Protótipo sem criptografia — apenas dados fictícios.");
       gtk_box_append(GTK_BOX(page),state->charge_status);
+      GtkWidget *show_charges_button=gtk_button_new_with_label("Consultar cobranças");
+      gtk_box_append(GTK_BOX(page),show_charges_button);
+      g_signal_connect(show_charges_button,"clicked",G_CALLBACK(show_charges),state);
       state->charge_list=gtk_list_box_new();
       gtk_box_append(GTK_BOX(page),state->charge_list);
       g_signal_connect(save_charge_button,"clicked",G_CALLBACK(save_charge),state);
