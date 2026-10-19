@@ -28,3 +28,5 @@ gboolean ef_store_delete_assessment_for_client(EfStore *store,gint64 assessment_
 gboolean ef_store_delete_charge_for_client(EfStore *store,gint64 charge_id,gint64 client_id,GError **error);
 void ef_store_set_passphrase(const char *passphrase);
 gboolean ef_store_receive_charge(EfStore *store,gint64 charge_id,gint64 client_id,GError **error);
+
+gboolean ef_store_snapshot_to_folder(EfStore *store,const char *folder,char **saved_path,GError **error);
