@@ -1,0 +1,12 @@
+/* 16-styles.css */
+/* ===== EvoluFísico v7.8.1 · Parecer editável no Comparar Evolução ===== */
+.ef781-editor textarea{width:100%;box-sizing:border-box;min-height:9rem;padding:.75rem .85rem;border:1px solid var(--border-color,#d1d5db);border-radius:12px;font:inherit;font-size:.92rem;line-height:1.55;resize:vertical;background:#fff;color:inherit}
+.ef781-editor textarea:focus-visible{outline:3px solid rgba(0,122,255,.35);outline-offset:1px}
+.ef781-editor textarea:disabled{opacity:.55;cursor:not-allowed}
+.ef781-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;margin-top:.55rem}
+.ef781-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+#ef781-status{font-size:.78rem;color:#6b7280}
+#ef781-status.ok{color:#166534}
+#ef781-status.dirty{color:#92400e;font-weight:700}
+.ef781-print-text{display:none;white-space:pre-wrap}
+@media print{.ef781-print-text{display:block!important}.ef781-editor{display:none!important}}
