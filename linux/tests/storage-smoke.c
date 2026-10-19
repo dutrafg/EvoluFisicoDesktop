@@ -33,6 +33,8 @@ int main(void) {
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
   g_assert_false(ef_store_backup(&store,backup,&error));g_clear_error(&error);
+  g_assert_false(ef_store_backup(&store,"",&error));g_clear_error(&error);
+  g_assert_false(ef_store_rename_client(&store,-1,"Inválido",&error));g_clear_error(&error);
   g_assert_true(ef_store_delete_client(&store,2,&error));g_assert_no_error(error);
   g_assert_true(ef_store_restore(&store,backup,&error));g_assert_no_error(error);
   filtered=ef_store_search_clients(&store,"Souza",&error);
