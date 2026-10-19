@@ -22,6 +22,11 @@ jobs:
         run: bash linux/package-deb.sh
       - name: Test native SQLite operations
         run: meson test -C linux/build --print-errorlogs
+      - name: Compile with strict warnings
+        run: |
+          meson setup linux/build-strict linux --buildtype=debug -Dwerror=true
+          meson compile -C linux/build-strict
+          meson test -C linux/build-strict --print-errorlogs
       - name: Verify Debian package contents
         run: |
           dpkg-deb --contents linux/dist/*.deb | tee /tmp/evolufisico-deb-files.txt
