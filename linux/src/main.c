@@ -102,6 +102,21 @@ static void save_assessment(GtkButton *button,gpointer data) {
     g_clear_error(&error);
   }
 }
+static void save_charge(GtkButton *button,gpointer data) {
+  (void)button;AppState *state=data;gint64 id=0,cents=0;
+  if(!read_id(state->charge_client,&id) || !read_id(state->charge_cents,&cents)) {
+    gtk_label_set_text(GTK_LABEL(state->charge_status),"Informe ID e valor em centavos inteiros.");return;
+  }
+  const char *description=gtk_editable_get_text(GTK_EDITABLE(state->charge_description));
+  GError *error=NULL;
+  if(ef_store_add_charge(&state->store,id,cents,description,&error)) {
+    gtk_label_set_text(GTK_LABEL(state->charge_status),"Cobrança registrada (sem criptografia).");
+    refresh_charges(state,id);
+  }else{
+    gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);
+    g_clear_error(&error);
+  }
+}
 static void rename_client_clicked(GtkButton *button,gpointer data) {
   (void)button;
   AppState *state=data;
