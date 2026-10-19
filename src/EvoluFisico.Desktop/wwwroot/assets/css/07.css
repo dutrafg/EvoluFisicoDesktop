@@ -1,0 +1,153 @@
+/* 07-styles.css */
+/* ============ Design v2 dos PDFs: Comparar evolução (cm-) e Lab (lb-) ============ */
+@media print {
+  #single-print-wrapper, #ef77-print { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #single-print-wrapper *, #ef77-print * { box-sizing: border-box; }
+
+  /* ---------- Comparativo ---------- */
+  #single-print-wrapper .cm-page { width: 210mm; min-height: 296mm; padding: 9mm 11mm 10mm; display: flex; flex-direction: column; gap: 4.2mm; background: #fff; color: #0f172a;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; font-size: 8.4pt; line-height: 1.35; page-break-after: always; break-after: page; }
+  #single-print-wrapper .cm-page.cm-last { page-break-after: auto; break-after: auto; }
+  #single-print-wrapper .cm-head { display: flex; justify-content: space-between; align-items: center; gap: 8mm; padding: 5.5mm 6mm; border-radius: 3mm; color: #fff;
+    background: linear-gradient(120deg, #0b1b3a 0%, #1e3a8a 60%, #2563eb 100%); }
+  #single-print-wrapper .cm-head-mini { padding: 3.2mm 5mm; }
+  #single-print-wrapper .cm-kicker { font-size: 6.5pt; letter-spacing: .18em; text-transform: uppercase; color: #93c5fd; font-weight: 700; }
+  #single-print-wrapper .cm-brand-name { font-size: 15pt; font-weight: 800; letter-spacing: .01em; line-height: 1.15; }
+  #single-print-wrapper .cm-head-mini .cm-brand-name { font-size: 10.5pt; }
+  #single-print-wrapper .cm-brand-sub { font-size: 7.6pt; color: #cbd5e1; margin-top: 1mm; }
+  #single-print-wrapper .cm-pro { text-align: right; line-height: 1.3; flex-shrink: 0; }
+  #single-print-wrapper .cm-pro b { display: block; font-size: 9.5pt; font-weight: 700; }
+  #single-print-wrapper .cm-pro span { display: block; font-size: 7.8pt; color: #93c5fd; font-weight: 600; }
+
+  #single-print-wrapper .cm-student { display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm; padding: 0 1mm; }
+  #single-print-wrapper .cm-student small, #single-print-wrapper .cm-chips small { display: block; font-size: 6.2pt; text-transform: uppercase; letter-spacing: .1em; color: #64748b; font-weight: 700; }
+  #single-print-wrapper .cm-student h2 { margin: 0; font-size: 15pt; font-weight: 800; color: #0f172a; line-height: 1.15; }
+  #single-print-wrapper .cm-chips { display: flex; gap: 2.5mm; }
+  #single-print-wrapper .cm-chips span { padding: 1.4mm 3mm; border: .25mm solid #dbe4f0; background: #f8fafc; border-radius: 2mm; font-weight: 700; font-size: 8.2pt; white-space: nowrap; }
+
+  #single-print-wrapper .cm-period { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 3mm; padding: 3mm 4mm; border: .25mm solid #dbe4f0; border-radius: 3mm; background: #f8fafc; }
+  #single-print-wrapper .cm-pt small { display: block; font-size: 6.2pt; text-transform: uppercase; letter-spacing: .1em; color: #64748b; font-weight: 700; }
+  #single-print-wrapper .cm-pt b { display: block; font-size: 12pt; font-weight: 800; }
+  #single-print-wrapper .cm-pt em { font-style: normal; font-size: 7.4pt; color: #475569; }
+  #single-print-wrapper .cm-pt-now { text-align: right; }
+  #single-print-wrapper .cm-pt-now b { color: #1d4ed8; }
+  #single-print-wrapper .cm-pline { position: relative; min-width: 38mm; height: 6mm; display: flex; align-items: center; justify-content: center; }
+  #single-print-wrapper .cm-pline::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: .5mm dashed #94a3b8; }
+  #single-print-wrapper .cm-pline span { position: relative; background: #1d4ed8; color: #fff; font-weight: 700; font-size: 7.6pt; padding: .8mm 3.5mm; border-radius: 99mm; }
+
+  #single-print-wrapper .cm-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.6mm; }
+  #single-print-wrapper .cm-kpi { padding: 2.8mm 3mm 2.6mm; border: .25mm solid #dbe4f0; border-top: 1.1mm solid var(--acc); border-radius: 2.5mm; background: #fff; text-align: center; }
+  #single-print-wrapper .cm-kpi small { display: block; font-size: 6.4pt; text-transform: uppercase; letter-spacing: .09em; color: #64748b; font-weight: 700; }
+  #single-print-wrapper .cm-kpi b { display: block; font-size: 15pt; font-weight: 800; line-height: 1.25; margin: .6mm 0 1mm; }
+  #single-print-wrapper .cm-kpi em { display: block; font-style: normal; font-size: 6.8pt; color: #64748b; margin-top: 1mm; }
+
+  #single-print-wrapper .cm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; align-items: start; }
+  #single-print-wrapper .cm-card { border: .25mm solid #dbe4f0; border-radius: 3mm; padding: 3mm 3.2mm 2.6mm; background: #fff; break-inside: avoid; page-break-inside: avoid; }
+  #single-print-wrapper .cm-h { margin: 0 0 2mm; display: flex; align-items: center; gap: 1.8mm; font-size: 8.4pt; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: .05em; }
+  #single-print-wrapper .cm-dot { width: 2.2mm; height: 2.2mm; border-radius: 50%; background: var(--acc, #2563eb); }
+
+  #single-print-wrapper .cm-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 7.8pt; }
+  #single-print-wrapper .cm-table th { background: #edf3fb; color: #334155; font-size: 6.4pt; text-transform: uppercase; letter-spacing: .06em; padding: 1.4mm 1.2mm; text-align: left; }
+  #single-print-wrapper .cm-table td { padding: 2mm 1.2mm; border-bottom: .2mm solid #eef2f7; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+  #single-print-wrapper .cm-table tbody tr:nth-child(even) { background: #f8fafc; }
+  #single-print-wrapper .cm-table tr { break-inside: avoid; page-break-inside: avoid; }
+  #single-print-wrapper .cm-table .r { text-align: right; } #single-print-wrapper .cm-table .c { text-align: center; } #single-print-wrapper .cm-table .b { font-weight: 800; }
+  #single-print-wrapper .cm-table tr.cm-strong td { font-weight: 800; background: #eef4ff; }
+  #single-print-wrapper .cm-empty { text-align: center; color: #94a3b8; padding: 4mm 0 !important; white-space: normal !important; }
+  #single-print-wrapper .cm-badge { display: inline-block; padding: .4mm 1.9mm; border-radius: 99mm; font-size: 6.6pt; font-weight: 800; white-space: nowrap; }
+  #single-print-wrapper .cm-good { background: #dcfce7; color: #15803d; } #single-print-wrapper .cm-bad { background: #fee2e2; color: #b91c1c; } #single-print-wrapper .cm-neutral { background: #f1f5f9; color: #64748b; }
+  #single-print-wrapper .cm-pct { font-weight: 800; font-size: 6.8pt; } #single-print-wrapper .cm-good-t { color: #15803d; } #single-print-wrapper .cm-bad-t { color: #b91c1c; } #single-print-wrapper .cm-muted { color: #94a3b8; }
+  #single-print-wrapper .cm-note { font-size: 6.8pt; color: #64748b; padding: 0 1mm; }
+
+  #single-print-wrapper .cm-brow { display: grid; grid-template-columns: 11mm 1fr; align-items: center; gap: 2mm; margin-bottom: 2mm; }
+  #single-print-wrapper .cm-blabel { font-size: 7pt; font-weight: 700; color: #475569; }
+  #single-print-wrapper .cm-btrack { display: flex; height: 6.4mm; border-radius: 1.6mm; overflow: hidden; background: #e2e8f0; font-size: 7pt; font-weight: 800; color: #fff; }
+  #single-print-wrapper .cm-btrack span { display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; }
+  #single-print-wrapper .cm-bfat { background: linear-gradient(90deg, #f59e0b, #f97316); } #single-print-wrapper .cm-blean { background: linear-gradient(90deg, #2563eb, #1d4ed8); }
+  #single-print-wrapper .cm-bempty { justify-content: center; align-items: center; color: #94a3b8; font-weight: 600; }
+  #single-print-wrapper .cm-legend { display: flex; gap: 4mm; font-size: 6.6pt; color: #64748b; margin: 0 0 2.4mm 13mm; }
+  #single-print-wrapper .cm-legend i { display: inline-block; width: 2.4mm; height: 2.4mm; border-radius: .6mm; margin-right: 1.2mm; vertical-align: -.2mm; }
+  #single-print-wrapper .cm-lg-fat { background: #f59e0b; } #single-print-wrapper .cm-lg-lean { background: #2563eb; }
+  #single-print-wrapper .cm-minikpi { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; }
+  #single-print-wrapper .cm-minikpi div { background: #f8fafc; border: .25mm solid #e2e8f0; border-radius: 2mm; padding: 1.8mm 2.2mm; }
+  #single-print-wrapper .cm-minikpi small { display: block; font-size: 6.2pt; color: #64748b; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+  #single-print-wrapper .cm-minikpi b { font-size: 8.4pt; }
+
+  #single-print-wrapper .cm-photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+  #single-print-wrapper .cm-photo { border: .25mm solid #e2e8f0; border-radius: 2.4mm; padding: 2mm; background: #f8fafc; }
+  #single-print-wrapper .cm-photo-t { text-align: center; font-size: 7pt; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #334155; margin-bottom: 1.6mm; }
+  #single-print-wrapper .cm-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6mm; }
+  #single-print-wrapper .cm-tag { display: block; text-align: center; font-size: 5.8pt; font-weight: 800; border-radius: 1mm; padding: .5mm 0; margin-bottom: 1mm; color: #fff; white-space: nowrap; overflow: hidden; }
+  #single-print-wrapper .cm-tag-a { background: #64748b; } #single-print-wrapper .cm-tag-b { background: #2563eb; }
+  #single-print-wrapper .cm-img { height: 92mm; border-radius: 1.6mm; background: #e8edf3; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  #single-print-wrapper .cm-img img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 0; }
+  #single-print-wrapper .cm-img em { font-size: 6.6pt; color: #94a3b8; font-style: normal; }
+
+  #single-print-wrapper .cm-text { font-size: 8.6pt; line-height: 1.6; color: #1e293b; white-space: pre-wrap; }
+  #single-print-wrapper .cm-parecer { break-inside: auto; page-break-inside: auto; }
+  #single-print-wrapper .cm-sign { display: grid; grid-template-columns: 1fr 1fr; gap: 14mm; margin-top: 16mm; padding: 0 6mm; }
+  #single-print-wrapper .cm-sign > div { text-align: center; font-size: 7.8pt; line-height: 1.35; }
+  #single-print-wrapper .cm-line { border-top: .3mm solid #334155; margin-bottom: 1.6mm; }
+  #single-print-wrapper .cm-sign b, #single-print-wrapper .cm-sign span, #single-print-wrapper .cm-sign small { display: block; }
+  #single-print-wrapper .cm-sign small { color: #64748b; font-size: 6.6pt; }
+  #single-print-wrapper .cm-foot { margin-top: auto; padding-top: 2mm; border-top: .25mm solid #e2e8f0; display: flex; justify-content: space-between; font-size: 6.6pt; color: #94a3b8; }
+
+  /* ---------- Lab ---------- */
+  html body.ef77-printing #ef77-print { padding: 9mm 12mm !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  #ef77-print .lb-doc { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color: #0f172a; font-size: 9pt; line-height: 1.4; }
+  #ef77-print .lb-head { display: flex; justify-content: space-between; align-items: center; gap: 8mm; padding: 4.2mm 6mm; border-radius: 3mm; color: #fff; background: linear-gradient(120deg, #0b1b3a 0%, #1e3a8a 60%, #2563eb 100%); margin-bottom: 4mm; }
+  #ef77-print .lb-kick { font-size: 6.5pt; letter-spacing: .18em; text-transform: uppercase; color: #93c5fd; font-weight: 700; }
+  #ef77-print .lb-title { font-size: 14.5pt; font-weight: 800; line-height: 1.2; }
+  #ef77-print .lb-sub { font-size: 7.6pt; color: #cbd5e1; margin-top: 1mm; }
+  #ef77-print .lb-pro { text-align: right; line-height: 1.35; font-size: 8pt; color: #93c5fd; }
+  #ef77-print .lb-pro b { display: block; color: #fff; font-size: 9.5pt; } #ef77-print .lb-pro span { display: block; font-weight: 600; }
+  #ef77-print .lb-student { display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm; margin: 0 1mm 3mm; }
+  #ef77-print .lb-student small { display: block; font-size: 6.2pt; text-transform: uppercase; letter-spacing: .1em; color: #64748b; font-weight: 700; }
+  #ef77-print .lb-student h2 { margin: 0; font-size: 14pt; font-weight: 800; line-height: 1.15; }
+  #ef77-print .lb-chips { display: flex; flex-wrap: wrap; gap: 2mm; justify-content: flex-end; }
+  #ef77-print .lb-chip { display: inline-block; padding: 1.2mm 2.8mm; border: .25mm solid #dbe4f0; background: #f8fafc; border-radius: 2mm; font-weight: 700; font-size: 8pt; white-space: nowrap; }
+  #ef77-print .lb-chip small { display: inline; margin-right: 1.4mm; font-size: 6pt; text-transform: uppercase; letter-spacing: .08em; color: #64748b; }
+  #ef77-print .lb-chip.blue { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; } #ef77-print .lb-chip.good { background: #dcfce7; border-color: #bbf7d0; color: #15803d; } #ef77-print .lb-chip.bad { background: #fee2e2; border-color: #fecaca; color: #b91c1c; }
+  #ef77-print .lb-card { border: .25mm solid #dbe4f0; border-radius: 3mm; padding: 2.8mm 3.4mm 2.4mm; margin-bottom: 3mm; background: #fff; break-inside: avoid; page-break-inside: avoid; }
+  #ef77-print .lb-h { margin: 0 0 2.2mm; display: flex; align-items: center; gap: 1.8mm; font-size: 8.4pt; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #0f172a; }
+  #ef77-print .lb-h i { width: 2.2mm; height: 2.2mm; border-radius: 50%; background: var(--acc, #2563eb); flex: none; }
+  #ef77-print .lb-h em { font-style: normal; font-weight: 600; text-transform: none; letter-spacing: 0; color: #64748b; font-size: 7.6pt; }
+  #ef77-print .lb-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 8pt; }
+  #ef77-print .lb-table th { background: #edf3fb; color: #334155; font-size: 6.4pt; text-transform: uppercase; letter-spacing: .05em; padding: 1.6mm 1.2mm; text-align: right; }
+  #ef77-print .lb-table td { padding: 1.2mm 1.2mm; border-bottom: .2mm solid #eef2f7; text-align: right; }
+  #ef77-print .lb-table th.l, #ef77-print .lb-table td.l { text-align: left; }
+  #ef77-print .lb-table tbody tr:nth-child(even) { background: #f8fafc; }
+  #ef77-print .lb-table tbody tr.sel { background: #dbeafe; font-weight: 800; }
+  #ef77-print .lb-table tr { break-inside: avoid; page-break-inside: avoid; }
+  #ef77-print .lb-evo { display: flex; flex-wrap: wrap; align-items: center; gap: 2mm; margin-top: 2.6mm; }
+  #ef77-print .lb-evo-t { font-size: 7.8pt; font-weight: 700; color: #475569; margin-right: 1mm; }
+  #ef77-print .lb-note { font-size: 7.4pt; color: #64748b; margin: 0 1mm 2.6mm; }
+  #ef77-print .lb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 3.4mm; align-items: start; }
+  #ef77-print .lb-grid .lb-card { height: calc(100% - 3mm); }
+  #ef77-print .lb-kv { width: 100%; border-collapse: collapse; font-size: 8.2pt; }
+  #ef77-print .lb-kv td { padding: 1.1mm 0; border-bottom: .2mm solid #eef2f7; vertical-align: top; }
+  #ef77-print .lb-kv tr:last-child td { border-bottom: 0; }
+  #ef77-print .lb-kv td.v { text-align: right; font-weight: 700; white-space: nowrap; padding-left: 3mm; }
+  #ef77-print .lb-kv .hl { color: #1d4ed8; font-weight: 800; font-size: 9.2pt; }
+  #ef77-print .lb-kv tr { break-inside: avoid; page-break-inside: avoid; }
+  #ef77-print .lb-tag { display: inline-block; margin-left: 1.4mm; padding: .3mm 1.8mm; border-radius: 99mm; font-size: 6.6pt; font-weight: 800; }
+  #ef77-print .lb-tag.good { background: #dcfce7; color: #15803d; } #ef77-print .lb-tag.warn { background: #fef3c7; color: #b45309; } #ef77-print .lb-tag.bad { background: #fee2e2; color: #b91c1c; }
+  #ef77-print .lb-empty { font-size: 8pt; color: #94a3b8; padding: 1mm 0; }
+  #ef77-print .lb-meter { display: grid; grid-template-columns: 29mm 1fr 11mm; align-items: center; gap: 2mm; margin-bottom: 1.8mm; font-size: 7.6pt; }
+  #ef77-print .lb-meter .ml { font-weight: 600; color: #475569; }
+  #ef77-print .lb-meter .mt { display: block; height: 3.2mm; border-radius: 99mm; background: #e2e8f0; overflow: hidden; }
+  #ef77-print .lb-meter .mt i { display: block; height: 100%; border-radius: 99mm; }
+  #ef77-print .lb-meter .mv { text-align: right; font-weight: 800; }
+  #ef77-print .lb-macro { display: flex; height: 5.4mm; border-radius: 1.6mm; overflow: hidden; margin-top: 2.6mm; font-size: 6.8pt; font-weight: 800; color: #fff; }
+  #ef77-print .lb-macro span { display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; }
+  #ef77-print .lb-fcmax { display: flex; justify-content: space-between; align-items: baseline; background: #fef2f2; border: .25mm solid #fecaca; border-radius: 2mm; padding: 1.8mm 3mm; margin-bottom: 2.2mm; }
+  #ef77-print .lb-fcmax small { font-size: 7pt; text-transform: uppercase; letter-spacing: .07em; color: #991b1b; font-weight: 700; } #ef77-print .lb-fcmax b { font-size: 12pt; color: #b91c1c; }
+  #ef77-print .lb-zone { display: grid; grid-template-columns: 52mm 1fr 25mm; align-items: center; gap: 3mm; padding: 1.1mm 0; font-size: 8pt; }
+  #ef77-print .lb-zone .zn i { display: inline-block; width: 2.4mm; height: 2.4mm; border-radius: 50%; margin-right: 1.8mm; vertical-align: -.2mm; }
+  #ef77-print .lb-zone .zn small { color: #64748b; font-size: 6.8pt; margin-left: 1mm; }
+  #ef77-print .lb-zone .zb { position: relative; display: block; height: 3mm; background: #eef2f7; border-radius: 99mm; }
+  #ef77-print .lb-zone .zb i { position: absolute; top: 0; height: 100%; border-radius: 99mm; }
+  #ef77-print .lb-zone .zv { text-align: right; font-weight: 800; }
+  #ef77-print .lb-fnote { font-size: 7.2pt; color: #64748b; margin-top: 1.6mm; }
+  #ef77-print .lb-foot { font-size: 7pt; color: #64748b; border-top: .25mm solid #e2e8f0; padding-top: 2.4mm; margin-top: 1mm; line-height: 1.45; }
+}
