@@ -6,6 +6,10 @@
 'use strict';
 if(!window.EFNativeStorage || !window.EFDesktopIndexedDBInventory)return;
 const encoder=new TextEncoder();
+async function stableId(database,store,key){
+ const digest=await crypto.subtle.digest('SHA-256',encoder.encode(JSON.stringify([database,store,key])));
+ return 'ef-idb-v2-'+Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+}
 function readStore(db,name){
  return new Promise((resolve,reject)=>{
   const items=[];
@@ -55,7 +59,7 @@ async function snapshot(){
       const record=encoder.encode(JSON.stringify({database:info.name,store:store.name,entry:JSON.parse(rows[i])}));
       if(record.byteLength>8_000_000)throw new Error('Registro excede o limite: '+store.name);
       // IDs are deterministic and bounded; collisions are rejected by verification.
-      const id='ef-idb-'+inventory.indexOf(info).toString().padStart(3,'0')+'-'+info.stores.indexOf(store).toString().padStart(3,'0')+'-'+i.toString().padStart(8,'0');
+      const id=await stableId(info.name,store.name,JSON.parse(rows[i]).key);
       const existing=await window.EFNativeStorage.read(id);
       if(existing===null)batch[id]=record;
       else if(equal(existing,record))alreadyCopied++;
