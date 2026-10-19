@@ -24,3 +24,5 @@ GPtrArray *ef_store_list_assessment_rows(EfStore *store,gint64 client_id,GError 
 GPtrArray *ef_store_list_charge_rows(EfStore *store,gint64 client_id,GError **error);
 gboolean ef_store_assessment_belongs_to(EfStore *store,gint64 assessment_id,gint64 client_id,GError **error);
 gboolean ef_store_charge_belongs_to(EfStore *store,gint64 charge_id,gint64 client_id,GError **error);
+gboolean ef_store_delete_assessment_for_client(EfStore *store,gint64 assessment_id,gint64 client_id,GError **error);
+gboolean ef_store_delete_charge_for_client(EfStore *store,gint64 charge_id,gint64 client_id,GError **error);
