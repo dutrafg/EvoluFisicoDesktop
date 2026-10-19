@@ -1,0 +1,58 @@
+/* 19-styles.css */
+/* Ajuste pontual solicitado: Decision & Action Engine no Painel e bloco de dados
+   do avaliando em Comparar Evolução. Nenhum outro módulo é selecionado aqui. */
+html.ef-dark-mode #tab-painel #ef70-engine,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-head,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-grid,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-body,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-section,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-stat {
+  background:#1b2432 !important;
+  color:#e8eef7 !important;
+  border-color:#344256 !important;
+  box-shadow:none !important;
+}
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-head,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-foot,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-row {
+  border-color:#344256 !important;
+}
+html.ef-dark-mode #tab-painel #ef70-engine h3,
+html.ef-dark-mode #tab-painel #ef70-engine h4,
+html.ef-dark-mode #tab-painel #ef70-engine b,
+html.ef-dark-mode #tab-painel #ef70-engine strong {
+  color:#f3f6fb !important;
+}
+html.ef-dark-mode #tab-painel #ef70-engine p,
+html.ef-dark-mode #tab-painel #ef70-engine small,
+html.ef-dark-mode #tab-painel #ef70-engine span,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-foot {
+  color:#a8b4c5 !important;
+}
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-badge,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-icon,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-pill,
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-action {
+  background:#26364a !important;
+  color:#dbeafe !important;
+  border-color:#40516a !important;
+}
+html.ef-dark-mode #tab-painel #ef70-engine .ef70-stat {
+  background:#202c3d !important;
+}
+/* Os estilos inline claros do resumo de contato tinham prioridade visual. */
+html.ef-dark-mode #tab-comparison #comp-contact-meta {
+  background:#1b2432 !important;
+  color:#a8b4c5 !important;
+  border:1px solid #344256 !important;
+}
+html.ef-dark-mode #tab-comparison #comp-contact-meta > div {
+  background:transparent !important;
+  color:#a8b4c5 !important;
+}
+html.ef-dark-mode #tab-comparison #comp-contact-meta strong,
+html.ef-dark-mode #tab-comparison #comp-contact-meta b,
+html.ef-dark-mode #tab-comparison #comp-contact-meta span {
+  color:#e8eef7 !important;
+  overflow-wrap:anywhere;
+}
