@@ -176,6 +176,15 @@ gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
     if(!ok && error && !*error)g_set_error_literal(error,ef_error(),18,"Backup sem esquema de clientes");
   }
   if(ok) {
+    sqlite3_stmt *version=NULL;
+    if(sqlite3_prepare_v2(incoming,"PRAGMA user_version",-1,&version,NULL)!=SQLITE_OK)ok=FALSE;
+    else {
+      ok=sqlite3_step(version)==SQLITE_ROW && sqlite3_column_int(version,0)==1;
+      sqlite3_finalize(version);
+    }
+    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),25,"Versão de esquema do backup incompatível");
+  }
+  if(ok) {
     sqlite3 *rollback=NULL;
     if(sqlite3_open(":memory:",&rollback)!=SQLITE_OK) {
       g_set_error_literal(error,ef_error(),21,"Falha ao reservar cópia de segurança para restauração");
