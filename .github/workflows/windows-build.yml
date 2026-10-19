@@ -108,9 +108,12 @@ jobs:
           $target = Join-Path $env:RUNNER_TEMP 'EvoluFisicoDesktopSmoke'
           $install = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/DIR=$target") -Wait -PassThru
           if ($install.ExitCode -ne 0) { throw "Silent install failed: $($install.ExitCode)" }
-          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/sw.js')) {
+          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/sw.js','wwwroot/desktop-version.json')) {
             if (!(Test-Path (Join-Path $target $file))) { throw "Installed file missing: $file" }
           }
+          $installedVersion = Get-Content (Join-Path $target 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
+          $expectedVersion = 'desktop-v9.0-beta-' + '${{ github.sha }}'.Substring(0,7)
+          if ($installedVersion.tag -ne $expectedVersion) { throw 'Installed version does not match release version' }
           $uninstaller = Join-Path $target 'unins000.exe'
           if (!(Test-Path $uninstaller)) { throw 'Uninstaller missing' }
           $remove = Start-Process -FilePath $uninstaller -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
