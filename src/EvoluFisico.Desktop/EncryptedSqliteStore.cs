@@ -119,21 +119,25 @@ internal sealed class EncryptedSqliteStore
             cmd.CommandText = """
                 INSERT INTO protected_records(record_id, encrypted_payload, updated_utc)
                 VALUES ($id, $data, $time)
-                ON CONFLICT(record_id) DO UPDATE SET
-                encrypted_payload=excluded.encrypted_payload, updated_utc=excluded.updated_utc
+                ON CONFLICT(record_id) DO NOTHING
                 """;
             cmd.Parameters.AddWithValue("$id", pair.Key);
             cmd.Parameters.AddWithValue("$data", pair.Value);
             cmd.Parameters.AddWithValue("$time", DateTimeOffset.UtcNow.ToString("O"));
-            cmd.ExecuteNonQuery();
-        }
-        tx.Commit();
-        foreach (var pair in records)
-        {
-            var restored = Load(pair.Key, masterPassword);
-            if (restored is null || !System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(restored, pair.Value))
+            if (cmd.ExecuteNonQuery() != 1)
+                throw new InvalidDataException("A importação encontrou um identificador já existente. Nenhum registro foi substituído.");
+            using var check = db.CreateCommand();
+            check.Transaction = tx;
+            check.CommandText = "SELECT encrypted_payload FROM protected_records WHERE record_id=$id";
+            check.Parameters.AddWithValue("$id", pair.Key);
+            var encryptedSaved = check.ExecuteScalar() as byte[];
+            if (encryptedSaved is null)
+                throw new InvalidDataException("Falha ao conferir o registro importado.");
+            var restored = ProtectedVault.Decrypt(encryptedSaved, masterPassword);
+            if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(restored, records[pair.Key]))
                 throw new InvalidDataException("Falha na conferência da importação criptografada.");
         }
+        tx.Commit();
     }
 
     /// <summary>Deletes a protected record in a transaction. Does not imply secure disk erasure.</summary>
