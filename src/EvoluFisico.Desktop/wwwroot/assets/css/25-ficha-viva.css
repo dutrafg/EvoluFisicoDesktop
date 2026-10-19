@@ -1,0 +1,663 @@
+/* ==========================================================================
+   EvoluFísico 9.0 — identidade "ficha viva"
+   Camada apenas visual: papel giz, verde-abeto e verde-lima. Não altera
+   marcação, IDs nem lógica. Carrega depois de 23-simple-interface.css.
+   ========================================================================== */
+
+body.ef-simple-ui {
+  --ef-page: #eef1ec;
+  --ef-surface: #f9faf7;
+  --ef-ink: #13231c;
+  --ef-muted: #5b6a61;
+  --ef-line: #d7ded4;
+  --ef-fir: #0f3d2e;
+  --ef-fir-2: #1b5a45;
+  --ef-lime: #cfec5c;
+  --ef-lime-ink: #20300a;
+  --ef-accent: #0f3d2e;
+  --ef-accent-hover: #1b5a45;
+  --ef-soft: #e2eadc;
+  --ef-success: #1f8a5b;
+  --ef-success-soft: #dcefe3;
+  --ef-warning: #b7791f;
+  --ef-danger: #b4372f;
+  --ef-radius-lg: 22px;
+  --ef-radius-md: 14px;
+  --ef-radius-sm: 10px;
+  --ef-shadow-sm: none;
+  --ef-shadow-md: 0 1px 0 rgba(19, 35, 28, .04);
+  --ef-shadow-lg: 0 12px 32px -12px rgba(19, 35, 28, .25);
+  --ef-font: 'EF Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --ef-display: 'EF Display', 'EF Sans', system-ui, sans-serif;
+  --ef-primary-bg: var(--ef-fir);
+  --ef-primary-ink: #ffffff;
+  --ef-nav-active-bg: var(--ef-fir);
+  --ef-nav-active-ink: #ffffff;
+  /* tokens do CSS antigo */
+  --primary: #0f3d2e;
+  --primary-hover: #1b5a45;
+  --primary-light: #e2eadc;
+  --primary-glow: rgba(15, 61, 46, .18);
+  --apple-blue: #1b5a45;
+  --border-focus: #1b5a45;
+  --bg-color: #eef1ec;
+  --border-color: #d7ded4;
+  font-family: var(--ef-font) !important;
+}
+
+html.ef-dark-mode body.ef-simple-ui,
+body.ef-simple-ui.dark-mode {
+  --ef-page: #0d1a16;
+  --ef-surface: #15251f;
+  --ef-ink: #e9f0ea;
+  --ef-muted: #9db0a5;
+  --ef-line: #26392f;
+  --ef-fir: #7be0bc;
+  --ef-fir-2: #9aebcf;
+  --ef-lime: #cfec5c;
+  --ef-lime-ink: #20300a;
+  --ef-accent: #7be0bc;
+  --ef-accent-hover: #9aebcf;
+  --ef-soft: #1d3329;
+  --ef-success: #5fd6a0;
+  --ef-success-soft: #173a2b;
+  --ef-warning: #e6bd5a;
+  --ef-danger: #f0877e;
+  --ef-shadow-lg: 0 14px 34px -12px rgba(0, 0, 0, .6);
+  --ef-primary-bg: #7be0bc;
+  --ef-primary-ink: #0b241b;
+  --ef-nav-active-bg: #223a30;
+  --ef-nav-active-ink: #e9f0ea;
+  --primary: #7be0bc;
+  --primary-hover: #9aebcf;
+  --primary-light: #1d3329;
+  --apple-blue: #7be0bc;
+  --border-focus: #7be0bc;
+  --bg-color: #0d1a16;
+  --border-color: #26392f;
+}
+
+body.ef-simple-ui :is(h1, h2, h3, .brand-title, .ef55-kpi b, .kpi-value, .stat-value, .form-header h1, .history-client-name) {
+  font-family: var(--ef-display) !important;
+  letter-spacing: -.02em;
+}
+
+@media screen {
+  body.ef-simple-ui { background: var(--ef-page) !important; }
+  html.ef-dark-mode { background: #0d1a16 !important; }
+  html.ef-dark-mode body.ef-simple-ui { background: var(--ef-page) !important; color: var(--ef-ink) !important; }
+  html:not(.ef-dark-mode) { background: #eef1ec; }
+
+  /* ---------- Marca ---------- */
+  body.ef-simple-ui .brand-icon-box {
+    background: var(--ef-lime) !important;
+    color: var(--ef-lime-ink) !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+    font-family: var(--ef-display) !important;
+    font-weight: 800 !important;
+  }
+  body.ef-simple-ui .brand-title {
+    font-family: var(--ef-display) !important;
+    font-weight: 700 !important;
+    letter-spacing: -.03em !important;
+    font-size: 19px !important;
+  }
+
+  /* ---------- Botões em pílula ---------- */
+  body.ef-simple-ui .btn,
+  body.ef-simple-ui .btn-sm,
+  body.ef-simple-ui .folder-status-pill {
+    border-radius: 999px !important;
+    font-family: var(--ef-font) !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui .btn-primary,
+  body.ef-simple-ui #tab-btn-form {
+    background: var(--ef-primary-bg) !important;
+    color: var(--ef-primary-ink) !important;
+    border: 0 !important;
+  }
+  body.ef-simple-ui .btn-primary:hover,
+  body.ef-simple-ui #tab-btn-form:hover {
+    background: var(--ef-fir-2) !important;
+    color: var(--ef-primary-ink) !important;
+    transform: none !important;
+  }
+  body.ef-simple-ui :is(.btn-secondary, .btn-outline) {
+    background: transparent !important;
+    color: var(--ef-ink) !important;
+    border: 1px solid var(--ef-line) !important;
+  }
+  body.ef-simple-ui :is(.btn-secondary, .btn-outline):hover {
+    background: var(--ef-soft) !important;
+    border-color: var(--ef-line) !important;
+  }
+  body.ef-simple-ui :is(button, summary, a, input, select, textarea):focus-visible {
+    outline: 2px solid var(--ef-fir-2) !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+  }
+
+  /* ---------- Cartões: papel, linha fina, sem sombra ---------- */
+  body.ef-simple-ui :is(.ef55-card, .card, .history-card, .cob-card, .form-container, .ef77-card, .efdiag-card, .kpi-card, .stat-card) {
+    background: var(--ef-surface) !important;
+    border: 1px solid var(--ef-line) !important;
+    border-radius: var(--ef-radius-lg) !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui :is(.ef55-card, .history-card):hover { box-shadow: none !important; border-color: var(--ef-fir-2) !important; }
+  body.ef-simple-ui .form-container { background: transparent !important; border: 0 !important; }
+
+  /* Campos */
+  body.ef-simple-ui :is(input, select, textarea):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]) {
+    background: var(--ef-surface) !important;
+    border: 1px solid var(--ef-line) !important;
+    border-radius: 12px !important;
+    color: var(--ef-ink) !important;
+    font-family: var(--ef-font) !important;
+  }
+  body.ef-simple-ui :is(input, select, textarea):focus {
+    border-color: var(--ef-fir-2) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ef-fir-2) 22%, transparent) !important;
+  }
+
+  /* ---------- Início: faixa única de indicadores ---------- */
+  body.ef-simple-ui .ef55-kpis {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    background: var(--ef-surface);
+    border: 1px solid var(--ef-line);
+    border-radius: var(--ef-radius-lg);
+    overflow: hidden;
+  }
+  body.ef-simple-ui .ef55-kpi {
+    background: transparent !important;
+    border: 0 !important;
+    border-left: 1px solid var(--ef-line) !important;
+    border-radius: 0 !important;
+    padding: 24px 26px !important;
+  }
+  body.ef-simple-ui .ef55-kpi:first-child { border-left: 0 !important; }
+  body.ef-simple-ui .ef55-kpi::before { display: none !important; content: none !important; }
+  body.ef-simple-ui .ef55-kpi b {
+    font-size: clamp(2rem, 3.2vw, 2.9rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -.04em !important;
+    color: var(--ef-ink) !important;
+  }
+  body.ef-simple-ui .ef55-kpi small {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-weight: 600 !important;
+    color: var(--ef-muted) !important;
+    font-size: 12.5px !important;
+  }
+  body.ef-simple-ui .ef55-kpi span { color: var(--ef-muted) !important; font-size: 12.5px !important; }
+
+  /* ---------- Linhas de alunos (início) ---------- */
+  body.ef-simple-ui .ef55-row {
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    grid-template-areas: "av txt pill";
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 8px;
+    padding: 14px 8px !important;
+    border-radius: 14px;
+    background: transparent !important;
+  }
+  body.ef-simple-ui .ef55-row:hover { background: var(--ef-soft) !important; }
+  body.ef-simple-ui .ef55-av {
+    grid-area: av;
+    width: 40px; height: 40px;
+    border-radius: 50% !important;
+    background: var(--ef-soft) !important;
+    color: var(--ef-fir) !important;
+    font-family: var(--ef-display);
+    font-weight: 700;
+    display: grid; place-items: center;
+  }
+  body.ef-simple-ui .ef55-row > .t { grid-area: txt; min-width: 0; }
+  body.ef-simple-ui .ef55-row > .t b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  body.ef-simple-ui .ef55-row > .ef55-pill,
+  body.ef-simple-ui .ef55-row > .ef55-wa { grid-area: pill; justify-self: end; white-space: nowrap; }
+  body.ef-simple-ui .ef55-row > .ef55-pill + .ef55-wa { grid-area: pill; }
+  /* faixa de variações: sempre numa linha própria, alinhada ao nome */
+  body.ef-simple-ui .ef55-row > .ef55-chips {
+    grid-column: 2 / -1;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+  }
+  body.ef-simple-ui .ef55-chips > * {
+    white-space: nowrap;
+    border-radius: 999px !important;
+    padding: 4px 10px !important;
+    font-size: 11.5px !important;
+    font-weight: 600 !important;
+  }
+
+  /* ---------- Histórico: sem painel dentro de painel ---------- */
+  body.ef-simple-ui #tab-historico > .card {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+  body.ef-simple-ui #tab-historico > .card > .card-header {
+    padding: 8px 2px 4px !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  body.ef-simple-ui #tab-historico .card-title { font-family: var(--ef-display); letter-spacing: -.02em; }
+  body.ef-simple-ui #tab-historico .history-card { padding: 18px 20px !important; }
+  /* ícones do resumo: cores do tema, sem os azuis fixos */
+  body.ef-simple-ui .kpi-icon-box[style] {
+    background: var(--ef-soft) !important;
+    color: var(--ef-fir) !important;
+    border-radius: 14px !important;
+  }
+  body.ef-simple-ui .kpi-card { box-shadow: none !important; }
+  body.ef-simple-ui .kpi-value { font-weight: 800 !important; }
+
+  /* Ações do cartão: tons suaves */
+  body.ef-simple-ui .history-actions .btn {
+    background: var(--ef-soft) !important;
+    color: var(--ef-fir) !important;
+    border: 0 !important;
+  }
+  body.ef-simple-ui .history-actions .btn:hover { background: var(--ef-line) !important; }
+  body.ef-simple-ui .history-actions .btn:is(.btn-danger, [onclick*="excluir"], [onclick*="Excluir"], [onclick*="delete"]) {
+    background: color-mix(in srgb, var(--ef-danger) 14%, transparent) !important;
+    color: var(--ef-danger) !important;
+  }
+  body.ef-simple-ui .history-card .badge,
+  body.ef-simple-ui .history-card [class*="badge"],
+  body.ef-simple-ui .ef55-pill {
+    border-radius: 999px !important;
+    background: var(--ef-soft) !important;
+    color: var(--ef-fir) !important;
+    border: 0 !important;
+  }
+
+  /* Busca */
+  body.ef-simple-ui .search-input-box input { border-radius: 999px !important; padding-left: 20px !important; }
+
+  /* ---------- Formulário: régua de medição ---------- */
+  body.ef-simple-ui .wizard-header-card {
+    background: var(--ef-surface) !important;
+    border: 1px solid var(--ef-line) !important;
+    border-radius: var(--ef-radius-lg) !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui .stepper-container {
+    position: relative;
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0 !important;
+    padding: 30px 0 4px !important;
+    background: transparent !important;
+    border: 0 !important;
+    /* marcas da régua */
+    background-image: repeating-linear-gradient(90deg, var(--ef-line) 0 1px, transparent 1px 12px) !important;
+    background-size: 100% 8px !important;
+    background-repeat: no-repeat !important;
+    background-position: 0 14px !important;
+  }
+  body.ef-simple-ui .stepper-progress-bg {
+    top: 10px !important;
+    height: 3px !important;
+    background: var(--ef-line) !important;
+    border-radius: 2px !important;
+  }
+  body.ef-simple-ui .stepper-progress-fill {
+    background: var(--ef-fir) !important;
+    box-shadow: none !important;
+    border-radius: 2px !important;
+  }
+  body.ef-simple-ui .step-indicator,
+  body.ef-simple-ui .step-indicator.active,
+  body.ef-simple-ui .step-indicator:hover { background: transparent !important; border: 0 !important; box-shadow: none !important; outline: 0; }
+  body.ef-simple-ui .step-dot {
+    background: var(--ef-surface) !important;
+    color: var(--ef-muted) !important;
+    border: 2px solid var(--ef-line) !important;
+    box-shadow: none !important;
+    font-family: var(--ef-display);
+    font-weight: 700;
+  }
+  /* passo ativo: sem halo azul do CSS antigo */
+  body.ef-simple-ui .step-indicator.active .step-dot,
+  body.ef-simple-ui .step-indicator.active:focus .step-dot,
+  body.ef-simple-ui .step-indicator.active:hover .step-dot {
+    background: var(--ef-fir) !important;
+    color: var(--ef-primary-ink) !important;
+    border-color: var(--ef-fir) !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  body.ef-simple-ui .step-indicator.completed .step-dot { background: var(--ef-soft) !important; color: var(--ef-fir) !important; border-color: var(--ef-fir) !important; box-shadow: none !important; }
+  body.ef-simple-ui .step-indicator.active .step-label { color: var(--ef-ink) !important; font-weight: 700 !important; }
+  body.ef-simple-ui .step-label { color: var(--ef-muted) !important; }
+  body.ef-simple-ui .brand-badge { background: var(--ef-soft) !important; color: var(--ef-fir) !important; border-radius: 999px !important; border: 0 !important; }
+  body.ef-simple-ui .progress-fill { background: var(--ef-fir) !important; }
+
+  /* ---------- Dobras e seções recolhíveis ---------- */
+  body.ef-simple-ui .ef-simple-fold {
+    background: var(--ef-surface) !important;
+    border: 1px solid var(--ef-line) !important;
+    border-radius: 20px !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui .ef-simple-fold > summary:after {
+    background: var(--ef-soft) !important;
+    color: var(--ef-fir) !important;
+  }
+
+  /* ---------- Comparar / Calculadora / Cobranças: coerência ---------- */
+  body.ef-simple-ui .stat-card { padding: 18px !important; }
+  body.ef-simple-ui .stat-card.weight, body.ef-simple-ui .stat-card.muscle,
+  body.ef-simple-ui .stat-card.fat, body.ef-simple-ui .stat-card.age { border-top-color: var(--ef-line) !important; }
+  body.ef-simple-ui .cob-seg-btn.active,
+  body.ef-simple-ui .cob-status-seg-btn.active { background: var(--ef-fir) !important; color: var(--ef-primary-ink) !important; border-color: var(--ef-fir) !important; }
+
+  /* ---------- Aviso flutuante ---------- */
+  #ef55-toasts .ef55-toast,
+  body.ef-simple-ui .ef55-toast {
+    background: var(--ef-ink) !important;
+    color: var(--ef-page) !important;
+    border-radius: 14px !important;
+    font-family: var(--ef-font);
+    font-weight: 500;
+    max-width: min(92vw, 560px);
+  }
+}
+
+/* ==========================================================================
+   Desktop (≥1200px): barra lateral sobre o papel, sem caixa
+   ========================================================================== */
+@media screen and (min-width: 1200px) {
+  body.ef-simple-ui { --ef-sidebar: 248px; }
+  body.ef-simple-ui .top-navbar {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 28px 18px !important;
+  }
+  body.ef-simple-ui .top-navbar > .brand-wrapper { border-bottom: 0 !important; padding: 0 6px 12px !important; }
+  body.ef-simple-ui .top-navbar > .nav-tabs:before { display: none !important; content: none !important; }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn {
+    gap: 12px !important;
+    height: 44px !important;
+    border-radius: 999px !important;
+    border: 0 !important;
+    color: var(--ef-muted) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn:hover { background: var(--ef-soft) !important; color: var(--ef-ink) !important; }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn.active {
+    background: var(--ef-nav-active-bg) !important;
+    color: var(--ef-nav-active-ink) !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui #ef-tools { border-top: 0 !important; padding-top: 8px !important; }
+  body.ef-simple-ui #ef-workspace-heading {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    height: 64px;
+    padding: 0 40px;
+    font-family: var(--ef-display);
+  }
+  body.ef-simple-ui #ef-workspace-heading small {
+    background: var(--ef-soft);
+    color: var(--ef-fir);
+    border: 0;
+    border-radius: 999px;
+    padding: 4px 10px;
+  }
+  body.ef-simple-ui #ef-primary-actions { right: 40px; top: 12px; }
+}
+
+/* ---------- Ícones da navegação (SVG por máscara, herdam a cor) ---------- */
+body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  -webkit-mask: var(--ef-ico) center / contain no-repeat;
+  mask: var(--ef-ico) center / contain no-repeat;
+}
+#tab-btn-painel { --ef-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11.5 12 4l9 7.5'/%3E%3Cpath d='M5.5 10v9.5h13V10'/%3E%3Cpath d='M10 19.5v-5h4v5'/%3E%3C/svg%3E"); }
+#tab-btn-history { --ef-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3.5h9l3 3V20.5H6z'/%3E%3Cpath d='M9 10h6M9 13.5h6M9 17h4'/%3E%3C/svg%3E"); }
+#tab-btn-compare { --ef-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 17l6-6 4 4 8-8'/%3E%3Cpath d='M15 7h6v6'/%3E%3C/svg%3E"); }
+#tab-btn-lab77 { --ef-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='3' width='14' height='18' rx='2.5'/%3E%3Cpath d='M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01'/%3E%3C/svg%3E"); }
+#tab-btn-cobranca { --ef-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5.5' width='18' height='13' rx='2.5'/%3E%3Cpath d='M3 10h18M7 15h3'/%3E%3C/svg%3E"); }
+
+/* ==========================================================================
+   Celular e tablet (<1200px): barra superior enxuta + barra inferior flutuante
+   ========================================================================== */
+@media screen and (max-width: 1199px) {
+  body.ef-simple-ui {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+  }
+  body.ef-simple-ui .top-navbar {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    position: relative !important;
+    grid-template-columns: 1fr auto !important;
+    padding: 14px 16px 6px !important;
+    gap: 12px !important;
+  }
+  body.ef-simple-ui .brand-icon-box { display: grid !important; height: 38px !important; width: 38px !important; }
+  body.ef-simple-ui .top-navbar > .brand-wrapper { grid-row: 1; grid-column: 1; }
+  body.ef-simple-ui #ef-primary-actions { grid-row: 1; grid-column: 2; }
+  body.ef-simple-ui #tab-btn-form { height: 44px !important; padding: 0 18px !important; font-size: 13.5px !important; }
+
+  /* barra inferior flutuante */
+  body.ef-simple-ui .top-navbar > .nav-tabs {
+    position: fixed !important;
+    left: 12px;
+    right: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    z-index: 200;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 2px !important;
+    width: auto !important;
+    max-width: 560px;
+    margin: 0 auto !important;
+    padding: 6px !important;
+    overflow: visible !important;
+    background: var(--ef-surface) !important;
+    border: 1px solid var(--ef-line) !important;
+    border-radius: 26px !important;
+    box-shadow: 0 14px 34px -10px rgba(10, 30, 22, .35) !important;
+  }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    height: 54px !important;
+    min-height: 54px !important;
+    padding: 4px 2px !important;
+    border: 0 !important;
+    border-radius: 20px !important;
+    background: transparent !important;
+    color: var(--ef-muted) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    min-width: 0 !important;
+    white-space: nowrap;
+  }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn::before { width: 22px; height: 22px; }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn.active {
+    background: var(--ef-nav-active-bg) !important;
+    color: var(--ef-nav-active-ink) !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui .ef-nav-count { display: none !important; }
+
+  /* menus de suporte/preferências viram pílulas lado a lado */
+  body.ef-simple-ui #ef-tools { border-top: 0 !important; padding: 6px 0 8px !important; }
+  body.ef-simple-ui #ef-tools-content { gap: 8px !important; }
+  body.ef-simple-ui #ef-tools .ef-sidebar-section,
+  body.ef-simple-ui #ef-tools-content > details {
+    background: transparent !important;
+    border: 1px solid var(--ef-line) !important;
+    border-radius: 999px !important;
+  }
+  body.ef-simple-ui #ef-tools-content > details[open] { border-radius: 20px !important; }
+
+  /* o aviso flutuante nunca cobre a barra inferior */
+  #ef55-toasts { bottom: calc(86px + env(safe-area-inset-bottom)) !important; }
+
+  body.ef-simple-ui .ef55-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  body.ef-simple-ui .ef55-kpi:nth-child(3) { border-left: 0 !important; }
+  body.ef-simple-ui .ef55-kpi:nth-child(n+3) { border-top: 1px solid var(--ef-line) !important; }
+  body.ef-simple-ui .ef55-kpi { padding: 18px 18px !important; }
+}
+
+@media screen and (max-width: 600px) {
+  body.ef-simple-ui .top-navbar { padding: 12px 14px 4px !important; }
+  body.ef-simple-ui .brand-title { font-size: 17px !important; }
+  body.ef-simple-ui .top-navbar > .nav-tabs { left: 10px; right: 10px; }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn { font-size: 10.5px !important; }
+  body.ef-simple-ui #ef-tools-content { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  body.ef-simple-ui #tab-historico .history-card { padding: 16px !important; }
+  body.ef-simple-ui .ef55-row { grid-template-columns: 36px minmax(0, 1fr) auto; column-gap: 10px; padding: 12px 4px !important; }
+  body.ef-simple-ui .ef55-av { width: 36px; height: 36px; }
+}
+
+/* ---------- Escuro: ajustes finos ---------- */
+html.ef-dark-mode body.ef-simple-ui .top-navbar > .nav-tabs,
+body.ef-simple-ui.dark-mode .top-navbar > .nav-tabs {
+  --ef-nav-shadow: rgba(0, 0, 0, .6);
+}
+html.ef-dark-mode body.ef-simple-ui .brand-icon-box,
+body.ef-simple-ui.dark-mode .brand-icon-box { background: var(--ef-lime) !important; color: var(--ef-lime-ink) !important; }
+
+@media print {
+  body.ef-simple-ui .top-navbar > .nav-tabs::before { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.ef-simple-ui * { transition: none !important; animation: none !important; }
+}
+
+/* ==========================================================================
+   Modo escuro: substitui as superfícies azul-marinho fixas do CSS antigo
+   ========================================================================== */
+@media screen {
+  html.ef-dark-mode body.ef-simple-ui :is(#tab-painel, #tab-historico, #tab-comparison, #tab-cobranca, #tab-lab77, #tab-novo-checkin)
+    :is(.ef55-card, .ef55-cols > *, .kpi-card, .history-card, .stat-card, .card, .comparison-selector-grid, .chart-box, .comparison-table,
+        .cob-card, .cob-kpi-card, .wizard-header-card, .form-section, #ef70-engine, .ef70-stat, #comp-contact-meta, .ef77-card),
+  html.ef-dark-mode body.ef-simple-ui :is(.modal-card, .modal-content, #view-modal .modal-content, .cob-card, .cob-kpi-card, .history-card, .wizard-header-card) {
+    background: var(--ef-surface) !important;
+    border-color: var(--ef-line) !important;
+    color: var(--ef-ink) !important;
+  }
+  html.ef-dark-mode body.ef-simple-ui #tab-painel .ef55-kpis { background: var(--ef-surface) !important; border-color: var(--ef-line) !important; }
+  html.ef-dark-mode body.ef-simple-ui #tab-painel .ef55-kpis > * { background: transparent !important; border-color: var(--ef-line) !important; }
+  html.ef-dark-mode body.ef-simple-ui #tab-historico > .card { background: transparent !important; border: 0 !important; }
+  html.ef-dark-mode body.ef-simple-ui th,
+  html.ef-dark-mode body.ef-simple-ui #tab-comparison .comparison-table :is(th, thead th) { background: var(--ef-soft) !important; color: var(--ef-ink) !important; border-color: var(--ef-line) !important; }
+  html.ef-dark-mode body.ef-simple-ui :is(td, .cob-table td, #tab-comparison .comparison-table :is(td, tr, tbody tr)) { background: transparent !important; border-color: var(--ef-line) !important; }
+  html.ef-dark-mode body.ef-simple-ui :is(input, select, textarea):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]) {
+    background: var(--ef-surface) !important;
+    border-color: var(--ef-line) !important;
+    color: var(--ef-ink) !important;
+  }
+  html.ef-dark-mode body.ef-simple-ui .kpi-icon-box[style] { background: var(--ef-soft) !important; color: var(--ef-fir) !important; }
+  html.ef-dark-mode body.ef-simple-ui .ef-simple-fold { background: var(--ef-surface) !important; border-color: var(--ef-line) !important; }
+}
+
+/* ==========================================================================
+   Azuis remanescentes do CSS antigo → paleta da ficha viva (claro e escuro)
+   ========================================================================== */
+@media screen {
+  body.ef-simple-ui :is(.ef-help-btn, #comp-period-badge, .history-badge, .ef70-badge, .cob-view-btn.active, .cob-kpi-icon, .ef-nav-count) {
+    color: var(--ef-fir) !important;
+    border-color: color-mix(in srgb, var(--ef-fir) 40%, transparent) !important;
+  }
+  body.ef-simple-ui :is(.ef-help-btn, #comp-period-badge, .history-badge, .ef70-badge, .ef-nav-count) {
+    background: var(--ef-soft) !important;
+  }
+  body.ef-simple-ui :is(.cob-chip.active, .ef77-btn.pri, #ef77-csv) {
+    background: var(--ef-primary-bg) !important;
+    border-color: var(--ef-primary-bg) !important;
+    color: var(--ef-primary-ink) !important;
+  }
+  html.ef-dark-mode body.ef-simple-ui :is(#tab-comparison, #tab-cobranca, #tab-historico, #tab-novo-checkin, #tab-lab77) :is(input, select, textarea):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]) {
+    background: var(--ef-surface) !important;
+    border-color: var(--ef-line) !important;
+    color: var(--ef-ink) !important;
+  }
+  html.ef-dark-mode body.ef-simple-ui #filtro-busca { border-color: var(--ef-line) !important; }
+  body.ef-simple-ui :is(.cob-seg-btn, .cob-view-btn, .cob-kpi-label):not(.active) { color: var(--ef-muted) !important; }
+  body.ef-simple-ui .cob-view-btn.active { background: var(--ef-soft) !important; }
+}
+@media screen {
+  html.ef-dark-mode body.ef-simple-ui :is(#tab-historico, #tab-painel) :is(.history-badge, .ef70-badge) {
+    background: var(--ef-soft) !important;
+    color: var(--ef-fir) !important;
+    border-color: transparent !important;
+  }
+  body.ef-simple-ui .cob-kpi-val { color: var(--ef-fir) !important; }
+}
+
+
+/* Ajustes de acabamento da 9.0: safe-area, nomes longos e foco sem halo legado. */
+@media screen {
+  body.ef-simple-ui #ef55-toasts {
+    bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 50% !important;
+    width: min(92vw, 560px) !important;
+    max-width: min(92vw, 560px) !important;
+    padding-inline: 0 !important;
+    box-sizing: border-box !important;
+  }
+  body.ef-simple-ui #ef55-toasts .ef55-toast {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    text-align: center !important;
+  }
+  body.ef-simple-ui .ef55-row { min-width: 0; }
+  body.ef-simple-ui .ef55-row > .t { overflow-wrap: anywhere; }
+  body.ef-simple-ui .step-indicator:focus,
+  body.ef-simple-ui .step-indicator:focus-visible,
+  body.ef-simple-ui .step-indicator.active:focus .step-dot,
+  body.ef-simple-ui .step-indicator.active:focus-visible .step-dot {
+    outline: 2px solid var(--ef-fir) !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui #ef-tools-content > .ef-sidebar-section > summary {
+    overflow-wrap: anywhere;
+  }
+}
+@media screen and (max-width: 600px) {
+  body.ef-simple-ui .ef55-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-areas: "av txt" "av pill" "av chips";
+    column-gap: 10px;
+    padding: 12px 4px !important;
+  }
+  body.ef-simple-ui .ef55-av { width: 34px; height: 34px; }
+  body.ef-simple-ui .ef55-row > .ef55-pill,
+  body.ef-simple-ui .ef55-row > .ef55-wa {
+    grid-area: auto; justify-self: start; white-space: normal; max-width: 100%;
+  }
+  body.ef-simple-ui .ef55-row > .ef55-chips { grid-column: 2; }
+  body.ef-simple-ui #ef55-toasts { bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
+}
