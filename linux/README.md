@@ -148,3 +148,11 @@ O aplicativo Linux está em estágio de **prévia técnica**. O pipeline automat
 | Instalação real | **Pendente** — Ubuntu/Debian e demais distribuições, upgrades, dependências e remoção segura |
 
 **Critério para produção:** concluir e registrar evidências de todos os itens pendentes, executar teste de recuperação real com backups fictícios e obter aprovação de segurança e privacidade.
+
+## Correções Windows adaptadas ao Linux — 19/10/2026
+
+- **Cobranças pendentes:** status `pendente` por padrão, ação `Receber cobrança pendente...` com confirmação GTK4 e transição SQLCipher atômica para `pago` com data UTC. Uma segunda tentativa de recebimento falha sem modificar a cobrança.
+- **Migração do banco:** `user_version=2` acrescenta status e data de recebimento a bases SQLCipher anteriores (versão 1), preservando os registros. Backups das versões 1 e 2 são reconhecidos.
+- **Avaliações:** o Linux já grava diretamente no SQLite criptografado; a falha JavaScript de `perimetria_soma.toFixed` não se aplica ao formulário nativo atual (que só possui data, peso e altura).
+- **Diferença funcional ainda existente:** o Linux não oferece a escolha e sincronização de pasta física de avaliações do Windows. Portanto, a correção de gravação duplicada na pasta não pode ser considerada portada. A função requer implementação própria, permissões e testes de sincronização.
+- **Uso experimental:** não inserir dados clínicos reais até a homologação de segurança e privacidade.
