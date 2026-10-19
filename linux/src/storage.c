@@ -78,11 +78,7 @@ gboolean ef_store_open(EfStore *store, GError **error) {
   int rc=sqlite3_step(version);
   int schema_version=rc==SQLITE_ROW ? sqlite3_column_int(version,0) : -1;
   sqlite3_finalize(version);
-  if(schema_version==0) {
-    if(sqlite3_exec(store->db,"PRAGMA user_version=1",NULL,NULL,NULL)!=SQLITE_OK) {
-      sql_error(store,error);ef_store_close(store);return FALSE;
-    }
-  } else if(schema_version!=1) {
+  if(schema_version!=0 && schema_version!=1 && schema_version!=2) {
     g_set_error(error,ef_error(),27,"Versão de banco não suportada: %d",schema_version);
     ef_store_close(store);return FALSE;
   }
@@ -94,6 +90,18 @@ gboolean ef_store_open(EfStore *store, GError **error) {
     "CREATE INDEX IF NOT EXISTS idx_charges_client ON charges(client_id);",
     NULL,NULL,NULL)!=SQLITE_OK) {
     sql_error(store,error);ef_store_close(store);return FALSE;
+  }
+  if(schema_version<2) {
+    const char *migration="BEGIN IMMEDIATE;"
+      "ALTER TABLE charges ADD COLUMN status TEXT NOT NULL DEFAULT 'pendente' CHECK(status IN ('pendente','pago'));"
+      "ALTER TABLE charges ADD COLUMN received_utc TEXT;"
+      "PRAGMA user_version=2;"
+      "COMMIT;";
+    if(sqlite3_exec(store->db,migration,NULL,NULL,NULL)!=SQLITE_OK) {
+      sql_error(store,error);
+      sqlite3_exec(store->db,"ROLLBACK",NULL,NULL,NULL);
+      ef_store_close(store);return FALSE;
+    }
   }
   return TRUE;
 }
