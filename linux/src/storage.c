@@ -1,5 +1,7 @@
 #include "storage.h"
 #include <glib/gstdio.h>
+#include <unistd.h>
+#include <errno.h>
 static GQuark ef_error(void) { return g_quark_from_static_string("evolufisico-storage"); }
 static gboolean sql_error(EfStore *store, GError **error) {
   g_set_error(error, ef_error(), 1, "%s", sqlite3_errmsg(store->db)); return FALSE;
@@ -136,10 +138,10 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
     }
   }
   if(ok)g_chmod(temporary,0600);
-  if(ok && g_rename(temporary,destination)!=0) {
-    g_set_error_literal(error,ef_error(),15,"Não foi possível finalizar backup");ok=FALSE;
+  if(ok && link(temporary,destination)!=0) {
+    g_set_error(error,ef_error(),15,"Não foi possível finalizar backup sem sobrescrever: %s",g_strerror(errno));ok=FALSE;
   }
-  if(!ok)g_unlink(temporary);
+  g_unlink(temporary);
   g_free(temporary);
   return ok;
 }
