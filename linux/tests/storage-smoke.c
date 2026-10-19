@@ -152,6 +152,18 @@ int main(void) {
   g_assert_cmpint(symlink(backup,symlink_path),==,0);
   g_assert_false(ef_store_backup(&store,symlink_path,&error));g_clear_error(&error);
   g_assert_false(ef_store_restore(&store,symlink_path,&error));g_clear_error(&error);
+  /* Tampering with encrypted backup must fail without changing the live database. */
+  char *tampered=g_build_filename(tmp,"tampered-backup.sqlite",NULL);
+  gchar *encrypted_bytes=NULL;gsize encrypted_length=0;
+  g_assert_true(g_file_get_contents(backup,&encrypted_bytes,&encrypted_length,&error));g_assert_no_error(error);
+  g_assert_cmpuint(encrypted_length,>,256);
+  encrypted_bytes[128]^=0x5A;
+  g_assert_true(g_file_set_contents(tampered,encrypted_bytes,encrypted_length,&error));g_assert_no_error(error);
+  g_free(encrypted_bytes);
+  g_assert_false(ef_store_restore(&store,tampered,&error));g_clear_error(&error);
+  g_remove(tampered);g_free(tampered);
+  g_assert_true(ef_store_check_integrity(&store,&error));g_assert_no_error(error);
+
   g_unlink(symlink_path);g_free(symlink_path);
   g_assert_false(ef_store_rename_client(&store,-1,"Inválido",&error));g_clear_error(&error);
   g_assert_false(ef_store_rename_client(&store,2,"",&error));g_clear_error(&error);
