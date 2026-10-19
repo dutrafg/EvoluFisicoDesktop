@@ -4,6 +4,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: windows-build-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -35,6 +39,7 @@ jobs:
             throw 'Invalid Windows ICO file'
           }
           $exe = 'publish/win-x64/EvoluFisico.Desktop.exe'
+          Add-Type -AssemblyName System.Drawing
           $icon = [System.Drawing.Icon]::ExtractAssociatedIcon((Resolve-Path $exe).Path)
           if (-not $icon) { throw 'Windows EXE icon missing' }
           $icon.Dispose()
