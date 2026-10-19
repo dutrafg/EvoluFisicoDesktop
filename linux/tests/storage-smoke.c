@@ -65,6 +65,8 @@ int main(void) {
   g_assert_false(ef_store_add_assessment(&store,2,"2026-10-19",70,301,&error));g_clear_error(&error);
   g_assert_false(ef_store_add_assessment(&store,2,"2026-13-01",70,170,&error));g_clear_error(&error);
   g_assert_false(ef_store_add_charge(&store,2,100000000001LL,"Valor acima do limite",&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_assessment(&store,2,"2026-00-10",70,170,&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_assessment(&store,2,"2026-11-31",70,170,&error));g_clear_error(&error);
   GPtrArray *charges=ef_store_list_charges(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(charges->len,==,1);g_ptr_array_unref(charges);
   GPtrArray *choices=ef_store_client_choices(&store,&error);
