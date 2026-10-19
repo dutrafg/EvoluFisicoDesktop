@@ -185,6 +185,58 @@ internal sealed class EncryptedSqliteStore
         tx.Commit();
     }
 
+    /// <summary>Atomically updates comparison records and deletes one evaluation.</summary>
+    internal void DeleteEvaluationWithUpdates(string targetId,
+        System.Collections.Generic.IReadOnlyDictionary<string, byte[]> updates)
+    {
+        if (string.IsNullOrWhiteSpace(targetId) || targetId.Length > 128)
+            throw new ArgumentException("Identificador inválido.", nameof(targetId));
+        ArgumentNullException.ThrowIfNull(updates);
+        if (updates.Count > 1000) throw new InvalidDataException("Lote excede o limite.");
+        var encrypted = new System.Collections.Generic.Dictionary<string, byte[]>(StringComparer.Ordinal);
+        long totalBytes = 0;
+        foreach (var pair in updates)
+        {
+            if (string.IsNullOrWhiteSpace(pair.Key) || pair.Key.Length > 128 || pair.Key == targetId)
+                throw new InvalidDataException("Identificador de avaliação vinculada inválido.");
+            ArgumentNullException.ThrowIfNull(pair.Value);
+            totalBytes += pair.Value.Length;
+            if (pair.Value.Length > 12_000_000 || totalBytes > 32_000_000)
+                throw new InvalidDataException("Lote excede o limite.");
+            encrypted.Add(pair.Key, ProtectedVault.Encrypt(pair.Value));
+        }
+        using var db = Open();
+        using var tx = db.BeginTransaction();
+        using (var exists = db.CreateCommand())
+        {
+            exists.Transaction = tx;
+            exists.CommandText = "SELECT COUNT(*) FROM protected_records WHERE record_id=$id";
+            exists.Parameters.AddWithValue("$id", targetId);
+            if (Convert.ToInt64(exists.ExecuteScalar()) != 1)
+                throw new InvalidDataException("Avaliação não encontrada; nenhuma alteração aplicada.");
+        }
+        foreach (var pair in encrypted)
+        {
+            using var cmd = db.CreateCommand();
+            cmd.Transaction = tx;
+            cmd.CommandText = "UPDATE protected_records SET encrypted_payload=$data, updated_utc=$time WHERE record_id=$id";
+            cmd.Parameters.AddWithValue("$id", pair.Key);
+            cmd.Parameters.AddWithValue("$data", pair.Value);
+            cmd.Parameters.AddWithValue("$time", DateTimeOffset.UtcNow.ToString("O"));
+            if (cmd.ExecuteNonQuery() != 1)
+                throw new InvalidDataException("Avaliação vinculada não encontrada; operação revertida.");
+        }
+        using (var cmd = db.CreateCommand())
+        {
+            cmd.Transaction = tx;
+            cmd.CommandText = "DELETE FROM protected_records WHERE record_id=$id";
+            cmd.Parameters.AddWithValue("$id", targetId);
+            if (cmd.ExecuteNonQuery() != 1)
+                throw new InvalidDataException("Falha ao excluir avaliação; operação revertida.");
+        }
+        tx.Commit();
+    }
+
     /// <summary>Lists opaque record identifiers without exposing encrypted patient payloads.</summary>
     internal string[] ListRecordIds()
     {
