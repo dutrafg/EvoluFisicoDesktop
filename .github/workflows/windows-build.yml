@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -95,3 +95,20 @@ jobs:
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish downloadable beta release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = 'desktop-v9.0-beta'
+          gh release view $tag --repo ${{ github.repository }} *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 9.0 beta (Windows)' --notes 'Versao de testes para Windows x64. Instalador e pacote portatil. Faca backup antes de usar dados reais.' --prerelease --latest=false
+            if ($LASTEXITCODE -ne 0) { throw 'Could not create GitHub release' }
+          }
+          $installer = Get-ChildItem installer-output -Filter '*.exe' -File | Select-Object -First 1
+          if (-not $installer) { throw 'Setup EXE missing' }
+          gh release upload $tag $installer.FullName --repo ${{ github.repository }} --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Could not upload installer to GitHub release' }
+          Write-Host "Release available at https://github.com/${{ github.repository }}/releases/tag/$tag"
