@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include "storage.h"
 #include <errno.h>
+#include <math.h>
 
 typedef struct {
   EfStore store;
@@ -26,6 +27,22 @@ typedef struct {
   GtkWidget *charge_list;
 } AppState;
 
+static gboolean read_id(GtkWidget *entry,gint64 *out) {
+  const char *value=gtk_editable_get_text(GTK_EDITABLE(entry));
+  if(!*value)return FALSE;
+  errno=0;char *end=NULL;
+  gint64 parsed=g_ascii_strtoll(value,&end,10);
+  if(errno==ERANGE || !end || *end || parsed<=0)return FALSE;
+  *out=parsed;return TRUE;
+}
+static gboolean read_positive_double(GtkWidget *entry,double *out) {
+  const char *value=gtk_editable_get_text(GTK_EDITABLE(entry));
+  if(!*value)return FALSE;
+  errno=0;char *end=NULL;
+  double parsed=g_ascii_strtod(value,&end);
+  if(errno==ERANGE || !end || *end || !isfinite(parsed) || parsed<=0)return FALSE;
+  *out=parsed;return TRUE;
+}
 static void refresh_clients(AppState *state) {
   GtkWidget *child;
   while ((child=gtk_widget_get_first_child(state->client_list)))
@@ -49,10 +66,8 @@ static void refresh_clients(AppState *state) {
 static void rename_client_clicked(GtkButton *button,gpointer data) {
   (void)button;
   AppState *state=data;
-  const char *id_text=gtk_editable_get_text(GTK_EDITABLE(state->client_id_entry));
-  char *end=NULL;
-  gint64 id=g_ascii_strtoll(id_text,&end,10);
-  if(!*id_text || !end || *end || id<=0) {
+  gint64 id=0;
+  if(!read_id(state->client_id_entry,&id)) {
     gtk_label_set_text(GTK_LABEL(state->status),"Informe um ID numérico válido.");
     return;
   }
