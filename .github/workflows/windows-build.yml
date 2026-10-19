@@ -58,9 +58,12 @@ jobs:
         shell: pwsh
         run: |
           $publish = 'publish/win-x64'
-          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/evolufisico.html','wwwroot/icon-192.png','wwwroot/icon-512.png','wwwroot/sw.js')) {
+          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/evolufisico.html','wwwroot/icon-192.png','wwwroot/icon-512.png','wwwroot/sw.js','wwwroot/desktop-version.json')) {
             if (!(Test-Path (Join-Path $publish $file))) { throw "Missing published file: $file" }
           }
+          $manifest = Get-Content (Join-Path $publish 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
+          $expected = 'desktop-v9.0-beta-' + '${{ github.sha }}'.Substring(0,7)
+          if ($manifest.tag -ne $expected) { throw "Version manifest mismatch: $($manifest.tag) vs $expected" }
           Write-Host 'Portable Windows application validated for packaging'
 
       - name: Upload portable Windows application
