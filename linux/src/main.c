@@ -125,14 +125,14 @@ static void refresh_charges(AppState *state,gint64 client_id) {
 }
 static void show_assessments(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;
-  if(!read_id(state->assessment_client,&id)) {
+  if(!read_picker_id(state->assessment_picker,&id)) {
     gtk_label_set_text(GTK_LABEL(state->assessment_status),"Informe o ID do cliente.");return;
   }
   refresh_assessments(state,id);
 }
 static void show_charges(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;
-  if(!read_id(state->charge_client,&id)) {
+  if(!read_picker_id(state->charge_picker,&id)) {
     gtk_label_set_text(GTK_LABEL(state->charge_status),"Informe o ID do cliente.");return;
   }
   refresh_charges(state,id);
@@ -335,15 +335,14 @@ static void activate(GtkApplication *app,gpointer data) {
       else gtk_label_set_text(GTK_LABEL(state->status),"Erro ao abrir SQLite. Cadastro indisponível.");
       gtk_widget_set_sensitive(save,state->store.db!=NULL);
     }else if(i==2){
-      state->assessment_client=gtk_entry_new();
-      gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_client),"ID do cliente");
+      state->assessment_picker=gtk_combo_box_text_new();
       state->assessment_date=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_date),"Data AAAA-MM-DD");
       state->assessment_weight=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_weight),"Peso em kg (ex.: 70.5)");
       state->assessment_height=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_height),"Altura em cm (ex.: 170)");
-      gtk_box_append(GTK_BOX(page),state->assessment_client);
+      gtk_box_append(GTK_BOX(page),state->assessment_picker);
       gtk_box_append(GTK_BOX(page),state->assessment_date);
       gtk_box_append(GTK_BOX(page),state->assessment_weight);
       gtk_box_append(GTK_BOX(page),state->assessment_height);
@@ -360,13 +359,12 @@ static void activate(GtkApplication *app,gpointer data) {
       g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
       gtk_widget_set_sensitive(save_assessment_button,state->store.db!=NULL);
     }else if(i==3){
-      state->charge_client=gtk_entry_new();
-      gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_client),"ID do cliente");
+      state->charge_picker=gtk_combo_box_text_new();
       state->charge_cents=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_cents),"Valor em centavos (ex.: 2500 = R$ 25,00)");
       state->charge_description=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_description),"Descrição do serviço");
-      gtk_box_append(GTK_BOX(page),state->charge_client);
+      gtk_box_append(GTK_BOX(page),state->charge_picker);
       gtk_box_append(GTK_BOX(page),state->charge_cents);
       gtk_box_append(GTK_BOX(page),state->charge_description);
       GtkWidget *save_charge_button=gtk_button_new_with_label("Registrar cobrança");
@@ -415,6 +413,7 @@ static void activate(GtkApplication *app,gpointer data) {
     g_signal_connect(button,"clicked",G_CALLBACK(navigate),stack);
     gtk_box_append(GTK_BOX(sidebar),button);
   }
+  refresh_pickers(state);
   gtk_box_append(GTK_BOX(root),sidebar);
   gtk_box_append(GTK_BOX(root),gtk_separator_new(GTK_ORIENTATION_VERTICAL));
   gtk_widget_set_hexpand(stack,TRUE);
