@@ -150,6 +150,11 @@ static void delete_record_confirmed(GtkDialog *dialog,gint response,gpointer dat
     gtk_label_set_text(GTK_LABEL(status),"Selecione um cliente e informe o ID do registro.");return;
   }
   GError *error=NULL;
+  gboolean owns=assessment ? ef_store_assessment_belongs_to(&state->store,id,client,&error) : ef_store_charge_belongs_to(&state->store,id,client,&error);
+  if(!owns) {
+    gtk_label_set_text(GTK_LABEL(status),error ? error->message : "Registro de outro cliente.");
+    g_clear_error(&error);return;
+  }
   gboolean ok=assessment ? ef_store_delete_assessment(&state->store,id,&error) : ef_store_delete_charge(&state->store,id,&error);
   if(ok) {
     gtk_label_set_text(GTK_LABEL(status),"Registro excluído.");
