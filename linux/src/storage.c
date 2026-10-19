@@ -14,11 +14,24 @@ gboolean ef_store_open(EfStore *store, GError **error) {
     g_set_error_literal(error, ef_error(), 2, "Não foi possível criar diretório de dados");
     g_free(dir); return FALSE;
   }
+  if(g_file_test(dir,G_FILE_TEST_IS_SYMLINK)) {
+    g_set_error_literal(error,ef_error(),48,"Diretório de dados não pode ser um link simbólico");
+    g_free(dir);return FALSE;
+  }
+  if(g_chmod(dir,0700)!=0) {
+    g_set_error_literal(error,ef_error(),49,"Não foi possível proteger o diretório de dados");
+    g_free(dir);return FALSE;
+  }
   char *file = g_build_filename(dir, "records.sqlite", NULL);
+  if(g_file_test(file,G_FILE_TEST_IS_SYMLINK)) {
+    g_set_error_literal(error,ef_error(),50,"Arquivo de banco não pode ser link simbólico");
+    g_free(file);g_free(dir);return FALSE;
+  }
   g_free(dir);
   int result = sqlite3_open_v2(file, &store->db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, NULL);
-  if(result==SQLITE_OK) {
-    g_chmod(file,0600);
+  if(result==SQLITE_OK && g_chmod(file,0600)!=0) {
+    g_set_error_literal(error,ef_error(),51,"Não foi possível proteger o arquivo SQLite");
+    g_free(file);ef_store_close(store);return FALSE;
   }
   g_free(file);
   if (result != SQLITE_OK) { sql_error(store, error); ef_store_close(store); return FALSE; }
