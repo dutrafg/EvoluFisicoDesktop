@@ -60,6 +60,7 @@ window.EFNativeStorage=Object.freeze({
   return Number(await call('import-batch',undefined,undefined,encoded));
  },
  delete:id=>call('delete',id),
+ backup:()=>call('backup'),
  readJSON:async id=>{
   const bytes=await window.EFNativeStorage.read(id);
   return bytes===null?null:JSON.parse(decoder.decode(bytes));
