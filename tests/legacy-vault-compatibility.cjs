@@ -15,7 +15,7 @@ const expectations=[
  ['legacy encrypted envelopes',/__efEncrypted/],
  ['SQLite evaluation read',/storage\.readJSON\(id\)/],
  ['SQLite evaluation write',/efNativeEvalStore\(\)\.writeJSON\(/],
- ['SQLite evaluation delete',/efNativeEvalStore\(\)\.delete\(/],
+ ['SQLite atomic evaluation delete',/efNativeEvalStore\(\)\.deleteEvaluation\(/],
  ['Locked vault blocks evaluation deletion',/Desbloqueie o cofre antes de excluir avaliações/],
  ['Invalid SQLite evaluation is not silently skipped',/Avaliação SQLite não pôde ser recuperada ou descriptografada/],
  ['SQLite billing read',/billingNativeStore\(\)\.readJSON\(EF_NATIVE_BILLING_KEY\)/],
