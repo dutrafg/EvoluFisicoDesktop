@@ -10,6 +10,19 @@ async function stableId(database,store,key){
  const digest=await crypto.subtle.digest('SHA-256',encoder.encode(JSON.stringify([database,store,key])));
  return 'ef-idb-v2-'+Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
 }
+function requireJSON(value,seen=new WeakSet()){
+ if(value===null || typeof value==='string' || typeof value==='boolean')return;
+ if(typeof value==='number' && Number.isFinite(value))return;
+ if(typeof value!=='object' || seen.has(value) || value instanceof Date ||
+    value instanceof ArrayBuffer || ArrayBuffer.isView(value) ||
+    value instanceof Blob || value instanceof Map || value instanceof Set)
+  throw new Error('Registro IndexedDB contém valor não compatível com JSON');
+ seen.add(value);
+ if(!Array.isArray(value) && Object.getPrototypeOf(value)!==Object.prototype)
+  throw new Error('Registro IndexedDB contém objeto não suportado');
+ for(const [key,item] of Object.entries(value))requireJSON(item,seen);
+ seen.delete(value);
+}
 function readStore(db,name){
  return new Promise((resolve,reject)=>{
   const items=[];
@@ -20,6 +33,7 @@ function readStore(db,name){
    if(!cursor)return;
    try{
     const key=cursor.key,value=cursor.value;
+    requireJSON(key);requireJSON(value);
     const serialized=JSON.stringify({key,value});
     if(serialized===undefined)throw new Error('Registro não serializável');
     const decoded=JSON.parse(serialized);
