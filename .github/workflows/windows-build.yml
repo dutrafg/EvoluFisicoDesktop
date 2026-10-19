@@ -42,6 +42,19 @@ jobs:
           if (-not $installer) { throw 'Instalador EXE nao foi gerado' }
           if ($installer.Length -lt 100KB) { throw 'Instalador suspeitamente pequeno' }
           Write-Host "Instalador gerado: $($installer.Name) ($($installer.Length) bytes)"
+      - name: Verify published application and bundled assets
+        shell: pwsh
+        run: |
+          $publish = 'publish/win-x64'
+          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/icon-192.png','wwwroot/icon-512.png','wwwroot/sw.js')) {
+            if (!(Test-Path (Join-Path $publish $file))) { throw "Published file missing: $file" }
+          }
+          Write-Host 'Windows executable and frontend bundle verified'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-9.0-Windows-Portable
+          path: publish/win-x64/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: EvoluFisicoDesktop-9.0-Windows-Setup
