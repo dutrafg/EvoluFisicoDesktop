@@ -220,8 +220,11 @@ gboolean ef_store_backup(EfStore *store,const char *destination,GError **error) 
   }
   const char *live=sqlite3_db_filename(store->db,"main");
   if(!live)return FALSE;
+  if(sqlite3_exec(store->db,"BEGIN IMMEDIATE",NULL,NULL,NULL)!=SQLITE_OK)
+    return sql_error(store,error);
   char *temporary=g_strdup_printf("%s.tmp-%s",destination,g_uuid_string_random());
   gboolean ok=encrypted_file_copy(live,temporary,error);
+  sqlite3_exec(store->db,"ROLLBACK",NULL,NULL,NULL);
   if(ok)ok=verify_encrypted_snapshot(temporary,error);
   if(ok && g_chmod(temporary,0600)!=0) {
     g_set_error_literal(error,ef_error(),75,"Falha ao proteger backup");ok=FALSE;
