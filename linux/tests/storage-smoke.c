@@ -8,6 +8,7 @@ int main(void) {
   char *tmp=g_dir_make_tmp("evolufisico-test-XXXXXX",NULL);
   g_assert_nonnull(tmp);
   g_setenv("XDG_DATA_HOME",tmp,TRUE);
+  g_setenv("EVOLUFISICO_DB_PASSPHRASE","EvoluFisico-QA-Ficticio-2026!",TRUE);
   EfStore store={0}; GError *error=NULL;
   g_assert_true(ef_store_open(&store,&error)); g_assert_no_error(error);
   char *dbdir=g_build_filename(tmp,"evolufisico",NULL);
