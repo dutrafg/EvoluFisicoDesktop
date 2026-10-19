@@ -52,6 +52,23 @@ try
     Check(store.Load("batch-a") is null, "Deleted record is no longer readable");
     Check(!store.Delete("batch-a"), "Repeated deletion is idempotent");
     Check(!store.ListRecordIds().Contains("batch-a"), "Deleted record absent from listing");
+    var futureDatabase = Path.Combine(dir, "future.sqlite");
+    using (var future = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + futureDatabase))
+    {
+        future.Open();
+        using var setVersion = future.CreateCommand();
+        setVersion.CommandText = "PRAGMA user_version=99";
+        setVersion.ExecuteNonQuery();
+    }
+    try { new EncryptedSqliteStore(futureDatabase).VerifyIntegrity(); throw new Exception("Future schema must be rejected"); }
+    catch (InvalidDataException) { Console.WriteLine("PASS: Newer SQLite schema rejected without downgrade"); }
+    using (var future = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + futureDatabase))
+    {
+        future.Open();
+        using var checkVersion = future.CreateCommand();
+        checkVersion.CommandText = "PRAGMA user_version";
+        Check(Convert.ToInt32(checkVersion.ExecuteScalar()) == 99, "Newer schema version preserved");
+    }
     var snapshot = Path.Combine(dir, "snapshot.sqlite");
     store.BackupTo(snapshot);
     var restored = new EncryptedSqliteStore(snapshot);
