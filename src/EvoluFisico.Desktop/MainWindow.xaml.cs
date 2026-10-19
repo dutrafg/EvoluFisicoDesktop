@@ -70,6 +70,21 @@ public partial class MainWindow : Window
                     catch (Exception ex) { MessageBox.Show("Não foi possível abrir o download: " + ex.Message); }
                 }
             };
+            Browser.CoreWebView2.NavigationStarting += (_, args) =>
+            {
+                if (!Uri.TryCreate(args.Uri, UriKind.Absolute, out var destination)
+                    || !destination.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase)
+                    || !destination.Host.Equals("evolufisico.local", StringComparison.OrdinalIgnoreCase))
+                {
+                    args.Cancel = true;
+                    if (Uri.TryCreate(args.Uri, UriKind.Absolute, out var external)
+                        && external.Scheme == Uri.UriSchemeHttps)
+                    {
+                        try { Process.Start(new ProcessStartInfo(external.AbsoluteUri) { UseShellExecute = true }); }
+                        catch (Exception ex) { MessageBox.Show("Não foi possível abrir o link: " + ex.Message); }
+                    }
+                }
+            };
             Browser.CoreWebView2.NavigationCompleted += (_, args) =>
             {
                 if (!args.IsSuccess)
@@ -97,20 +112,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private void Home_Click(object sender, RoutedEventArgs e)
-    {
-        if (_ready) Browser.CoreWebView2.Navigate(AppUrl);
-    }
-
-    private void Reload_Click(object sender, RoutedEventArgs e)
-    {
-        if (_ready) Browser.CoreWebView2.Reload();
-    }
-
-    private void Print_Click(object sender, RoutedEventArgs e)
-    {
-        if (_ready) Browser.CoreWebView2.ShowPrintUI();
-    }
     private async Task CheckUpdatesAsync()
     {
         if (_checkingUpdates) return;
