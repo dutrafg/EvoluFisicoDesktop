@@ -28,6 +28,9 @@ typedef struct {
   GtkWidget *assessment_delete_id;
   GtkWidget *charge_delete_id;
   GtkWidget *client_delete_id;
+  GtkWidget *client_scroll;
+  GtkWidget *assessment_scroll;
+  GtkWidget *charge_scroll;
 } AppState;
 
 static gboolean read_picker_id(GtkWidget *picker,gint64 *out) {
@@ -415,7 +418,10 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),state->search_entry);
       g_signal_connect(state->search_entry,"search-changed",G_CALLBACK(on_search),state);
       state->client_list=gtk_list_box_new();
-      gtk_box_append(GTK_BOX(page),state->client_list);
+      state->client_scroll=gtk_scrolled_window_new();
+      gtk_widget_set_vexpand(state->client_scroll,TRUE);
+      gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(state->client_scroll),state->client_list);
+      gtk_box_append(GTK_BOX(page),state->client_scroll);
       g_signal_connect(save,"clicked",G_CALLBACK(add_client),state);
       if(state->store.db) refresh_clients(state);
       else gtk_label_set_text(GTK_LABEL(state->status),"Erro ao abrir SQLite. Cadastro indisponível.");
@@ -449,7 +455,10 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_widget_set_sensitive(delete_assessment_button,state->store.db!=NULL);
       gtk_box_append(GTK_BOX(page),delete_assessment_button);
       state->assessment_list=gtk_list_box_new();
-      gtk_box_append(GTK_BOX(page),state->assessment_list);
+      state->assessment_scroll=gtk_scrolled_window_new();
+      gtk_widget_set_vexpand(state->assessment_scroll,TRUE);
+      gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(state->assessment_scroll),state->assessment_list);
+      gtk_box_append(GTK_BOX(page),state->assessment_scroll);
       g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
       gtk_widget_set_sensitive(save_assessment_button,state->store.db!=NULL);
     }else if(i==3){
@@ -478,7 +487,10 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_widget_set_sensitive(delete_charge_button,state->store.db!=NULL);
       gtk_box_append(GTK_BOX(page),delete_charge_button);
       state->charge_list=gtk_list_box_new();
-      gtk_box_append(GTK_BOX(page),state->charge_list);
+      state->charge_scroll=gtk_scrolled_window_new();
+      gtk_widget_set_vexpand(state->charge_scroll,TRUE);
+      gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(state->charge_scroll),state->charge_list);
+      gtk_box_append(GTK_BOX(page),state->charge_scroll);
       g_signal_connect(save_charge_button,"clicked",G_CALLBACK(save_charge),state);
       gtk_widget_set_sensitive(save_charge_button,state->store.db!=NULL);
     }else if(i==5){
