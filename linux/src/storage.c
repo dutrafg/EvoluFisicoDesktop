@@ -246,6 +246,13 @@ gboolean ef_store_restore(EfStore *store,const char *source,GError **error) {
     g_free(live);return FALSE;
   }
   if(!verify_encrypted_snapshot(source,error)){g_free(live);return FALSE;}
+  char *wal_file=g_strconcat(live,"-wal",NULL);
+  gboolean has_wal=g_file_test(wal_file,G_FILE_TEST_EXISTS);
+  g_free(wal_file);
+  if(has_wal) {
+    g_set_error_literal(error,ef_error(),82,"Restauração bloqueada enquanto existir arquivo WAL do banco ativo.");
+    g_free(live);return FALSE;
+  }
   char *rollback=g_strdup_printf("%s.rollback-%s",live,g_uuid_string_random());
   char *replacement=g_strdup_printf("%s.restore-%s",live,g_uuid_string_random());
   gboolean ok=ef_store_check_integrity(store,error);
