@@ -105,7 +105,10 @@ public partial class MainWindow : Window
             };
             Browser.CoreWebView2.WebMessageReceived += async (_, args) =>
             {
-                if (args.TryGetWebMessageAsString() is "check-updates" or "check-updates-auto") await CheckUpdatesAsync();
+                if (args.TryGetWebMessageAsString() is "check-updates" or "check-updates-auto")
+                    await CheckUpdatesAsync();
+                else
+                    HandleStorageMessage(args);
             };
             _ready = true;
             Browser.CoreWebView2.Navigate(AppUrl);
@@ -121,6 +124,88 @@ public partial class MainWindow : Window
             MessageBox.Show("Erro ao iniciar o EvoluFisico Desktop: " + ex.Message,
                 "EvoluFisico Desktop", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    // Native encrypted persistence endpoint. Only the packaged application origin may invoke it.
+    // The legacy IndexedDB store remains untouched until a verified migration is available.
+    private void HandleStorageMessage(CoreWebView2WebMessageReceivedEventArgs args)
+    {
+        try
+        {
+            if (!Uri.TryCreate(args.Source, UriKind.Absolute, out var source)
+                || source.Scheme != Uri.UriSchemeHttps
+                || !source.Host.Equals("evolufisico.local", StringComparison.OrdinalIgnoreCase)
+                || !source.IsDefaultPort
+                || source.AbsolutePath != "/index.html")
+                return;
+            using var message = JsonDocument.Parse(args.WebMessageAsJson);
+            var root = message.RootElement;
+            if (root.ValueKind != JsonValueKind.Object
+                || !root.TryGetProperty("type", out var type)
+                || type.GetString() != "native-storage")
+                return;
+            var id = root.GetProperty("requestId").GetString();
+            var action = root.GetProperty("action").GetString();
+            if (string.IsNullOrWhiteSpace(id) || id.Length > 80) return;
+            string? result = null;
+            var store = new EncryptedSqliteStore();
+            switch (action)
+            {
+                case "health":
+                    result = store.VerifyIntegrity() ? "ok" : "corrupt";
+                    break;
+                case "list":
+                    result = JsonSerializer.Serialize(store.ListRecordIds());
+                    break;
+                case "read":
+                {
+                    var key = root.GetProperty("recordId").GetString() ?? "";
+                    var data = store.Load(key);
+                    result = data is null ? null : Convert.ToBase64String(data);
+                    break;
+                }
+                case "write":
+                {
+                    var key = root.GetProperty("recordId").GetString() ?? "";
+                    var base64 = root.GetProperty("data").GetString() ?? "";
+                    if (base64.Length > 16_000_000) throw new InvalidDataException("Registro excede o limite permitido.");
+                    store.Save(key, Convert.FromBase64String(base64));
+                    result = "saved";
+                    break;
+                }
+                case "delete":
+                {
+                    var key = root.GetProperty("recordId").GetString() ?? "";
+                    result = store.Delete(key) ? "deleted" : "missing";
+                    break;
+                }
+                default: throw new InvalidDataException("Operação não permitida.");
+            }
+            SendStorageResponse(id, result, null);
+        }
+        catch (Exception ex)
+        {
+            // Do not disclose record contents or passwords in error responses.
+            string? id = null;
+            try
+            {
+                using var doc = JsonDocument.Parse(args.WebMessageAsJson);
+                if (doc.RootElement.TryGetProperty("requestId", out var requestId))
+                    id = requestId.GetString();
+            }
+            catch { /* Invalid input */ }
+            if (!string.IsNullOrWhiteSpace(id) && id.Length <= 80)
+                SendStorageResponse(id, null, ex is System.Security.Cryptography.CryptographicException
+                    ? "Não foi possível descriptografar o registro." : "Operação de armazenamento não concluída.");
+        }
+    }
+
+    private void SendStorageResponse(string requestId, string? data, string? error)
+    {
+        Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
+        {
+            type = "native-storage-result", requestId, data, error
+        }));
     }
 
     private async Task CheckUpdatesAsync()
