@@ -1,11 +1,18 @@
-# EvoluFisico Desktop 9.0
+# EvoluFisico Desktop 9.0-beta
 
-Projeto de migração do EvoluFisico 9.0-beta para Windows com C#/.NET 8, WPF e WebView2.
+Migração para Windows com C#/.NET 8, WPF e WebView2.
 
-**Status:** estrutura inicial; ainda não é instalador funcional. O frontend original 9.0 precisa ser incluído em `src/EvoluFisico.Desktop/wwwroot/` e validado.
+## Estado
+Frontend HTML/CSS/JavaScript 9.0-beta integrado ao repositório (arquivos de texto). Os ícones PNG ainda não foram incorporados. A compilação e execução Windows dependem de confirmação no GitHub Actions; **não declarar instalador validado antes do artefato e testes**.
 
-## Compilar no Windows
+## Build
+Requer Windows x64, .NET 8 SDK, WebView2 Runtime e Inno Setup 6.
 
-Instale .NET 8 SDK, Microsoft Edge WebView2 Runtime e Inno Setup 6. Execute `powershell -ExecutionPolicy Bypass -File scripts/build-windows.ps1` e compile `installer/EvoluFisico.iss` no Inno Setup.
+1. Execute `powershell -ExecutionPolicy Bypass -File scripts/build-windows.ps1`
+2. Compile `installer/EvoluFisico.iss` com Inno Setup.
+3. Ou consulte Actions > Windows Desktop Build para o pacote de instalação.
 
-A versão Web e o repositório EvoluFisico estável não serão alterados por este projeto.
+## Segurança dos dados
+O WebView2 utiliza perfil em `%LOCALAPPDATA%\EvoluFisicoDesktop\WebView2`. Não exclua esse diretório sem exportar seus dados. Persistência e impressão ainda exigem testes em Windows.
+
+O projeto não altera os repositórios EvoluFisico e Evolufisico2.
