@@ -20,7 +20,7 @@ static void refresh_clients(AppState *state) {
     gtk_list_box_remove(GTK_LIST_BOX(state->client_list),child);
   GError *error=NULL;
   const char *query=state->search_entry ? gtk_editable_get_text(GTK_EDITABLE(state->search_entry)) : "";
-  GPtrArray *clients=ef_store_search_clients(&state->store,query,&error);
+  GPtrArray *clients=*query ? ef_store_search_clients(&state->store,query,&error) : ef_store_list_client_rows(&state->store,&error);
   if(!clients) {
     gtk_label_set_text(GTK_LABEL(state->status),error->message);
     g_clear_error(&error);return;
