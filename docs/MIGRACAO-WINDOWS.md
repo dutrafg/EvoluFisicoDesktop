@@ -33,3 +33,9 @@ A versão web estável e o projeto Linux não devem ser alterados durante este p
 - O módulo `assets/js/24-billing.js` usa `localStorage` como fonte atual de cobranças; não realizar troca automática antes de confirmar a compatibilidade do cofre e dos dados de cobrança.
 - A migração para SQLite permanece **snapshot sem corte**. Evitar ativar armazenamento duplo de escrita, pois pode causar divergência entre bases.
 - Não declarar homologação estável com base apenas em verificações estáticas ou no resultado verde do GitHub Actions.
+
+## Backup nativo SQLite (novo)
+- Em Configurações, use **Salvar backup SQLite** para escolher o destino em uma janela nativa do Windows.
+- O arquivo é criado como snapshot SQLite consistente, passa por conferência estrutural e autenticação criptográfica dos registros antes de substituir o destino.
+- **Atenção:** o backup do SQLite **não** inclui automaticamente os registros que continuam somente no IndexedDB/localStorage; exporte também um backup do sistema legado.
+- Os registros protegidos por DPAPI não são portáteis para outra conta Windows. Ainda não há restauração portátil homologada nem interface nativa para senha mestre.
