@@ -3,8 +3,10 @@ const read=p=>fs.readFileSync(p,'utf8');
 const runtime=read('assets/js/05-app-runtime.js');
 const ui=read('assets/js/26-simple-interface.js');
 const cases=[
-['Avaliações: gravação no IndexedDB',/function salvarAvaliacaoNoDB\s*\(/.test(runtime)&&runtime.includes("db.transaction([STORE_NAME], 'readwrite')")],
-['Avaliações: operação de escrita aguarda commit',runtime.includes('tx.oncomplete = resolve')],
+['Avaliações: gravação no SQLite nativo',/async function salvarAvaliacaoNoDB\s*\(/.test(runtime)&&runtime.includes('efNativeEvalStore().writeJSON(EF_NATIVE_EVAL_PREFIX+registro.id,registroPersistido)')],
+['Avaliações: gravação aguarda persistência nativa',runtime.includes('await efNativeEvalStore().writeJSON(EF_NATIVE_EVAL_PREFIX+registro.id,registroPersistido)')],
+['Avaliações: leitura do SQLite nativo',runtime.includes('await storage.readJSON(id)')],
+['Avaliações: exclusão do SQLite nativo',runtime.includes('await efNativeEvalStore().delete(EF_NATIVE_EVAL_PREFIX+target.id)')],
 ['Avaliações: criptografia antes de persistir',runtime.includes('EF_Security.encryptObject(registro)')],
 ['Backup: exportação por envelope',runtime.includes('EF_BackupEngine.gerarEnvelopeBackup')],
 ['Backup: restauração por arquivo',runtime.includes('function importarBackupJSON(event)')&&runtime.includes('lerEProcessarArquivoBackup(file)')],
