@@ -132,6 +132,15 @@ int main(void) {
   g_assert_cmpint(sqlite3_step(index_check),==,SQLITE_ROW);
   g_assert_cmpint(sqlite3_column_int(index_check,0),==,2);
   sqlite3_finalize(index_check);
+  char *folder_copy=NULL;
+  g_assert_true(ef_store_snapshot_to_folder(&store,tmp,&folder_copy,&error));
+  g_assert_no_error(error);
+  g_assert_nonnull(folder_copy);
+  g_assert_true(g_file_test(folder_copy,G_FILE_TEST_IS_REGULAR));
+  GStatBuf copy_stat;
+  g_assert_cmpint(g_stat(folder_copy,&copy_stat),==,0);
+  g_assert_cmpint(copy_stat.st_mode & 077,==,0);
+  g_unlink(folder_copy);g_free(folder_copy);
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
   sqlite3_stmt *backup_read=NULL;
