@@ -3,60 +3,79 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Verify frontend
-        shell: pwsh
-        run: |
-          if (!(Test-Path 'src/EvoluFisico.Desktop/wwwroot/index.html')) {
-            throw 'Frontend 9.0 missing. Installer cannot be built yet.'
-          }
-      - name: Validate frontend scripts and assets
+
+      - name: Validate frontend and resource references
         shell: pwsh
         run: python scripts/verify_frontend.py
-      - name: Publish win-x64
+
+      - name: Build Windows executable
         shell: pwsh
         run: ./scripts/build-windows.ps1
-      - name: Regression tests (offline and print cleanup)
+
+      - name: Test packaged offline assets and print cleanup
         shell: pwsh
         working-directory: publish/win-x64/wwwroot
         run: |
           node ../../../tests/service-worker.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Service Worker regression failed' }
           node ../../../tests/print-cleanup.cjs
-      - name: Install Inno Setup
-        shell: pwsh
-        run: choco install innosetup --no-progress -y
-      - name: Build installer
-        shell: pwsh
-        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\EvoluFisico.iss'
-      - name: Verify installer output
-        shell: pwsh
-        run: |
-          $installer = Get-ChildItem installer-output -Filter '*.exe' -File -ErrorAction SilentlyContinue | Select-Object -First 1
-          if (-not $installer) { throw 'Instalador EXE nao foi gerado' }
-          if ($installer.Length -lt 100KB) { throw 'Instalador suspeitamente pequeno' }
-          Write-Host "Instalador gerado: $($installer.Name) ($($installer.Length) bytes)"
-      - name: Verify published application and bundled assets
+          if ($LASTEXITCODE -ne 0) { throw 'Print regression failed' }
+
+      - name: Verify executable and resources
         shell: pwsh
         run: |
           $publish = 'publish/win-x64'
-          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/icon-192.png','wwwroot/icon-512.png','wwwroot/sw.js')) {
-            if (!(Test-Path (Join-Path $publish $file))) { throw "Published file missing: $file" }
+          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/evolufisico.html','wwwroot/icon-192.png','wwwroot/icon-512.png','wwwroot/sw.js')) {
+            if (!(Test-Path (Join-Path $publish $file))) { throw "Missing published file: $file" }
           }
-          Write-Host 'Windows executable and frontend bundle verified'
-      - uses: actions/upload-artifact@v4
+          Write-Host 'Portable Windows application validated for packaging'
+
+      - name: Upload portable Windows application
+        uses: actions/upload-artifact@v4
         with:
           name: EvoluFisicoDesktop-9.0-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
-      - uses: actions/upload-artifact@v4
+          retention-days: 14
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6/ISCC.exe'
+          if (!(Test-Path $iscc)) { throw "Inno Setup not found: $iscc" }
+          & $iscc installer/EvoluFisico.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup exited with $LASTEXITCODE" }
+
+      - name: Verify installer
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem installer-output -Filter '*.exe' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $installer) { throw 'Installer EXE was not generated' }
+          if ($installer.Length -lt 100KB) { throw 'Installer is unexpectedly small' }
+          Get-FileHash $installer.FullName -Algorithm SHA256 | Format-List
+          Write-Host "Installer ready: $($installer.Name) ($($installer.Length) bytes)"
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
         with:
           name: EvoluFisicoDesktop-9.0-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
+          retention-days: 14
