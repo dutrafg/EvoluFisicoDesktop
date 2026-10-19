@@ -10,6 +10,8 @@ typedef struct {
   GtkWidget *backup_entry;
   GtkWidget *settings_status;
   GtkWidget *restore_entry;
+  GtkWidget *client_edit_entry;
+  GtkWidget *client_id_entry;
 } AppState;
 
 static void refresh_clients(AppState *state) {
@@ -31,6 +33,28 @@ static void refresh_clients(AppState *state) {
     gtk_list_box_append(GTK_LIST_BOX(state->client_list),label);
   }
   g_ptr_array_unref(clients);
+}
+static void rename_client_clicked(GtkButton *button,gpointer data) {
+  (void)button;
+  AppState *state=data;
+  const char *id_text=gtk_editable_get_text(GTK_EDITABLE(state->client_id_entry));
+  char *end=NULL;
+  gint64 id=g_ascii_strtoll(id_text,&end,10);
+  if(!*id_text || !end || *end || id<=0) {
+    gtk_label_set_text(GTK_LABEL(state->status),"Informe um ID numérico válido.");
+    return;
+  }
+  char *name=g_strdup(gtk_editable_get_text(GTK_EDITABLE(state->client_edit_entry)));
+  g_strstrip(name);
+  GError *error=NULL;
+  if(ef_store_rename_client(&state->store,id,name,&error)) {
+    gtk_label_set_text(GTK_LABEL(state->status),"Cliente atualizado.");
+    refresh_clients(state);
+  }else{
+    gtk_label_set_text(GTK_LABEL(state->status),error ? error->message : "Falha na edição.");
+    g_clear_error(&error);
+  }
+  g_free(name);
 }
 static void on_search(GtkEditable *entry, gpointer data) {
   (void)entry;
@@ -156,6 +180,19 @@ static void activate(GtkApplication *app,gpointer data) {
       state->status=gtk_label_new("Dados locais: prévia sem criptografia.");
       gtk_widget_set_halign(state->status,GTK_ALIGN_START);
       gtk_box_append(GTK_BOX(page),state->status);
+      GtkWidget *edit_row=gtk_box_new(GTK_ORIENTATION_HORIZONTAL,8);
+      state->client_id_entry=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->client_id_entry),"ID do cliente");
+      gtk_widget_set_size_request(state->client_id_entry,125,-1);
+      state->client_edit_entry=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->client_edit_entry),"Novo nome");
+      GtkWidget *rename=gtk_button_new_with_label("Renomear");
+      gtk_box_append(GTK_BOX(edit_row),state->client_id_entry);
+      gtk_box_append(GTK_BOX(edit_row),state->client_edit_entry);
+      gtk_box_append(GTK_BOX(edit_row),rename);
+      gtk_box_append(GTK_BOX(page),edit_row);
+      g_signal_connect(rename,"clicked",G_CALLBACK(rename_client_clicked),state);
+      gtk_widget_set_sensitive(rename,state->store.db!=NULL);
       state->search_entry=gtk_search_entry_new();
       gtk_box_append(GTK_BOX(page),state->search_entry);
       g_signal_connect(state->search_entry,"search-changed",G_CALLBACK(on_search),state);
