@@ -283,6 +283,27 @@ static void activate(GtkApplication *app,gpointer data) {
       if(state->store.db) refresh_clients(state);
       else gtk_label_set_text(GTK_LABEL(state->status),"Erro ao abrir SQLite. Cadastro indisponível.");
       gtk_widget_set_sensitive(save,state->store.db!=NULL);
+    }else if(i==2){
+      state->assessment_client=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_client),"ID do cliente");
+      state->assessment_date=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_date),"Data AAAA-MM-DD");
+      state->assessment_weight=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_weight),"Peso em kg (ex.: 70.5)");
+      state->assessment_height=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_height),"Altura em cm (ex.: 170)");
+      gtk_box_append(GTK_BOX(page),state->assessment_client);
+      gtk_box_append(GTK_BOX(page),state->assessment_date);
+      gtk_box_append(GTK_BOX(page),state->assessment_weight);
+      gtk_box_append(GTK_BOX(page),state->assessment_height);
+      GtkWidget *save_assessment_button=gtk_button_new_with_label("Registrar avaliação");
+      gtk_box_append(GTK_BOX(page),save_assessment_button);
+      state->assessment_status=gtk_label_new("Protótipo sem criptografia — apenas dados fictícios.");
+      gtk_box_append(GTK_BOX(page),state->assessment_status);
+      state->assessment_list=gtk_list_box_new();
+      gtk_box_append(GTK_BOX(page),state->assessment_list);
+      g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
+      gtk_widget_set_sensitive(save_assessment_button,state->store.db!=NULL);
     }else if(i==5){
       state->backup_entry=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->backup_entry),"Caminho completo do arquivo de backup .sqlite");
