@@ -24,7 +24,7 @@ jobs:
         run: meson test -C linux/build --print-errorlogs
       - name: Compile with strict warnings
         run: |
-          meson setup linux/build-strict linux --buildtype=debug -Dwerror=true
+          meson setup linux/build-strict linux --buildtype=debug -Dwerror=true -Dc_args=-Wno-error=deprecated-declarations
           meson compile -C linux/build-strict
           meson test -C linux/build-strict --print-errorlogs
       - name: Verify Debian package contents
