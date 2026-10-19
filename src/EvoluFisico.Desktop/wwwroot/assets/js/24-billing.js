@@ -118,7 +118,7 @@
 
     // Modal de confirmação próprio: window.confirm() é bloqueado/ignorado em PWAs instalados
     // e WebViews (retorna false sem mostrar nada), o que impedia a exclusão.
-    function confirmar(msg, onConfirm, rotuloOk) {
+    function confirmar(msg, onConfirm, rotuloOk, opcoes = {}) {
         const antigo = document.getElementById('cob-confirm-overlay');
         if (antigo) antigo.remove();
 
@@ -139,6 +139,8 @@
         document.body.appendChild(overlay);
         overlay.querySelector('#cob-confirm-msg').textContent = msg;
         overlay.querySelector('#cob-confirm-ok').textContent = rotuloOk || '🗑️ Excluir';
+        overlay.querySelector('div[style*="font-weight:700"]').textContent = opcoes.titulo || 'Confirmar exclusão';
+        if (opcoes.classeBotao === 'btn-success') overlay.querySelector('#cob-confirm-ok').className = 'btn btn-success btn-sm';
 
         const fechar = () => { overlay.remove(); document.removeEventListener('keydown', onKey, true); };
         const onKey = (e) => { if (e.key === 'Escape') fechar(); };
@@ -146,9 +148,13 @@
 
         overlay.addEventListener('click', (e) => { if (e.target === overlay) fechar(); });
         overlay.querySelector('#cob-confirm-cancel').addEventListener('click', fechar);
-        overlay.querySelector('#cob-confirm-ok').addEventListener('click', () => {
+        overlay.querySelector('#cob-confirm-ok').addEventListener('click', async () => {
             fechar();
-            try { onConfirm(); } catch (err) { console.error(err); }
+            try { await onConfirm(); }
+            catch(err) {
+                console.error('[Cobranças] Falha ao confirmar:', err);
+                notificar('Não foi possível concluir a operação: ' + err.message, 'error');
+            }
         });
         overlay.querySelector('#cob-confirm-cancel').focus();
     }
@@ -594,8 +600,42 @@
         if (!item) return;
 
         item.status = item.status === 'pago' ? 'pendente' : 'pago';
+        item.dataRecebimento = item.status === 'pago' ? new Date().toISOString() : null;
         if (!await salvarCobrancasDb(lista)) return;
         renderizarHistoricoCompleto();
+    }
+
+    function receberCobrancaDoHistorico(id) {
+        const alvo = String(id);
+        const previa = carregarCobrancas().find(c => String(c.id) === alvo);
+        if (!previa) {
+            notificar('Cobrança não encontrada. Atualize o histórico e tente novamente.', 'warning');
+            return;
+        }
+        if (previa.status === 'pago') {
+            notificar('Este recebimento já foi registrado.', 'info');
+            return;
+        }
+        confirmar('Confirmar recebimento de ' + formatarMoeda(Number(previa.valorTotal)||0) + ' referente a ' + (previa.aluno1?.nome||'aluno') + '?', async function() {
+            // Ler novamente do SQLite e conferir o estado para evitar duplicidade.
+            await loadBilling();
+            const lista = carregarCobrancas();
+            const item = lista.find(c => String(c.id) === alvo);
+            if (!item) {
+                notificar('Cobrança não encontrada. Nenhum recebimento foi registrado.', 'warning');
+                return;
+            }
+            if (item.status === 'pago') {
+                notificar('Esta cobrança já foi recebida.', 'info');
+                renderizarHistoricoCompleto();
+                return;
+            }
+            item.status = 'pago';
+            item.dataRecebimento = new Date().toISOString();
+            if (!await salvarCobrancasDb(lista)) return;
+            renderizarHistoricoCompleto();
+            notificar('Recebimento de ' + formatarMoeda(Number(item.valorTotal)||0) + ' confirmado no SQLite!', 'success');
+        }, '✓ Receber', { titulo: 'Confirmar recebimento', classeBotao: 'btn-success' });
     }
 
     function excluirCobrancaDoHistorico(id) {
@@ -865,14 +905,15 @@
                         ${obterBadgeFormaPagamento(c.formaPagamento, c.parcelasCartao)}
                     </td>
                     <td>
-                        <button type="button" class="cob-status-pill ${statusClass}" data-cob-action="toggle" data-cob-id="${esc(c.id)}" title="Clique para alternar entre Pago e Pendente">
+                        <button type="button" class="cob-status-pill ${statusClass}" data-cob-action="toggle" data-cob-id="${esc(c.id)}" title="${c.status === 'pago' && c.dataRecebimento ? 'Recebido em ' + formatarData(c.dataRecebimento) + '. Clique para alterar o status.' : 'Clique para alternar entre Pago e Pendente'}">
                             ${statusLabel}
                         </button>
                     </td>
-                    <td style="text-align:right; white-space:nowrap;">
-                        <button type="button" class="btn btn-danger btn-sm cob-btn-excluir" data-cob-action="delete" data-cob-id="${esc(c.id)}" title="Excluir esta cobrança" aria-label="Excluir esta cobrança">
-                            🗑️ Excluir
-                        </button>
+                    <td style="text-align:right;">
+                        <div class="cob-history-actions" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;align-items:center;">
+                            ${c.status !== 'pago' ? `<button type="button" class="btn btn-success btn-sm cob-btn-receber" data-cob-action="receive" data-cob-id="${esc(c.id)}" title="Confirmar recebimento desta cobrança" aria-label="Receber cobrança de ${esc(c.aluno1?.nome || 'aluno')}">✓ Receber</button>` : ''}
+                            <button type="button" class="btn btn-danger btn-sm cob-btn-excluir" data-cob-action="delete" data-cob-id="${esc(c.id)}" title="Excluir esta cobrança" aria-label="Excluir esta cobrança">🗑️ Excluir</button>
+                        </div>
                     </td>
                 </tr>
             `;
@@ -901,7 +942,7 @@
                         —
                     </td>
                     <td colspan="2" style="text-align:right; font-size:0.75rem; color:var(--text-muted);">
-                        Clique no status para alterar
+                        Use Receber para quitar cobranças pendentes
                     </td>
                 </tr>
             `;
@@ -1196,6 +1237,7 @@
         calcularTroco: calcularTroco,
         salvarCobrancaNoHistorico: salvarCobrancaNoHistorico,
         alternarStatusNoHistorico: alternarStatusNoHistorico,
+        receberCobrancaDoHistorico: receberCobrancaDoHistorico,
         excluirCobrancaDoHistorico: excluirCobrancaDoHistorico,
         limparTodoHistorico: limparTodoHistorico,
         setFiltroStatus: setFiltroStatus,
@@ -1238,6 +1280,7 @@
         if (!id) return;
         e.preventDefault();
         if (acao === 'delete') excluirCobrancaDoHistorico(id);
+        else if (acao === 'receive') receberCobrancaDoHistorico(id);
         else if (acao === 'toggle') alternarStatusNoHistorico(id);
     });
 
