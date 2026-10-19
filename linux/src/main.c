@@ -27,6 +27,7 @@ typedef struct {
   GtkWidget *charge_picker;
   GtkWidget *assessment_delete_id;
   GtkWidget *charge_delete_id;
+  GtkWidget *charge_receive_id;
   GtkWidget *client_delete_id;
   GtkWidget *client_scroll;
   GtkWidget *assessment_scroll;
@@ -229,6 +230,40 @@ static void save_assessment(GtkButton *button,gpointer data) {
     g_clear_error(&error);
   }
 }
+typedef struct {AppState *state;gint64 charge_id;gint64 client_id;} ReceiveRequest;
+static void receive_charge_confirmed(GObject *source,GAsyncResult *result,gpointer data) {
+  ReceiveRequest *request=data;
+  GError *choice_error=NULL;
+  int response=gtk_alert_dialog_choose_finish(GTK_ALERT_DIALOG(source),result,&choice_error);
+  g_clear_error(&choice_error);
+  if(response==1) {
+    GError *error=NULL;
+    if(ef_store_receive_charge(&request->state->store,request->charge_id,request->client_id,&error)) {
+      gtk_label_set_text(GTK_LABEL(request->state->charge_status),"Recebimento confirmado e salvo no SQLite criptografado.");
+      refresh_charges(request->state,request->client_id);
+      gtk_editable_set_text(GTK_EDITABLE(request->state->charge_receive_id),"");
+    }else{
+      gtk_label_set_text(GTK_LABEL(request->state->charge_status),error ? error->message : "Não foi possível receber a cobrança.");
+      g_clear_error(&error);
+    }
+  }
+  g_free(request);
+}
+static void receive_charge_clicked(GtkButton *button,gpointer data) {
+  AppState *state=data;gint64 charge_id=0,client_id=0;
+  if(!read_id(state->charge_receive_id,&charge_id) || !read_picker_id(state->charge_picker,&client_id)) {
+    gtk_label_set_text(GTK_LABEL(state->charge_status),"Selecione o cliente e informe o ID da cobrança pendente.");return;
+  }
+  GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
+  GtkAlertDialog *dialog=gtk_alert_dialog_new("Confirmar recebimento da cobrança %" G_GINT64_FORMAT "?",charge_id);
+  const char *buttons[]={"Cancelar","Receber",NULL};
+  gtk_alert_dialog_set_buttons(dialog,buttons);
+  gtk_alert_dialog_set_cancel_button(dialog,0);
+  ReceiveRequest *request=g_new0(ReceiveRequest,1);
+  request->state=state;request->charge_id=charge_id;request->client_id=client_id;
+  gtk_alert_dialog_choose(dialog,GTK_WINDOW(window),NULL,receive_charge_confirmed,request);
+  g_object_unref(dialog);
+}
 static void save_charge(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0,cents=0;
   if(!read_picker_id(state->charge_picker,&id) || !read_id(state->charge_cents,&cents)) {
@@ -237,7 +272,7 @@ static void save_charge(GtkButton *button,gpointer data) {
   const char *description=gtk_editable_get_text(GTK_EDITABLE(state->charge_description));
   GError *error=NULL;
   if(ef_store_add_charge(&state->store,id,cents,description,&error)) {
-    gtk_label_set_text(GTK_LABEL(state->charge_status),"Cobrança registrada (sem criptografia).");
+    gtk_label_set_text(GTK_LABEL(state->charge_status),"Cobrança pendente registrada no SQLite criptografado.");
     refresh_charges(state,id);
     gtk_editable_set_text(GTK_EDITABLE(state->charge_cents),"");
     gtk_editable_set_text(GTK_EDITABLE(state->charge_description),"");
@@ -539,7 +574,7 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),state->assessment_height);
       GtkWidget *save_assessment_button=gtk_button_new_with_label("Registrar avaliação");
       gtk_box_append(GTK_BOX(page),save_assessment_button);
-      state->assessment_status=gtk_label_new("Protótipo sem criptografia — apenas dados fictícios.");
+      state->assessment_status=gtk_label_new("Cobranças criptografadas — ambiente experimental, apenas dados fictícios.");
       gtk_box_append(GTK_BOX(page),state->assessment_status);
       GtkWidget *show_assessments_button=gtk_button_new_with_label("Consultar avaliações");
       gtk_box_append(GTK_BOX(page),show_assessments_button);
@@ -578,6 +613,13 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),show_charges_button);
       g_signal_connect(show_charges_button,"clicked",G_CALLBACK(show_charges),state);
       gtk_widget_set_sensitive(show_charges_button,state->store.db!=NULL);
+      state->charge_receive_id=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_receive_id),"ID da cobrança pendente a receber");
+      gtk_box_append(GTK_BOX(page),state->charge_receive_id);
+      GtkWidget *receive_charge_button=gtk_button_new_with_label("Receber cobrança pendente...");
+      gtk_box_append(GTK_BOX(page),receive_charge_button);
+      g_signal_connect(receive_charge_button,"clicked",G_CALLBACK(receive_charge_clicked),state);
+      gtk_widget_set_sensitive(receive_charge_button,state->store.db!=NULL);
       state->charge_delete_id=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_delete_id),"ID da cobrança a excluir");
       gtk_box_append(GTK_BOX(page),state->charge_delete_id);
