@@ -439,12 +439,12 @@ GPtrArray *ef_store_list_assessment_rows(EfStore *store,gint64 client_id,GError 
 GPtrArray *ef_store_list_charge_rows(EfStore *store,gint64 client_id,GError **error) {
   if(!store || !store->db || client_id<=0) {g_set_error_literal(error,ef_error(),43,"Cliente inválido");return NULL;}
   sqlite3_stmt *stmt=NULL;
-  if(sqlite3_prepare_v2(store->db,"SELECT id,amount_cents,description FROM charges WHERE client_id=? ORDER BY id DESC",-1,&stmt,NULL)!=SQLITE_OK) {sql_error(store,error);return NULL;}
+  if(sqlite3_prepare_v2(store->db,"SELECT id,amount_cents,description,status,received_utc FROM charges WHERE client_id=? ORDER BY id DESC",-1,&stmt,NULL)!=SQLITE_OK) {sql_error(store,error);return NULL;}
   sqlite3_bind_int64(stmt,1,client_id);
   GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);int rc;
   while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
     gint64 cents=sqlite3_column_int64(stmt,1);
-    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — R$ %" G_GINT64_FORMAT ",%02" G_GINT64_FORMAT " | %s",(gint64)sqlite3_column_int64(stmt,0),cents/100,cents%100,(const char*)sqlite3_column_text(stmt,2)));
+    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — R$ %" G_GINT64_FORMAT ",%02" G_GINT64_FORMAT " | %s | %s%s%s",(gint64)sqlite3_column_int64(stmt,0),cents/100,cents%100,(const char*)sqlite3_column_text(stmt,2),(const char*)sqlite3_column_text(stmt,3),sqlite3_column_type(stmt,4)==SQLITE_NULL?"":" | recebido em ",sqlite3_column_type(stmt,4)==SQLITE_NULL?"":(const char*)sqlite3_column_text(stmt,4)));
   }
   sqlite3_finalize(stmt);
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
@@ -487,4 +487,25 @@ gboolean ef_store_delete_assessment_for_client(EfStore *store,gint64 record_id,g
 }
 gboolean ef_store_delete_charge_for_client(EfStore *store,gint64 record_id,gint64 client_id,GError **error) {
   return delete_scoped(store,record_id,client_id,"DELETE FROM charges WHERE id=? AND client_id=?",error);
+}
+
+gboolean ef_store_receive_charge(EfStore *store,gint64 charge_id,gint64 client_id,GError **error) {
+  if(!store || !store->db || charge_id<=0 || client_id<=0) {
+    g_set_error_literal(error,ef_error(),83,"Identificadores de recebimento inválidos");return FALSE;
+  }
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,
+    "UPDATE charges SET status='pago',received_utc=strftime('%Y-%m-%dT%H:%M:%SZ','now') "
+    "WHERE id=? AND client_id=? AND status='pendente'",-1,&stmt,NULL)!=SQLITE_OK)
+    return sql_error(store,error);
+  sqlite3_bind_int64(stmt,1,charge_id);
+  sqlite3_bind_int64(stmt,2,client_id);
+  int rc=sqlite3_step(stmt);
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE)return sql_error(store,error);
+  if(sqlite3_changes(store->db)!=1) {
+    g_set_error_literal(error,ef_error(),84,"Cobrança inexistente, de outro cliente ou já recebida");
+    return FALSE;
+  }
+  return TRUE;
 }
