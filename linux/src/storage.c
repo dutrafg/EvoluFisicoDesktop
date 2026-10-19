@@ -167,7 +167,7 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
   return ok;
 }
 gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
-  if(!store || !store->db || !source || !*source) {
+  if(!store || !store->db || !source || !*source || !g_path_is_absolute(source)) {
     g_set_error_literal(error,ef_error(),16,"Origem de restauração inválida");return FALSE;
   }
   const char *live=sqlite3_db_filename(store->db,"main");
