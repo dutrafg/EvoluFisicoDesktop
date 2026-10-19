@@ -69,8 +69,6 @@ static void restore_confirmed(GtkDialog *dialog, gint response, gpointer data) {
   AppState *state=data;
   gtk_window_destroy(GTK_WINDOW(dialog));
   if(response!=GTK_RESPONSE_ACCEPT) return;
-  (void)button;
-  AppState *state=data;
   const char *path=gtk_editable_get_text(GTK_EDITABLE(state->restore_entry));
   GError *error=NULL;
   if(ef_store_restore(&state->store,path,&error)) {
