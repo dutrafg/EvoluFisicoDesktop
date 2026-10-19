@@ -99,6 +99,13 @@ int main(void) {
   g_assert_cmpint(sqlite3_exec(future,"PRAGMA user_version=99;CREATE TABLE clients(id INTEGER PRIMARY KEY,name TEXT)",NULL,NULL,NULL),==,SQLITE_OK);
   sqlite3_close(future);
   g_assert_false(ef_store_restore(&store,incompatible,&error));g_clear_error(&error);
+  sqlite3 *future_check=NULL;
+  g_assert_cmpint(sqlite3_open_v2(incompatible,&future_check,SQLITE_OPEN_READONLY,NULL),==,SQLITE_OK);
+  sqlite3_stmt *version_check=NULL;
+  g_assert_cmpint(sqlite3_prepare_v2(future_check,"PRAGMA user_version",-1,&version_check,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_step(version_check),==,SQLITE_ROW);
+  g_assert_cmpint(sqlite3_column_int(version_check,0),==,99);
+  sqlite3_finalize(version_check);sqlite3_close(future_check);
   g_remove(incompatible);g_free(incompatible);
   g_assert_true(ef_store_delete_client(&store,2,&error));g_assert_no_error(error);
   choices=ef_store_client_choices(&store,&error);
