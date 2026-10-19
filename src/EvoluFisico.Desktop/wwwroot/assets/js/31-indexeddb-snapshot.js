@@ -90,6 +90,13 @@ async function snapshot(){
       copied+=Object.keys(batch).length;
      }
     }
+    const afterCount=await new Promise((resolve,reject)=>{
+     const tx=db.transaction(store.name,'readonly');
+     const req=tx.objectStore(store.name).count();
+     req.onsuccess=()=>resolve(req.result);
+     req.onerror=()=>reject(req.error||new Error('Falha ao conferir quantidade final'));
+    });
+    if(afterCount!==rows.length)throw new Error('Banco alterado durante a cópia; execute novamente.');
    }
   }finally{db.close()}
  }
