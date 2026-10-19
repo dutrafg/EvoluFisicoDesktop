@@ -5,8 +5,9 @@ html=root/"index.html"
 if not html.is_file():
     sys.exit("ERRO: index.html ausente")
 text=html.read_text(encoding="utf-8")
+refs=re.findall(r'''(?:src|href)\s*=\s*["'](?:\./)?(assets/[^"'?#]+)''',text)
 missing=[]
-for rel in re.findall(r'''(?:src|href)\s*=\s*["'](?:\./)?(assets/[^"'?#]+)''',text):
+for rel in refs:
     if not (root/rel).is_file(): missing.append(rel)
 for file in sorted(root.rglob("*.js")):
     r=subprocess.run(["node","--check",str(file)],capture_output=True,text=True)
@@ -14,4 +15,4 @@ for file in sorted(root.rglob("*.js")):
         print(r.stderr)
         sys.exit(f"ERRO de sintaxe: {file}")
 if missing: sys.exit("Arquivos ausentes: "+", ".join(sorted(set(missing))))
-print(f"QA estatico OK: {len(list(root.rglob('*.js')))} scripts, {len(set(re.findall(r'''(?:src|href)\s*=\s*["'](?:\./)?(assets/[^"'?#]+)''',text)))} referencias de assets")
+print(f"QA estatico OK: {len(list(root.rglob('*.js')))} scripts, {len(set(refs))} referencias de assets")
