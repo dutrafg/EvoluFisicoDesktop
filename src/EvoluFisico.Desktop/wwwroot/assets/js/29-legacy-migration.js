@@ -6,6 +6,10 @@
 if(!window.EFNativeStorage)return;
 const PREFIX='ef-legacy-localstorage-';
 const encoder=new TextEncoder();
+async function stableId(key){
+ const hash=await crypto.subtle.digest('SHA-256',encoder.encode(key));
+ return 'ef-legacy-v2-'+Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');
+}
 async function migrate(){
  const entries=[];
  for(let i=0;i<localStorage.length;i++){
@@ -24,7 +28,7 @@ async function migrate(){
    batches.push(current);current={};size=0;
   }
   // Stable unique key, not derived from sensitive content; avoid colliding with patient records.
-  const id=PREFIX+String(batches.length).padStart(4,'0')+'-'+Object.keys(current).length.toString().padStart(4,'0');
+  const id=await stableId(key);
   current[id]=payload;size+=payload.length;
  }
  if(Object.keys(current).length)batches.push(current);
