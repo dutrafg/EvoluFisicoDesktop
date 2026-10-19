@@ -93,6 +93,27 @@ try
     Check(restored.VerifyIntegrity(), "SQLite snapshot integrity");
     Check(sample.SequenceEqual(restored.Load("patient-002", password)!), "Encrypted record restored from snapshot");
     Check(Encoding.UTF8.GetString(restored.Load("patient-001")!) == "updated", "Latest transactional data preserved in backup");
+    store.Save("batch-delete-a", Encoding.UTF8.GetBytes("a"));
+    store.Save("batch-delete-b", Encoding.UTF8.GetBytes("b"));
+    try {
+        store.DeleteBatch(new[] { "batch-delete-a", "missing-record" });
+        throw new Exception("Missing record should roll back batch deletion");
+    }
+    catch (InvalidDataException) {
+        Check(store.Load("batch-delete-a") is not null,
+            "Batch deletion rolls back all records when an ID is missing");
+    }
+    try {
+        store.DeleteBatch(new[] { "batch-delete-a", "batch-delete-a" });
+        throw new Exception("Duplicate IDs should be rejected");
+    }
+    catch (ArgumentException) {
+        Check(store.Load("batch-delete-a") is not null,
+            "Duplicate batch identifiers are rejected without deletion");
+    }
+    store.DeleteBatch(new[] { "batch-delete-a", "batch-delete-b" });
+    Check(store.Load("batch-delete-a") is null && store.Load("batch-delete-b") is null,
+        "Batch deletion commits all records atomically");
     // A verified backup must be a point-in-time copy, not a live database alias.
     store.Save("patient-001", Encoding.UTF8.GetBytes("post-backup-change"));
     Check(Encoding.UTF8.GetString(store.Load("patient-001")!) == "post-backup-change",
