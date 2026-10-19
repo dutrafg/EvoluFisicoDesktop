@@ -122,7 +122,9 @@ int main(void) {
   g_assert_no_error(error);g_assert_cmpuint(assessments->len,==,0);g_ptr_array_unref(assessments);
   charges=ef_store_list_charges(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(charges->len,==,0);g_ptr_array_unref(charges);
-  g_assert_true(ef_store_restore(&store,backup,&error));g_assert_no_error(error);
+  gboolean restore_ok=ef_store_restore(&store,backup,&error);
+  if(!restore_ok)g_printerr("SQLCipher restore failed: %s\n",error ? error->message : "unknown");
+  g_assert_true(restore_ok);g_assert_no_error(error);
   assessments=ef_store_list_assessments(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(assessments->len,==,1);g_ptr_array_unref(assessments);
   charges=ef_store_list_charges(&store,2,&error);
