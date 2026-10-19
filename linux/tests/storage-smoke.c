@@ -9,6 +9,9 @@ int main(void) {
   g_assert_true(ef_store_open(&store,&error)); g_assert_no_error(error);
   g_assert_true(ef_store_add_client(&store,"Paciente Exemplo",&error)); g_assert_no_error(error);
   g_assert_false(ef_store_add_client(&store,"",&error)); g_clear_error(&error);
+  g_assert_false(ef_store_add_client(&store,"\xFF",&error)); g_clear_error(&error);
+  char too_long[183]; memset(too_long, 120, 182); too_long[182]=0;
+  g_assert_false(ef_store_add_client(&store,too_long,&error)); g_clear_error(&error);
   GPtrArray *list=ef_store_list_clients(&store,&error);
   g_assert_no_error(error); g_assert_cmpuint(list->len,==,1);
   g_assert_cmpstr(g_ptr_array_index(list,0),==,"Paciente Exemplo");
