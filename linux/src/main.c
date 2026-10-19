@@ -131,13 +131,13 @@ static void refresh_assessments(AppState *state,gint64 client_id) {
   GError *error=NULL;
   GPtrArray *rows=ef_store_list_assessment_rows(&state->store,client_id,&error);
   if(rows) {fill_list(state->assessment_list,rows);g_ptr_array_unref(rows);}
-  else {gtk_label_set_text(GTK_LABEL(state->assessment_status),error->message);g_clear_error(&error);}
+  else {gtk_label_set_text(GTK_LABEL(state->assessment_status),error ? error->message : "Falha ao consultar avaliações.");g_clear_error(&error);}
 }
 static void refresh_charges(AppState *state,gint64 client_id) {
   GError *error=NULL;
   GPtrArray *rows=ef_store_list_charge_rows(&state->store,client_id,&error);
   if(rows) {fill_list(state->charge_list,rows);g_ptr_array_unref(rows);}
-  else {gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);g_clear_error(&error);}
+  else {gtk_label_set_text(GTK_LABEL(state->charge_status),error ? error->message : "Falha ao consultar cobranças.");g_clear_error(&error);}
 }
 static void show_assessments(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;
