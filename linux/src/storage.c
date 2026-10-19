@@ -251,6 +251,22 @@ gboolean ef_store_snapshot_to_folder(EfStore *store,const char *folder,char **sa
     g_set_error_literal(error,ef_error(),90,"Selecione uma pasta absoluta existente, sem links simbólicos.");
     return FALSE;
   }
+  /* Reject symlinks in every parent component, not only the final folder. */
+  char **parts=g_strsplit(folder,G_DIR_SEPARATOR_S,0);
+  GString *prefix=g_string_new(G_DIR_SEPARATOR_S);
+  gboolean safe=TRUE;
+  for(guint i=0;parts[i];i++) {
+    if(!parts[i][0])continue;
+    if(strcmp(parts[i],".")==0 || strcmp(parts[i],"..")==0) {safe=FALSE;break;}
+    if(prefix->len>1)g_string_append_c(prefix,G_DIR_SEPARATOR);
+    g_string_append(prefix,parts[i]);
+    if(g_file_test(prefix->str,G_FILE_TEST_IS_SYMLINK)) {safe=FALSE;break;}
+  }
+  g_strfreev(parts);g_string_free(prefix,TRUE);
+  if(!safe) {
+    g_set_error_literal(error,ef_error(),91,"Pasta de cópia contém caminho inseguro ou link simbólico.");
+    return FALSE;
+  }
   char *name=g_strdup_printf("evolufisico-%s.sqlite",g_uuid_string_random());
   char *destination=g_build_filename(folder,name,NULL);
   g_free(name);
