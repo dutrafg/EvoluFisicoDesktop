@@ -183,6 +183,22 @@ function mount(){
          finally{button.disabled=false}
        });
      }
+     if(window.EFDesktopIndexedDBSnapshot){
+       const panel=document.createElement('article');
+       panel.className='ef-settings-card';
+       panel.innerHTML='<h3>Cópia protegida dos cadastros IndexedDB</h3><p>Copiar registros compatíveis para SQLite criptografado e conferir o conteúdo. Não exclui os originais nem muda o banco usado pelos módulos.</p><button class="btn btn-outline btn-sm ef-settings-action" id="ef-desktop-snapshot-idb" type="button">Copiar IndexedDB para SQLite</button><p id="ef-desktop-snapshot-status" role="status" aria-live="polite"></p>';
+       grid.append(panel);
+       const button=$('ef-desktop-snapshot-idb'),status=$('ef-desktop-snapshot-status');
+       button.addEventListener('click',async()=>{
+         if(!confirm('Criar uma cópia criptografada dos cadastros IndexedDB? Os originais serão mantidos.'))return;
+         button.disabled=true;status.textContent='Copiando e conferindo…';
+         try{
+           const result=await window.EFDesktopIndexedDBSnapshot.snapshot();
+           status.textContent=result.copied+' registros copiados; '+result.alreadyCopied+' já conferidos. Originais preservados.';
+         }catch(error){status.textContent='Cópia interrompida: '+error.message+'. Originais preservados.'}
+         finally{button.disabled=false}
+       });
+     }
      const btn=$('ef-desktop-check-update'), status=$('ef-desktop-update-status');
      btn.addEventListener('click',()=>{btn.disabled=true;status.textContent='Consultando versões publicadas…';window.chrome.webview.postMessage('check-updates')});
      window.chrome.webview.addEventListener('message',e=>{
