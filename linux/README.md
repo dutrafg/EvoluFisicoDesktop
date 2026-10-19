@@ -41,3 +41,11 @@ O código Windows em `main` permanece inalterado.
 - O mecanismo de restauração mantém uma cópia temporária em memória para tentar reverter falhas durante a cópia. **Não substitui um backup externo independente.**
 - A edição de nomes e exclusão continuam disponíveis apenas na API interna; ainda não estão ligadas à interface.
 - **Segurança:** dados e backups continuam sem criptografia. Não usar dados pessoais reais nem considerar esta versão pronta para produção.
+
+## Etapas 31–40
+
+- Compilação da confirmação de restauração corrigida.
+- Interface de clientes permite editar nomes informando ID e novo nome; listagem principal exibe IDs.
+- Backups exigem caminho absoluto e não sobrescrevem arquivos existentes.
+- A API de recuperação e os testes ainda estão sujeitos a homologação CI e revisão de segurança.
+- **Importante:** a versão continua experimental, sem criptografia de banco ou backup; use apenas dados fictícios.
