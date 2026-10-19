@@ -29,6 +29,9 @@ jobs:
         shell: pwsh
         run: node tests/desktop-integration.cjs
 
+      - name: Validate notification settings without vibration
+        run: node tests/notifications-no-vibration.cjs
+
       - name: Validate branded installer shortcut configuration
         run: node tests/installer-icon.cjs
 
