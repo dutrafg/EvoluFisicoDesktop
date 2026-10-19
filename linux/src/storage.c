@@ -206,6 +206,18 @@ gboolean ef_store_backup(EfStore *store,const char *destination,GError **error) 
     g_set_error_literal(error,ef_error(),74,"Backup existente não pode ser sobrescrito");return FALSE;
   }
   if(!ef_store_check_integrity(store,error))return FALSE;
+  sqlite3_stmt *journal=NULL;
+  if(sqlite3_prepare_v2(store->db,"PRAGMA journal_mode",-1,&journal,NULL)!=SQLITE_OK) {
+    return sql_error(store,error);
+  }
+  int journal_rc=sqlite3_step(journal);
+  const char *mode=journal_rc==SQLITE_ROW ? (const char*)sqlite3_column_text(journal,0) : NULL;
+  gboolean wal=mode && g_ascii_strcasecmp(mode,"wal")==0;
+  sqlite3_finalize(journal);
+  if(wal) {
+    g_set_error_literal(error,ef_error(),81,"Backup em modo WAL não suportado nesta versão; operação recusada para evitar perda de dados.");
+    return FALSE;
+  }
   const char *live=sqlite3_db_filename(store->db,"main");
   if(!live)return FALSE;
   char *temporary=g_strdup_printf("%s.tmp-%s",destination,g_uuid_string_random());
