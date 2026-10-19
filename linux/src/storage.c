@@ -14,6 +14,9 @@ gboolean ef_store_open(EfStore *store, GError **error) {
   char *file = g_build_filename(dir, "records.sqlite", NULL);
   g_free(dir);
   int result = sqlite3_open_v2(file, &store->db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, NULL);
+  if(result==SQLITE_OK) {
+    g_chmod(file,0600);
+  }
   g_free(file);
   if (result != SQLITE_OK) { sql_error(store, error); ef_store_close(store); return FALSE; }
   sqlite3_busy_timeout(store->db, 5000);
@@ -104,7 +107,9 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
     g_set_error_literal(error,ef_error(),13,"Destino de backup inválido"); return FALSE;
   }
   if(!ef_store_check_integrity(store,error)) return FALSE;
-  char *temporary=g_strdup_printf("%s.tmp-%s",destination,g_uuid_string_random());
+  char *uuid=g_uuid_string_random();
+  char *temporary=g_strdup_printf("%s.tmp-%s",destination,uuid);
+  g_free(uuid);
   sqlite3 *target=NULL;
   if(sqlite3_open_v2(temporary,&target,SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE,NULL)!=SQLITE_OK) {
     g_set_error_literal(error,ef_error(),14,"Não foi possível criar backup temporário");
@@ -122,6 +127,7 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
       sqlite3_close(verify);
     }
   }
+  if(ok)g_chmod(temporary,0600);
   if(ok && g_rename(temporary,destination)!=0) {
     g_set_error_literal(error,ef_error(),15,"Não foi possível finalizar backup");ok=FALSE;
   }
