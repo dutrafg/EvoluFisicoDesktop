@@ -1,0 +1,20 @@
+/* 09-styles.css */
+.efdiag-wrap{max-width:1100px;margin:0 auto;padding:0 0 3rem;color:#0f172a}
+.efdiag-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin:1.25rem 0}
+.efdiag-head h2{margin:0;font-size:1.45rem;font-weight:800;letter-spacing:-.03em}
+.efdiag-head p{margin:.35rem 0 0;color:#64748b;font-size:.88rem;max-width:720px;line-height:1.55}
+.efdiag-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:1rem 1.15rem;box-shadow:0 4px 16px rgba(15,23,42,.045);margin-bottom:1rem}
+.efdiag-actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.efdiag-btn{border:1px solid #cbd5e1;border-radius:10px;padding:.65rem .95rem;background:#fff;color:#334155;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer}
+.efdiag-btn.primary{background:#2563eb;color:#fff;border-color:#2563eb}
+.efdiag-btn.repair{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+.efdiag-btn:disabled{opacity:.55;cursor:wait}
+.efdiag-summary{margin-left:auto;border-radius:999px;padding:.4rem .75rem;background:#f1f5f9;color:#475569;font-size:.76rem;font-weight:800}
+.efdiag-summary.ok{background:#dcfce7;color:#166534}.efdiag-summary.warn{background:#fef3c7;color:#92400e}.efdiag-summary.fail{background:#fee2e2;color:#991b1b}
+.efdiag-results{display:grid;gap:.55rem;margin-top:.9rem}
+.efdiag-row{display:grid;grid-template-columns:76px minmax(150px,.6fr) minmax(0,1.4fr);align-items:start;gap:.75rem;padding:.75rem .8rem;border:1px solid #e2e8f0;border-radius:11px;background:#fff}
+.efdiag-row b{font-size:.82rem}.efdiag-row p{margin:0;color:#64748b;font-size:.78rem;line-height:1.45;overflow-wrap:anywhere}
+.efdiag-badge{display:inline-flex;justify-content:center;min-width:62px;padding:.2rem .45rem;border-radius:999px;font-size:.68rem;font-weight:800;background:#f1f5f9;color:#475569}
+.efdiag-badge.pass{background:#dcfce7;color:#166534}.efdiag-badge.warn{background:#fef3c7;color:#92400e}.efdiag-badge.fail{background:#fee2e2;color:#991b1b}
+.efdiag-note{margin:.8rem 0 0;color:#64748b;font-size:.74rem;line-height:1.5}
+@media(max-width:640px){.efdiag-row{grid-template-columns:68px minmax(0,1fr);gap:.45rem}.efdiag-row p{grid-column:2}.efdiag-summary{margin-left:0}.efdiag-head{flex-direction:column}}
