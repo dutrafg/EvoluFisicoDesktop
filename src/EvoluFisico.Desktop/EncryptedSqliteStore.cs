@@ -169,7 +169,7 @@ internal sealed class EncryptedSqliteStore
     }
 
     /// <summary>Creates a consistent SQLite snapshot without exposing decrypted patient data.</summary>
-    internal void BackupTo(string destination)
+    internal void BackupTo(string destination, string? masterPassword = null)
     {
         if (string.IsNullOrWhiteSpace(destination))
             throw new ArgumentException("Caminho de backup inválido.", nameof(destination));
@@ -201,6 +201,9 @@ internal sealed class EncryptedSqliteStore
                 if (!string.Equals(check.ExecuteScalar() as string, "ok", StringComparison.OrdinalIgnoreCase))
                     throw new InvalidDataException("Backup SQLite não passou na verificação de integridade.");
             }
+            // A structurally valid SQLite snapshot may still contain damaged ciphertext.
+            // Authenticate every copied record before publishing the backup.
+            new EncryptedSqliteStore(temporary).VerifyEncryptedRecords(masterPassword);
             File.Move(temporary, fullDestination, true);
         }
         finally
