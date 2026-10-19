@@ -14,5 +14,5 @@ await run('Rotas cleanUrls funcionam offline',async()=>{for(const name of ['inde
 await run('JS offline servido do mesmo cache',async()=>{let promise;handlers.fetch({request:{method:'GET',url:'https://app.test/assets/js/05-app-runtime.js',mode:'cors'},respondWith:p=>promise=p});assert.equal((await promise).status,200)});
 await run('Não intercepta dados externos ou URLs desconhecidas',async()=>{for(const url of ['https://external.test/','https://app.test/api/dados']){let intercepted=false;handlers.fetch({request:{method:'GET',url},respondWith:()=>intercepted=true});assert.equal(intercepted,false)}});
 await run('Ativação imediata exige mensagem explícita',()=>{assert.equal(scope.skipped,undefined);handlers.message({data:{type:'SKIP_WAITING'}});assert.equal(scope.skipped,true)});
-fs.writeFileSync('tests/sw-results.json',JSON.stringify({passed:checks,environment:'Service Worker em VM com CacheStorage simulado'},null,2));console.log('TOTAL',checks);
+fs.mkdirSync('tests',{recursive:true});fs.writeFileSync('tests/sw-results.json',JSON.stringify({passed:checks,environment:'Service Worker em VM com CacheStorage simulado'},null,2));console.log('TOTAL',checks);
 })().catch(e=>{console.error(e);process.exit(1)});
