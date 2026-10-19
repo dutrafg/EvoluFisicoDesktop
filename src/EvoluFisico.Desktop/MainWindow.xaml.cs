@@ -153,8 +153,9 @@ public partial class MainWindow : Window
                 }
                 else if (string.IsNullOrWhiteSpace(installed))
                 {
-                    message = "Não foi possível identificar a versão instalada. Verifique a versão manualmente antes de atualizar.";
-                    downloadUrl = null;
+                    message = downloadUrl is null
+                        ? "Versão instalada sem identificação e nenhum instalador disponível."
+                        : "Esta instalação é anterior ao controle de versões. Você pode baixar o instalador publicado e atualizar manualmente, após fazer backup dos dados.";
                 }
                 else
                 {
