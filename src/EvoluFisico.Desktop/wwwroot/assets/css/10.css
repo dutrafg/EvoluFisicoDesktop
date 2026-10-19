@@ -1,0 +1,341 @@
+/* 10-styles.css */
+/* ==========================================================================
+   EVOLUFÍSICO v8.9.1 Teste — APPLE / macOS TRANSITIONS & SPLASH EXPERIENCE
+   ========================================================================== */
+
+:root {
+  --apple-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --apple-spring-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --apple-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Transição elegante estilo macOS entre módulos/abas */
+.tab-panel {
+  display: none;
+  opacity: 0;
+  transform: translateY(14px) scale(0.992);
+  filter: blur(4px);
+  will-change: opacity, transform, filter;
+}
+
+.tab-panel.active {
+  display: block !important;
+  animation: appleModuleEnter 0.44s var(--apple-spring) both !important;
+}
+
+@keyframes appleModuleEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.988);
+    filter: blur(6px);
+  }
+  60% {
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* Transições refinadas dos botões de controle segmentado (macOS / iOS style) */
+.nav-tab-btn {
+  position: relative;
+  overflow: hidden;
+  transition: background 0.22s var(--apple-ease),
+              color 0.22s var(--apple-ease),
+              transform 0.18s var(--apple-spring),
+              box-shadow 0.25s var(--apple-spring) !important;
+}
+
+.nav-tab-btn:hover {
+  transform: translateY(-0.5px);
+}
+
+.nav-tab-btn:active {
+  transform: scale(0.96) !important;
+}
+
+.nav-tab-btn.active {
+  background: #ffffff !important;
+  color: var(--text-main, #1d1d1f) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12), 0 0.5px 1px rgba(0, 0, 0, 0.08) !important;
+  animation: appleTabPulse 0.32s var(--apple-spring) both;
+}
+
+@keyframes appleTabPulse {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   TELA DE ABERTURA (SPLASH INTRO SCREEN)
+   ========================================================================== */
+.ef-splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 245, 247, 0.88);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  transition: opacity 0.48s var(--apple-spring),
+              transform 0.48s var(--apple-spring),
+              filter 0.48s var(--apple-spring),
+              visibility 0.48s;
+  cursor: pointer;
+  user-select: none;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+html.ef-dark-mode .ef-splash-overlay {
+  background: rgba(18, 20, 26, 0.93);
+}
+
+.ef-splash-overlay.dismissed {
+  opacity: 0;
+  transform: scale(1.04);
+  filter: blur(14px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.ef-splash-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(0, 122, 255, 0.18) 0%, rgba(90, 200, 250, 0.08) 35%, transparent 70%);
+  pointer-events: none;
+  animation: efSplashAura 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes efSplashAura {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+.ef-splash-card {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 440px;
+  width: 100%;
+  padding: 2.75rem 2.25rem 2.25rem 2.25rem;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(36px) saturate(190%);
+  -webkit-backdrop-filter: blur(36px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+  animation: efSplashCardIn 0.65s var(--apple-spring) both;
+}
+
+html.ef-dark-mode .ef-splash-card {
+  background: rgba(30, 34, 46, 0.78);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45), 0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+@keyframes efSplashCardIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.86) translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.ef-splash-icon-wrapper {
+  position: relative;
+  margin-bottom: 1.35rem;
+}
+
+.ef-splash-glow {
+  position: absolute;
+  inset: -14px;
+  border-radius: 36px;
+  background: radial-gradient(circle, rgba(0, 122, 255, 0.5) 0%, rgba(52, 199, 89, 0.25) 50%, transparent 75%);
+  filter: blur(16px);
+  z-index: 0;
+  animation: efSplashPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes efSplashPulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.ef-splash-icon {
+  position: relative;
+  z-index: 1;
+  width: 82px;
+  height: 82px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #5ac8fa 0%, #007aff 50%, #5856d6 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.35rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  box-shadow: 0 14px 32px rgba(0, 122, 255, 0.38), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.65);
+  animation: efSplashIconBounce 0.85s var(--apple-spring-bouncy) both;
+}
+
+@keyframes efSplashIconBounce {
+  0% {
+    transform: scale(0.6) rotate(-8deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.ef-splash-titles {
+  margin-bottom: 1.6rem;
+}
+
+.ef-splash-title {
+  font-size: 1.95rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text-main, #1d1d1f);
+  margin: 0 0 0.35rem 0;
+  line-height: 1.15;
+}
+
+.ef-splash-subtitle {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-muted, #6e6e73);
+  margin: 0 0 0.85rem 0;
+  line-height: 1.35;
+}
+
+.ef-splash-version-pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.28rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(0, 122, 255, 0.2);
+}
+
+.ef-splash-loader-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.ef-splash-bar {
+  width: 180px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(118, 118, 128, 0.2);
+  overflow: hidden;
+  position: relative;
+}
+
+.ef-splash-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 45%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5ac8fa, #007aff, #34c759);
+  animation: efSplashShimmer 1.25s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes efSplashShimmer {
+  0% {
+    left: -45%;
+    width: 30%;
+  }
+  50% {
+    width: 65%;
+  }
+  100% {
+    left: 100%;
+    width: 30%;
+  }
+}
+
+.ef-splash-status {
+  font-size: 0.78rem;
+  color: var(--text-muted, #86868b);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: opacity 0.2s ease;
+}
+
+.ef-splash-skip {
+  display: inline-block;
+  margin-top: 1.1rem;
+  font-size: 0.74rem;
+  color: var(--text-light, #94a3b8);
+  opacity: 0.85;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.ef-splash-skip:hover {
+  opacity: 1;
+  color: var(--primary, #007aff);
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-panel.active {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .ef-splash-overlay {
+    transition: opacity 0.1s linear !important;
+  }
+  .ef-splash-card, .ef-splash-icon, .ef-splash-glow, .ef-splash-bar-fill, .ef-splash-backdrop {
+    animation: none !important;
+  }
+}
+
+@media print {
+  #ef-splash {
+    display: none !important;
+  }
+}
