@@ -61,3 +61,12 @@ Revisão estática identificou e corrigiu:
 - ausência de testes específicos para esses cenários.
 
 **Limitações:** sem criptografia, autenticação e testes de interface em desktop Linux real. A cópia de rollback da restauração está em memória e não garante recuperação diante de falha de energia ou encerramento do processo. A criação de backup não substitui estratégia de backup criptografado e externo. Não usar dados pessoais reais.
+
+## Etapas 51–60 — modelos de avaliações e cobranças
+
+- Banco SQLite inclui tabelas `assessments` e `charges`, ligadas a `clients` por chaves estrangeiras.
+- Avaliações: data ISO, peso (kg), altura (cm), validação de limites e datas.
+- Cobranças: valor armazenado em centavos inteiros e descrição.
+- Backups preservam os novos dados; restauração rejeita esquemas sem as tabelas.
+- **As novas operações ainda são APIs internas, não formulários GTK4.**
+- **Nenhuma criptografia foi implementada nesta rodada.** Não utilizar dados reais, senhas ou informações clínicas. Não confundir validação de entradas com conformidade LGPD.
