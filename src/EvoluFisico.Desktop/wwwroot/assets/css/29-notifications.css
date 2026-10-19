@@ -1,0 +1,27 @@
+/* EvoluFísico: cartão de Notificações — segue a paleta escolhida e ambos os temas. */
+@media screen {
+ body.ef-simple-ui #efn-card {min-width:0}
+ body.ef-simple-ui #efn-card .efn-options {width:100%;display:flex;flex-direction:column;gap:0;margin:0 0 16px}
+ body.ef-simple-ui #efn-card .efn-setting {width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--ef-line);cursor:pointer}
+ body.ef-simple-ui #efn-card .efn-setting span {min-width:0;display:block}
+ body.ef-simple-ui #efn-card .efn-setting b {color:var(--ef-ink);font-size:13px;font-weight:720;display:block;line-height:1.45}
+ body.ef-simple-ui #efn-card .efn-setting small {color:var(--ef-muted);font-size:11px;line-height:1.5;display:block;margin:3px 0 0}
+ body.ef-simple-ui #efn-card .efn-setting input[type=checkbox] {flex-shrink:0;appearance:none;position:relative;width:42px;height:24px;border-radius:99px;background:var(--ef-line);border:1px solid var(--ef-line);cursor:pointer;transition:background .2s}
+ body.ef-simple-ui #efn-card .efn-setting input[type=checkbox]:checked {background:var(--ef-accent);border-color:var(--ef-accent)}
+ body.ef-simple-ui #efn-card .efn-setting input[type=checkbox]::after {content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px #0002;transition:transform .2s}
+ body.ef-simple-ui #efn-card .efn-setting input[type=checkbox]:checked::after {transform:translateX(18px)}
+ body.ef-simple-ui #efn-card .efn-setting input[type=checkbox]:disabled {opacity:.42;cursor:not-allowed}
+ body.ef-simple-ui #efn-card .efn-field {display:flex;flex-direction:column;gap:8px;padding-top:14px;font-size:12px;font-weight:650;color:var(--ef-ink);width:100%}
+ body.ef-simple-ui #efn-card .efn-field>span {display:flex;justify-content:space-between;gap:8px;align-items:center}
+ body.ef-simple-ui #efn-card .efn-field select {width:100%;min-height:42px;padding:8px 10px;border:1px solid var(--ef-line);background:var(--ef-surface);color:var(--ef-ink);border-radius:10px}
+ body.ef-simple-ui #efn-card .efn-field input[type=range] {width:100%;accent-color:var(--ef-accent);cursor:pointer}
+ body.ef-simple-ui #efn-card .efn-field output {font-weight:700;color:var(--ef-accent)}
+ body.ef-simple-ui #efn-card .efn-actions {display:flex;gap:8px;flex-wrap:wrap;width:100%}
+ body.ef-simple-ui #efn-card .efn-test {background:var(--ef-soft);border:1px solid var(--ef-line);color:var(--ef-ink);border-radius:9px;font-size:12px;font-weight:700;padding:10px 12px;cursor:pointer;min-height:40px;max-width:100%}
+ body.ef-simple-ui #efn-card .efn-test:hover {border-color:var(--ef-accent)}
+ body.ef-simple-ui #efn-card .efn-test-primary {background:var(--ef-primary-bg,var(--ef-accent));color:var(--ef-primary-ink,#fff);border-color:var(--ef-accent)}
+ body.ef-simple-ui #efn-card .efn-status {margin:12px 0 0;font-size:12px;color:var(--ef-muted);line-height:1.4}
+ body.ef-simple-ui #efn-card .efn-limitation {display:block;margin-top:10px;color:var(--ef-muted);line-height:1.45}
+}
+
+@media (min-width:761px){body.ef-simple-ui .ef-settings-card:has(#ef-setting-appearance){align-self:start}}
