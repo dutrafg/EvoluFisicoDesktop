@@ -22,3 +22,5 @@ gboolean ef_store_delete_assessment(EfStore *store,gint64 assessment_id,GError *
 gboolean ef_store_delete_charge(EfStore *store,gint64 charge_id,GError **error);
 GPtrArray *ef_store_list_assessment_rows(EfStore *store,gint64 client_id,GError **error);
 GPtrArray *ef_store_list_charge_rows(EfStore *store,gint64 client_id,GError **error);
+gboolean ef_store_assessment_belongs_to(EfStore *store,gint64 assessment_id,gint64 client_id,GError **error);
+gboolean ef_store_charge_belongs_to(EfStore *store,gint64 charge_id,gint64 client_id,GError **error);
