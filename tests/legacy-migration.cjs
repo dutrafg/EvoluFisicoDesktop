@@ -1,6 +1,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
+const crypto=require('node:crypto').webcrypto;
 const code=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/29-legacy-migration.js','utf8');
 const original=new Map([['patient-synthetic','{"name":"Paciente Fictício"}'],['settings','tema claro']]);
 const encrypted=new Map();
@@ -22,7 +23,7 @@ const storage={
  read:async id=>encrypted.get(id)??null
 };
 const window={EFNativeStorage:storage};
-vm.runInNewContext(code,{window,localStorage,TextEncoder,Error,Object,String});
+vm.runInNewContext(code,{window,localStorage,TextEncoder,crypto,Uint8Array,Error,Object,String});
 (async()=>{
  const result=await window.EFDesktopLegacyMigration.migrate();
  assert.equal(result.transferred,2);
