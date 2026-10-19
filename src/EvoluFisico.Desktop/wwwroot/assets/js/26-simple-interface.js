@@ -165,7 +165,7 @@ function mount(){
          migrateButton.disabled=true;migrateStatus.textContent='Copiando e conferindo os registros…';
          try{
            const result=await window.EFDesktopLegacyMigration.migrate();
-           migrateStatus.textContent=result.transferred+' registros copiados e conferidos. Os dados originais foram preservados.';
+           migrateStatus.textContent=result.transferred+' registros novos copiados, '+result.alreadyCopied+' já conferidos. Os dados originais foram preservados.';
          }catch(error){migrateStatus.textContent='Migração interrompida: '+error.message+' Os dados originais foram preservados.'}
          finally{migrateButton.disabled=false}
        });
