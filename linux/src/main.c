@@ -155,7 +155,7 @@ static void delete_record_confirmed(GtkDialog *dialog,gint response,gpointer dat
     gtk_label_set_text(GTK_LABEL(status),error ? error->message : "Registro de outro cliente.");
     g_clear_error(&error);return;
   }
-  gboolean ok=assessment ? ef_store_delete_assessment(&state->store,id,&error) : ef_store_delete_charge(&state->store,id,&error);
+  gboolean ok=assessment ? ef_store_delete_assessment_for_client(&state->store,id,client,&error) : ef_store_delete_charge_for_client(&state->store,id,client,&error);
   if(ok) {
     gtk_label_set_text(GTK_LABEL(status),"Registro excluído.");
     if(assessment)refresh_assessments(state,client);else refresh_charges(state,client);
