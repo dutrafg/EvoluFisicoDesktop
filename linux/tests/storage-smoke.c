@@ -65,6 +65,11 @@ int main(void) {
   g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);
   g_assert_true(g_str_has_prefix(g_ptr_array_index(filtered,0),"2 "));g_ptr_array_unref(filtered);
   g_assert_true(ef_store_check_integrity(&store,&error));g_assert_no_error(error);
+  sqlite3_stmt *index_check=NULL;
+  g_assert_cmpint(sqlite3_prepare_v2(store.db,"SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name IN ('idx_assessments_client_date','idx_charges_client')",-1,&index_check,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_step(index_check),==,SQLITE_ROW);
+  g_assert_cmpint(sqlite3_column_int(index_check,0),==,2);
+  sqlite3_finalize(index_check);
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
   g_assert_false(ef_store_backup(&store,backup,&error));g_clear_error(&error);
