@@ -59,6 +59,21 @@ window.EFNativeStorage=Object.freeze({
   }
   return Number(await call('import-batch',undefined,undefined,encoded));
  },
+ deleteEvaluation:async (id,records)=>{
+  if(typeof id!=='string'||!id||id.length>128||!records||typeof records!=='object'||Array.isArray(records))
+   throw new TypeError('Exclusão de avaliação inválida');
+  const entries=Object.entries(records);
+  if(entries.length>1000)throw new RangeError('Lote excede 1000 registros');
+  const encoded={};let total=0;
+  for(const [key,bytes] of entries){
+   if(!key||key.length>128||key===id||!(bytes instanceof Uint8Array))
+    throw new TypeError('Avaliação vinculada inválida');
+   total+=bytes.byteLength;
+   if(bytes.byteLength>12000000||total>32000000)throw new RangeError('Lote excede os limites');
+   encoded[key]=encode(bytes);
+  }
+  return call('delete-evaluation',id,undefined,encoded);
+ },
  delete:id=>call('delete',id),
  backup:()=>call('backup'),
  readJSON:async id=>{
