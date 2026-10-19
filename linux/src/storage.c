@@ -149,7 +149,7 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
     g_set_error_literal(error,ef_error(),22,"Backup exige caminho absoluto");
     return FALSE;
   }
-  if(g_file_test(destination,G_FILE_TEST_EXISTS)) {
+  if(g_file_test(destination,G_FILE_TEST_EXISTS) || g_file_test(destination,G_FILE_TEST_IS_SYMLINK)) {
     g_set_error_literal(error,ef_error(),20,"Destino já existe: backup não sobrescrito");
     return FALSE;
   }
@@ -192,6 +192,10 @@ gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
   g_free(source_canonical);g_free(live_canonical);
   if(same) {
     g_set_error_literal(error,ef_error(),24,"Não é permitido restaurar a partir do banco ativo");
+    return FALSE;
+  }
+  if(g_file_test(source,G_FILE_TEST_IS_SYMLINK)) {
+    g_set_error_literal(error,ef_error(),52,"Backup não pode ser link simbólico");
     return FALSE;
   }
   sqlite3 *incoming=NULL;
