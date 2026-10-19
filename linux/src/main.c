@@ -137,6 +137,46 @@ static void show_charges(GtkButton *button,gpointer data) {
   }
   refresh_charges(state,id);
 }
+static void delete_record_confirmed(GtkDialog *dialog,gint response,gpointer data) {
+  AppState *state=data;
+  gboolean assessment=GPOINTER_TO_INT(g_object_get_data(G_OBJECT(dialog),"assessment"));
+  gtk_window_destroy(GTK_WINDOW(dialog));
+  if(response!=GTK_RESPONSE_ACCEPT)return;
+  GtkWidget *field=assessment ? state->assessment_delete_id : state->charge_delete_id;
+  GtkWidget *status=assessment ? state->assessment_status : state->charge_status;
+  GtkWidget *picker=assessment ? state->assessment_picker : state->charge_picker;
+  gint64 id=0,client=0;
+  if(!read_id(field,&id) || !read_picker_id(picker,&client)) {
+    gtk_label_set_text(GTK_LABEL(status),"Selecione um cliente e informe o ID do registro.");return;
+  }
+  GError *error=NULL;
+  gboolean ok=assessment ? ef_store_delete_assessment(&state->store,id,&error) : ef_store_delete_charge(&state->store,id,&error);
+  if(ok) {
+    gtk_label_set_text(GTK_LABEL(status),"Registro excluído.");
+    if(assessment)refresh_assessments(state,client);else refresh_charges(state,client);
+  }else{
+    gtk_label_set_text(GTK_LABEL(status),error ? error->message : "Falha ao excluir.");
+    g_clear_error(&error);
+  }
+}
+static void delete_record_clicked(GtkButton *button,gpointer data) {
+  AppState *state=data;
+  gboolean assessment=GPOINTER_TO_INT(g_object_get_data(G_OBJECT(button),"assessment"));
+  GtkWidget *field=assessment ? state->assessment_delete_id : state->charge_delete_id;
+  gint64 id=0;
+  if(!read_id(field,&id)) {
+    gtk_label_set_text(GTK_LABEL(assessment ? state->assessment_status : state->charge_status),"Informe um ID de registro válido.");
+    return;
+  }
+  GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
+  GtkWidget *dialog=gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_MODAL,GTK_MESSAGE_WARNING,GTK_BUTTONS_NONE,
+    "Excluir permanentemente o registro %" G_GINT64_FORMAT "?",id);
+  gtk_dialog_add_button(GTK_DIALOG(dialog),"Cancelar",GTK_RESPONSE_CANCEL);
+  gtk_dialog_add_button(GTK_DIALOG(dialog),"Excluir",GTK_RESPONSE_ACCEPT);
+  g_object_set_data(G_OBJECT(dialog),"assessment",GINT_TO_POINTER(assessment));
+  g_signal_connect(dialog,"response",G_CALLBACK(delete_record_confirmed),state);
+  gtk_window_present(GTK_WINDOW(dialog));
+}
 static void save_assessment(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;double weight=0,height=0;
   if(!read_picker_id(state->assessment_picker,&id) || !read_positive_double(state->assessment_weight,&weight) ||
