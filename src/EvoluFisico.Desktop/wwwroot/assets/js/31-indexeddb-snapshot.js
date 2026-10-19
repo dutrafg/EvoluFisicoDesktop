@@ -108,6 +108,9 @@ async function snapshot(onProgress){
       }
       copied+=Object.keys(batch).length;
      }
+     if(typeof onProgress==='function'){
+      try{onProgress({checked,total,copied,alreadyCopied})}catch(_){/* display only */}
+     }
     }
     const afterCount=await new Promise((resolve,reject)=>{
      const tx=db.transaction(store.name,'readonly');
