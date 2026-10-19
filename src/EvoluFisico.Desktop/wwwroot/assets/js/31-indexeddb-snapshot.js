@@ -13,6 +13,8 @@ async function stableId(database,store,key){
 function requireJSON(value,seen=new WeakSet()){
  if(value===null || typeof value==='string' || typeof value==='boolean')return;
  if(typeof value==='number' && Number.isFinite(value))return;
+ if(typeof value==='bigint' || typeof value==='symbol' || typeof value==='function' || value===undefined)
+  throw new Error('Registro IndexedDB contém valor não compatível com JSON');
  if(typeof value!=='object' || seen.has(value) || value instanceof Date ||
     value instanceof ArrayBuffer || ArrayBuffer.isView(value) ||
     value instanceof Blob || value instanceof Map || value instanceof Set)
@@ -62,14 +64,19 @@ async function snapshot(onProgress){
  active=true;
  try{
  const inventory=await window.EFDesktopIndexedDBInventory.inventory();
+ if(!Array.isArray(inventory))throw new Error('Inventário IndexedDB inválido');
  let copied=0,alreadyCopied=0;
  let checked=0;
  const total=inventory.reduce((n,db)=>n+db.stores.reduce((sum,s)=>sum+s.count,0),0);
+ if(!Number.isSafeInteger(total)||total<0)throw new Error('Contagem IndexedDB inválida');
  for(const info of inventory){
-  const db=await openExisting(info.name);
+  if(typeof info.name!=='string'||!info.name||!Array.isArray(info.stores))throw new Error('Banco IndexedDB inválido');
+ const db=await openExisting(info.name);
   try{
    if(db.version!==info.version)throw new Error('Versão do banco alterada durante a cópia');
    for(const store of info.stores){
+    if(typeof store.name!=='string'||!store.name||!Number.isSafeInteger(store.count)||store.count<0)
+     throw new Error('Tabela IndexedDB inválida');
     const rows=await readStore(db,store.name);
     if(rows.length!==store.count)throw new Error('Quantidade de registros mudou durante a cópia');
     for(let offset=0;offset<rows.length;offset+=100){
@@ -88,7 +95,9 @@ async function snapshot(onProgress){
       else if(equal(existing,record))alreadyCopied++;
       else throw new Error('Cópia existente diferente: '+id);
       checked++;
-      if(typeof onProgress==='function' && checked%25===0)onProgress({checked,total,copied,alreadyCopied});
+      if(typeof onProgress==='function' && checked%25===0){
+       try{onProgress({checked,total,copied,alreadyCopied})}catch(_){/* progress callbacks cannot corrupt migration */}
+      }
      }
      if(Object.keys(batch).length){
       await window.EFNativeStorage.importBatch(batch);
@@ -108,7 +117,9 @@ async function snapshot(onProgress){
    }
   }finally{db.close()}
  }
- if(typeof onProgress==='function')onProgress({checked,total,copied,alreadyCopied});
+ if(typeof onProgress==='function'){
+  try{onProgress({checked,total,copied,alreadyCopied})}catch(_){/* progress is informational */}
+ }
  return {copied,alreadyCopied,originalsPreserved:true};
  }finally{active=false}
 }
