@@ -25,3 +25,6 @@ A automacao em `.github/workflows/windows-build.yml` agora:
 - Testar instalacao/desinstalacao e atualizacao sem perda de dados.
 
 **Status:** nenhuma compilacao ou instalacao real foi confirmada nesta sessao. Nao classificar como release estavel.
+
+## Novo teste automatizado do instalador (Windows CI)
+O pipeline instala o Setup com `/VERYSILENT` em pasta temporaria, verifica `EvoluFisico.Desktop.exe`, `wwwroot/index.html` e `wwwroot/sw.js`, confirma a presenca do desinstalador e executa a remocao silenciosa. O teste falha se qualquer etapa retornar erro. **Pendente de resultado do runner Windows.**
