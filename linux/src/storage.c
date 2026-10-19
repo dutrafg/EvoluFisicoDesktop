@@ -3,6 +3,19 @@
 #include <unistd.h>
 #include <errno.h>
 #include <math.h>
+static gboolean apply_key(sqlite3 *db,GError **error) {
+  const char *passphrase=g_getenv("EVOLUFISICO_DB_PASSPHRASE");
+  if(!passphrase || strlen(passphrase)<12) {
+    g_set_error_literal(error,g_quark_from_static_string("evolufisico-storage"),60,
+      "Defina EVOLUFISICO_DB_PASSPHRASE com pelo menos 12 caracteres antes de iniciar.");
+    return FALSE;
+  }
+  if(sqlite3_key(db,passphrase,(int)strlen(passphrase))!=SQLITE_OK) {
+    g_set_error_literal(error,g_quark_from_static_string("evolufisico-storage"),61,"Falha ao aplicar chave SQLCipher");
+    return FALSE;
+  }
+  return TRUE;
+}
 static GQuark ef_error(void) { return g_quark_from_static_string("evolufisico-storage"); }
 static gboolean sql_error(EfStore *store, GError **error) {
   g_set_error(error, ef_error(), 1, "%s", sqlite3_errmsg(store->db)); return FALSE;
@@ -35,6 +48,18 @@ gboolean ef_store_open(EfStore *store, GError **error) {
   }
   g_free(file);
   if (result != SQLITE_OK) { sql_error(store, error); ef_store_close(store); return FALSE; }
+  if(!apply_key(store->db,error)) {ef_store_close(store);return FALSE;}
+  sqlite3_stmt *cipher_probe=NULL;
+  if(sqlite3_prepare_v2(store->db,"SELECT count(*) FROM sqlite_master",-1,&cipher_probe,NULL)!=SQLITE_OK) {
+    g_set_error_literal(error,ef_error(),62,"Senha incorreta ou banco antigo sem criptografia. Migração automática bloqueada.");
+    ef_store_close(store);return FALSE;
+  }
+  int cipher_rc=sqlite3_step(cipher_probe);
+  sqlite3_finalize(cipher_probe);
+  if(cipher_rc!=SQLITE_ROW) {
+    g_set_error_literal(error,ef_error(),63,"Banco criptografado indisponível ou senha incorreta.");
+    ef_store_close(store);return FALSE;
+  }
   sqlite3_busy_timeout(store->db, 5000);
   if(sqlite3_exec(store->db,"PRAGMA foreign_keys=ON",NULL,NULL,NULL)!=SQLITE_OK) {
     sql_error(store,error);ef_store_close(store);return FALSE;
@@ -163,11 +188,13 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
     if(target)sqlite3_close(target);
     g_unlink(temporary);g_free(temporary);return FALSE;
   }
-  gboolean ok=copy_database(store->db,target,error);
+  gboolean ok=apply_key(target,error);
+  if(ok)ok=copy_database(store->db,target,error);
   if(sqlite3_close(target)!=SQLITE_OK)ok=FALSE;
   if(ok) {
     sqlite3 *verify=NULL;
     if(sqlite3_open_v2(temporary,&verify,SQLITE_OPEN_READONLY,NULL)!=SQLITE_OK)ok=FALSE;
+    else if(!apply_key(verify,error)) {sqlite3_close(verify);ok=FALSE;}
     else {
       EfStore snapshot={verify};
       ok=ef_store_check_integrity(&snapshot,error);
@@ -205,8 +232,9 @@ gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
     if(incoming)sqlite3_close(incoming);
     return FALSE;
   }
+  gboolean ok=apply_key(incoming,error);
   EfStore snapshot={incoming};
-  gboolean ok=ef_store_check_integrity(&snapshot,error);
+  if(ok)ok=ef_store_check_integrity(&snapshot,error);
   if(ok) {
     sqlite3_stmt *stmt=NULL;
     if(sqlite3_prepare_v2(incoming,"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='clients'",-1,&stmt,NULL)!=SQLITE_OK)ok=FALSE;
