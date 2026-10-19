@@ -34,12 +34,6 @@ internal sealed class EncryptedSqliteStore
         setup.CommandText = """
             PRAGMA busy_timeout=5000;
             PRAGMA foreign_keys=ON;
-            PRAGMA journal_mode=WAL;
-            CREATE TABLE IF NOT EXISTS protected_records (
-              record_id TEXT PRIMARY KEY NOT NULL,
-              encrypted_payload BLOB NOT NULL,
-              updated_utc TEXT NOT NULL
-            );
             """;
         setup.ExecuteNonQuery();
         using var version = db.CreateCommand();
@@ -50,6 +44,16 @@ internal sealed class EncryptedSqliteStore
             db.Dispose();
             throw new InvalidDataException("Banco criado por uma versão mais recente do EvoluFisico. Atualize o aplicativo antes de abrir.");
         }
+        using var schema = db.CreateCommand();
+        schema.CommandText = """
+            PRAGMA journal_mode=WAL;
+            CREATE TABLE IF NOT EXISTS protected_records (
+              record_id TEXT PRIMARY KEY NOT NULL,
+              encrypted_payload BLOB NOT NULL,
+              updated_utc TEXT NOT NULL
+            );
+            """;
+        schema.ExecuteNonQuery();
         if (schemaVersion == 0)
         {
             using var initialize = db.CreateCommand();
