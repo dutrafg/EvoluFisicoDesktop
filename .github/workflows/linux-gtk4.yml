@@ -40,6 +40,13 @@ jobs:
           meson setup linux/build-ubsan linux --buildtype=debug -Db_sanitize=undefined -Dwerror=true
           meson compile -C linux/build-ubsan
           meson test -C linux/build-ubsan --print-errorlogs
+      - name: Address sanitizer QA
+        env:
+          ASAN_OPTIONS: "detect_leaks=0:halt_on_error=1"
+        run: |
+          meson setup linux/build-asan linux --buildtype=debug -Db_sanitize=address -Dwerror=true
+          meson compile -C linux/build-asan
+          meson test -C linux/build-asan --print-errorlogs
       - name: Security source checks
         run: |
           ! grep -nE 'system\\(|popen\\(|strcpy\\(|strcat\\(|gets\\(' linux/src/*.c
