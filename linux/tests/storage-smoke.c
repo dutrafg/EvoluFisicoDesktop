@@ -25,6 +25,9 @@ int main(void) {
   g_assert_false(ef_store_delete_client(&store,1,&error)); g_clear_error(&error);
   g_assert_true(ef_store_add_client(&store,"Ana Silva",&error));g_assert_no_error(error);
   g_assert_true(ef_store_rename_client(&store,2,"Ana Souza",&error));g_assert_no_error(error);
+  GPtrArray *rows=ef_store_list_client_rows(&store,&error);
+  g_assert_no_error(error);g_assert_cmpuint(rows->len,==,1);
+  g_assert_true(g_str_has_prefix(g_ptr_array_index(rows,0),"2 "));g_ptr_array_unref(rows);
   g_assert_false(ef_store_rename_client(&store,999,"Inexistente",&error));g_clear_error(&error);
   GPtrArray *filtered=ef_store_search_clients(&store,"Souza",&error);
   g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);
