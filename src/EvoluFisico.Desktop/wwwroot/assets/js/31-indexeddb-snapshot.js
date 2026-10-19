@@ -28,6 +28,7 @@ function requireJSON(value,seen=new WeakSet()){
 function readStore(db,name){
  return new Promise((resolve,reject)=>{
   const items=[];
+  let settled=false;
   const tx=db.transaction(name,'readonly');
   const req=tx.objectStore(name).openCursor();
   req.onsuccess=()=>{
@@ -42,11 +43,12 @@ function readStore(db,name){
     if(JSON.stringify(decoded)!==serialized)throw new Error('Registro inválido');
     items.push(serialized);
     cursor.continue();
-   }catch(error){reject(error);try{tx.abort()}catch(_){}}
+   }catch(error){if(!settled){settled=true;reject(error)}try{tx.abort()}catch(_){}}
   };
-  req.onerror=()=>reject(req.error||new Error('Falha ao ler registros'));
-  tx.onerror=()=>reject(tx.error||new Error('Falha na transação'));
-  tx.oncomplete=()=>resolve(items);
+  req.onerror=()=>{if(!settled){settled=true;reject(req.error||new Error('Falha ao ler registros'))}};
+  tx.onerror=()=>{if(!settled){settled=true;reject(tx.error||new Error('Falha na transação'))}};
+  tx.onabort=()=>{if(!settled){settled=true;reject(tx.error||new Error('Transação IndexedDB cancelada'))}};
+  tx.oncomplete=()=>{if(!settled){settled=true;resolve(items)}};
  });
 }
 function openExisting(name){
