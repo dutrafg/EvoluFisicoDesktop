@@ -154,6 +154,22 @@ function mount(){
      panel.className='ef-settings-card';
      panel.innerHTML='<h3>Atualizações do aplicativo</h3><p>Verifique se há uma versão mais recente do EvoluFisico Desktop para Windows.</p><div class="ef-settings-controls"><button class="btn btn-outline btn-sm ef-settings-action" id="ef-desktop-check-update" type="button">Verificar atualizações</button><p id="ef-desktop-update-status" role="status" aria-live="polite"></p></div>';
      grid.append(panel);
+     if(window.EFDesktopLegacyMigration){
+       const migration=document.createElement('article');
+       migration.className='ef-settings-card';
+       migration.innerHTML='<h3>Proteção dos dados antigos</h3><p>Crie uma cópia criptografada dos dados locais no SQLite. Os dados originais não serão excluídos. Esta operação ainda não substitui o banco utilizado pelos módulos.</p><div class="ef-settings-controls"><button class="btn btn-outline btn-sm ef-settings-action" id="ef-desktop-migrate-legacy" type="button">Copiar dados locais para SQLite</button><p id="ef-desktop-migrate-status" role="status" aria-live="polite"></p></div>';
+       grid.append(migration);
+       const migrateButton=$('ef-desktop-migrate-legacy'),migrateStatus=$('ef-desktop-migrate-status');
+       migrateButton.addEventListener('click',async()=>{
+         if(!confirm('Criar cópia criptografada dos dados locais? Nenhum registro original será excluído.'))return;
+         migrateButton.disabled=true;migrateStatus.textContent='Copiando e conferindo os registros…';
+         try{
+           const result=await window.EFDesktopLegacyMigration.migrate();
+           migrateStatus.textContent=result.transferred+' registros copiados e conferidos. Os dados originais foram preservados.';
+         }catch(error){migrateStatus.textContent='Migração interrompida: '+error.message+' Os dados originais foram preservados.'}
+         finally{migrateButton.disabled=false}
+       });
+     }
      const btn=$('ef-desktop-check-update'), status=$('ef-desktop-update-status');
      btn.addEventListener('click',()=>{btn.disabled=true;status.textContent='Consultando versões publicadas…';window.chrome.webview.postMessage('check-updates')});
      window.chrome.webview.addEventListener('message',e=>{
