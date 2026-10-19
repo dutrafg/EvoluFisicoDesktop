@@ -114,6 +114,28 @@ try
     store.DeleteBatch(new[] { "batch-delete-a", "batch-delete-b" });
     Check(store.Load("batch-delete-a") is null && store.Load("batch-delete-b") is null,
         "Batch deletion commits all records atomically");
+    store.Save("eval-target", Encoding.UTF8.GetBytes("target"));
+    store.Save("eval-linked", Encoding.UTF8.GetBytes("before"));
+    try {
+        store.DeleteEvaluationWithUpdates("eval-target", new System.Collections.Generic.Dictionary<string, byte[]>
+        {
+            ["eval-linked"] = Encoding.UTF8.GetBytes("after"),
+            ["eval-missing"] = Encoding.UTF8.GetBytes("invalid")
+        });
+        throw new Exception("Missing linked record should abort the transaction");
+    }
+    catch (InvalidDataException) {
+        Check(Encoding.UTF8.GetString(store.Load("eval-linked")!) == "before"
+            && store.Load("eval-target") is not null,
+            "Evaluation deletion rolls back comparison updates when a linked record is missing");
+    }
+    store.DeleteEvaluationWithUpdates("eval-target", new System.Collections.Generic.Dictionary<string, byte[]>
+    {
+        ["eval-linked"] = Encoding.UTF8.GetBytes("after")
+    });
+    Check(store.Load("eval-target") is null
+        && Encoding.UTF8.GetString(store.Load("eval-linked")!) == "after",
+        "Evaluation deletion atomically updates comparisons and removes target");
     // A verified backup must be a point-in-time copy, not a live database alias.
     store.Save("patient-001", Encoding.UTF8.GetBytes("post-backup-change"));
     Check(Encoding.UTF8.GetString(store.Load("patient-001")!) == "post-backup-change",
