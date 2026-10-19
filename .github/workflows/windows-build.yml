@@ -33,6 +33,12 @@ jobs:
         shell: pwsh
         run: ./scripts/build-windows.ps1
 
+      - name: Validate migration JavaScript syntax
+        run: |
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/29-legacy-migration.js
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/30-indexeddb-inventory.js
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/31-indexeddb-snapshot.js
+
       - name: Exercise IndexedDB migration with synthetic records
         run: node tests/indexeddb-snapshot-runtime.cjs
 
