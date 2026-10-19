@@ -3,6 +3,7 @@
 #include <glib/gstdio.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <math.h>
 #include <glib/gstdio.h>
 extern int symlink(const char *target, const char *linkpath);
 extern int sqlite3_key(sqlite3 *db,const void *key,int key_length);
@@ -94,6 +95,20 @@ int main(void) {
   GPtrArray *filtered=ef_store_search_clients(&store,"Souza",&error);
   g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);
   g_assert_true(g_str_has_prefix(g_ptr_array_index(filtered,0),"2 "));g_ptr_array_unref(filtered);
+  /* Security regression: SQL metacharacters are treated as data, not commands. */
+  const char *injection="'; DROP TABLE clients; --";
+  g_assert_true(ef_store_add_client(&store,injection,&error));g_assert_no_error(error);
+  filtered=ef_store_search_clients(&store,injection,&error);
+  g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);g_ptr_array_unref(filtered);
+  g_assert_true(ef_store_add_charge(&store,2,1234,injection,&error));g_assert_no_error(error);
+  charges=ef_store_list_charges(&store,2,&error);
+  g_assert_no_error(error);g_assert_cmpuint(charges->len,==,2);g_ptr_array_unref(charges);
+  g_assert_true(ef_store_delete_client(&store,3,&error));g_assert_no_error(error);
+  g_assert_true(ef_store_delete_charge_for_client(&store,3,2,&error));g_assert_no_error(error);
+  /* Reject invalid UTF-8 and nonfinite measurements without corrupting the store. */
+  g_assert_false(ef_store_add_charge(&store,2,100,"\\xFF",&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_assessment(&store,2,"2026-10-19",NAN,170,&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_assessment(&store,2,"2026-10-19",70,INFINITY,&error));g_clear_error(&error);
   g_assert_true(ef_store_check_integrity(&store,&error));g_assert_no_error(error);
   sqlite3_stmt *index_check=NULL;
   g_assert_cmpint(sqlite3_prepare_v2(store.db,"SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name IN ('idx_assessments_client_date','idx_charges_client')",-1,&index_check,NULL),==,SQLITE_OK);
