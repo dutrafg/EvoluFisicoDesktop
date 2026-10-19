@@ -246,11 +246,15 @@ static void save_charge(GtkButton *button,gpointer data) {
     g_clear_error(&error);
   }
 }
-static void delete_client_confirmed(GtkDialog *dialog,gint response,gpointer data) {
-  AppState *state=data;
-  gint64 id=*(gint64*)g_object_get_data(G_OBJECT(dialog),"client-id");
-  gtk_window_destroy(GTK_WINDOW(dialog));
-  if(response!=GTK_RESPONSE_ACCEPT)return;
+typedef struct { AppState *state; gint64 id; } ClientDeleteRequest;
+static void delete_client_confirmed(GObject *source,GAsyncResult *result,gpointer data) {
+  ClientDeleteRequest *request=data;
+  AppState *state=request->state;
+  gint64 id=request->id;
+  GError *choice_error=NULL;
+  int response=gtk_alert_dialog_choose_finish(GTK_ALERT_DIALOG(source),result,&choice_error);
+  g_clear_error(&choice_error);g_free(request);
+  if(response!=1)return;
   GError *error=NULL;
   if(ef_store_delete_client(&state->store,id,&error)) {
     gtk_label_set_text(GTK_LABEL(state->status),"Cliente e registros associados excluídos.");
@@ -266,14 +270,15 @@ static void delete_client_clicked(GtkButton *button,gpointer data) {
     gtk_label_set_text(GTK_LABEL(state->status),"Informe ID de cliente válido.");return;
   }
   GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
-  GtkWidget *dialog=gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_MODAL,GTK_MESSAGE_WARNING,GTK_BUTTONS_NONE,
+  GtkAlertDialog *dialog=gtk_alert_dialog_new(
     "Excluir cliente %" G_GINT64_FORMAT " e TODAS as avaliações e cobranças vinculadas?",id);
-  gtk_dialog_add_button(GTK_DIALOG(dialog),"Cancelar",GTK_RESPONSE_CANCEL);
-  gtk_dialog_add_button(GTK_DIALOG(dialog),"Excluir tudo",GTK_RESPONSE_ACCEPT);
-  gint64 *id_copy=g_new(gint64,1);*id_copy=id;
-  g_object_set_data_full(G_OBJECT(dialog),"client-id",id_copy,g_free);
-  g_signal_connect(dialog,"response",G_CALLBACK(delete_client_confirmed),state);
-  gtk_window_present(GTK_WINDOW(dialog));
+  const char *buttons[]={"Cancelar","Excluir tudo",NULL};
+  gtk_alert_dialog_set_buttons(dialog,buttons);
+  gtk_alert_dialog_set_cancel_button(dialog,0);
+  ClientDeleteRequest *request=g_new0(ClientDeleteRequest,1);
+  request->state=state;request->id=id;
+  gtk_alert_dialog_choose(dialog,GTK_WINDOW(window),NULL,delete_client_confirmed,request);
+  g_object_unref(dialog);
 }
 static void rename_client_clicked(GtkButton *button,gpointer data) {
   (void)button;
@@ -328,30 +333,36 @@ static void backup_clicked(GtkButton *button,gpointer data) {
     g_clear_error(&error);
   }
 }
-static void restore_confirmed(GtkDialog *dialog, gint response, gpointer data) {
-  AppState *state=data;
-  gtk_window_destroy(GTK_WINDOW(dialog));
-  if(response!=GTK_RESPONSE_ACCEPT) return;
-  const char *path=gtk_editable_get_text(GTK_EDITABLE(state->restore_entry));
+typedef struct { AppState *state; char *path; } RestoreRequest;
+static void restore_confirmed(GObject *source,GAsyncResult *result,gpointer data) {
+  RestoreRequest *request=data;
+  AppState *state=request->state;
+  GError *choice_error=NULL;
+  int response=gtk_alert_dialog_choose_finish(GTK_ALERT_DIALOG(source),result,&choice_error);
+  g_clear_error(&choice_error);
+  if(response!=1){g_free(request->path);g_free(request);return;}
   GError *error=NULL;
-  if(ef_store_restore(&state->store,path,&error)) {
+  if(ef_store_restore(&state->store,request->path,&error)) {
     gtk_label_set_text(GTK_LABEL(state->settings_status),"Restauração concluída. Confira os dados.");
     refresh_clients(state);
-  } else {
+  }else{
     gtk_label_set_text(GTK_LABEL(state->settings_status),error ? error->message : "Restauração falhou.");
     g_clear_error(&error);
   }
+  g_free(request->path);g_free(request);
 }
 static void restore_clicked(GtkButton *button,gpointer data) {
   AppState *state=data;
   GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
-  GtkWidget *dialog=gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_MODAL,
-    GTK_MESSAGE_WARNING,GTK_BUTTONS_NONE,
-    "A restauração substituirá os clientes existentes. Continuar?");
-  gtk_dialog_add_button(GTK_DIALOG(dialog),"Cancelar",GTK_RESPONSE_CANCEL);
-  gtk_dialog_add_button(GTK_DIALOG(dialog),"Restaurar",GTK_RESPONSE_ACCEPT);
-  g_signal_connect(dialog,"response",G_CALLBACK(restore_confirmed),state);
-  gtk_window_present(GTK_WINDOW(dialog));
+  GtkAlertDialog *dialog=gtk_alert_dialog_new("A restauração substituirá os clientes existentes. Continuar?");
+  const char *buttons[]={"Cancelar","Restaurar",NULL};
+  gtk_alert_dialog_set_buttons(dialog,buttons);
+  gtk_alert_dialog_set_cancel_button(dialog,0);
+  RestoreRequest *request=g_new0(RestoreRequest,1);
+  request->state=state;
+  request->path=g_strdup(gtk_editable_get_text(GTK_EDITABLE(state->restore_entry)));
+  gtk_alert_dialog_choose(dialog,GTK_WINDOW(window),NULL,restore_confirmed,request);
+  g_object_unref(dialog);
 }
 static void integrity_clicked(GtkButton *button,gpointer data) {
   (void)button;
