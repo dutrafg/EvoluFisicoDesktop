@@ -25,8 +25,18 @@ typedef struct {
   GtkWidget *charge_description;
   GtkWidget *charge_status;
   GtkWidget *charge_list;
+  GtkWidget *assessment_picker;
+  GtkWidget *charge_picker;
 } AppState;
 
+static gboolean read_picker_id(GtkWidget *picker,gint64 *out) {
+  const char *id=gtk_combo_box_get_active_id(GTK_COMBO_BOX(picker));
+  if(!id || !*id)return FALSE;
+  char *end=NULL;errno=0;
+  gint64 parsed=g_ascii_strtoll(id,&end,10);
+  if(errno==ERANGE || !end || *end || parsed<=0)return FALSE;
+  *out=parsed;return TRUE;
+}
 static gboolean read_id(GtkWidget *entry,gint64 *out) {
   const char *value=gtk_editable_get_text(GTK_EDITABLE(entry));
   if(!*value)return FALSE;
