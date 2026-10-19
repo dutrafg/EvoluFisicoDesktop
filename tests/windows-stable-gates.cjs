@@ -46,4 +46,8 @@ check('27 IndexedDB prevents concurrent migration',()=>assert.match(idb,/if\(act
 check('28 Legacy localStorage uses stable hash',()=>assert.match(legacy,/ef-legacy-v2-/));
 check('29 UI exposes migration explicitly',()=>assert.match(ui,/ef-desktop-snapshot-idb/));
 check('30 Migration scripts loaded',()=>{assert.match(html,/29-legacy-migration\.js/);assert.match(html,/30-indexeddb-inventory\.js/);assert.match(html,/31-indexeddb-snapshot\.js/)});
-console.log('30/30 Windows desktop migration safety contract checks passed.');
+check('31 Native backup uses Windows save dialog',()=>assert.match(native,/new Microsoft\.Win32\.SaveFileDialog/));
+check('32 Native backup verifies encrypted snapshot',()=>assert.match(native,/store\.BackupTo\(dialog\.FileName\)/));
+check('33 UI exposes backup action',()=>assert.match(ui,/ef-desktop-native-backup/));
+check('34 Native bridge exposes backup method',()=>assert.match(bridge,/async backup\(\)/));
+console.log('34/34 Windows desktop migration safety contract checks passed.');
