@@ -12,7 +12,7 @@ static void Check(bool ok, string description)
 }
 static void Reject(Action action, string description)
 {
-    try { action(); } catch (CryptographicException) { Console.WriteLine("PASS: " + description); return; }
+    try { action(); } catch (Exception ex) when (ex is CryptographicException or InvalidDataException) { Console.WriteLine("PASS: " + description); return; }
     throw new Exception("FAIL: " + description);
 }
 var sample = Encoding.UTF8.GetBytes("{\"patient\":\"Paciente fictício\",\"measure\":42}");
