@@ -9,6 +9,7 @@ typedef struct {
   GtkWidget *search_entry;
   GtkWidget *backup_entry;
   GtkWidget *settings_status;
+  GtkWidget *restore_entry;
 } AppState;
 
 static void refresh_clients(AppState *state) {
@@ -61,6 +62,19 @@ static void backup_clicked(GtkButton *button,gpointer data) {
     gtk_label_set_text(GTK_LABEL(state->settings_status),"Backup SQLite criado e validado.");
   }else{
     gtk_label_set_text(GTK_LABEL(state->settings_status),error ? error->message : "Erro ao salvar backup.");
+    g_clear_error(&error);
+  }
+}
+static void restore_clicked(GtkButton *button,gpointer data) {
+  (void)button;
+  AppState *state=data;
+  const char *path=gtk_editable_get_text(GTK_EDITABLE(state->restore_entry));
+  GError *error=NULL;
+  if(ef_store_restore(&state->store,path,&error)) {
+    gtk_label_set_text(GTK_LABEL(state->settings_status),"Restauração concluída. Confira os dados.");
+    refresh_clients(state);
+  } else {
+    gtk_label_set_text(GTK_LABEL(state->settings_status),error ? error->message : "Restauração falhou.");
     g_clear_error(&error);
   }
 }
@@ -145,6 +159,11 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),state->backup_entry);
       GtkWidget *backup=gtk_button_new_with_label("Criar backup");
       GtkWidget *integrity=gtk_button_new_with_label("Verificar integridade");
+      state->restore_entry=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->restore_entry),"Arquivo .sqlite para restaurar");
+      gtk_box_append(GTK_BOX(page),state->restore_entry);
+      GtkWidget *restore=gtk_button_new_with_label("Restaurar backup (substitui dados atuais)");
+      gtk_box_append(GTK_BOX(page),restore);
       gtk_box_append(GTK_BOX(page),backup);
       gtk_box_append(GTK_BOX(page),integrity);
       state->settings_status=gtk_label_new("Prévia experimental: backups sem criptografia.");
@@ -152,8 +171,10 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),state->settings_status);
       g_signal_connect(backup,"clicked",G_CALLBACK(backup_clicked),state);
       g_signal_connect(integrity,"clicked",G_CALLBACK(integrity_clicked),state);
+      g_signal_connect(restore,"clicked",G_CALLBACK(restore_clicked),state);
       gtk_widget_set_sensitive(backup,state->store.db!=NULL);
       gtk_widget_set_sensitive(integrity,state->store.db!=NULL);
+      gtk_widget_set_sensitive(restore,state->store.db!=NULL);
     }else{
       GtkWidget *note=gtk_label_new("Módulo em desenvolvimento. Não utilize dados clínicos reais.");
       gtk_widget_set_halign(note,GTK_ALIGN_START);
