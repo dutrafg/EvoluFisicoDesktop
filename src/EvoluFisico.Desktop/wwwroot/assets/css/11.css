@@ -1,0 +1,826 @@
+/* 11-styles.css */
+/* ==========================================================================
+   EVOLUFÍSICO v8.9.1 Teste — MÓDULO DE COBRANÇA, PRECIFICAÇÃO E HISTÓRICO
+   Design Moderno Apple Human Interface / macOS com Totais e Por Aluno
+   ========================================================================== */
+
+.cob-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 3rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-main, #0f172a);
+}
+
+.cob-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.cob-kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--primary, #007aff);
+    margin-bottom: 0.25rem;
+}
+
+.cob-head h2 {
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.35rem 0;
+    color: var(--text-main, #0f172a);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cob-head p {
+    font-size: 0.9rem;
+    color: var(--text-muted, #64748b);
+    margin: 0;
+    max-width: 720px;
+    line-height: 1.45;
+}
+
+.cob-head-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Workspace Grid (Calculadora) */
+.cob-workspace-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 1.25fr) minmax(300px, 0.95fr);
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+    align-items: start;
+}
+
+@media (max-width: 880px) {
+    .cob-workspace-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Apple-style Cards */
+.cob-card {
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    margin-bottom: 1.25rem;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.cob-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.cob-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main, #0f172a);
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: -0.01em;
+}
+
+/* Segmented Control Apple */
+.cob-segmented {
+    display: flex;
+    background: rgba(148, 163, 184, 0.15);
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.cob-seg-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-muted, #64748b);
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.cob-seg-btn.active {
+    background: var(--bg-card, #ffffff);
+    color: var(--text-main, #0f172a);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+html.ef-dark-mode .cob-seg-btn.active {
+    background: #334155;
+    color: #f8fafc;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Chips de Desconto Rápido */
+.cob-chips-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.cob-chip {
+    border: 1px solid var(--border-color, #cbd5e1);
+    background: var(--bg-card, #ffffff);
+    color: var(--text-main, #334155);
+    padding: 0.4rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.cob-chip:hover {
+    border-color: #007aff;
+    color: #007aff;
+    background: rgba(0, 122, 255, 0.05);
+}
+
+.cob-chip.active {
+    background: #007aff;
+    border-color: #007aff;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 122, 255, 0.25);
+}
+
+html.ef-dark-mode .cob-chip {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+html.ef-dark-mode .cob-chip.active {
+    background: #007aff;
+    border-color: #007aff;
+    color: #ffffff;
+}
+
+/* Banner de Dupla */
+.cob-duo-banner {
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+    border: 1px solid rgba(0, 122, 255, 0.25);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Hero Card (Resumo Financeiro & Ação de Registro) */
+.cob-hero-card {
+    background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 1.5rem;
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+    position: sticky;
+    top: 1rem;
+}
+
+html.ef-dark-mode .cob-hero-card {
+    background: linear-gradient(145deg, #090d16 0%, #111827 100%);
+    border: 1px solid #1f2937;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.cob-hero-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cob-hero-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+    color: #94a3b8;
+}
+
+.cob-hero-row b {
+    color: #f1f5f9;
+    font-variant-numeric: tabular-nums;
+}
+
+.cob-hero-row.discount b {
+    color: #f87171;
+}
+
+.cob-hero-total-group {
+    padding: 1.15rem 0 0.85rem 0;
+    text-align: left;
+}
+
+.cob-hero-total-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.cob-hero-total-val {
+    font-size: 2.35rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #38bdf8;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    display: block;
+}
+
+/* Box Destacado: Valor Por Aluno */
+.cob-hero-per-student-box {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.15rem;
+}
+
+.cob-hero-per-student-info span {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.cob-hero-per-student-info small {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    display: block;
+    margin-top: 2px;
+}
+
+.cob-hero-per-student-val {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #4ade80;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+/* Status Selector Apple */
+.cob-status-segmented {
+    display: flex;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+    margin-bottom: 1.25rem;
+}
+
+.cob-status-seg-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 0.6rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.cob-status-seg-btn.active.pago {
+    background: #15803d;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(21, 128, 61, 0.4);
+}
+
+.cob-status-seg-btn.active.pendente {
+    background: #b45309;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(180, 83, 9, 0.4);
+}
+
+.cob-btn-save-hero {
+    width: 100%;
+    background: #007aff;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 14px rgba(0, 122, 255, 0.35);
+}
+
+.cob-btn-save-hero:hover {
+    background: #0062cc;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 122, 255, 0.45);
+}
+
+.cob-btn-save-hero:active {
+    transform: translateY(0);
+}
+
+.cob-btn-reset-hero {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
+    border-radius: 10px;
+    padding: 0.55rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.6rem;
+    transition: all 0.15s ease;
+}
+
+.cob-btn-reset-hero:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   HISTÓRICO DE PAGAMENTOS COM TOTAIS E POR ALUNO
+   ========================================================================== */
+.cob-history-card {
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.cob-history-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.cob-history-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-main, #0f172a);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Grid de KPIs no Topo do Histórico (5 Métricas) */
+.cob-kpis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.cob-kpi-card {
+    background: rgba(148, 163, 184, 0.06);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: transform 0.15s ease;
+}
+
+.cob-kpi-card:hover {
+    transform: translateY(-2px);
+}
+
+.cob-kpi-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.cob-kpi-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.cob-kpi-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--text-muted, #64748b);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.cob-kpi-val {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-main, #0f172a);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    margin: 0.1rem 0;
+}
+
+.cob-kpi-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted, #64748b);
+}
+
+/* Toolbar de Filtros do Histórico */
+.cob-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(148, 163, 184, 0.08);
+    border-radius: 12px;
+}
+
+.cob-search-input {
+    flex: 1;
+    min-width: 220px;
+    padding: 0.55rem 0.85rem;
+    border: 1px solid var(--border-color, #cbd5e1);
+    border-radius: 8px;
+    font-size: 0.84rem;
+    background: var(--bg-card, #ffffff);
+    color: var(--text-main, #0f172a);
+}
+
+.cob-toolbar-filters {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.cob-view-toggle {
+    display: flex;
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+}
+
+.cob-view-btn {
+    border: none;
+    background: transparent;
+    padding: 0.4rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted, #64748b);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.cob-view-btn.active {
+    background: var(--bg-card, #ffffff);
+    color: var(--text-main, #0f172a);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+html.ef-dark-mode .cob-view-btn.active {
+    background: #334155;
+    color: #ffffff;
+}
+
+/* Tabela de Lançamentos & Consolidado */
+.cob-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.cob-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.cob-table thead th {
+    background: rgba(148, 163, 184, 0.1);
+    color: var(--text-muted, #475569);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.75rem 0.85rem;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    white-space: nowrap;
+}
+
+.cob-table tbody tr {
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    transition: background 0.15s ease;
+}
+
+.cob-table tbody tr:hover {
+    background: rgba(148, 163, 184, 0.05);
+}
+
+.cob-table tbody td {
+    padding: 0.85rem;
+    vertical-align: middle;
+}
+
+.cob-table tfoot td {
+    background: rgba(148, 163, 184, 0.12);
+    font-weight: 800;
+    padding: 0.85rem;
+    border-top: 2px solid var(--border-color, #cbd5e1);
+    color: var(--text-main, #0f172a);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Badges e Status */
+.cob-badge-total {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-main, #0f172a);
+    font-variant-numeric: tabular-nums;
+}
+
+.cob-badge-per-aluno {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    padding: 0.25rem 0.55rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+html.ef-dark-mode .cob-badge-per-aluno {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.cob-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.cob-status-pill.pago {
+    background: #ecfdf5;
+    color: #15803d;
+    border-color: #86efac;
+}
+
+.cob-status-pill.pendente {
+    background: #fffbeb;
+    color: #b45309;
+    border-color: #fde68a;
+}
+
+.cob-status-pill:hover {
+    transform: scale(1.04);
+}
+
+html.ef-dark-mode .cob-status-pill.pago {
+    background: rgba(22, 163, 74, 0.2);
+    color: #4ade80;
+    border-color: rgba(22, 163, 74, 0.4);
+}
+
+html.ef-dark-mode .cob-status-pill.pendente {
+    background: rgba(202, 138, 4, 0.2);
+    color: #facc15;
+    border-color: rgba(202, 138, 4, 0.4);
+}
+
+.cob-empty {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--text-muted, #64748b);
+}
+
+.cob-empty span {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+
+/* Seletor de Formas de Pagamento */
+.cob-pay-segmented {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3px;
+    border-radius: 10px;
+    gap: 3px;
+    margin-bottom: 0.6rem;
+}
+
+.cob-pay-seg-btn {
+    border: none;
+    background: transparent;
+    padding: 0.55rem 0.25rem;
+    border-radius: 8px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
+.cob-pay-seg-btn:hover {
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.cob-pay-seg-btn.active {
+    background: #007aff;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
+}
+
+.cob-pay-subdetail {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+
+@media (max-width: 480px) {
+    .cob-pay-segmented {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .cob-status-segmented {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .cob-hero-total-val {
+        font-size: 2rem !important;
+    }
+}
+
+html.ef-dark-mode .cob-table thead th {
+    background: rgba(30, 41, 59, 0.8) !important;
+    color: #94a3b8 !important;
+    border-color: #334155 !important;
+}
+
+html.ef-dark-mode .cob-table tbody tr {
+    border-color: #334155 !important;
+}
+
+html.ef-dark-mode .cob-table tfoot td {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html.ef-dark-mode .cob-kpi-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+html.ef-dark-mode .cob-kpi-val {
+    color: #f8fafc !important;
+}
+
+html.ef-dark-mode .cob-toolbar {
+    background: rgba(30, 41, 59, 0.7) !important;
+}
+
+html.ef-dark-mode .cob-search-input {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* Animações e Utilitários */
+.cob-fade-in {
+    animation: cobFade 0.2s ease-in-out;
+}
+
+@keyframes cobFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+html.ef-dark-mode .cob-card,
+html.ef-dark-mode .cob-history-card {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+/* Coluna "Ações" sempre visível (antes ficava fora da tela em celulares) */
+#cob-view-extrato-wrapper .cob-table thead th:last-child,
+#cob-view-extrato-wrapper .cob-table tbody td:last-child {
+    position: sticky;
+    right: 0;
+    background: var(--card-bg, #fff);
+    box-shadow: -6px 0 8px -6px rgba(15, 23, 42, 0.18);
+    z-index: 1;
+}
+#cob-view-extrato-wrapper .cob-table thead th:last-child {
+    background: #f1f5f9;
+}
+html.ef-dark-mode #cob-view-extrato-wrapper .cob-table thead th:last-child,
+html.ef-dark-mode #cob-view-extrato-wrapper .cob-table tbody td:last-child {
+    background: #1e293b;
+}
+.cob-btn-excluir { white-space: nowrap; min-height: 34px; }
+
+/* Modalidade responsiva independente da camada de interface. */
+.cob-workspace-grid > div {min-width:0;}
+.cob-card-title {flex-wrap:wrap;gap:8px;}
+.cob-card-title > span {min-width:0;max-width:100%;white-space:normal;}
+.cob-segmented {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}
+.cob-seg-btn {min-width:0;white-space:normal;overflow-wrap:anywhere;min-height:44px;}
+.cob-duo-banner {flex-wrap:wrap;min-width:0;}
+.cob-duo-banner > * {min-width:0;max-width:100%;}
+.cob-duo-banner .btn {white-space:normal!important;}
+@media(max-width:600px) {
+ .cob-segmented[aria-label="Número de Pessoas"] {grid-template-columns:1fr;}
+ .cob-segmented[aria-label="Número de Pessoas"] .cob-seg-btn {justify-content:flex-start;text-align:left;}
+}
