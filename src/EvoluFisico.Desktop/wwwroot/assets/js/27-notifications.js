@@ -1,11 +1,10 @@
-/* EvoluFísico 9.0-beta — Notificações locais de agenda, som sintetizado e vibração. */
+/* EvoluFísico 9.0 — Notificações locais de agenda e som sintetizado. */
 (function(){'use strict';
   const KEY='ef90_notification_preferences_v1';
   const SENT_KEY='ef90_notification_events_sent_v1';
   const AGENDA_KEY='ef90_home_agenda';
-  const DEFAULTS={ reminders:true, sound:false, vibration:false, minutes:15, volume:55 };
+  const DEFAULTS={ reminders:true, sound:false, minutes:15, volume:55 };
   const $=id=>document.getElementById(id);
-  const supportsVibration=typeof navigator!=='undefined' && typeof navigator.vibrate==='function';
   let prefs=readPrefs();
   let audioContext=null;
   let initialized=false;
@@ -16,7 +15,7 @@
   function readPrefs(){const saved=safeParse(KEY,{});const p=Object.assign({},DEFAULTS,saved && typeof saved==='object'&&!Array.isArray(saved)?saved:{});
     p.minutes=[0,5,10,15,30,60].includes(Number(p.minutes))?Number(p.minutes):15;
     p.volume=Math.max(0,Math.min(100,Number(p.volume)||0));
-    p.reminders=!!p.reminders;p.sound=!!p.sound;p.vibration=!!p.vibration;
+    p.reminders=!!p.reminders;p.sound=!!p.sound;delete p.vibration;
     return p;
   }
   function savePrefs(){try{localStorage.setItem(KEY,JSON.stringify(prefs))}catch(_){}}
@@ -48,14 +47,8 @@
       return true;
     }catch(_){status('O navegador bloqueou o áudio automático. Toque em “Ouvir som” para habilitá-lo.');return false}
   }
-  function vibrate(){
-    if(!supportsVibration){status('Este navegador ou dispositivo não oferece suporte à vibração.');return false}
-    try{const ok=navigator.vibrate([120,75,180]);if(!ok){status('O dispositivo recusou a vibração. Confira o modo silencioso e as permissões.');return false}return true}
-    catch(_){status('Não foi possível ativar a vibração neste dispositivo.');return false}
-  }
   function alertSignal(){
     if(prefs.sound)playSound();
-    if(prefs.vibration)vibrate();
   }
   function readAgenda(){const data=safeParse(AGENDA_KEY,[]);return Array.isArray(data)?data:[]}
   function dateFromAppointment(e){
@@ -95,13 +88,11 @@
     if(changed){try{localStorage.setItem(SENT_KEY,JSON.stringify(seen))}catch(_){}}
   }
   function updateUI(){
-    const ids=[['efn-reminders','reminders'],['efn-sound','sound'],['efn-vibration','vibration']];
+    const ids=[['efn-reminders','reminders'],['efn-sound','sound']];
     ids.forEach(pair=>{const el=$(pair[0]);if(el)el.checked=!!prefs[pair[1]]});
     const lead=$('efn-minutes');if(lead)lead.value=String(prefs.minutes);
     const volume=$('efn-volume');if(volume)volume.value=String(prefs.volume);
     const v=$('efn-volume-output');if(v)v.textContent=prefs.volume+'%';
-    const vib=$('efn-vibration');if(vib){vib.disabled=!supportsVibration;vib.title=supportsVibration?'Vibrar em dispositivos compatíveis':'Vibração não disponível neste navegador'}
-    const vhelp=$('efn-vibration-help');if(vhelp)vhelp.textContent=supportsVibration?'Vibração disponível neste navegador; a resposta depende do aparelho e das configurações de sistema.':'Vibração indisponível neste navegador. No iPhone/iPad, navegadores geralmente não permitem vibrar por páginas web.';
     if(lastStatus)status(lastStatus);
   }
   function buildCard(){
@@ -114,26 +105,24 @@
       <div class="efn-options">
         <label class="efn-setting"><span><b>Lembretes da agenda</b><small>Mostrar avisos próximos ao horário marcado.</small></span><input id="efn-reminders" type="checkbox"/></label>
         <label class="efn-setting"><span><b>Som de notificação</b><small>Sinal sonoro suave produzido pelo próprio aplicativo.</small></span><input id="efn-sound" type="checkbox"/></label>
-        <label class="efn-setting"><span><b>Vibração</b><small id="efn-vibration-help">Verificando suporte do dispositivo...</small></span><input id="efn-vibration" type="checkbox"/></label>
         <label class="efn-field"><span>Antecedência do aviso</span><select id="efn-minutes"><option value="0">Na hora</option><option value="5">5 minutos antes</option><option value="10">10 minutos antes</option><option value="15">15 minutos antes</option><option value="30">30 minutos antes</option><option value="60">1 hora antes</option></select></label>
         <label class="efn-field"><span>Volume do som <output id="efn-volume-output" for="efn-volume">55%</output></span><input type="range" min="0" max="100" step="5" id="efn-volume"/></label>
       </div>
-      <div class="efn-actions"><button type="button" class="efn-test" id="efn-test-sound">Ouvir som</button><button type="button" class="efn-test" id="efn-test-vibration">Testar vibração</button><button type="button" class="efn-test efn-test-primary" id="efn-test-all">Testar aviso</button></div>
+      <div class="efn-actions"><button type="button" class="efn-test" id="efn-test-sound">Ouvir som</button><button type="button" class="efn-test efn-test-primary" id="efn-test-all">Testar aviso</button></div>
       <p class="efn-status" role="status" aria-live="polite" id="efn-status">Preferências armazenadas neste navegador.</p>
-      <small class="efn-limitation">Som e vibração dependem da permissão do navegador e da interação do usuário. Avisos funcionam com o aplicativo aberto; não são notificações em segundo plano.</small>
+      <small class="efn-limitation">O som depende das permissões do navegador e da interação do usuário. Avisos funcionam com o aplicativo aberto; não são notificações em segundo plano.</small>
       <div id="efn-live-region" role="status" aria-live="polite" hidden></div>`;
     const next=$('ef-setting-professional')?.closest('.ef-settings-card');
     if(next)parent.insertBefore(card,next);else parent.append(card);
     return true;
   }
   function bind(){
-    const map={ 'efn-reminders':'reminders','efn-sound':'sound','efn-vibration':'vibration' };
+    const map={ 'efn-reminders':'reminders','efn-sound':'sound' };
     Object.entries(map).forEach(([id,key])=>$(id).addEventListener('change',e=>{prefs[key]=!!e.target.checked;savePrefs();status('Preferência salva.');if(key==='reminders'&&prefs.reminders)checkAppointments()}));
     $('efn-minutes').addEventListener('change',e=>{prefs.minutes=Number(e.target.value);savePrefs();status('Antecedência salva.');checkAppointments()});
     $('efn-volume').addEventListener('input',e=>{prefs.volume=Number(e.target.value);savePrefs();$('efn-volume-output').textContent=prefs.volume+'%'});
     $('efn-test-sound').addEventListener('click',async()=>{const ok=await playSound();if(ok)status('Som reproduzido. Se não ouviu, confira o volume do aparelho.')});
-    $('efn-test-vibration').addEventListener('click',()=>{if(vibrate())status('Sinal de vibração enviado ao dispositivo.')});
-    $('efn-test-all').addEventListener('click',async()=>{notifyOnScreen('Teste de notificação: som e vibração do EvoluFísico.');const audio=await playSound();const vib=vibrate();status(audio||vib?'Teste executado. Confira o som e a vibração no dispositivo.':'Não foi possível reproduzir o som nem a vibração neste navegador.')});
+    $('efn-test-all').addEventListener('click',async()=>{notifyOnScreen('Teste de notificação do EvoluFísico.');const audio=await playSound();status(audio?'Teste executado. Confira o som no dispositivo.':'Aviso visual exibido; não foi possível reproduzir o som neste navegador.')});
     // Uma interação deliberada libera o áudio em alguns navegadores, mesmo sem ouvir um teste.
     document.addEventListener('pointerdown',()=>{if(!prefs.sound)return;const AC=window.AudioContext||window.webkitAudioContext;if(AC&&!audioContext){try{audioContext=new AC()}catch(_){}}if(audioContext?.state==='suspended')audioContext.resume().catch(()=>{})},{passive:true});
     document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkAppointments()});
@@ -147,5 +136,5 @@
   function init(){if(initialized)return true;if(!buildCard())return false;initialized=true;bind();updateUI();checkAppointments();timer=setInterval(checkAppointments,30000);return true}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{if(!init()){setTimeout(init,600);setTimeout(init,2000)}},{once:true});
   else if(!init()){setTimeout(init,600);setTimeout(init,2000)}
-  window.EFNotifications={getSettings:()=>Object.assign({},prefs),testSound:playSound,testVibration:vibrate,check:checkAppointments};
+  window.EFNotifications={getSettings:()=>Object.assign({},prefs),testSound:playSound,check:checkAppointments};
 })();
