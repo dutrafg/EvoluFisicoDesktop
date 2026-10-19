@@ -5,8 +5,8 @@ const app=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runt
 const billing=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/24-billing.js','utf8');
 const migration=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/31-indexeddb-snapshot.js','utf8');
 const expectations=[
- ['legacy evaluations database',/const DB_NAME = 'EvoluFisicoDB'/],
- ['legacy evaluations store',/const STORE_NAME = 'avaliacoes'/],
+ ['SQLite evaluation namespace',/EF_NATIVE_EVAL_PREFIX = 'ef-eval-'/],
+ ['SQLite evaluation storage required',/function efNativeEvalStore\(\)/],
  ['legacy evaluation persistence',/async function salvarAvaliacaoNoDB/],
  ['legacy evaluation deletion',/async function deletarAvaliacaoDoDB/],
  ['legacy evaluation loading',/async function carregarAvaliacoesDoDB/],
@@ -14,11 +14,13 @@ const expectations=[
  ['legacy password key derivation',/iterations: 250000/],
  ['legacy master password reset',/executarResetarRemoverSenha/],
  ['legacy encrypted envelopes',/__efEncrypted/],
- ['legacy IndexedDB atomic replacement',/_idbSubstituirTudo\(linhas\)/],
+ ['SQLite evaluation read',/storage\.readJSON\(id\)/],
+ ['SQLite evaluation write',/efNativeEvalStore\(\)\.writeJSON\(/],
+ ['SQLite evaluation delete',/efNativeEvalStore\(\)\.delete\(/],
  ['legacy billing localStorage',/localStorage\.setItem\(DB_KEY,raw\)/],
  ['legacy billing encryption',/EF_Security\.encryptObject|security\.encryptObject/],
  ['new SQLite copy does not delete legacy',/originalsPreserved:true/],
  ['new SQLite copy rejects changed record',/Cópia existente diferente/]
 ];
 for(const [label,pattern] of expectations){assert.match(label.startsWith('legacy billing')?billing:label.startsWith('new SQLite')?migration:app,pattern,label);console.log('PASS '+label)}
-console.log('Legacy compatibility contracts verified. These are not functional migration tests.');
+console.log('SQLite evaluation and existing billing/security contracts verified. These are static checks.');
