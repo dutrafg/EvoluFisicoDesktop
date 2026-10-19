@@ -32,6 +32,9 @@ int main(void) {
   g_assert_no_error(error);g_assert_cmpuint(assessments->len,==,1);g_ptr_array_unref(assessments);
   g_assert_true(ef_store_add_charge(&store,2,2500,"Diária",&error));g_assert_no_error(error);
   g_assert_false(ef_store_add_charge(&store,2,-1,"Inválida",&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_charge(&store,2,2500,"",&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_charge(&store,999,2500,"Cliente inexistente",&error));g_clear_error(&error);
+  g_assert_false(ef_store_add_assessment(&store,2,"2026-10-19",0,170,&error));g_clear_error(&error);
   GPtrArray *charges=ef_store_list_charges(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(charges->len,==,1);g_ptr_array_unref(charges);
   GPtrArray *rows=ef_store_list_client_rows(&store,&error);
