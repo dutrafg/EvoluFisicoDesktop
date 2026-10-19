@@ -1,5 +1,5 @@
 #define MyAppName "EvoluFisico Desktop"
-#define MyAppVersion "9.0.0"
+#define MyAppVersion "9.0.0-beta.1"
 #define MyAppExeName "EvoluFisico.Desktop.exe"
 [Setup]
 AppId={{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B}
