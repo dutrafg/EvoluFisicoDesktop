@@ -1,6 +1,7 @@
 #include "../src/storage.h"
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <unistd.h>
 int main(void) {
   char *tmp=g_dir_make_tmp("evolufisico-test-XXXXXX",NULL);
   g_assert_nonnull(tmp);
@@ -77,6 +78,11 @@ int main(void) {
   g_assert_false(ef_store_backup(&store,backup,&error));g_clear_error(&error);
   g_assert_false(ef_store_backup(&store,"",&error));g_clear_error(&error);
   g_assert_false(ef_store_backup(&store,"relative.sqlite",&error));g_clear_error(&error);
+  char *symlink_path=g_build_filename(tmp,"linked.sqlite",NULL);
+  g_assert_cmpint(symlink(backup,symlink_path),==,0);
+  g_assert_false(ef_store_backup(&store,symlink_path,&error));g_clear_error(&error);
+  g_assert_false(ef_store_restore(&store,symlink_path,&error));g_clear_error(&error);
+  g_unlink(symlink_path);g_free(symlink_path);
   g_assert_false(ef_store_rename_client(&store,-1,"Inválido",&error));g_clear_error(&error);
   g_assert_false(ef_store_rename_client(&store,2,"",&error));g_clear_error(&error);
   char *incompatible=g_build_filename(tmp,"incompatible.sqlite",NULL);
