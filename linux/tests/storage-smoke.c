@@ -54,6 +54,7 @@ int main(void) {
   g_assert_false(ef_store_delete_charge_for_client(&store,2,999,&error));g_clear_error(&error);
   g_assert_false(ef_store_delete_charge_for_client(&store,2,-1,&error));g_clear_error(&error);
   g_assert_true(ef_store_delete_charge_for_client(&store,2,2,&error));g_assert_no_error(error);
+  g_assert_false(ef_store_delete_charge_for_client(&store,2,2,&error));g_clear_error(&error);
   g_assert_true(ef_store_add_assessment(&store,2,"2026-10-18",71,171,&error));g_assert_no_error(error);
   g_assert_false(ef_store_assessment_belongs_to(&store,2,999,&error));g_clear_error(&error);
   g_assert_true(ef_store_assessment_belongs_to(&store,2,2,&error));g_assert_no_error(error);
