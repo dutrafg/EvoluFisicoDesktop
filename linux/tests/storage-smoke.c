@@ -2,6 +2,8 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <unistd.h>
+#include <glib/gstdio.h>
+extern int symlink(const char *target, const char *linkpath);
 int main(void) {
   char *tmp=g_dir_make_tmp("evolufisico-test-XXXXXX",NULL);
   g_assert_nonnull(tmp);
