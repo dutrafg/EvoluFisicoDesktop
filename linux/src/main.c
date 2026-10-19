@@ -25,6 +25,8 @@ typedef struct {
   GtkWidget *charge_list;
   GtkWidget *assessment_picker;
   GtkWidget *charge_picker;
+  GtkWidget *assessment_delete_id;
+  GtkWidget *charge_delete_id;
 } AppState;
 
 static gboolean read_picker_id(GtkWidget *picker,gint64 *out) {
