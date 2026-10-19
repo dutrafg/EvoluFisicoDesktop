@@ -141,6 +141,11 @@ int main(void) {
   g_assert_cmpint(g_stat(folder_copy,&copy_stat),==,0);
   g_assert_cmpint(copy_stat.st_mode & 077,==,0);
   g_unlink(folder_copy);g_free(folder_copy);
+  char *bad_copy=NULL;
+  g_assert_false(ef_store_snapshot_to_folder(&store,"relative",&bad_copy,&error));
+  g_assert_null(bad_copy);g_clear_error(&error);
+  g_assert_false(ef_store_snapshot_to_folder(&store,"/this-directory-does-not-exist-evolufisico",&bad_copy,&error));
+  g_assert_null(bad_copy);g_clear_error(&error);
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
   sqlite3_stmt *backup_read=NULL;
