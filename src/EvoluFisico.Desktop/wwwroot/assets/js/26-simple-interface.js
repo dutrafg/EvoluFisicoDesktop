@@ -127,17 +127,22 @@ function mount(){
  // Hide only vibration controls; keep sound and calendar reminders intact.
  if(window.chrome && window.chrome.webview){
    const hideDesktopVibration=()=>{
-     const labels=[...document.querySelectorAll('label,h3,h4,strong,span,button')];
-     for(const el of labels){
+     // Notification preferences can be rendered asynchronously. Find the actual
+     // switch container rather than relying on a particular CSS class name.
+     const controls=[...document.querySelectorAll('button,label,h3,h4,strong,span,div,p')];
+     for(const el of controls){
+       if(el.children.length && el.tagName!=='BUTTON')continue;
        const label=(el.textContent||'').trim().toLocaleLowerCase('pt-BR');
        if(label==='testar vibração'){
-         el.closest('button')?.setAttribute('hidden','');
+         const button=el.closest('button') || el;
+         if(!button.hidden)button.hidden=true;
        }else if(label==='vibração'){
-         const row=el.closest('.setting-row,.settings-row,.notification-setting,.preference-row,.setting-item,.config-row');
-         if(row)row.hidden=true;
-         else {
-           const candidate=el.parentElement?.parentElement;
-           if(candidate && candidate.querySelector('input[type="checkbox"],[role="switch"]'))candidate.hidden=true;
+         let parent=el;
+         for(let depth=0;depth<6 && parent;depth++,parent=parent.parentElement){
+           if(parent!==el && parent.querySelector('input[type="checkbox"],[role="switch"]')){
+             if(!parent.hidden)parent.hidden=true;
+             break;
+           }
          }
        }
      }
