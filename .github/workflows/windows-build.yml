@@ -25,6 +25,10 @@ jobs:
         shell: pwsh
         run: python scripts/verify_frontend.py
 
+      - name: Validate desktop integrations
+        shell: pwsh
+        run: node tests/desktop-integration.cjs
+
       - name: Build Windows executable
         shell: pwsh
         run: ./scripts/build-windows.ps1
