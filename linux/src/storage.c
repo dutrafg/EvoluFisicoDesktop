@@ -406,3 +406,22 @@ GPtrArray *ef_store_list_charge_rows(EfStore *store,gint64 client_id,GError **er
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
   return rows;
 }
+
+static gboolean belongs_to(EfStore *store,gint64 record_id,gint64 client_id,const char *sql,GError **error) {
+  if(!store || !store->db || record_id<=0 || client_id<=0) {g_set_error_literal(error,ef_error(),44,"Identificador inválido");return FALSE;}
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,sql,-1,&stmt,NULL)!=SQLITE_OK)return sql_error(store,error);
+  sqlite3_bind_int64(stmt,1,record_id);sqlite3_bind_int64(stmt,2,client_id);
+  int rc=sqlite3_step(stmt);
+  gboolean exists=rc==SQLITE_ROW;
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_ROW && rc!=SQLITE_DONE)return sql_error(store,error);
+  if(!exists)g_set_error_literal(error,ef_error(),45,"Registro não pertence ao cliente selecionado");
+  return exists;
+}
+gboolean ef_store_assessment_belongs_to(EfStore *store,gint64 record_id,gint64 client_id,GError **error) {
+  return belongs_to(store,record_id,client_id,"SELECT 1 FROM assessments WHERE id=? AND client_id=?",error);
+}
+gboolean ef_store_charge_belongs_to(EfStore *store,gint64 record_id,gint64 client_id,GError **error) {
+  return belongs_to(store,record_id,client_id,"SELECT 1 FROM charges WHERE id=? AND client_id=?",error);
+}
