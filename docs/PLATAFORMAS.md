@@ -21,3 +21,10 @@ Manter a versão Windows atual isolada e avaliar uma **segunda interface Tauri**
 **Decisão de roadmap:** concluir primeiro o EvoluFisico Desktop para Windows (WPF + WebView2), sem trocar a tecnologia nesta fase. **Depois que a versão Windows estiver instalável, validada e estável**, reavaliar **Avalonia UI + .NET** como alternativa para criar versões nativas de Windows, Linux e macOS.
 
 Na avaliação futura, comparar Avalonia UI e Tauri considerando reaproveitamento do frontend HTML/CSS/JS, esforço de migração, funcionamento offline, armazenamento local, geração de PDF, acessibilidade e distribuição em cada sistema. Não iniciar a migração antes de concluir a homologação Windows.
+
+## Destino Linux definido (2026-10-19)
+- Distribuição planejada: **Debian/Ubuntu `.deb`**, com interface integrada ao **GTK4**.
+- WPF/WebView2 é específico do Windows. Para Linux, avaliar **GTK4 + WebKitGTK** (reutilização de HTML/CSS/JS) com host nativo, ou GTK4 com componentes próprios. Não assumir que Avalonia é GTK4.
+- Separar contratos de armazenamento/criptografia do host Windows antes do porte. **DPAPI não existe no Linux**: integrar Secret Service/libsecret ou chave derivada de senha mestre, com migração portátil testada e recuperação.
+- Validar dependências `.deb`, arquitetura amd64, sandbox/permissões, impressão PDF, backup/restauração e persistência SQLite em GTK4.
+- Manter o aplicativo Windows funcional e sem alteração destrutiva do IndexedDB até migração transacional validada.
