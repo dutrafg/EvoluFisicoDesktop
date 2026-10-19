@@ -36,9 +36,9 @@ gboolean ef_store_open(EfStore *store, GError **error) {
   g_free(file);
   if (result != SQLITE_OK) { sql_error(store, error); ef_store_close(store); return FALSE; }
   sqlite3_busy_timeout(store->db, 5000);
-  const char *schema = "PRAGMA foreign_keys=ON;"
-    "CREATE TABLE IF NOT EXISTS clients(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL CHECK(length(name) BETWEEN 1 AND 180), created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);";
-  if (sqlite3_exec(store->db, schema, NULL, NULL, NULL) != SQLITE_OK) { sql_error(store, error); ef_store_close(store); return FALSE; }
+  if(sqlite3_exec(store->db,"PRAGMA foreign_keys=ON",NULL,NULL,NULL)!=SQLITE_OK) {
+    sql_error(store,error);ef_store_close(store);return FALSE;
+  }
   sqlite3_stmt *version=NULL;
   if(sqlite3_prepare_v2(store->db,"PRAGMA user_version",-1,&version,NULL)!=SQLITE_OK) {
     sql_error(store,error);ef_store_close(store);return FALSE;
@@ -55,6 +55,7 @@ gboolean ef_store_open(EfStore *store, GError **error) {
     ef_store_close(store);return FALSE;
   }
   if(sqlite3_exec(store->db,
+    "CREATE TABLE IF NOT EXISTS clients(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL CHECK(length(name) BETWEEN 1 AND 180), created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);"
     "CREATE TABLE IF NOT EXISTS assessments(id INTEGER PRIMARY KEY,client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,assessment_date TEXT NOT NULL,weight_kg REAL NOT NULL,height_cm REAL NOT NULL,created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);"
     "CREATE TABLE IF NOT EXISTS charges(id INTEGER PRIMARY KEY,client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,amount_cents INTEGER NOT NULL CHECK(amount_cents>0),description TEXT NOT NULL,created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);"
     "CREATE INDEX IF NOT EXISTS idx_assessments_client_date ON assessments(client_id,assessment_date DESC);"
