@@ -119,6 +119,34 @@ internal sealed class EncryptedSqliteStore
         }
     }
 
+    /// <summary>Deletes a protected record in a transaction. Does not imply secure disk erasure.</summary>
+    internal bool Delete(string recordId)
+    {
+        if (string.IsNullOrWhiteSpace(recordId) || recordId.Length > 128)
+            throw new ArgumentException("Identificador inválido.", nameof(recordId));
+        using var db = Open();
+        using var tx = db.BeginTransaction();
+        using var cmd = db.CreateCommand();
+        cmd.Transaction = tx;
+        cmd.CommandText = "DELETE FROM protected_records WHERE record_id=$id";
+        cmd.Parameters.AddWithValue("$id", recordId);
+        var deleted = cmd.ExecuteNonQuery() > 0;
+        tx.Commit();
+        return deleted;
+    }
+
+    /// <summary>Lists opaque record identifiers without exposing encrypted patient payloads.</summary>
+    internal string[] ListRecordIds()
+    {
+        using var db = Open();
+        using var cmd = db.CreateCommand();
+        cmd.CommandText = "SELECT record_id FROM protected_records ORDER BY record_id";
+        using var reader = cmd.ExecuteReader();
+        var ids = new System.Collections.Generic.List<string>();
+        while (reader.Read()) ids.Add(reader.GetString(0));
+        return ids.ToArray();
+    }
+
     /// <summary>Creates a consistent SQLite snapshot without exposing decrypted patient data.</summary>
     internal void BackupTo(string destination)
     {
