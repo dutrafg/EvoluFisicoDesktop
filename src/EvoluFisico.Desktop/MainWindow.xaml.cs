@@ -178,6 +178,31 @@ public partial class MainWindow : Window
                     result = "saved";
                     break;
                 }
+                case "import-batch":
+                {
+                    var entries = root.GetProperty("records");
+                    if (entries.ValueKind != JsonValueKind.Object)
+                        throw new InvalidDataException("Lote inválido.");
+                    var records = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+                    long totalBytes = 0;
+                    foreach (var entry in entries.EnumerateObject())
+                    {
+                        if (records.Count >= 1000 || string.IsNullOrWhiteSpace(entry.Name)
+                            || entry.Name.Length > 128 || entry.Value.ValueKind != JsonValueKind.String)
+                            throw new InvalidDataException("Lote excede os limites.");
+                        var base64 = entry.Value.GetString() ?? "";
+                        if (base64.Length > 16_000_000)
+                            throw new InvalidDataException("Registro excede o limite permitido.");
+                        var payload = Convert.FromBase64String(base64);
+                        totalBytes += payload.Length;
+                        if (totalBytes > 32_000_000)
+                            throw new InvalidDataException("Lote excede o limite total.");
+                        records.Add(entry.Name, payload);
+                    }
+                    store.ImportBatch(records);
+                    result = records.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                }
                 case "delete":
                 {
                     var key = root.GetProperty("recordId").GetString() ?? "";
