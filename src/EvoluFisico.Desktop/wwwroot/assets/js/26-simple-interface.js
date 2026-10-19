@@ -132,10 +132,11 @@ function mount(){
      panel.innerHTML='<h3>Atualizações do aplicativo</h3><p>Verifique se há uma versão mais recente do EvoluFisico Desktop para Windows.</p><div class="ef-settings-controls"><button class="btn btn-outline btn-sm ef-settings-action" id="ef-desktop-check-update" type="button">Verificar atualizações</button><p id="ef-desktop-update-status" role="status" aria-live="polite"></p></div>';
      grid.append(panel);
      const btn=$('ef-desktop-check-update'), status=$('ef-desktop-update-status');
-     btn.addEventListener('click',()=>{status.textContent='Consultando versões publicadas…';window.chrome.webview.postMessage('check-updates')});
+     btn.addEventListener('click',()=>{btn.disabled=true;status.textContent='Consultando versões publicadas…';window.chrome.webview.postMessage('check-updates')});
      window.chrome.webview.addEventListener('message',e=>{
        const m=e.data;
        if(!m || m.type!=='desktop-update')return;
+       btn.disabled=false;
        status.textContent=m.message||'';
        if(m.downloadUrl && /^https:\/\/github\.com\/dutrafg\/EvoluFisicoDesktop\/releases\/download\//.test(m.downloadUrl)){
          const a=document.createElement('a');a.href=m.downloadUrl;a.textContent='Baixar instalador';a.target='_blank';a.rel='noopener noreferrer';status.append(' ',a);
