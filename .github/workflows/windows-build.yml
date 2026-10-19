@@ -72,6 +72,22 @@ jobs:
           Get-FileHash $installer.FullName -Algorithm SHA256 | Format-List
           Write-Host "Installer ready: $($installer.Name) ($($installer.Length) bytes)"
 
+      - name: Smoke test silent installation and removal
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem installer-output -Filter '*.exe' -File | Select-Object -First 1).FullName
+          $target = Join-Path $env:RUNNER_TEMP 'EvoluFisicoDesktopSmoke'
+          $install = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/DIR=$target") -Wait -PassThru
+          if ($install.ExitCode -ne 0) { throw "Silent install failed: $($install.ExitCode)" }
+          foreach ($file in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/sw.js')) {
+            if (!(Test-Path (Join-Path $target $file))) { throw "Installed file missing: $file" }
+          }
+          $uninstaller = Join-Path $target 'unins000.exe'
+          if (!(Test-Path $uninstaller)) { throw 'Uninstaller missing' }
+          $remove = Start-Process -FilePath $uninstaller -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
+          if ($remove.ExitCode -ne 0) { throw "Silent uninstall failed: $($remove.ExitCode)" }
+          Write-Host 'Silent installation and uninstall smoke tests passed'
+
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
