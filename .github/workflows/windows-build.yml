@@ -138,6 +138,19 @@ jobs:
           $installedVersion = Get-Content (Join-Path $target 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
           $expectedVersion = 'desktop-v9.0-beta-' + '${{ github.sha }}'.Substring(0,7)
           if ($installedVersion.tag -ne $expectedVersion) { throw 'Installed version does not match release version' }
+          $installedIcon = Join-Path $target 'EvoluFisico.ico'
+          if (!(Test-Path $installedIcon)) { throw 'Installed application icon missing' }
+          if ((Get-Item $installedIcon).Length -lt 1024) { throw 'Installed icon is unexpectedly small' }
+          $shell = New-Object -ComObject WScript.Shell
+          $desktopPaths = @([Environment]::GetFolderPath('Desktop'), [Environment]::GetFolderPath('CommonDesktopDirectory'))
+          $links = @($desktopPaths | ForEach-Object { Join-Path $_ 'EvoluFisico Desktop.lnk' } | Where-Object { Test-Path $_ })
+          if ($links.Count -eq 0) { throw 'Desktop shortcut was not created by installer' }
+          foreach ($link in $links) {
+            $shortcut = $shell.CreateShortcut($link)
+            if ($shortcut.IconLocation -notlike '*EvoluFisico.ico*') { throw "Desktop shortcut uses unexpected icon: $($shortcut.IconLocation)" }
+            if ($shortcut.TargetPath -ne (Join-Path $target 'EvoluFisico.Desktop.exe')) { throw 'Desktop shortcut points to unexpected executable' }
+          }
+          Write-Host 'Desktop shortcut target and custom ICO verified'
           $uninstaller = Join-Path $target 'unins000.exe'
           if (!(Test-Path $uninstaller)) { throw 'Uninstaller missing' }
           $remove = Start-Process -FilePath $uninstaller -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
