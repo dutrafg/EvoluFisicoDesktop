@@ -49,3 +49,15 @@ O código Windows em `main` permanece inalterado.
 - Backups exigem caminho absoluto e não sobrescrevem arquivos existentes.
 - A API de recuperação e os testes ainda estão sujeitos a homologação CI e revisão de segurança.
 - **Importante:** a versão continua experimental, sem criptografia de banco ou backup; use apenas dados fictícios.
+
+## Auditoria de bugs — etapas 41–50
+
+Revisão estática identificou e corrigiu:
+- risco de sobrescrever backup existente por corrida entre verificar e renomear: publicação sem sobrescrita via hard link no mesmo diretório;
+- restauração acidental usando o próprio arquivo do banco ativo;
+- backup com esquema SQLite de versão incompatível ou sem colunas essenciais;
+- abertura do banco redefinindo silenciosamente a versão do esquema;
+- pesquisa que ocultava IDs necessários à edição;
+- ausência de testes específicos para esses cenários.
+
+**Limitações:** sem criptografia, autenticação e testes de interface em desktop Linux real. A cópia de rollback da restauração está em memória e não garante recuperação diante de falha de energia ou encerramento do processo. A criação de backup não substitui estratégia de backup criptografado e externo. Não usar dados pessoais reais.
