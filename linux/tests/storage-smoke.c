@@ -55,6 +55,17 @@ int main(void) {
   GPtrArray *assessments=ef_store_list_assessments(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(assessments->len,==,1);g_ptr_array_unref(assessments);
   g_assert_true(ef_store_add_charge(&store,2,2500,"Diária",&error));g_assert_no_error(error);
+  g_assert_true(ef_store_receive_charge(&store,1,2,&error));g_assert_no_error(error);
+  g_assert_false(ef_store_receive_charge(&store,1,2,&error));g_clear_error(&error);
+  g_assert_false(ef_store_receive_charge(&store,1,999,&error));g_clear_error(&error);
+  g_assert_false(ef_store_receive_charge(&store,-1,2,&error));g_clear_error(&error);
+  sqlite3_stmt *receipt=NULL;
+  g_assert_cmpint(sqlite3_prepare_v2(store.db,"SELECT status,received_utc FROM charges WHERE id=1",-1,&receipt,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_step(receipt),==,SQLITE_ROW);
+  g_assert_cmpstr((const char*)sqlite3_column_text(receipt,0),==,"pago");
+  g_assert_cmpint(sqlite3_column_type(receipt,1),!=,SQLITE_NULL);
+  sqlite3_finalize(receipt);
+
   GPtrArray *assessment_rows=ef_store_list_assessment_rows(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(assessment_rows->len,==,1);g_ptr_array_unref(assessment_rows);
   GPtrArray *charge_rows=ef_store_list_charge_rows(&store,2,&error);
