@@ -274,3 +274,73 @@ GPtrArray *ef_store_list_client_rows(EfStore *store, GError **error) {
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
   return rows;
 }
+
+static gboolean valid_date(const char *date) {
+  if(!date || strlen(date)!=10 || date[4]!='-' || date[7]!='-')return FALSE;
+  for(int i=0;i<10;i++)if(i!=4 && i!=7 && (date[i]<'0'||date[i]>'9'))return FALSE;
+  int year=atoi(date),month=atoi(date+5),day=atoi(date+8);
+  GDateTime *dt=g_date_time_new_utc(year,month,day,12,0,0);
+  if(!dt)return FALSE;
+  gboolean valid=g_date_time_get_year(dt)==year && g_date_time_get_month(dt)==month && g_date_time_get_day_of_month(dt)==day;
+  g_date_time_unref(dt);
+  return valid;
+}
+gboolean ef_store_add_assessment(EfStore *store,gint64 client_id,const char *date,double weight_kg,double height_cm,GError **error) {
+  if(!store || !store->db || client_id<=0 || !valid_date(date) || !isfinite(weight_kg) || !isfinite(height_cm) ||
+     weight_kg<=0 || weight_kg>500 || height_cm<=0 || height_cm>300) {
+    g_set_error_literal(error,ef_error(),30,"Dados da avaliação inválidos");return FALSE;
+  }
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"INSERT INTO assessments(client_id,assessment_date,weight_kg,height_cm) VALUES(?,?,?,?)",-1,&stmt,NULL)!=SQLITE_OK)return sql_error(store,error);
+  sqlite3_bind_int64(stmt,1,client_id);
+  sqlite3_bind_text(stmt,2,date,-1,SQLITE_TRANSIENT);
+  sqlite3_bind_double(stmt,3,weight_kg);
+  sqlite3_bind_double(stmt,4,height_cm);
+  int rc=sqlite3_step(stmt);
+  if(rc!=SQLITE_DONE)sql_error(store,error);
+  sqlite3_finalize(stmt);
+  return rc==SQLITE_DONE;
+}
+GPtrArray *ef_store_list_assessments(EfStore *store,gint64 client_id,GError **error) {
+  if(!store || !store->db || client_id<=0) {g_set_error_literal(error,ef_error(),31,"Cliente inválido");return NULL;}
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"SELECT assessment_date,weight_kg,height_cm FROM assessments WHERE client_id=? ORDER BY assessment_date DESC,id DESC",-1,&stmt,NULL)!=SQLITE_OK) {sql_error(store,error);return NULL;}
+  sqlite3_bind_int64(stmt,1,client_id);
+  GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);
+  int rc;
+  while((rc=sqlite3_step(stmt))==SQLITE_ROW)
+    g_ptr_array_add(rows,g_strdup_printf("%s | %.1f kg | %.1f cm",(const char*)sqlite3_column_text(stmt,0),sqlite3_column_double(stmt,1),sqlite3_column_double(stmt,2)));
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
+  return rows;
+}
+gboolean ef_store_add_charge(EfStore *store,gint64 client_id,gint64 cents,const char *description,GError **error) {
+  if(!store || !store->db || client_id<=0 || cents<=0 || cents>100000000000LL ||
+     !description || !g_utf8_validate(description,-1,NULL) || g_utf8_strlen(description,-1)<1 || g_utf8_strlen(description,-1)>240) {
+    g_set_error_literal(error,ef_error(),32,"Cobrança inválida");return FALSE;
+  }
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"INSERT INTO charges(client_id,amount_cents,description) VALUES(?,?,?)",-1,&stmt,NULL)!=SQLITE_OK)return sql_error(store,error);
+  sqlite3_bind_int64(stmt,1,client_id);
+  sqlite3_bind_int64(stmt,2,cents);
+  sqlite3_bind_text(stmt,3,description,-1,SQLITE_TRANSIENT);
+  int rc=sqlite3_step(stmt);
+  if(rc!=SQLITE_DONE)sql_error(store,error);
+  sqlite3_finalize(stmt);
+  return rc==SQLITE_DONE;
+}
+GPtrArray *ef_store_list_charges(EfStore *store,gint64 client_id,GError **error) {
+  if(!store || !store->db || client_id<=0) {g_set_error_literal(error,ef_error(),33,"Cliente inválido");return NULL;}
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"SELECT amount_cents,description FROM charges WHERE client_id=? ORDER BY id DESC",-1,&stmt,NULL)!=SQLITE_OK) {sql_error(store,error);return NULL;}
+  sqlite3_bind_int64(stmt,1,client_id);
+  GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);
+  int rc;
+  while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
+    gint64 cents=sqlite3_column_int64(stmt,0);
+    g_ptr_array_add(rows,g_strdup_printf("R$ %" G_GINT64_FORMAT ",%02" G_GINT64_FORMAT " | %s",cents/100,cents%100,(const char*)sqlite3_column_text(stmt,1)));
+  }
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
+  return rows;
+}
