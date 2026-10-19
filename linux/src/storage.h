@@ -12,3 +12,4 @@ gboolean ef_store_check_integrity(EfStore *store, GError **error);
 gboolean ef_store_backup(EfStore *store, const char *destination, GError **error);
 gboolean ef_store_restore(EfStore *store, const char *source, GError **error);
 GPtrArray *ef_store_search_clients(EfStore *store, const char *query, GError **error);
+GPtrArray *ef_store_list_client_rows(EfStore *store, GError **error);
