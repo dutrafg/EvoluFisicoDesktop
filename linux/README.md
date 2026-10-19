@@ -103,3 +103,12 @@ Revisão estática identificou e corrigiu:
 - Verificação da versão de esquema antes de criar tabelas.
 - Testes adicionais de permissões, symlinks, versões e compilação estrita.
 - **Não há criptografia de dados em repouso**; permissões POSIX não substituem criptografia, autenticação ou controles LGPD.
+
+## Etapas 115–134 — modernização GTK4 e compilação estrita
+
+- Seletor de clientes migrado de `GtkComboBoxText` para `GtkDropDown` e `GtkStringList`.
+- A seleção permanece por ID estável e não escolhe automaticamente o primeiro cliente.
+- Correções de erros nulos, confirmação de exclusão e formatação portável de inteiros SQLite.
+- Compilação estrita mantém **exceção temporária somente para APIs GTK4 de diálogo obsoletas**; a migração dos diálogos ainda é pendente.
+- QA cobre datas inválidas, IDs negativos, integridade, backup e restore.
+- Banco SQLite e backups seguem sem criptografia; usar apenas dados fictícios.
