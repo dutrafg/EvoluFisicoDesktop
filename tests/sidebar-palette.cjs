@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const base='src/EvoluFisico.Desktop/wwwroot/';
+const css=fs.readFileSync(base+'assets/css/30-sidebar-palette.css','utf8');
+const js=fs.readFileSync(base+'assets/js/26-simple-interface.js','utf8');
+const html=fs.readFileSync(base+'index.html','utf8');
+assert.match(html,/assets\/css\/30-sidebar-palette\.css/,'Palette stylesheet must be packaged');
+assert.match(js,/document\.body\.dataset\.efPalette=key/,'Palette selection must update body');
+assert.match(js,/localStorage\.setItem\('ef90_paleta'/,'Palette selection must persist');
+assert.match(css,/@media screen and \(min-width: 1200px\)/,'Tint is limited to desktop');
+assert.match(css,/body\.ef-simple-ui\[data-ef-palette\] \.top-navbar/,'Sidebar must react to palette');
+assert.match(css,/var\(--ef-selected-color/,'Selected palette must affect sidebar background');
+assert.match(css,/ef-dark-mode/,'Dark mode must be supported');
+assert.match(css,/@media print/,'Printing must remain unaffected');
+console.log('PASS: Desktop sidebar palette CSS integration contracts');
