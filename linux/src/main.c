@@ -172,7 +172,7 @@ static void delete_record_confirmed(GObject *source,GAsyncResult *result,gpointe
   gint64 confirmed_id=request->record_id;
   gint64 confirmed_client=request->client_id;
   if(id!=confirmed_id || client!=confirmed_client) {
-    gtk_label_set_text(GTK_LABEL(status),"Seleção alterada. Confirme novamente a exclusão.");gtk_window_destroy(GTK_WINDOW(dialog));return;
+    gtk_label_set_text(GTK_LABEL(status),"Seleção alterada. Confirme novamente a exclusão.");g_free(request);return;
   }
   GError *error=NULL;
   g_free(request);
