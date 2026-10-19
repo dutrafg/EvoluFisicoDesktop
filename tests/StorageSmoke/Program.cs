@@ -85,12 +85,25 @@ try
         schemaCheck.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='protected_records'";
         Check(Convert.ToInt32(schemaCheck.ExecuteScalar()) == 0, "Incompatible database schema not modified");
     }
+    store.VerifyEncryptedRecords(password);
+    Console.WriteLine("PASS: All encrypted records authenticated");
     var snapshot = Path.Combine(dir, "snapshot.sqlite");
     store.BackupTo(snapshot);
     var restored = new EncryptedSqliteStore(snapshot);
     Check(restored.VerifyIntegrity(), "SQLite snapshot integrity");
     Check(sample.SequenceEqual(restored.Load("patient-002", password)!), "Encrypted record restored from snapshot");
     Check(Encoding.UTF8.GetString(restored.Load("patient-001")!) == "updated", "Latest transactional data preserved in backup");
+    using (var tamper = new Microsoft.Data.Sqlite.SqliteConnection("Data Source=" + snapshot + ";Pooling=False"))
+    {
+        tamper.Open();
+        using var command = tamper.CreateCommand();
+        command.CommandText = "UPDATE protected_records SET encrypted_payload = X'010203' WHERE record_id='patient-001'";
+        Check(command.ExecuteNonQuery() == 1, "Synthetic ciphertext tampering performed");
+    }
+    Check(restored.VerifyIntegrity(), "SQLite structural check alone cannot detect ciphertext tampering");
+    try { restored.VerifyEncryptedRecords(password); throw new Exception("Tampering should fail authentication"); }
+    catch (InvalidDataException) { Console.WriteLine("PASS: Authenticated record verification detects tampering"); }
+
     try { store.BackupTo(Path.Combine(dir, "test.sqlite")); throw new Exception("Backup must reject source overwrite"); }
     catch (ArgumentException) { Console.WriteLine("PASS: Active database overwrite rejected"); }
 }
