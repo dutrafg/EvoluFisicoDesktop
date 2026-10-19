@@ -56,9 +56,15 @@ function openExisting(name){
  });
 }
 function equal(a,b){return a&&a.length===b.length&&!a.some((v,i)=>v!==b[i])}
-async function snapshot(){
+let active=false;
+async function snapshot(onProgress){
+ if(active)throw new Error('Já existe uma cópia em andamento.');
+ active=true;
+ try{
  const inventory=await window.EFDesktopIndexedDBInventory.inventory();
  let copied=0,alreadyCopied=0;
+ let checked=0;
+ const total=inventory.reduce((n,db)=>n+db.stores.reduce((sum,s)=>sum+s.count,0),0);
  for(const info of inventory){
   const db=await openExisting(info.name);
   try{
@@ -81,6 +87,8 @@ async function snapshot(){
       if(existing===null)batch[id]=record;
       else if(equal(existing,record))alreadyCopied++;
       else throw new Error('Cópia existente diferente: '+id);
+      checked++;
+      if(typeof onProgress==='function' && checked%25===0)onProgress({checked,total,copied,alreadyCopied});
      }
      if(Object.keys(batch).length){
       await window.EFNativeStorage.importBatch(batch);
@@ -100,7 +108,9 @@ async function snapshot(){
    }
   }finally{db.close()}
  }
+ if(typeof onProgress==='function')onProgress({checked,total,copied,alreadyCopied});
  return {copied,alreadyCopied,originalsPreserved:true};
+ }finally{active=false}
 }
 window.EFDesktopIndexedDBSnapshot=Object.freeze({snapshot});
 })();
