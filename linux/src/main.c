@@ -27,6 +27,7 @@ typedef struct {
   GtkWidget *charge_picker;
   GtkWidget *assessment_delete_id;
   GtkWidget *charge_delete_id;
+  GtkWidget *client_delete_id;
 } AppState;
 
 static gboolean read_picker_id(GtkWidget *picker,gint64 *out) {
@@ -214,6 +215,34 @@ static void save_charge(GtkButton *button,gpointer data) {
     gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);
     g_clear_error(&error);
   }
+}
+static void delete_client_confirmed(GtkDialog *dialog,gint response,gpointer data) {
+  AppState *state=data;
+  gint64 id=GPOINTER_TO_INT(g_object_get_data(G_OBJECT(dialog),"client-id"));
+  gtk_window_destroy(GTK_WINDOW(dialog));
+  if(response!=GTK_RESPONSE_ACCEPT)return;
+  GError *error=NULL;
+  if(ef_store_delete_client(&state->store,id,&error)) {
+    gtk_label_set_text(GTK_LABEL(state->status),"Cliente e registros associados excluídos.");
+    refresh_clients(state);
+  }else{
+    gtk_label_set_text(GTK_LABEL(state->status),error ? error->message : "Erro na exclusão.");
+    g_clear_error(&error);
+  }
+}
+static void delete_client_clicked(GtkButton *button,gpointer data) {
+  AppState *state=data;gint64 id=0;
+  if(!read_id(state->client_delete_id,&id) || id>G_MAXINT) {
+    gtk_label_set_text(GTK_LABEL(state->status),"Informe ID de cliente válido.");return;
+  }
+  GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
+  GtkWidget *dialog=gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_MODAL,GTK_MESSAGE_WARNING,GTK_BUTTONS_NONE,
+    "Excluir cliente %" G_GINT64_FORMAT " e TODAS as avaliações e cobranças vinculadas?",id);
+  gtk_dialog_add_button(GTK_DIALOG(dialog),"Cancelar",GTK_RESPONSE_CANCEL);
+  gtk_dialog_add_button(GTK_DIALOG(dialog),"Excluir tudo",GTK_RESPONSE_ACCEPT);
+  g_object_set_data(G_OBJECT(dialog),"client-id",GINT_TO_POINTER((int)id));
+  g_signal_connect(dialog,"response",G_CALLBACK(delete_client_confirmed),state);
+  gtk_window_present(GTK_WINDOW(dialog));
 }
 static void rename_client_clicked(GtkButton *button,gpointer data) {
   (void)button;
