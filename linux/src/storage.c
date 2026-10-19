@@ -379,3 +379,30 @@ gboolean ef_store_delete_assessment(EfStore *store,gint64 id,GError **error) {
 gboolean ef_store_delete_charge(EfStore *store,gint64 id,GError **error) {
   return delete_record(store,id,"DELETE FROM charges WHERE id=?",error);
 }
+
+GPtrArray *ef_store_list_assessment_rows(EfStore *store,gint64 client_id,GError **error) {
+  if(!store || !store->db || client_id<=0) {g_set_error_literal(error,ef_error(),42,"Cliente inválido");return NULL;}
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"SELECT id,assessment_date,weight_kg,height_cm FROM assessments WHERE client_id=? ORDER BY assessment_date DESC,id DESC",-1,&stmt,NULL)!=SQLITE_OK) {sql_error(store,error);return NULL;}
+  sqlite3_bind_int64(stmt,1,client_id);
+  GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);int rc;
+  while((rc=sqlite3_step(stmt))==SQLITE_ROW)
+    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — %s | %.1f kg | %.1f cm",sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1),sqlite3_column_double(stmt,2),sqlite3_column_double(stmt,3)));
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
+  return rows;
+}
+GPtrArray *ef_store_list_charge_rows(EfStore *store,gint64 client_id,GError **error) {
+  if(!store || !store->db || client_id<=0) {g_set_error_literal(error,ef_error(),43,"Cliente inválido");return NULL;}
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"SELECT id,amount_cents,description FROM charges WHERE client_id=? ORDER BY id DESC",-1,&stmt,NULL)!=SQLITE_OK) {sql_error(store,error);return NULL;}
+  sqlite3_bind_int64(stmt,1,client_id);
+  GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);int rc;
+  while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
+    gint64 cents=sqlite3_column_int64(stmt,1);
+    g_ptr_array_add(rows,g_strdup_printf("%" G_GINT64_FORMAT " — R$ %" G_GINT64_FORMAT ",%02" G_GINT64_FORMAT " | %s",sqlite3_column_int64(stmt,0),cents/100,cents%100,(const char*)sqlite3_column_text(stmt,2)));
+  }
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
+  return rows;
+}
