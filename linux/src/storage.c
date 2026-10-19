@@ -359,3 +359,23 @@ GPtrArray *ef_store_list_charges(EfStore *store,gint64 client_id,GError **error)
 GPtrArray *ef_store_client_choices(EfStore *store,GError **error) {
   return ef_store_list_client_rows(store,error);
 }
+
+static gboolean delete_record(EfStore *store,gint64 id,const char *sql,GError **error) {
+  if(!store || !store->db || id<=0) {g_set_error_literal(error,ef_error(),40,"Identificador inválido");return FALSE;}
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,sql,-1,&stmt,NULL)!=SQLITE_OK)return sql_error(store,error);
+  sqlite3_bind_int64(stmt,1,id);
+  int rc=sqlite3_step(stmt);
+  int changes=sqlite3_changes(store->db);
+  if(rc!=SQLITE_DONE)sql_error(store,error);
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE)return FALSE;
+  if(changes!=1) {g_set_error_literal(error,ef_error(),41,"Registro não encontrado");return FALSE;}
+  return TRUE;
+}
+gboolean ef_store_delete_assessment(EfStore *store,gint64 id,GError **error) {
+  return delete_record(store,id,"DELETE FROM assessments WHERE id=?",error);
+}
+gboolean ef_store_delete_charge(EfStore *store,gint64 id,GError **error) {
+  return delete_record(store,id,"DELETE FROM charges WHERE id=?",error);
+}
