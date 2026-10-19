@@ -597,7 +597,7 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),state->assessment_folder);
       GtkWidget *save_assessment_button=gtk_button_new_with_label("Registrar avaliação");
       gtk_box_append(GTK_BOX(page),save_assessment_button);
-      state->assessment_status=gtk_label_new("Cobranças criptografadas — ambiente experimental, apenas dados fictícios.");
+      state->assessment_status=gtk_label_new("Avaliações protegidas por SQLCipher. Cópia de pasta opcional; apenas dados fictícios.");
       gtk_box_append(GTK_BOX(page),state->assessment_status);
       GtkWidget *show_assessments_button=gtk_button_new_with_label("Consultar avaliações");
       gtk_box_append(GTK_BOX(page),show_assessments_button);
@@ -671,7 +671,7 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),restore);
       gtk_box_append(GTK_BOX(page),backup);
       gtk_box_append(GTK_BOX(page),integrity);
-      state->settings_status=gtk_label_new("Prévia experimental: backups sem criptografia.");
+      state->settings_status=gtk_label_new("Prévia experimental: backups SQLCipher criptografados.");
       gtk_widget_set_halign(state->settings_status,GTK_ALIGN_START);
       gtk_box_append(GTK_BOX(page),state->settings_status);
       g_signal_connect(backup,"clicked",G_CALLBACK(backup_clicked),state);
