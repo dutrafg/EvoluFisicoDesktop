@@ -20,6 +20,12 @@ jobs:
       - name: Validate frontend scripts and assets
         shell: pwsh
         run: python scripts/verify_frontend.py
+      - name: Regression tests (offline and PDF print cleanup)
+        shell: pwsh
+        working-directory: src/EvoluFisico.Desktop/wwwroot
+        run: |
+          node ../../../tests/service-worker.cjs
+          node ../../../tests/print-cleanup.cjs
       - name: Publish win-x64
         shell: pwsh
         run: ./scripts/build-windows.ps1
