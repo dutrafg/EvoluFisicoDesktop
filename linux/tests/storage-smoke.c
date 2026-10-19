@@ -2,6 +2,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <glib/gstdio.h>
 extern int symlink(const char *target, const char *linkpath);
 extern int sqlite3_key(sqlite3 *db,const void *key,int key_length);
@@ -19,6 +20,12 @@ int main(void) {
   g_assert_cmpint(statbuf.st_mode & 077,==,0);
   g_assert_cmpint(g_stat(dbpath,&statbuf),==,0);
   g_assert_cmpint(statbuf.st_mode & 077,==,0);
+  char header[16]={0};
+  FILE *dbfile=fopen(dbpath,"rb");
+  g_assert_nonnull(dbfile);
+  g_assert_cmpuint(fread(header,1,sizeof(header),dbfile),==,sizeof(header));
+  fclose(dbfile);
+  g_assert_cmpint(memcmp(header,"SQLite format 3",15),!=,0);
   g_free(dbdir);g_free(dbpath);
   g_assert_true(ef_store_add_client(&store,"Paciente Exemplo",&error)); g_assert_no_error(error);
   g_assert_false(ef_store_add_client(&store,"",&error)); g_clear_error(&error);
