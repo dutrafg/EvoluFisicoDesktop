@@ -149,6 +149,15 @@ gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
   if(!store || !store->db || !source || !*source) {
     g_set_error_literal(error,ef_error(),16,"Origem de restauração inválida");return FALSE;
   }
+  const char *live=sqlite3_db_filename(store->db,"main");
+  char *source_canonical=g_canonicalize_filename(source,NULL);
+  char *live_canonical=live ? g_canonicalize_filename(live,NULL) : NULL;
+  gboolean same=g_strcmp0(source_canonical,live_canonical)==0;
+  g_free(source_canonical);g_free(live_canonical);
+  if(same) {
+    g_set_error_literal(error,ef_error(),24,"Não é permitido restaurar a partir do banco ativo");
+    return FALSE;
+  }
   sqlite3 *incoming=NULL;
   if(sqlite3_open_v2(source,&incoming,SQLITE_OPEN_READONLY,NULL)!=SQLITE_OK) {
     g_set_error_literal(error,ef_error(),17,"Backup não encontrado ou inválido");
