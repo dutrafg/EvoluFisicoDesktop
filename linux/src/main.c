@@ -573,6 +573,10 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),state->assessment_date);
       gtk_box_append(GTK_BOX(page),state->assessment_weight);
       gtk_box_append(GTK_BOX(page),state->assessment_height);
+      state->assessment_folder=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->assessment_folder),
+        "Pasta para cópia criptografada após salvar (opcional)");
+      gtk_box_append(GTK_BOX(page),state->assessment_folder);
       GtkWidget *save_assessment_button=gtk_button_new_with_label("Registrar avaliação");
       gtk_box_append(GTK_BOX(page),save_assessment_button);
       state->assessment_status=gtk_label_new("Cobranças criptografadas — ambiente experimental, apenas dados fictícios.");
