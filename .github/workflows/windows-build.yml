@@ -33,6 +33,9 @@ jobs:
         shell: pwsh
         run: ./scripts/build-windows.ps1
 
+      - name: Test desktop SQLite JavaScript bridge
+        run: node tests/native-storage-client.cjs
+
       - name: Run native encrypted SQLite integration tests
         shell: pwsh
         run: |
