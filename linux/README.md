@@ -24,3 +24,12 @@ Execute `bash linux/package-deb.sh` a partir da raiz do repositório depois de i
 - Autenticação, avaliações, cobranças, PDF, backup, criptografia e testes de uso real ainda precisam ser implementados.
 
 O código Windows em `main` permanece inalterado.
+
+## Persistência e recuperação (fase experimental)
+
+- Banco: `$XDG_DATA_HOME/evolufisico/records.sqlite` (ou `~/.local/share/evolufisico/records.sqlite`).
+- Diretório privado (0700), arquivo SQLite (0600), validação de integridade e operações preparadas.
+- API interna: `ef_store_backup` cria uma cópia SQLite consistente em arquivo temporário, verifica e renomeia para o destino; `ef_store_restore` verifica o backup antes de restaurar.
+- **Atenção:** backups e banco ainda não são criptografados; não inserir dados pessoais reais, não compartilhar os arquivos e não usar para atendimento.
+- A interface de restauração ainda não está disponível: a API será exposta após confirmação, criptografia e fluxo seguro de recuperação.
+- Os testes de recuperação utilizam dados fictícios, não substituem homologação real.
