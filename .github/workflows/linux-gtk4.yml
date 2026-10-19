@@ -18,6 +18,12 @@ jobs:
       - name: Check source for unsafe SQL string formatting
         run: |
           if grep -nE 'sqlite3_exec\([^,]*, *g_strdup_printf|sqlite3_exec\([^,]*, *sprintf' linux/src/storage.c; then exit 1; fi
+      - name: Guard against deprecated client picker APIs
+        run: |
+          if grep -nE 'gtk_combo_box_|gtk_combo_box_text_' linux/src/main.c; then
+            echo 'Legacy GTK4 client picker API found'
+            exit 1
+          fi
       - name: Compile and package
         run: bash linux/package-deb.sh
       - name: Test native SQLite operations
