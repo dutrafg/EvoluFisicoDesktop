@@ -1,0 +1,3 @@
+/* 08-styles.css */
+/* Tema escuro por tokens; não inverter a página inteira para preservar layout, imagens e contraste. */
+@media print { html.ef-dark-mode, html.ef-dark-mode body { filter: none !important; } }
