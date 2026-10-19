@@ -6,6 +6,9 @@ typedef struct {
   GtkWidget *client_list;
   GtkWidget *client_entry;
   GtkWidget *status;
+  GtkWidget *search_entry;
+  GtkWidget *backup_entry;
+  GtkWidget *settings_status;
 } AppState;
 
 static void refresh_clients(AppState *state) {
@@ -13,7 +16,8 @@ static void refresh_clients(AppState *state) {
   while ((child=gtk_widget_get_first_child(state->client_list)))
     gtk_list_box_remove(GTK_LIST_BOX(state->client_list),child);
   GError *error=NULL;
-  GPtrArray *clients=ef_store_list_clients(&state->store,&error);
+  const char *query=state->search_entry ? gtk_editable_get_text(GTK_EDITABLE(state->search_entry)) : "";
+  GPtrArray *clients=ef_store_search_clients(&state->store,query,&error);
   if(!clients) {
     gtk_label_set_text(GTK_LABEL(state->status),error->message);
     g_clear_error(&error);return;
@@ -26,6 +30,10 @@ static void refresh_clients(AppState *state) {
     gtk_list_box_append(GTK_LIST_BOX(state->client_list),label);
   }
   g_ptr_array_unref(clients);
+}
+static void on_search(GtkEditable *entry, gpointer data) {
+  (void)entry;
+  refresh_clients(data);
 }
 static void add_client(GtkButton *button, gpointer data) {
   (void)button;
@@ -99,6 +107,9 @@ static void activate(GtkApplication *app,gpointer data) {
       state->status=gtk_label_new("Dados locais: prévia sem criptografia.");
       gtk_widget_set_halign(state->status,GTK_ALIGN_START);
       gtk_box_append(GTK_BOX(page),state->status);
+      state->search_entry=gtk_search_entry_new();
+      gtk_box_append(GTK_BOX(page),state->search_entry);
+      g_signal_connect(state->search_entry,"search-changed",G_CALLBACK(on_search),state);
       state->client_list=gtk_list_box_new();
       gtk_box_append(GTK_BOX(page),state->client_list);
       g_signal_connect(save,"clicked",G_CALLBACK(add_client),state);
