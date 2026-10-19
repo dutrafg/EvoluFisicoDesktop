@@ -203,6 +203,26 @@ public partial class MainWindow : Window
                     result = records.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
                     break;
                 }
+                case "backup":
+                {
+                    var dialog = new Microsoft.Win32.SaveFileDialog
+                    {
+                        Title = "Salvar cópia protegida do banco SQLite",
+                        Filter = "Banco SQLite (*.sqlite)|*.sqlite",
+                        FileName = "EvoluFisicoDesktop-backup.sqlite",
+                        AddExtension = true,
+                        DefaultExt = ".sqlite",
+                        OverwritePrompt = true
+                    };
+                    if (dialog.ShowDialog(this) != true)
+                    {
+                        result = "cancelled";
+                        break;
+                    }
+                    store.BackupTo(dialog.FileName);
+                    result = "saved";
+                    break;
+                }
                 case "delete":
                 {
                     var key = root.GetProperty("recordId").GetString() ?? "";
