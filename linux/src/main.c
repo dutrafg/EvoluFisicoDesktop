@@ -60,7 +60,7 @@ static void refresh_pickers(AppState *state) {
   gtk_combo_box_text_remove_all(a);gtk_combo_box_text_remove_all(b);
   GError *error=NULL;
   GPtrArray *rows=ef_store_client_choices(&state->store,&error);
-  if(!rows) {g_warning("Erro ao atualizar seleção: %s",error->message);g_clear_error(&error);}
+  if(!rows) {g_warning("Erro ao atualizar seleção: %s",error ? error->message : "erro desconhecido");g_clear_error(&error);}
   else {
     for(guint i=0;i<rows->len;i++) {
       const char *row=g_ptr_array_index(rows,i);
@@ -85,7 +85,7 @@ static void refresh_clients(AppState *state) {
   const char *query=state->search_entry ? gtk_editable_get_text(GTK_EDITABLE(state->search_entry)) : "";
   GPtrArray *clients=*query ? ef_store_search_clients(&state->store,query,&error) : ef_store_list_client_rows(&state->store,&error);
   if(!clients) {
-    gtk_label_set_text(GTK_LABEL(state->status),error->message);
+    gtk_label_set_text(GTK_LABEL(state->status),error ? error->message : "Falha na consulta.");
     g_clear_error(&error);return;
   }
   for(guint i=0;i<clients->len;i++){
