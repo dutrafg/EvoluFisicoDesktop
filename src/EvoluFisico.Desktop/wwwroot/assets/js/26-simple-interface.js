@@ -123,6 +123,29 @@ function mount(){
  move('btn-security-pill','ef-setting-security');
  move('folder-status-pill','ef-setting-storage');
  const backupButtons=[...oldActions.querySelectorAll('button')];backupButtons.forEach(b=>{b.classList.add('ef-settings-action');$('ef-setting-backup').append(b)});
+ // Desktop on Windows does not support hardware vibration in WebView2.
+ // Hide only vibration controls; keep sound and calendar reminders intact.
+ if(window.chrome && window.chrome.webview){
+   const hideDesktopVibration=()=>{
+     const labels=[...document.querySelectorAll('label,h3,h4,strong,span,button')];
+     for(const el of labels){
+       const label=(el.textContent||'').trim().toLocaleLowerCase('pt-BR');
+       if(label==='testar vibração'){
+         el.closest('button')?.setAttribute('hidden','');
+       }else if(label==='vibração'){
+         const row=el.closest('.setting-row,.settings-row,.notification-setting,.preference-row,.setting-item,.config-row');
+         if(row)row.hidden=true;
+         else {
+           const candidate=el.parentElement?.parentElement;
+           if(candidate && candidate.querySelector('input[type="checkbox"],[role="switch"]'))candidate.hidden=true;
+         }
+       }
+     }
+   };
+   hideDesktopVibration();
+   const vibrationObserver=new MutationObserver(hideDesktopVibration);
+   vibrationObserver.observe(document.body,{childList:true,subtree:true});
+ }
  // Desktop-only update panel: does not change the web edition.
  if(window.chrome && window.chrome.webview){
    const grid=$('ef-setting-backup')?.closest('.ef-settings-grid') || $('ef-setting-backup')?.parentElement?.parentElement;
