@@ -37,6 +37,10 @@ int main(void) {
   g_assert_no_error(error);g_assert_cmpuint(charge_rows->len,==,1);g_ptr_array_unref(charge_rows);
   g_assert_false(ef_store_delete_assessment(&store,-1,&error));g_clear_error(&error);
   g_assert_false(ef_store_delete_charge(&store,999,&error));g_clear_error(&error);
+  g_assert_true(ef_store_add_charge(&store,2,100,"Teste exclusão",&error));g_assert_no_error(error);
+  g_assert_true(ef_store_delete_charge(&store,2,&error));g_assert_no_error(error);
+  g_assert_true(ef_store_add_assessment(&store,2,"2026-10-18",71,171,&error));g_assert_no_error(error);
+  g_assert_true(ef_store_delete_assessment(&store,2,&error));g_assert_no_error(error);
   g_assert_false(ef_store_add_charge(&store,2,-1,"Inválida",&error));g_clear_error(&error);
   g_assert_false(ef_store_add_charge(&store,2,2500,"",&error));g_clear_error(&error);
   g_assert_false(ef_store_add_charge(&store,999,2500,"Cliente inexistente",&error));g_clear_error(&error);
