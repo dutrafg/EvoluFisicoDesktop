@@ -214,7 +214,7 @@ static void save_assessment(GtkButton *button,gpointer data) {
     gtk_editable_set_text(GTK_EDITABLE(state->assessment_weight),"");
     gtk_editable_set_text(GTK_EDITABLE(state->assessment_height),"");
   }else{
-    gtk_label_set_text(GTK_LABEL(state->assessment_status),error->message);
+    gtk_label_set_text(GTK_LABEL(state->assessment_status),error ? error->message : "Falha ao salvar avaliação.");
     g_clear_error(&error);
   }
 }
@@ -231,7 +231,7 @@ static void save_charge(GtkButton *button,gpointer data) {
     gtk_editable_set_text(GTK_EDITABLE(state->charge_cents),"");
     gtk_editable_set_text(GTK_EDITABLE(state->charge_description),"");
   }else{
-    gtk_label_set_text(GTK_LABEL(state->charge_status),error->message);
+    gtk_label_set_text(GTK_LABEL(state->charge_status),error ? error->message : "Falha ao salvar cobrança.");
     g_clear_error(&error);
   }
 }
