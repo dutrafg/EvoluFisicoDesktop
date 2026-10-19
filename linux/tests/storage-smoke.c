@@ -1,0 +1,30 @@
+#include "../src/storage.h"
+#include <glib.h>
+#include <glib/gstdio.h>
+int main(void) {
+  char *tmp=g_dir_make_tmp("evolufisico-test-XXXXXX",NULL);
+  g_assert_nonnull(tmp);
+  g_setenv("XDG_DATA_HOME",tmp,TRUE);
+  EfStore store={0}; GError *error=NULL;
+  g_assert_true(ef_store_open(&store,&error)); g_assert_no_error(error);
+  g_assert_true(ef_store_add_client(&store,"Paciente Exemplo",&error)); g_assert_no_error(error);
+  g_assert_false(ef_store_add_client(&store,"",&error)); g_clear_error(&error);
+  GPtrArray *list=ef_store_list_clients(&store,&error);
+  g_assert_no_error(error); g_assert_cmpuint(list->len,==,1);
+  g_assert_cmpstr(g_ptr_array_index(list,0),==,"Paciente Exemplo");
+  g_ptr_array_unref(list);
+  ef_store_close(&store);
+  g_assert_true(ef_store_open(&store,&error)); g_assert_no_error(error);
+  list=ef_store_list_clients(&store,&error);
+  g_assert_no_error(error); g_assert_cmpuint(list->len,==,1);
+  g_ptr_array_unref(list);
+  g_assert_true(ef_store_delete_client(&store,1,&error)); g_assert_no_error(error);
+  g_assert_false(ef_store_delete_client(&store,1,&error)); g_clear_error(&error);
+  ef_store_close(&store);
+  char *db=g_build_filename(tmp,"evolufisico","records.sqlite",NULL);
+  g_remove(db); g_free(db);
+  char *folder=g_build_filename(tmp,"evolufisico",NULL);
+  g_rmdir(folder); g_free(folder); g_rmdir(tmp); g_free(tmp);
+  g_print("PASS: SQLite create/list/reopen/delete and validation\n");
+  return 0;
+}
