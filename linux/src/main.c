@@ -65,7 +65,10 @@ static void backup_clicked(GtkButton *button,gpointer data) {
     g_clear_error(&error);
   }
 }
-static void restore_clicked(GtkButton *button,gpointer data) {
+static void restore_confirmed(GtkDialog *dialog, gint response, gpointer data) {
+  AppState *state=data;
+  gtk_window_destroy(GTK_WINDOW(dialog));
+  if(response!=GTK_RESPONSE_ACCEPT) return;
   (void)button;
   AppState *state=data;
   const char *path=gtk_editable_get_text(GTK_EDITABLE(state->restore_entry));
@@ -77,6 +80,17 @@ static void restore_clicked(GtkButton *button,gpointer data) {
     gtk_label_set_text(GTK_LABEL(state->settings_status),error ? error->message : "Restauração falhou.");
     g_clear_error(&error);
   }
+}
+static void restore_clicked(GtkButton *button,gpointer data) {
+  AppState *state=data;
+  GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
+  GtkWidget *dialog=gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_MODAL,
+    GTK_MESSAGE_WARNING,GTK_BUTTONS_NONE,
+    "A restauração substituirá os clientes existentes. Continuar?");
+  gtk_dialog_add_button(GTK_DIALOG(dialog),"Cancelar",GTK_RESPONSE_CANCEL);
+  gtk_dialog_add_button(GTK_DIALOG(dialog),"Restaurar",GTK_RESPONSE_ACCEPT);
+  g_signal_connect(dialog,"response",G_CALLBACK(restore_confirmed),state);
+  gtk_window_present(GTK_WINDOW(dialog));
 }
 static void integrity_clicked(GtkButton *button,gpointer data) {
   (void)button;
