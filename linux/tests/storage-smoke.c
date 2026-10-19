@@ -94,6 +94,11 @@ int main(void) {
   sqlite3_finalize(index_check);
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
+  sqlite3 *unkeyed=NULL;sqlite3_stmt *unkeyed_query=NULL;
+  g_assert_cmpint(sqlite3_open_v2(backup,&unkeyed,SQLITE_OPEN_READONLY,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_prepare_v2(unkeyed,"SELECT name FROM clients",-1,&unkeyed_query,NULL),!=,SQLITE_OK);
+  if(unkeyed_query)sqlite3_finalize(unkeyed_query);
+  sqlite3_close(unkeyed);
   g_assert_false(ef_store_backup(&store,backup,&error));g_clear_error(&error);
   g_assert_false(ef_store_backup(&store,"",&error));g_clear_error(&error);
   g_assert_false(ef_store_backup(&store,"relative.sqlite",&error));g_clear_error(&error);
