@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <math.h>
 #include <gio/gio.h>
+extern int sqlite3_key(sqlite3 *db,const void *key,int key_length);
 static gboolean apply_key(sqlite3 *db,GError **error) {
   const char *passphrase=g_getenv("EVOLUFISICO_DB_PASSPHRASE");
   if(!passphrase || strlen(passphrase)<12) {
@@ -155,16 +156,6 @@ gboolean ef_store_check_integrity(EfStore *store, GError **error) {
   gboolean ok=rc==SQLITE_ROW && g_strcmp0((const char*)sqlite3_column_text(stmt,0),"ok")==0;
   sqlite3_finalize(stmt);
   if(!ok) { g_set_error_literal(error,ef_error(),10,"Falha na verificação de integridade SQLite"); return FALSE; }
-  return TRUE;
-}
-static gboolean copy_database(sqlite3 *source, sqlite3 *target, GError **error) {
-  sqlite3_backup *backup=sqlite3_backup_init(target,"main",source,"main");
-  if(!backup) { g_set_error(error,ef_error(),11,"Falha ao iniciar cópia SQLite: %s",sqlite3_errmsg(target)); return FALSE; }
-  int rc=sqlite3_backup_step(backup,-1);
-  int finished=sqlite3_backup_finish(backup);
-  if(rc!=SQLITE_DONE || finished!=SQLITE_OK) {
-    g_set_error(error,ef_error(),12,"Falha ao copiar banco SQLite: %d/%d",rc,finished); return FALSE;
-  }
   return TRUE;
 }
 static gboolean encrypted_file_copy(const char *source,const char *destination,GError **error) {
