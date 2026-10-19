@@ -209,6 +209,38 @@ internal sealed class EncryptedSqliteStore
         }
     }
 
+    /// <summary>
+    /// Verifies both SQLite structural integrity and authentication tags for all
+    /// DPAPI-protected records. Password-protected records require an explicit password.
+    /// </summary>
+    internal void VerifyEncryptedRecords(string? masterPassword = null)
+    {
+        using var db = Open();
+        using (var check = db.CreateCommand())
+        {
+            check.CommandText = "PRAGMA integrity_check";
+            if (!string.Equals(check.ExecuteScalar() as string, "ok", StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("Falha na integridade estrutural do banco.");
+        }
+        using var command = db.CreateCommand();
+        command.CommandText = "SELECT record_id, encrypted_payload FROM protected_records";
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            var recordId = reader.GetString(0);
+            var payload = reader.GetFieldValue<byte[]>(1);
+            try
+            {
+                _ = ProtectedVault.Decrypt(payload, masterPassword);
+            }
+            catch (Exception ex) when (ex is System.Security.Cryptography.CryptographicException
+                or InvalidDataException or System.Text.Json.JsonException)
+            {
+                throw new InvalidDataException("Registro criptografado inválido: " + recordId, ex);
+            }
+        }
+    }
+
     internal bool VerifyIntegrity()
     {
         using var db = Open();
