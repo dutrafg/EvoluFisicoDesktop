@@ -137,7 +137,7 @@ static void show_charges(GtkButton *button,gpointer data) {
 }
 static void save_assessment(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0;double weight=0,height=0;
-  if(!read_id(state->assessment_client,&id) || !read_positive_double(state->assessment_weight,&weight) ||
+  if(!read_picker_id(state->assessment_picker,&id) || !read_positive_double(state->assessment_weight,&weight) ||
      !read_positive_double(state->assessment_height,&height)) {
     gtk_label_set_text(GTK_LABEL(state->assessment_status),"Selecione um cliente e confira peso e altura.");return;
   }
@@ -153,7 +153,7 @@ static void save_assessment(GtkButton *button,gpointer data) {
 }
 static void save_charge(GtkButton *button,gpointer data) {
   (void)button;AppState *state=data;gint64 id=0,cents=0;
-  if(!read_id(state->charge_client,&id) || !read_id(state->charge_cents,&cents)) {
+  if(!read_picker_id(state->charge_picker,&id) || !read_id(state->charge_cents,&cents)) {
     gtk_label_set_text(GTK_LABEL(state->charge_status),"Selecione um cliente e informe o valor em centavos.");return;
   }
   const char *description=gtk_editable_get_text(GTK_EDITABLE(state->charge_description));
