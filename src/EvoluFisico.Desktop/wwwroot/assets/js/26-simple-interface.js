@@ -170,6 +170,19 @@ function mount(){
          finally{migrateButton.disabled=false}
        });
      }
+     if(window.EFDesktopIndexedDBInventory){
+       const panel=document.createElement('article');
+       panel.className='ef-settings-card';
+       panel.innerHTML='<h3>Diagnóstico IndexedDB</h3><p>Consulta somente leitura dos bancos antigos.</p><button class="btn btn-outline btn-sm ef-settings-action" id="ef-desktop-inventory" type="button">Verificar bancos</button><p id="ef-desktop-inventory-result" role="status" aria-live="polite"></p>';
+       grid.append(panel);
+       const button=$('ef-desktop-inventory'),status=$('ef-desktop-inventory-result');
+       button.addEventListener('click',async()=>{
+         button.disabled=true;status.textContent='Inspecionando…';
+         try{const databases=await window.EFDesktopIndexedDBInventory.inventory();status.textContent=databases.flatMap(db=>db.stores.map(s=>db.name+' / '+s.name+': '+s.count+' registros')).join(' | ')||'Nenhum registro encontrado.'}
+         catch(error){status.textContent='Falha na inspeção: '+error.message}
+         finally{button.disabled=false}
+       });
+     }
      const btn=$('ef-desktop-check-update'), status=$('ef-desktop-update-status');
      btn.addEventListener('click',()=>{btn.disabled=true;status.textContent='Consultando versões publicadas…';window.chrome.webview.postMessage('check-updates')});
      window.chrome.webview.addEventListener('message',e=>{
