@@ -8,6 +8,14 @@ int main(void) {
   g_setenv("XDG_DATA_HOME",tmp,TRUE);
   EfStore store={0}; GError *error=NULL;
   g_assert_true(ef_store_open(&store,&error)); g_assert_no_error(error);
+  char *dbdir=g_build_filename(tmp,"evolufisico",NULL);
+  char *dbpath=g_build_filename(dbdir,"records.sqlite",NULL);
+  GStatBuf statbuf;
+  g_assert_cmpint(g_stat(dbdir,&statbuf),==,0);
+  g_assert_cmpint(statbuf.st_mode & 077,==,0);
+  g_assert_cmpint(g_stat(dbpath,&statbuf),==,0);
+  g_assert_cmpint(statbuf.st_mode & 077,==,0);
+  g_free(dbdir);g_free(dbpath);
   g_assert_true(ef_store_add_client(&store,"Paciente Exemplo",&error)); g_assert_no_error(error);
   g_assert_false(ef_store_add_client(&store,"",&error)); g_clear_error(&error);
   g_assert_false(ef_store_add_client(&store,"\xFF",&error)); g_clear_error(&error);
