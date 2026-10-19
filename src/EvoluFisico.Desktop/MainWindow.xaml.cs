@@ -105,9 +105,12 @@ public partial class MainWindow : Window
             };
             Browser.CoreWebView2.WebMessageReceived += async (_, args) =>
             {
-                if (args.TryGetWebMessageAsString() is "check-updates" or "check-updates-auto")
+                string? command = null;
+                try { command = args.TryGetWebMessageAsString(); }
+                catch (ArgumentException) { /* Structured JSON message, handled below. */ }
+                if (command is "check-updates" or "check-updates-auto")
                     await CheckUpdatesAsync();
-                else
+                else if (command is null)
                     HandleStorageMessage(args);
             };
             _ready = true;
