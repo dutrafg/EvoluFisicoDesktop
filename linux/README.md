@@ -84,3 +84,13 @@ Revisão estática identificou e corrigiu:
 - A seleção é atualizada após operações de cadastro e edição, preservando o cliente selecionado quando ainda existir.
 - Nenhum cliente é selecionado automaticamente: é preciso escolher explicitamente.
 - O aplicativo permanece sem criptografia e sem autorização para uso com dados reais.
+
+## Etapas 81–100 — gestão de registros e QA
+
+- Listagens de avaliações e cobranças exibem IDs individuais.
+- Exclusão de avaliações e cobranças exige confirmação explícita.
+- Interface verifica que o registro pertence ao cliente selecionado antes de excluir.
+- Testes cobrem exclusões válidas, IDs inválidos e tentativas de operar em outro cliente.
+- Índices SQLite otimizam consultas por cliente.
+- **Risco residual:** a API interna de exclusão por ID não incorpora cliente; a validação está na interface e pode ser melhorada com exclusão SQL atômica por `id` e `client_id`.
+- Banco e backups seguem **sem criptografia**. Uso restrito a dados fictícios.
