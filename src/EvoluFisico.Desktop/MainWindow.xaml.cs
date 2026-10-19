@@ -94,7 +94,7 @@ public partial class MainWindow : Window
             };
             Browser.CoreWebView2.WebMessageReceived += async (_, args) =>
             {
-                if (args.TryGetWebMessageAsString() == "check-updates") await CheckUpdatesAsync();
+                if (args.TryGetWebMessageAsString() is "check-updates" or "check-updates-auto") await CheckUpdatesAsync();
             };
             _ready = true;
             Browser.CoreWebView2.Navigate(AppUrl);
