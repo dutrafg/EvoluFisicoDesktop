@@ -13,3 +13,7 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
 gboolean ef_store_restore(EfStore *store, const char *source, GError **error);
 GPtrArray *ef_store_search_clients(EfStore *store, const char *query, GError **error);
 GPtrArray *ef_store_list_client_rows(EfStore *store, GError **error);
+gboolean ef_store_add_assessment(EfStore *store, gint64 client_id, const char *date, double weight_kg, double height_cm, GError **error);
+GPtrArray *ef_store_list_assessments(EfStore *store, gint64 client_id, GError **error);
+gboolean ef_store_add_charge(EfStore *store, gint64 client_id, gint64 cents, const char *description, GError **error);
+GPtrArray *ef_store_list_charges(EfStore *store, gint64 client_id, GError **error);
