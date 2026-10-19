@@ -1,0 +1,21 @@
+/* 02-styles.css */
+/* ===== v6.8 — Predictive & Insight Engine ===== */
+.ef68-insights-card{grid-column:1/-1!important;position:relative;overflow:hidden}
+.ef68-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:.75rem}
+.ef68-head h3{margin-bottom:.2rem!important}
+.ef68-subtitle{font-size:.74rem;color:var(--text-muted);margin:0;max-width:720px}
+.ef68-summary{display:flex;gap:.35rem;flex-wrap:wrap}
+.ef68-summary span{font-size:.68rem;font-weight:700;padding:.2rem .55rem;border-radius:99px}
+.ef68-summary .ok{background:rgba(52,199,89,.14);color:#1c8a3d}.ef68-summary .warn{background:rgba(255,159,10,.16);color:#a86400}
+.ef68-events{display:grid;gap:.35rem}
+.ef68-event{display:flex;align-items:center;gap:.65rem;padding:.65rem .45rem;border-top:.5px solid rgba(0,0,0,.08)}
+.ef68-event:first-child{border-top:0}
+.ef68-event-icon{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:.82rem}
+.ef68-event-icon.ok{background:rgba(52,199,89,.14);color:#1c8a3d}.ef68-event-icon.bad{background:rgba(255,59,48,.12);color:#c62a20}.ef68-event-icon.warn{background:rgba(255,159,10,.15);color:#a86400}
+.ef68-event-main{flex:1;min-width:0}.ef68-event-main>div{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}.ef68-event-main b{font-size:.82rem;font-weight:650}.ef68-event-main p{font-size:.72rem;color:var(--text-muted);margin:.12rem 0 0}
+.ef68-student{font-size:.67rem;font-weight:600;color:var(--primary);background:var(--primary-light);padding:.13rem .45rem;border-radius:99px}
+.ef68-open{border:0;background:rgba(118,118,128,.12);color:var(--text-main);font-size:.68rem;font-weight:600;padding:.3rem .55rem;border-radius:7px;cursor:pointer}
+.ef68-open:hover{background:rgba(118,118,128,.2)}
+.ef68-consistency{margin-top:.7rem;padding:.7rem .75rem;background:var(--slate-50);border-radius:10px}.ef68-consistency>b{font-size:.72rem}.ef68-consistency>div{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.4rem}.ef68-chip{font-size:.65rem;padding:.22rem .5rem;background:#fff;border:1px solid var(--border-color);border-radius:99px;color:var(--text-muted)}
+.ef68-foot{margin-top:.65rem;text-align:right;font-size:.62rem;color:var(--text-light)}
+@media(max-width:600px){.ef68-event{align-items:flex-start}.ef68-open{align-self:center}.ef68-subtitle{max-width:none}}
