@@ -427,3 +427,22 @@ gboolean ef_store_assessment_belongs_to(EfStore *store,gint64 record_id,gint64 c
 gboolean ef_store_charge_belongs_to(EfStore *store,gint64 record_id,gint64 client_id,GError **error) {
   return belongs_to(store,record_id,client_id,"SELECT 1 FROM charges WHERE id=? AND client_id=?",error);
 }
+
+static gboolean delete_scoped(EfStore *store,gint64 record_id,gint64 client_id,const char *sql,GError **error) {
+  if(!store || !store->db || record_id<=0 || client_id<=0) {g_set_error_literal(error,ef_error(),46,"Identificador inválido");return FALSE;}
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,sql,-1,&stmt,NULL)!=SQLITE_OK)return sql_error(store,error);
+  sqlite3_bind_int64(stmt,1,record_id);sqlite3_bind_int64(stmt,2,client_id);
+  int rc=sqlite3_step(stmt);int changed=sqlite3_changes(store->db);
+  if(rc!=SQLITE_DONE)sql_error(store,error);
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE)return FALSE;
+  if(changed!=1) {g_set_error_literal(error,ef_error(),47,"Registro não encontrado para este cliente");return FALSE;}
+  return TRUE;
+}
+gboolean ef_store_delete_assessment_for_client(EfStore *store,gint64 record_id,gint64 client_id,GError **error) {
+  return delete_scoped(store,record_id,client_id,"DELETE FROM assessments WHERE id=? AND client_id=?",error);
+}
+gboolean ef_store_delete_charge_for_client(EfStore *store,gint64 record_id,gint64 client_id,GError **error) {
+  return delete_scoped(store,record_id,client_id,"DELETE FROM charges WHERE id=? AND client_id=?",error);
+}
