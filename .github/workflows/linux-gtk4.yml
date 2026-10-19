@@ -33,6 +33,19 @@ jobs:
           meson setup linux/build-strict linux --buildtype=debug -Dwerror=true
           meson compile -C linux/build-strict
           meson test -C linux/build-strict --print-errorlogs
+      - name: Undefined behavior sanitizer QA
+        env:
+          UBSAN_OPTIONS: "halt_on_error=1:print_stacktrace=1"
+        run: |
+          meson setup linux/build-ubsan linux --buildtype=debug -Db_sanitize=undefined -Dwerror=true
+          meson compile -C linux/build-ubsan
+          meson test -C linux/build-ubsan --print-errorlogs
+      - name: Security source checks
+        run: |
+          ! grep -nE 'system\\(|popen\\(|strcpy\\(|strcat\\(|gets\\(' linux/src/*.c
+          ! grep -nE 'sqlite3_exec\\([^,]+,[[:space:]]*(sprintf|g_strdup_printf)' linux/src/storage.c
+          grep -q 'sqlite3_key' linux/src/storage.c
+          grep -q 'EVOLUFISICO_DB_PASSPHRASE' linux/src/storage.c
       - name: GTK4 headless visual smoke and screenshot
         env:
           EVOLUFISICO_DB_PASSPHRASE: "CI-Only-Fictitious-Visual-2026!"
