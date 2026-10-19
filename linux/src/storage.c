@@ -60,3 +60,113 @@ gboolean ef_store_delete_client(EfStore *store, gint64 id, GError **error) {
   if(changed!=1) { g_set_error_literal(error,ef_error(),6,"Cliente não encontrado"); return FALSE; }
   return TRUE;
 }
+
+static gboolean valid_name(const char *name) {
+  return name && g_utf8_validate(name,-1,NULL) && g_utf8_strlen(name,-1)>=1 && g_utf8_strlen(name,-1)<=180;
+}
+gboolean ef_store_rename_client(EfStore *store, gint64 id, const char *name, GError **error) {
+  if (!store || !store->db || id<=0 || !valid_name(name)) {
+    g_set_error_literal(error,ef_error(),7,"Identificador ou nome inválido"); return FALSE;
+  }
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"UPDATE clients SET name=? WHERE id=?",-1,&stmt,NULL)!=SQLITE_OK) return sql_error(store,error);
+  sqlite3_bind_text(stmt,1,name,-1,SQLITE_TRANSIENT);
+  sqlite3_bind_int64(stmt,2,id);
+  int rc=sqlite3_step(stmt);
+  int changes=sqlite3_changes(store->db);
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE) return sql_error(store,error);
+  if(changes!=1) { g_set_error_literal(error,ef_error(),8,"Cliente não encontrado"); return FALSE; }
+  return TRUE;
+}
+gboolean ef_store_check_integrity(EfStore *store, GError **error) {
+  if(!store || !store->db) { g_set_error_literal(error,ef_error(),9,"Banco indisponível"); return FALSE; }
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"PRAGMA integrity_check",-1,&stmt,NULL)!=SQLITE_OK) return sql_error(store,error);
+  int rc=sqlite3_step(stmt);
+  gboolean ok=rc==SQLITE_ROW && g_strcmp0((const char*)sqlite3_column_text(stmt,0),"ok")==0;
+  sqlite3_finalize(stmt);
+  if(!ok) { g_set_error_literal(error,ef_error(),10,"Falha na verificação de integridade SQLite"); return FALSE; }
+  return TRUE;
+}
+static gboolean copy_database(sqlite3 *source, sqlite3 *target, GError **error) {
+  sqlite3_backup *backup=sqlite3_backup_init(target,"main",source,"main");
+  if(!backup) { g_set_error(error,ef_error(),11,"Falha ao iniciar cópia SQLite: %s",sqlite3_errmsg(target)); return FALSE; }
+  int rc=sqlite3_backup_step(backup,-1);
+  int finished=sqlite3_backup_finish(backup);
+  if(rc!=SQLITE_DONE || finished!=SQLITE_OK) {
+    g_set_error(error,ef_error(),12,"Falha ao copiar banco SQLite: %d/%d",rc,finished); return FALSE;
+  }
+  return TRUE;
+}
+gboolean ef_store_backup(EfStore *store, const char *destination, GError **error) {
+  if(!store || !store->db || !destination || !*destination) {
+    g_set_error_literal(error,ef_error(),13,"Destino de backup inválido"); return FALSE;
+  }
+  if(!ef_store_check_integrity(store,error)) return FALSE;
+  char *temporary=g_strdup_printf("%s.tmp-%s",destination,g_uuid_string_random());
+  sqlite3 *target=NULL;
+  if(sqlite3_open_v2(temporary,&target,SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE,NULL)!=SQLITE_OK) {
+    g_set_error_literal(error,ef_error(),14,"Não foi possível criar backup temporário");
+    if(target)sqlite3_close(target);
+    g_unlink(temporary);g_free(temporary);return FALSE;
+  }
+  gboolean ok=copy_database(store->db,target,error);
+  if(sqlite3_close(target)!=SQLITE_OK)ok=FALSE;
+  if(ok) {
+    sqlite3 *verify=NULL;
+    if(sqlite3_open_v2(temporary,&verify,SQLITE_OPEN_READONLY,NULL)!=SQLITE_OK)ok=FALSE;
+    else {
+      EfStore snapshot={verify};
+      ok=ef_store_check_integrity(&snapshot,error);
+      sqlite3_close(verify);
+    }
+  }
+  if(ok && g_rename(temporary,destination)!=0) {
+    g_set_error_literal(error,ef_error(),15,"Não foi possível finalizar backup");ok=FALSE;
+  }
+  if(!ok)g_unlink(temporary);
+  g_free(temporary);
+  return ok;
+}
+gboolean ef_store_restore(EfStore *store, const char *source, GError **error) {
+  if(!store || !store->db || !source || !*source) {
+    g_set_error_literal(error,ef_error(),16,"Origem de restauração inválida");return FALSE;
+  }
+  sqlite3 *incoming=NULL;
+  if(sqlite3_open_v2(source,&incoming,SQLITE_OPEN_READONLY,NULL)!=SQLITE_OK) {
+    g_set_error_literal(error,ef_error(),17,"Backup não encontrado ou inválido");
+    if(incoming)sqlite3_close(incoming);
+    return FALSE;
+  }
+  EfStore snapshot={incoming};
+  gboolean ok=ef_store_check_integrity(&snapshot,error);
+  if(ok) {
+    sqlite3_stmt *stmt=NULL;
+    if(sqlite3_prepare_v2(incoming,"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='clients'",-1,&stmt,NULL)!=SQLITE_OK)ok=FALSE;
+    else {
+      ok=sqlite3_step(stmt)==SQLITE_ROW && sqlite3_column_int(stmt,0)==1;
+      sqlite3_finalize(stmt);
+    }
+    if(!ok && error && !*error)g_set_error_literal(error,ef_error(),18,"Backup sem esquema de clientes");
+  }
+  if(ok)ok=copy_database(incoming,store->db,error);
+  sqlite3_close(incoming);
+  return ok;
+}
+GPtrArray *ef_store_search_clients(EfStore *store, const char *query, GError **error) {
+  if(!store || !store->db || !query || !g_utf8_validate(query,-1,NULL)) {
+    g_set_error_literal(error,ef_error(),19,"Busca inválida");return NULL;
+  }
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"SELECT name FROM clients WHERE instr(lower(name),lower(?))>0 ORDER BY name COLLATE NOCASE",-1,&stmt,NULL)!=SQLITE_OK) {
+    sql_error(store,error);return NULL;
+  }
+  sqlite3_bind_text(stmt,1,query,-1,SQLITE_TRANSIENT);
+  GPtrArray *list=g_ptr_array_new_with_free_func(g_free);
+  int rc;
+  while((rc=sqlite3_step(stmt))==SQLITE_ROW)g_ptr_array_add(list,g_strdup((const char*)sqlite3_column_text(stmt,0)));
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE) {g_ptr_array_unref(list);sql_error(store,error);return NULL;}
+  return list;
+}
