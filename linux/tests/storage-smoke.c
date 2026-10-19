@@ -29,6 +29,9 @@ int main(void) {
   g_assert_cmpstr(g_ptr_array_index(list,0),==,"Paciente Exemplo");
   g_ptr_array_unref(list);
   ef_store_close(&store);
+  g_setenv("EVOLUFISICO_DB_PASSPHRASE","Senha-Incorreta-De-Teste-2026!",TRUE);
+  g_assert_false(ef_store_open(&store,&error));g_clear_error(&error);
+  g_setenv("EVOLUFISICO_DB_PASSPHRASE","EvoluFisico-QA-Ficticio-2026!",TRUE);
   g_assert_true(ef_store_open(&store,&error)); g_assert_no_error(error);
   list=ef_store_list_clients(&store,&error);
   g_assert_no_error(error); g_assert_cmpuint(list->len,==,1);
