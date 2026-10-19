@@ -5,8 +5,13 @@
 #include <math.h>
 #include <gio/gio.h>
 extern int sqlite3_key(sqlite3 *db,const void *key,int key_length);
+static char *session_passphrase=NULL;
+void ef_store_set_passphrase(const char *passphrase) {
+  if(session_passphrase) {volatile char *p=session_passphrase;for(gsize i=0;i<strlen(session_passphrase);i++)p[i]=0;g_free(session_passphrase);}
+  session_passphrase=passphrase ? g_strdup(passphrase) : NULL;
+}
 static gboolean apply_key(sqlite3 *db,GError **error) {
-  const char *passphrase=g_getenv("EVOLUFISICO_DB_PASSPHRASE");
+  const char *passphrase=session_passphrase ? session_passphrase : g_getenv("EVOLUFISICO_DB_PASSPHRASE");
   if(!passphrase || strlen(passphrase)<12) {
     g_set_error_literal(error,g_quark_from_static_string("evolufisico-storage"),60,
       "Defina EVOLUFISICO_DB_PASSPHRASE com pelo menos 12 caracteres antes de iniciar.");
