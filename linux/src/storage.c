@@ -200,3 +200,23 @@ GPtrArray *ef_store_search_clients(EfStore *store, const char *query, GError **e
   if(rc!=SQLITE_DONE) {g_ptr_array_unref(list);sql_error(store,error);return NULL;}
   return list;
 }
+
+GPtrArray *ef_store_list_client_rows(EfStore *store, GError **error) {
+  if(!store || !store->db) {
+    g_set_error_literal(error,ef_error(),23,"Banco indisponível");
+    return NULL;
+  }
+  sqlite3_stmt *stmt=NULL;
+  if(sqlite3_prepare_v2(store->db,"SELECT id,name FROM clients ORDER BY name COLLATE NOCASE",-1,&stmt,NULL)!=SQLITE_OK) {
+    sql_error(store,error);return NULL;
+  }
+  GPtrArray *rows=g_ptr_array_new_with_free_func(g_free);
+  int rc;
+  while((rc=sqlite3_step(stmt))==SQLITE_ROW) {
+    char *line=g_strdup_printf("%" G_GINT64_FORMAT " — %s",sqlite3_column_int64(stmt,0),(const char*)sqlite3_column_text(stmt,1));
+    g_ptr_array_add(rows,line);
+  }
+  sqlite3_finalize(stmt);
+  if(rc!=SQLITE_DONE) {g_ptr_array_unref(rows);sql_error(store,error);return NULL;}
+  return rows;
+}
