@@ -14,6 +14,16 @@ public partial class MainWindow : Window
     private const string AppUrl = "https://evolufisico.local/index.html";
     private bool _ready;
     private const string CurrentVersion = "9.0.0-beta.1";
+    private static string InstalledTag()
+    {
+        try
+        {
+            var file = Path.Combine(AppContext.BaseDirectory, "wwwroot", "desktop-version.json");
+            using var doc = JsonDocument.Parse(File.ReadAllText(file));
+            return doc.RootElement.GetProperty("tag").GetString() ?? "";
+        }
+        catch { return ""; }
+    }
     private static readonly HttpClient UpdateClient = new() { Timeout = TimeSpan.FromSeconds(15) };
 
     public MainWindow()
@@ -101,8 +111,10 @@ public partial class MainWindow : Window
             response.EnsureSuccessStatusCode();
             using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
             var latest = doc.RootElement.EnumerateArray()
-                .Where(r => !r.GetProperty("draft").GetBoolean())
-                .FirstOrDefault(r => r.GetProperty("tag_name").GetString()?.StartsWith("desktop-v9.0-beta-") == true);
+                .Where(r => !r.GetProperty("draft").GetBoolean()
+                    && r.GetProperty("tag_name").GetString()?.StartsWith("desktop-v9.0-beta-") == true)
+                .OrderByDescending(r => r.GetProperty("published_at").GetString())
+                .FirstOrDefault();
             if (latest.ValueKind == JsonValueKind.Undefined)
             {
                 message = "Nenhuma atualização publicada no GitHub Releases.";
@@ -120,9 +132,23 @@ public partial class MainWindow : Window
                         break;
                     }
                 }
-                message = downloadUrl is null
-                    ? "Versão publicada, mas sem instalador Windows disponível."
-                    : $"Versão publicada: {tag}. Versão instalada: {CurrentVersion}. Baixe o instalador para atualizar.";
+                var installed = InstalledTag();
+                if (installed == tag)
+                {
+                    message = $"Você já utiliza a versão mais recente ({CurrentVersion}, {tag}).";
+                    downloadUrl = null;
+                }
+                else if (string.IsNullOrWhiteSpace(installed))
+                {
+                    message = "Não foi possível identificar a versão instalada. Verifique a versão manualmente antes de atualizar.";
+                    downloadUrl = null;
+                }
+                else
+                {
+                    message = downloadUrl is null
+                        ? "Versão publicada, mas sem instalador Windows disponível."
+                        : $"Versão disponível: {tag}. Instalada: {installed}. Baixe o instalador para atualizar.";
+                }
             }
         }
         catch (Exception ex)
