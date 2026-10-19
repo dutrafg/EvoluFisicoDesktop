@@ -36,6 +36,7 @@ const encode=bytes=>{
  return btoa(result);
 };
 const decode=base64=>Uint8Array.from(atob(base64),c=>c.charCodeAt(0));
+const encoder=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true});
 window.EFNativeStorage=Object.freeze({
  health:()=>call('health'),
  list:async()=>JSON.parse(await call('list')),
@@ -44,6 +45,11 @@ window.EFNativeStorage=Object.freeze({
   if(!(bytes instanceof Uint8Array))throw new TypeError('Esperado Uint8Array');
   return call('write',id,encode(bytes));
  },
- delete:id=>call('delete',id)
+ delete:id=>call('delete',id),
+ readJSON:async id=>{
+  const bytes=await window.EFNativeStorage.read(id);
+  return bytes===null?null:JSON.parse(decoder.decode(bytes));
+ },
+ writeJSON:(id,value)=>window.EFNativeStorage.write(id,encoder.encode(JSON.stringify(value)))
 });
 })();
