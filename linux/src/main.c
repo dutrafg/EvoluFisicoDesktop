@@ -317,6 +317,7 @@ static void activate(GtkApplication *app,gpointer data) {
       GtkWidget *show_assessments_button=gtk_button_new_with_label("Consultar avaliações");
       gtk_box_append(GTK_BOX(page),show_assessments_button);
       g_signal_connect(show_assessments_button,"clicked",G_CALLBACK(show_assessments),state);
+      gtk_widget_set_sensitive(show_assessments_button,state->store.db!=NULL);
       state->assessment_list=gtk_list_box_new();
       gtk_box_append(GTK_BOX(page),state->assessment_list);
       g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
@@ -338,6 +339,7 @@ static void activate(GtkApplication *app,gpointer data) {
       GtkWidget *show_charges_button=gtk_button_new_with_label("Consultar cobranças");
       gtk_box_append(GTK_BOX(page),show_charges_button);
       g_signal_connect(show_charges_button,"clicked",G_CALLBACK(show_charges),state);
+      gtk_widget_set_sensitive(show_charges_button,state->store.db!=NULL);
       state->charge_list=gtk_list_box_new();
       gtk_box_append(GTK_BOX(page),state->charge_list);
       g_signal_connect(save_charge_button,"clicked",G_CALLBACK(save_charge),state);
