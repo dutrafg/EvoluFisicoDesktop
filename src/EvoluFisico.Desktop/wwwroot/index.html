@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<script src="./assets/js/01-storage.js"></script>
+<meta charset="utf-8"/>
+<!-- ÍCONE DO APLICATIVO (FAVICON E APP ICONS) -->
+<link href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACcElEQVR4nGNkKHzMgAX8xyZIJcCIzGFh+PuLXhaj28GI7gB6WI7uEEYWRogD6G053BHoUUB3wML49zfJvv8717IZmzhz8vFaUs1iZEo4QLQD/s63x2oxhkMSDxLtEFgawAv+LHIlymIGBgYG0xNRtUbpEPb5aYmEHUAoDfxZ6o1hOUv0Vqw+RFdrmDWf4fzkaLzmM7KEr8MZBb9XBKIYyBqxnqigNShYjcK/MCEUp1omhr+/GXBiZMtDV9XiVYuEL/QGMDAwMDCcLrkO0YxHLQvjP+xR8GttDNz3bMFLan+vjcGqji14CYN+6TYMcZjlp0uuM5j2MDBc7PbCFQK/GLBiZIAvneCQM+3RRKFx2YM1F/zcnAH3PbvvjFrk2oPddwaKWmS5S612KHLsgnYMegyHGBgYGBj0K/ZgyDMwMDCwoMc1BkCXx6eeVLMYiCgH0OV/bsuFsznce1Hk9OqOMzAwMDBcrjcmyiwGBgYGFgYciRAO8MnjkiNBnHBlhCbP4dSIU+nlKnUoC4eZ2EKA1CjAp55UsxgYcBREnDZl8BLv+8HWZuTE8/1gKwpGSVho5uh03odLXSmRwVEQEVEZEetrckKHkdM0E2dd8O3UtGYGBkgNdzVPgKBDkYH2pA9wNj69OItiGDA9EVULM/BaDhdRlmtN+YbCx2cHI5dBHN4GidZ0zMLjWiYrxWrhDuDWjSDYItKcxUhICVZwPY1wY4uRWyuI6CaZ5lx24ixO/kmskQyMPOo+JDdKNRbwYhW/kfCZVKMYGHlU3QaqT8DAwABpljMyDFzHhIi6gNYOgJZQAxUKjMghQG9HMDIwMDAAAFaCTHl1Exf8AAAAAElFTkSuQmCC" rel="icon" type="image/png"/>
+<link href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgICAgICAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJlZkdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDA3MWUzIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGYxNzJhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+CiAgICAgICAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTIiIGZpbGw9InVybCgjZWZHcmFkKSIvPgogICAgICAgIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTY1IiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC40KSIgc3Ryb2tlLXdpZHRoPSIyNiIgZmlsbD0ibm9uZSIvPgogICAgICAgIDxwYXRoIGQ9Ik0gMjU2IDkxIEEgMTY1IDE2NSAwIDAgMSA0MTAgMzIwIiBzdHJva2U9IiMzNGM3NTkiIHN0cm9rZS13aWR0aD0iMjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgogICAgICAgIDxyZWN0IHg9IjE3NCIgeT0iMTgwIiB3aWR0aD0iMzAiIGhlaWdodD0iMTUyIiByeD0iMTUiIGZpbGw9IiNmZmZmZmYiLz4KICAgICAgICA8cmVjdCB4PSIxNzQiIHk9IjE4MCIgd2lkdGg9IjgyIiBoZWlnaHQ9IjMwIiByeD0iMTUiIGZpbGw9IiNmZmZmZmYiLz4KICAgICAgICA8cmVjdCB4PSIxNzQiIHk9IjI0MSIgd2lkdGg9IjY2IiBoZWlnaHQ9IjMwIiByeD0iMTUiIGZpbGw9IiNmZmZmZmYiLz4KICAgICAgICA8cmVjdCB4PSIxNzQiIHk9IjMwMiIgd2lkdGg9IjgyIiBoZWlnaHQ9IjMwIiByeD0iMTUiIGZpbGw9IiNmZmZmZmYiLz4KICAgICAgICA8cmVjdCB4PSIyNzYiIHk9IjE4MCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjE1MiIgcng9IjE1IiBmaWxsPSIjMzRjNzU5Ii8+CiAgICAgICAgPHJlY3QgeD0iMjc2IiB5PSIxODAiIHdpZHRoPSI4MiIgaGVpZ2h0PSIzMCIgcng9IjE1IiBmaWxsPSIjMzRjNzU5Ii8+CiAgICAgICAgPHJlY3QgeD0iMjc2IiB5PSIyNDEiIHdpZHRoPSI2MiIgaGVpZ2h0PSIzMCIgcng9IjE1IiBmaWxsPSIjMzRjNzU5Ii8+CiAgICAgICAgPGNpcmNsZSBjeD0iMzcwIiBjeT0iMTg1IiByPSIxOCIgZmlsbD0iI2ZmM2IzMCIvPgogICAgPC9zdmc+" rel="icon" type="image/svg+xml"/>
+<!-- ÍCONE DO APP: instalação / tela inicial / barra de tarefas -->
+<meta content="EvoluFísico" name="application-name"/>
+<meta content="EvoluFísico" name="apple-mobile-web-app-title"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="yes" name="mobile-web-app-capable"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<link href="data:image/png;base64,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" rel="icon" sizes="192x192" type="image/png"/>
+<link href="data:image/png;base64,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" rel="apple-touch-icon" sizes="180x180"/>
+<script src="./assets/js/02-manifest.js"></script>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>EvoluFísico v9.0-beta - Clinical Suite</title>
+<meta content="#eef1ec" name="theme-color"/>
+<meta content="telephone=no" name="format-detection"/>
+<meta content="EvoluFísico — avaliação física e composição corporal." name="description"/>
+<link rel="stylesheet" href="./assets/css/01.css">
+<link rel="stylesheet" href="./assets/css/02.css">
+<link rel="stylesheet" href="./assets/css/03.css">
+<link rel="stylesheet" href="./assets/css/04.css">
+<link rel="stylesheet" href="./assets/css/05.css">
+<link rel="stylesheet" href="./assets/css/06.css">
+<link rel="stylesheet" href="./assets/css/07.css">
+<link rel="stylesheet" href="./assets/css/08.css">
+<link rel="stylesheet" href="./assets/css/09.css">
+<link rel="stylesheet" href="./assets/css/10.css">
+<link rel="stylesheet" href="./assets/css/11.css">
+<link rel="stylesheet" href="./assets/css/12.css">
+<meta content="#0f172a" name="theme-color"/><link id="ef-mobile-responsive-darkmode-fix" rel="stylesheet" href="./assets/css/13.css">
+
+<link id="ef-modal-darkmode-fix" rel="stylesheet" href="./assets/css/14.css">
+</head>
+<body>
+<!-- TELA DE ABERTURA (SPLASH SCREEN INTRO) -->
+<div aria-hidden="true" class="ef-splash-overlay" id="ef-splash" onclick="fecharAbertura()">
+<div class="ef-splash-backdrop"></div>
+<div class="ef-splash-card">
+<div class="ef-splash-icon-wrapper">
+<div class="ef-splash-glow"></div>
+<div class="ef-splash-icon">EF</div>
+</div>
+<div class="ef-splash-titles">
+<h1 class="ef-splash-title">EvoluFísico</h1>
+<p class="ef-splash-subtitle">Avaliação Física &amp; Composição Corporal</p>
+<div class="ef-splash-version-pill">v9.0-beta • Avaliação Física</div>
+</div>
+<div class="ef-splash-loader-box">
+<div class="ef-splash-bar">
+<div class="ef-splash-bar-fill"></div>
+</div>
+<span class="ef-splash-status" id="ef-splash-status">Inicializando módulos clínicos…</span>
+</div>
+<span class="ef-splash-skip">Clique para continuar</span>
+</div>
+</div>
+<!-- NAVBAR PRINCIPAL (100% HTML, CSS E JS) -->
+<header class="top-navbar no-print">
+<a class="brand-wrapper" href="#" onclick="switchTab('tab-novo-checkin'); return false;">
+<div class="brand-icon-box">EF</div>
+<div class="brand-title-group">
+<span class="brand-title-row">
+<span class="brand-title">EvoluFísico</span>
+<span class="brand-version" title="Versão do aplicativo">v9.0-beta</span>
+</span>
+<span class="brand-subtitle">Avaliação Física &amp; Composição Corporal</span>
+</div>
+</a>
+<nav class="nav-tabs">
+<button class="nav-tab-btn active" id="tab-btn-form" onclick="switchTab('tab-novo-checkin')">
+<span id="tab-form-icon">📝</span> <span id="tab-form-label">Nova Avaliação</span>
+</button>
+<button class="nav-tab-btn" id="tab-btn-history" onclick="switchTab('tab-historico')">
+<span>📋</span> <span>Histórico de Avaliações (<span id="history-counter">0</span>)</span>
+</button>
+<button class="nav-tab-btn" id="tab-btn-compare" onclick="switchTab('tab-comparison')">
+<span>⚖️</span> <span>Comparar Evolução</span>
+</button>
+</nav>
+<div class="nav-actions">
+<button class="btn btn-outline btn-sm btn-pro-pill" id="btn-theme-toggle" onclick="alternarModoEscuroGlobal()" title="Alternar entre modo claro e escuro" type="button">
+<span id="nav-theme-icon" style="font-size:1.05rem;">🌙</span> <span id="nav-theme-text">Escuro</span>
+</button>
+<button class="btn btn-outline btn-sm btn-pro-pill" id="btn-security-pill" onclick="abrirConfiguracaoCriptografia()" title="Configurações de Segurança e Chave Mestra" type="button">
+<span style="font-size:1.05rem;">🔐</span> <span id="nav-security-status">Cofre</span>
+</button>
+<button class="btn btn-outline btn-sm btn-pro-pill" id="btn-config-profissional" onclick="abrirModalConfigProfissional()" title="Definir Nome e CREF do Profissional para o Cabeçalho do PDF" type="button">
+<span style="font-size:1.05rem;">👨‍⚕️</span> <span>Profissional / CREF</span>
+</button>
+<button class="folder-status-pill" id="folder-status-pill" onclick="conectarPastaBanco()" title="Conectar pasta local para salvar em subpastas no disco">
+<span class="folder-dot" id="folder-dot"></span>
+<span id="folder-status-text">Pasta Local</span>
+</button>
+<button class="btn btn-secondary btn-sm" onclick="abrirModalCentralBackup('exportar')" title="Central de Backup e Restauração Inteligente">
+<span>⬇️</span> Backup
+            </button>
+<button class="btn btn-secondary btn-sm" onclick="abrirModalCentralBackup('importar')" title="Restaurar avaliações com pré-visualização e segurança">
+<span>⬆️</span> Importar
+            </button>
+</div>
+</header>
+<main class="app-container">
+<!-- ============================================================== -->
+<!-- ABA 1: FORMULÁRIO DE CHECK-IN / EDIÇÃO (5 ETAPAS COMPLETAS)    -->
+<!-- ============================================================== -->
+<section class="tab-panel active" id="tab-novo-checkin">
+<div class="form-container">
+<!-- Banner de Modo de Edição -->
+<div class="edit-mode-banner hidden" id="edit-mode-alert">
+<div>
+<strong>✏️ Modo de Edição Ativo:</strong> Você está alterando uma avaliação existente.
+                    </div>
+<button class="btn btn-secondary btn-sm" onclick="cancelarEdicao()" type="button">Cancelar Edição</button>
+</div>
+<div class="form-header" id="form-header">
+<h1 id="form-title-text">Nova avaliação</h1>
+<p id="form-subtitle-text">Preencha em cinco etapas. Você pode consultar os resultados ao longo do caminho.</p>
+</div>
+<div class="wizard-header-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<div>
+<h2 style="font-size:1.25rem; font-weight:800; color:var(--slate-900); margin:0;">Novo Registro de Avaliação</h2>
+<p style="font-size:0.82rem; color:var(--slate-500); margin:2px 0 0 0;">Preencha os dados clínicos e fotográficos do aluno em 5 etapas rápidas</p>
+</div>
+<span class="brand-badge" id="wizard-progress-badge" style="font-size:0.8rem; padding:0.3rem 0.75rem;">Etapa 1 de 5 • 20%</span>
+</div>
+<div class="progress-wrapper" id="progress-wrapper" style="display:none;">
+<div class="progress-header">
+<span>Etapa <span id="current-step-num">1</span> de 5</span>
+<span id="step-name">Identificação</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progress-fill"></div>
+</div>
+</div>
+<div class="stepper-container">
+<div class="stepper-progress-bg">
+<div class="stepper-progress-fill" id="stepper-progress-fill"></div>
+</div>
+<div class="step-indicator active" data-step-target="1" onclick="irParaEtapa(0)">
+<div class="step-dot" id="step-dot-1">1</div>
+<div class="step-label">Dados</div>
+</div>
+<div class="step-indicator" data-step-target="2" onclick="irParaEtapa(1)">
+<div class="step-dot" id="step-dot-2">2</div>
+<div class="step-label">Medidas</div>
+</div>
+<div class="step-indicator" data-step-target="3" onclick="irParaEtapa(2)">
+<div class="step-dot" id="step-dot-3">3</div>
+<div class="step-label">Dobras/BIA</div>
+</div>
+<div class="step-indicator" data-step-target="4" onclick="irParaEtapa(3)">
+<div class="step-dot" id="step-dot-4">4</div>
+<div class="step-label">Fotos</div>
+</div>
+<div class="step-indicator" data-step-target="5" onclick="irParaEtapa(4)">
+<div class="step-dot" id="step-dot-5">5</div>
+<div class="step-label">Parecer</div>
+</div>
+</div>
+</div>
+<!-- Alerta de Rascunho Recuperado (Auto-Save v3.3) -->
+<div class="hidden" id="draft-alert" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:0.75rem 1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
+<div style="font-size:0.875rem; color:#1e40af;">
+                        💾 <strong>Rascunho recuperado:</strong> Encontramos dados não salvos de uma avaliação anterior.
+                    </div>
+<div style="display:flex; gap:0.5rem;">
+<button class="btn btn-primary btn-sm" onclick="aplicarRascunho()" type="button">Restaurar</button>
+<button class="btn btn-secondary btn-sm" onclick="descartarRascunho()" type="button">Descartar</button>
+</div>
+</div>
+<!-- WIDGET DE CÁLCULO AO VIVO (ESTATÍSTICAS EM TEMPO REAL) -->
+<div class="live-kpi-summary no-print" id="live-kpi-summary">
+<div class="live-kpi-item">
+<span class="live-kpi-label">% Gordura (Pollock)</span>
+<span class="live-kpi-val" id="live-kpi-pgordura">--%</span>
+<span class="live-kpi-sub" id="live-kpi-classificacao">Aguardando dados</span>
+</div>
+<div class="live-kpi-item">
+<span class="live-kpi-label">Massa magra (Pollock)</span>
+<span class="live-kpi-val" id="live-kpi-massa-magra">-- kg</span>
+<span class="live-kpi-sub" id="live-kpi-massa-gorda">Massa Gorda: -- kg</span>
+</div>
+<div class="live-kpi-item">
+<span class="live-kpi-label">Somatotipo</span>
+<span class="live-kpi-val" id="live-kpi-somato-tipo" style="font-size:1.05rem;">--</span>
+<span class="live-kpi-sub" id="live-kpi-somato-coords">X: -- | Y: --</span>
+</div>
+<div class="live-kpi-item">
+<span class="live-kpi-label">RCQ &amp; Risco</span>
+<span class="live-kpi-val" id="live-kpi-rcq">--</span>
+<span class="live-kpi-sub" id="live-kpi-rcq-risco">IMC: --</span>
+</div>
+</div>
+<form id="checkin-form" novalidate="">
+<input id="avaliacao_id" name="avaliacao_id" type="hidden"/>
+<!-- ETAPA 1: Identificação do Aluno, Avaliador e Prazos -->
+<div class="step active" data-name="Identificação" data-step="1">
+<h2 class="step-title">Identificação</h2>
+<div class="input-group">
+<label for="nome">Nome completo do Aluno/Paciente *</label>
+<input id="nome" name="nome" placeholder="Ex: Carlos Mendes" required="" type="text"/>
+</div>
+<div class="input-row">
+<div class="input-group">
+<label for="email">E-mail *</label>
+<input id="email" name="email" placeholder="carlos@exemplo.com" required="" type="email"/>
+</div>
+<div class="input-group">
+<label for="whatsapp">WhatsApp (com DDD) *</label>
+<input id="whatsapp" name="whatsapp" placeholder="11999999999" required="" type="text"/>
+</div>
+</div>
+<div class="input-row-3 input-row">
+<div class="input-group">
+<label for="sexo">Sexo Biológico *</label>
+<select id="sexo" name="sexo" onchange="recalcularCamposAutomaticos()" required="">
+<option value="M">Masculino</option>
+<option value="F">Feminino</option>
+</select>
+</div>
+<div class="input-group">
+<label for="idade">Idade (anos) *</label>
+<input id="idade" max="100" min="10" name="idade" oninput="recalcularCamposAutomaticos()" placeholder="Anos" required="" type="number"/>
+</div>
+<div class="input-group">
+<label for="altura">Estatura / Altura (cm) *</label>
+<input id="altura" max="250" min="100" name="altura" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 183" required="" type="number"/>
+</div>
+</div>
+<div class="input-row-4 input-row">
+<div class="input-group">
+<label for="data_avaliacao">Data de Avaliação *</label>
+<input id="data_avaliacao" name="data_avaliacao" required="" type="date"/>
+</div>
+<div class="input-group">
+<label for="data_proxima_avaliacao">Próxima Avaliação (Retorno)</label>
+<input id="data_proxima_avaliacao" name="data_proxima_avaliacao" type="date"/>
+</div>
+<div class="input-group">
+<label for="checkin_semana">Check-in / Período *</label>
+<select id="checkin_semana" name="checkin_semana" required="">
+<option value="Semana 1">Semana 1 (Inicial)</option>
+<option value="Semana 2">Semana 2</option>
+<option value="Semana 3">Semana 3</option>
+<option value="Semana 4">Semana 4</option>
+<option value="Semana 8">Semana 8</option>
+<option value="Semana 12">Semana 12</option>
+<option value="Trimestral">Trimestral</option>
+<option value="Outro">Outro</option>
+</select>
+</div>
+<div class="input-group">
+<label for="fase">Fase no programa *</label>
+<select id="fase" name="fase" required="">
+<option value="Cutting">Cutting (Déficit)</option>
+<option value="Bulking">Bulking (Superávit)</option>
+<option value="Manutenção">Manutenção</option>
+</select>
+</div>
+</div>
+<div class="section-subhead">📋 Dados do Profissional / Clínica (Opcional - Deixe em branco se preferir cabeçalho limpo no PDF)</div>
+<div class="input-row-3 input-row">
+<div class="input-group">
+<label for="avaliador_clinica">Nome da Clínica / Consultório</label>
+<input id="avaliador_clinica" name="avaliador_clinica" placeholder="Deixe em branco ou nome da clínica" type="text"/>
+</div>
+<div class="input-group">
+<label for="avaliador_nome">Nome do Profissional / Avaliador</label>
+<input id="avaliador_nome" name="avaliador_nome" placeholder="Deixe em branco ou seu nome" type="text"/>
+</div>
+<div class="input-group">
+<label for="avaliador_registro">Registro Profissional (CREF / CRN / CRM)</label>
+<input id="avaliador_registro" name="avaliador_registro" placeholder="Ex: CREF 12345-G/UF" type="text"/>
+</div>
+</div>
+</div>
+<!-- ETAPA 2: Perimetria Completa -->
+<div class="step" data-name="Perimetria (Circunferências)" data-step="2">
+<h2 class="step-title">Medidas corporais</h2>
+<span class="help-text">Medidas de fita com soma perimétrica automática em tempo real.</span>
+<div class="input-group">
+<label for="peso">Peso Corporal (kg) *</label>
+<input id="peso" max="400" min="20" name="peso" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 97.4" required="" step="any" type="number"/>
+</div>
+<div class="input-row">
+<div class="input-group">
+<label for="peri_pescoco">Pescoço (cm) <span>*novo</span></label>
+<input id="peri_pescoco" max="250" min="0" name="peri_pescoco" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 41.5" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="peri_ombros">Ombros (cm) <span>*novo</span></label>
+<input id="peri_ombros" max="250" min="0" name="peri_ombros" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 133.2" step="any" type="number"/>
+</div>
+</div>
+<div class="input-row-3 input-row">
+<div class="input-group">
+<label for="peri_abdomen">Abdômen (cm)</label>
+<input id="peri_abdomen" max="250" min="0" name="peri_abdomen" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 90.0" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="cintura">Cintura (cm) *</label>
+<span class="help-text">Menor curvatura do tronco</span>
+<input id="cintura" max="250" min="0" name="cintura" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 90.4" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="quadril">Quadril (cm) *</label>
+<span class="help-text">Ponto de maior volume glúteo</span>
+<input id="quadril" max="250" min="0" name="quadril" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 104.8" step="any" type="number"/>
+</div>
+</div>
+<div class="input-row">
+<div class="input-group">
+<label for="braco_esq">Braço Esquerdo (cm)</label>
+<input id="braco_esq" max="250" min="0" name="braco_esq" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 40.3" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="braco_dir">Braço Direito (cm)</label>
+<input id="braco_dir" max="250" min="0" name="braco_dir" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 40.0" step="any" type="number"/>
+</div>
+</div>
+<div class="input-row-3 input-row">
+<div class="input-group">
+<label for="coxa_esq">Coxa Esquerda (cm)</label>
+<input id="coxa_esq" max="250" min="0" name="coxa_esq" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 66.0" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="coxa_dir">Coxa Direita (cm)</label>
+<input id="coxa_dir" max="250" min="0" name="coxa_dir" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 67.0" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="panturrilha">Panturrilha (cm)</label>
+<input id="panturrilha" max="250" min="0" name="panturrilha" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 41.0" step="any" type="number"/>
+</div>
+</div>
+<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:var(--radius-md); padding:0.75rem 1rem; margin-top:0.75rem; display:flex; justify-content:space-between; align-items:center; font-size:0.9rem;">
+<span>⚡ <strong>Soma da Perimetria (Σ Perimetria):</strong></span>
+<strong id="preview-soma-perimetria" style="font-size:1.15rem; color:#15803d;">0.0 cm</strong>
+</div>
+</div>
+<!-- ETAPA 3: Antropometria (Pollock 7 Dobras) & Bioimpedância v3.0 -->
+<div class="step" data-name="Antropometria (Pollock 7) &amp; BIA" data-step="3">
+<h2 class="step-title">Composição corporal</h2>
+<div class="section-subhead">1️⃣ Antropometria (Pollock, 1984 – 7 Dobras em mm)</div>
+<div class="input-row-3 input-row">
+<div class="input-group">
+<label for="dobra_triceps">Tricipital (mm)</label>
+<input id="dobra_triceps" max="80" min="0" name="dobra_triceps" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 8.5" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="dobra_subescapular">Subescapular (mm)</label>
+<input id="dobra_subescapular" max="80" min="0" name="dobra_subescapular" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 23.0" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="dobra_suprailiaca">Supra-ilíaca (mm)</label>
+<input id="dobra_suprailiaca" max="80" min="0" name="dobra_suprailiaca" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 24.0" step="any" type="number"/>
+</div>
+</div>
+<div class="input-row-4 input-row">
+<div class="input-group">
+<label for="dobra_peitoral">Peitoral (mm)</label>
+<input id="dobra_peitoral" max="80" min="0" name="dobra_peitoral" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 9.0" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="dobra_axilar">Axilar Média (mm)</label>
+<input id="dobra_axilar" max="80" min="0" name="dobra_axilar" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 12.0" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="dobra_abdominal">Abdominal (mm)</label>
+<input id="dobra_abdominal" max="80" min="0" name="dobra_abdominal" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 16.0" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="dobra_coxa">Coxa (mm)</label>
+<input id="dobra_coxa" max="80" min="0" name="dobra_coxa" oninput="recalcularCamposAutomaticos()" placeholder="Ex: 11.0" step="any" type="number"/>
+</div>
+</div>
+<div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:var(--radius-md); padding:0.85rem 1rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; font-size:0.85rem;">
+<div>Soma Antropometria: <strong id="preview-soma-dobras">- mm</strong></div>
+<div>% Gordura Estimado: <strong id="preview-gordura-dobras" style="color:var(--primary-color);">-</strong></div>
+<div>Massa Magra: <strong id="preview-mm-dobras">- kg</strong></div>
+<div>Massa Gorda: <strong id="preview-mg-dobras">- kg</strong></div>
+<div>Faixa Saudável (Prisma): <strong id="preview-faixa-peso-ideal" style="color:#059669;">- kg</strong></div>
+</div>
+<div class="section-subhead">2️⃣ Bioimpedância Elétrica Completa</div>
+<div class="input-row-4 input-row">
+<div class="input-group">
+<label for="bia_peso">Peso na BIA (kg)</label>
+<input id="bia_peso" max="400" min="20" name="bia_peso" oninput="sincronizarPesoBia(this.value)" placeholder="Ex: 97.4" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_pgordura">Percentual de gordura (%)</label>
+<input id="bia_pgordura" min="0" name="bia_pgordura" oninput="recalcularKgGorduraAuto()" placeholder="Ex: 15.5" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_pmusculo">% Músculo esquelético (%)</label>
+<input id="bia_pmusculo" min="0" name="bia_pmusculo" oninput="recalcularKgMusculoAuto()" placeholder="Ex: 44.8" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_imc">IMC (kg/m²)</label>
+<input id="bia_imc" min="0" name="bia_imc" placeholder="Ex: 29.1" step="any" type="number"/>
+</div>
+</div>
+<div class="input-row-4 input-row">
+<div class="input-group">
+<label for="bia_gordura_kg">Kg de gordura (kg)</label>
+<input id="bia_gordura_kg" min="0" name="bia_gordura_kg" placeholder="Ex: 15.1" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_mme">Kg Massa muscular (kg)</label>
+<input id="bia_mme" min="0" name="bia_mme" placeholder="Ex: 82.3" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_tmb">Metabolismo basal (kcal)</label>
+<input id="bia_tmb" name="bia_tmb" placeholder="Ex: 2050" step="1" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_visceral">Gordura visceral (nível)</label>
+<input id="bia_visceral" max="30" min="1" name="bia_visceral" placeholder="Ex: 6" step="1" type="number"/>
+</div>
+</div>
+<div class="input-row-3 input-row">
+<div class="input-group">
+<label for="bia_idade_corporal">Idade corporal (anos)</label>
+<input id="bia_idade_corporal" name="bia_idade_corporal" placeholder="Ex: 29" step="1" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_rcq">Relação cintura/quadril (RCQ)</label>
+<input id="bia_rcq" min="0" name="bia_rcq" placeholder="Ex: 0.86" step="any" type="number"/>
+</div>
+<div class="input-group">
+<label for="bia_risco">Classificação de Risco</label>
+<select id="bia_risco" name="bia_risco">
+<option value="Baixo Risco (Normal)">Baixo Risco (Normal)</option>
+<option value="Risco Moderado">Risco Moderado</option>
+<option value="Risco Alto">Risco Alto</option>
+<option value="Risco Muito Alto">Risco Muito Alto</option>
+</select>
+</div>
+</div>
+<div class="input-group">
+<label for="bia_analise_texto">Análise Clínica da Bioimpedância</label>
+<textarea id="bia_analise_texto" name="bia_analise_texto" placeholder="Observações específicas da bioimpedância..." rows="2"></textarea>
+</div>
+</div>
+<!-- ETAPA 4: Fotos -->
+<div class="step" data-name="Registro Fotográfico (5 Fotos)" data-step="4">
+<h2 class="step-title">Fotos de acompanhamento</h2>
+<div class="info-box">
+<strong>Padronização:</strong> Adicione até 5 fotos padronizadas do aluno para análise postural, acompanhamento estético e emissão do laudo oficial em PDF (sem distorções e sem quebras de página).
+                        </div>
+<div class="photo-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+<!-- Foto 1: Frente -->
+<div class="photo-upload-card" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:0.85rem; text-align:center;">
+<label for="foto_frente" style="font-weight:700; color:var(--text-main); margin-bottom:6px; display:block; font-size:0.85rem;">1. Frente (Anterior)</label>
+<div class="photo-preview-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+<div class="photo-thumb" id="thumb-frente-box" style="width:100%; height:190px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+<span id="thumb-frente-empty" style="font-size:0.75rem; color:#94a3b8;">Sem foto</span>
+<img alt="Preview Frente" class="hidden" decoding="async" id="thumb-frente-img" loading="lazy" style="width:100%; height:100%; object-fit:contain;"/>
+</div>
+<div class="photo-upload-meta" style="width:100%;">
+<input accept="image/*" id="foto_frente" name="foto_frente" onchange="previewAndCompressImage(this, 'frente')" style="font-size:0.75rem; width:100%;" type="file"/>
+<span class="help-text" style="display:block; font-size:0.7rem; color:var(--text-muted); margin-top:3px;">Vista anterior ereta.</span>
+<span class="photo-status" id="status-frente" style="font-size:0.7rem; color:var(--apple-blue);"></span>
+</div>
+</div>
+</div>
+<!-- Foto 2: Perfil Direito -->
+<div class="photo-upload-card" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:0.85rem; text-align:center;">
+<label for="foto_perfil_direito" style="font-weight:700; color:var(--text-main); margin-bottom:6px; display:block; font-size:0.85rem;">2. Perfil Direito</label>
+<div class="photo-preview-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+<div class="photo-thumb" id="thumb-perfil_direito-box" style="width:100%; height:190px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+<span id="thumb-perfil_direito-empty" style="font-size:0.75rem; color:#94a3b8;">Sem foto</span>
+<img alt="Preview Perfil Direito" class="hidden" decoding="async" id="thumb-perfil_direito-img" loading="lazy" style="width:100%; height:100%; object-fit:contain;"/>
+</div>
+<div class="photo-upload-meta" style="width:100%;">
+<input accept="image/*" id="foto_perfil_direito" name="foto_perfil_direito" onchange="previewAndCompressImage(this, 'perfil_direito')" style="font-size:0.75rem; width:100%;" type="file"/>
+<span class="help-text" style="display:block; font-size:0.7rem; color:var(--text-muted); margin-top:3px;">Lateral direita alinhada.</span>
+<span class="photo-status" id="status-perfil_direito" style="font-size:0.7rem; color:var(--apple-blue);"></span>
+</div>
+</div>
+</div>
+<!-- Foto 3: Perfil Esquerdo -->
+<div class="photo-upload-card" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:0.85rem; text-align:center;">
+<label for="foto_perfil_esquerdo" style="font-weight:700; color:var(--text-main); margin-bottom:6px; display:block; font-size:0.85rem;">3. Perfil Esquerdo</label>
+<div class="photo-preview-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+<div class="photo-thumb" id="thumb-perfil_esquerdo-box" style="width:100%; height:190px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+<span id="thumb-perfil_esquerdo-empty" style="font-size:0.75rem; color:#94a3b8;">Sem foto</span>
+<img alt="Preview Perfil Esquerdo" class="hidden" decoding="async" id="thumb-perfil_esquerdo-img" loading="lazy" style="width:100%; height:100%; object-fit:contain;"/>
+</div>
+<div class="photo-upload-meta" style="width:100%;">
+<input accept="image/*" id="foto_perfil_esquerdo" name="foto_perfil_esquerdo" onchange="previewAndCompressImage(this, 'perfil_esquerdo')" style="font-size:0.75rem; width:100%;" type="file"/>
+<span class="help-text" style="display:block; font-size:0.7rem; color:var(--text-muted); margin-top:3px;">Lateral esquerda alinhada.</span>
+<span class="photo-status" id="status-perfil_esquerdo" style="font-size:0.7rem; color:var(--apple-blue);"></span>
+</div>
+</div>
+</div>
+<!-- Foto 4: Costas -->
+<div class="photo-upload-card" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:0.85rem; text-align:center;">
+<label for="foto_costas" style="font-weight:700; color:var(--text-main); margin-bottom:6px; display:block; font-size:0.85rem;">4. Costas (Posterior)</label>
+<div class="photo-preview-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+<div class="photo-thumb" id="thumb-costas-box" style="width:100%; height:190px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+<span id="thumb-costas-empty" style="font-size:0.75rem; color:#94a3b8;">Sem foto</span>
+<img alt="Preview Costas" class="hidden" decoding="async" id="thumb-costas-img" loading="lazy" style="width:100%; height:100%; object-fit:contain;"/>
+</div>
+<div class="photo-upload-meta" style="width:100%;">
+<input accept="image/*" id="foto_costas" name="foto_costas" onchange="previewAndCompressImage(this, 'costas')" style="font-size:0.75rem; width:100%;" type="file"/>
+<span class="help-text" style="display:block; font-size:0.7rem; color:var(--text-muted); margin-top:3px;">Vista posterior completa.</span>
+<span class="photo-status" id="status-costas" style="font-size:0.7rem; color:var(--apple-blue);"></span>
+</div>
+</div>
+</div>
+<!-- Foto 5: Livre / Detalhe / Postural -->
+<div class="photo-upload-card" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:0.85rem; text-align:center;">
+<label for="foto_extra" style="font-weight:700; color:var(--text-main); margin-bottom:6px; display:block; font-size:0.85rem;">5. Livre / Detalhe / Postural</label>
+<div class="photo-preview-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+<div class="photo-thumb" id="thumb-extra-box" style="width:100%; height:190px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+<span id="thumb-extra-empty" style="font-size:0.75rem; color:#94a3b8;">Sem foto</span>
+<img alt="Preview Extra" class="hidden" decoding="async" id="thumb-extra-img" loading="lazy" style="width:100%; height:100%; object-fit:contain;"/>
+</div>
+<div class="photo-upload-meta" style="width:100%;">
+<input accept="image/*" id="foto_extra" name="foto_extra" onchange="previewAndCompressImage(this, 'extra')" style="font-size:0.75rem; width:100%;" type="file"/>
+<span class="help-text" style="display:block; font-size:0.7rem; color:var(--text-muted); margin-top:3px;">Pose livre, postura ou abdômen.</span>
+<span class="photo-status" id="status-extra" style="font-size:0.7rem; color:var(--apple-blue);"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ETAPA 5: Aderência & Parecer do Avaliador -->
+<div class="step" data-name="Aderência &amp; Parecer Técnico" data-step="5">
+<h2 class="step-title">Acompanhamento e parecer</h2>
+<div class="ef6-resumo" id="ef6-resumo"></div>
+<div class="input-group">
+<label for="energia">Nível de disposição / energia do aluno (1 a 5)</label>
+<input id="energia" max="5" min="1" name="energia" step="1" type="range" value="3"/>
+<div class="range-labels">
+<span>1 (Baixa)</span>
+<span>3 (Normal)</span>
+<span>5 (Excelente)</span>
+</div>
+</div>
+<div class="input-row">
+<div class="input-group">
+<label for="aderencia_treino">Aderência ao treino *</label>
+<select id="aderencia_treino" name="aderencia_treino" required="">
+<option value="100% no plano">100% no plano (Treinou tudo)</option>
+<option value="Faltei 1-2x">Faltei 1-2x</option>
+<option value="Faltei 3x ou mais">Faltei 3x ou mais</option>
+<option value="Não treinei">Não treinei</option>
+</select>
+</div>
+<div class="input-group">
+<label for="aderencia_dieta">Aderência à dieta *</label>
+<select id="aderencia_dieta" name="aderencia_dieta" required="">
+<option value="100% no plano">100% no plano (Sem deslizes)</option>
+<option value="Pequenos furos">Pequenos furos (1-2 refeições livres)</option>
+<option value="Muitos furos">Muitos furos</option>
+<option value="Fora do plano">Totalmente fora do plano</option>
+</select>
+</div>
+</div>
+<div class="input-group">
+<label>Participante do Desafio de Transformação? *</label>
+<div class="radio-group">
+<label class="radio-option">
+<input checked="" name="desafio" required="" type="radio" value="Sim"/> Sim
+                                </label>
+<label class="radio-option">
+<input name="desafio" type="radio" value="Não"/> Não
+                                </label>
+</div>
+</div>
+<div class="ef6-sec">
+<h3>🌙 Bem-estar &amp; recuperação</h3>
+<div class="input-row">
+<div class="input-group"><label for="ef6_sono">Qualidade do sono (1 a 5)</label><input id="ef6_sono" max="5" min="1" name="ef6_sono" step="1" type="range" value="3"/><div class="range-labels"><span>1 (Ruim)</span><span>3</span><span>5 (Ótimo)</span></div></div>
+<div class="input-group"><label for="ef6_estresse">Nível de estresse (1 a 5)</label><input id="ef6_estresse" max="5" min="1" name="ef6_estresse" step="1" type="range" value="3"/><div class="range-labels"><span>1 (Baixo)</span><span>3</span><span>5 (Alto)</span></div></div>
+</div>
+<div class="input-group"><label for="ef6_dor">Dor / desconforto relatado</label><select id="ef6_dor" name="ef6_dor"><option value="Nenhuma">Nenhuma</option><option value="Leve">Leve</option><option value="Moderada">Moderada</option><option value="Forte">Forte</option></select></div>
+</div>
+<div class="ef6-sec">
+<h3>🎯 Metas do aluno</h3>
+<div class="input-row">
+<div class="input-group"><label for="ef6_meta_pg">Meta de % de gordura</label><input id="ef6_meta_pg" max="60" min="3" name="ef6_meta_pg" placeholder="Ex: 12" step="0.1" type="number"/></div>
+<div class="input-group"><label for="ef6_meta_peso">Meta de peso (kg)</label><input id="ef6_meta_peso" max="400" min="20" name="ef6_meta_peso" placeholder="Ex: 90" step="0.1" type="number"/></div>
+<div class="input-group"><label for="ef6_meta_prazo">Prazo da meta</label><input id="ef6_meta_prazo" name="ef6_meta_prazo" type="date"/></div>
+</div>
+<span class="help-text">O progresso é calculado a partir da primeira avaliação do aluno.</span>
+</div>
+<div class="ef6-sec">
+<h3>🧭 Parecer estruturado</h3>
+<div class="input-group"><label for="ef6_status">Status geral do check-in</label><select id="ef6_status" name="ef6_status"><option value="">Automático (sugerido pela aderência)</option><option>Excelente</option><option>Bom</option><option>Regular</option><option>Atenção</option></select></div>
+<div class="input-group"><label>Marcadores rápidos</label><input id="ef6_tags" name="ef6_tags" type="hidden" value=""/><div class="ef6-chips" id="ef6-tags"></div></div>
+<div class="input-group"><label for="ef6_fortes">✅ Pontos fortes</label><textarea id="ef6_fortes" name="ef6_fortes" placeholder="O que está funcionando bem neste ciclo..." rows="2"></textarea></div>
+<div class="input-group"><label for="ef6_atencao">⚠️ Pontos de atenção</label><textarea id="ef6_atencao" name="ef6_atencao" placeholder="O que precisa de cuidado ou correção..." rows="2"></textarea></div>
+<div class="input-row">
+<div class="input-group"><label for="ef6_treino">🏋️ Ajustes no treino</label><textarea id="ef6_treino" name="ef6_treino" placeholder="Carga, volume, frequência..." rows="2"></textarea></div>
+<div class="input-group"><label for="ef6_dieta">🥗 Ajustes na dieta</label><textarea id="ef6_dieta" name="ef6_dieta" placeholder="Orientações alimentares..." rows="2"></textarea></div>
+</div>
+<div class="input-group"><label for="ef6_proximos">🚀 Próximos passos até a reavaliação</label><textarea id="ef6_proximos" name="ef6_proximos" placeholder="Ações práticas para as próximas semanas..." rows="2"></textarea></div>
+</div>
+<div class="input-group">
+<label for="observacoes">Feedback / Relato do Aluno</label>
+<textarea id="observacoes" name="observacoes" placeholder="Sensações relatadas pelo aluno, dores ou dificuldades..." rows="2"></textarea>
+</div>
+<div class="input-group" style="background:#fefce8; border:1px solid #fef08a; padding:1rem; border-radius:var(--radius-md);">
+<label for="parecer_profissional" style="color:#854d0e; font-weight:700;">
+                                ✍️ Parecer Técnico &amp; Observações do Profissional Avaliador (Sai no PDF) *
+                            </label>
+<span class="help-text">Este campo é exportado em destaque no relatório. Descreva a evolução nas dobras e na BIA, metas e ajustes de treino/dieta.</span>
+<textarea id="parecer_profissional" name="parecer_profissional" placeholder="Ex: Excelente adesão e redução de adiposidade subcutânea visível nas dobras do tronco. Aumento de massa muscular confirmado na BIA." rows="4"></textarea>
+<div class="ef6-acoes"><button class="btn btn-secondary btn-sm" id="ef6-btn-rascunho" type="button">✨ Gerar rascunho com os dados</button><button class="btn btn-secondary btn-sm" id="ef6-btn-copiar" type="button">📋 Copiar resumo (WhatsApp)</button></div>
+<div style="margin-top:.6rem"><span class="help-text">Frases rápidas (clique para inserir):</span><div class="ef6-chips" id="ef6-frases" style="margin-top:.3rem"></div></div>
+</div>
+</div>
+<!-- Botões de Ação do Wizard -->
+<div class="form-actions" id="form-actions">
+<button class="btn btn-prev hidden" id="btn-prev" type="button">Voltar</button>
+<button class="btn btn-next" id="btn-next" type="button">Próxima Etapa</button>
+<button class="btn btn-submit hidden" id="btn-submit" type="submit">Salvar Avaliação</button>
+</div>
+<!-- Mensagem de Sucesso -->
+<div class="hidden success-message" id="success-screen">
+<div class="success-icon">✓</div>
+<h2 id="success-title" style="color: var(--text-main); margin-bottom: 0.5rem;">Avaliação Salva com Sucesso!</h2>
+<p id="success-db-info" style="color: var(--text-muted); margin-bottom: 1.5rem;">Os dados foram registrados no banco de dados.</p>
+<div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+<button class="btn btn-primary" onclick="irParaComparacaoComRecente()" type="button">⚖️ Comparar Avaliações</button>
+<button class="btn btn-secondary" onclick="resetFormulario()" type="button">➕ Novo Check-in</button>
+<button class="btn btn-secondary" onclick="switchTab('tab-historico')" type="button">📋 Ver Todas Avaliações</button>
+</div>
+</div>
+</form>
+</div>
+</section>
+<!-- ============================================================== -->
+<!-- ABA 2: AVALIAÇÕES CADASTRADAS (COM BOTÃO DE PDF COM FOTOS)     -->
+<!-- ============================================================== -->
+<section class="tab-panel" id="tab-historico">
+<!-- DASHBOARD KPI SUMMARY v5.0 -->
+<div class="dashboard-kpi-grid no-print">
+<div class="kpi-card">
+<div class="kpi-icon-box" style="background:#eff6ff; color:#2563eb;">👥</div>
+<div class="kpi-info">
+<span class="kpi-title">Avaliações Totais <span id="history-header-count" style="display:none;">0</span></span>
+<span class="kpi-value" id="kpi-total-avaliacoes">0</span>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-icon-box" style="background:#ecfdf5; color:#10b981;">📉</div>
+<div class="kpi-info">
+<span class="kpi-title">Média de % Gordura</span>
+<span class="kpi-value" id="kpi-media-gordura">--%</span>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-icon-box" style="background:#fef3c7; color:#d97706;">🏋️</div>
+<div class="kpi-info">
+<span class="kpi-title">Massa Magra Média</span>
+<span class="kpi-value" id="kpi-media-massa">-- kg</span>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-icon-box" style="background:#f5edfa; color:#9333ea;">📷</div>
+<div class="kpi-info">
+<span class="kpi-title">Com 5 Fotos</span>
+<span class="kpi-value" id="kpi-com-fotos">0</span>
+</div>
+</div>
+</div>
+<!-- Barra de Busca e Filtros Rápidos -->
+<div class="search-bar-container no-print">
+<div class="search-input-box">
+<input id="filtro-busca" oninput="filtrarAvaliacoes()" placeholder="🔍 Buscar por nome do aluno, e-mail ou semana..." type="text"/>
+</div>
+<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<button class="btn btn-secondary btn-sm" onclick="abrirModalCentralBackup('exportar')">⬇️ Exportar Backup</button>
+<button class="btn btn-secondary btn-sm" onclick="exportarCSV()">📊 Exportar CSV</button>
+<button class="btn btn-secondary btn-sm" onclick="abrirModalCentralBackup('importar')">⬆️ Importar JSON</button>
+<input accept=".json,.efx" id="import-file-input" onchange="importarBackupJSON(event)" style="display: none;" type="file"/>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-title">
+<span>📋</span> <span>Avaliações Físicas Cadastradas (<span id="history-header-count-list">0</span>)</span>
+</div>
+<div style="font-size:0.85rem; color:var(--text-muted);">
+                        Clique em <strong>🖨️ Relatório PDF</strong> para gerar o laudo com todos os dados e fotos!
+                    </div>
+</div>
+<div id="history-empty-state" style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+<div style="font-size: 3rem; margin-bottom: 0.75rem;">📁</div>
+<h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Nenhuma avaliação encontrada</h3>
+<p style="margin-bottom: 1.5rem;">Cadastre uma nova avaliação física ou carregue os dados de demonstração.</p>
+<button class="btn btn-primary" onclick="carregarDadosExemplo()">⚡ Experimentar com dados de exemplo</button>
+</div>
+<div class="history-list" id="history-list-grid">
+<!-- Cards renderizados dinamicamente via JS -->
+</div>
+</div>
+</section>
+<!-- ============================================================== -->
+<!-- ABA 3: COMPARAR AVALIAÇÕES & EXPORTAÇÃO PDF COMPARATIVO        -->
+<!-- ============================================================== -->
+<section class="tab-panel" id="tab-comparison">
+<!-- Barra Superior de Controle de Comparação -->
+<div class="comparison-selector-grid no-print">
+<div class="input-group" style="margin-bottom:0;">
+<label for="compare-client-select"><strong>Filtrar Aluno / Paciente:</strong></label>
+<select id="compare-client-select" onchange="aoMudarClienteComparacao()">
+<!-- Populado via JS -->
+</select>
+</div>
+<div class="input-group" style="margin-bottom:0;">
+<label for="compare-baseline-select"><strong>Avaliação 1 (Base / Anterior):</strong></label>
+<select id="compare-baseline-select" onchange="renderizarComparacao()">
+<!-- Populado via JS -->
+</select>
+</div>
+<div class="input-group" style="margin-bottom:0;">
+<label for="compare-current-select"><strong>Avaliação 2 (Atual / Recente):</strong></label>
+<select id="compare-current-select" onchange="renderizarComparacao()">
+<!-- Populado via JS -->
+</select>
+</div>
+<div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+<button class="btn btn-primary" onclick="imprimirComparativoPDF()" title="Imprimir Relatório Comparativo em PDF">
+                        🖨️ Imprimir Comparativo PDF
+                    </button>
+</div>
+</div>
+<!-- RELATÓRIO COMPARATIVO COMPLETO -->
+<div id="comparison-report-area">
+<!-- Cabeçalho de Impressão com Nome do Profissional e CREF -->
+<div class="print-header hidden">
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid #0071e3; padding-bottom: 8px; margin-bottom: 12px;">
+<div>
+<h1 class="print-title" style="font-size: 1.35rem; margin: 0 0 3px 0; color: #0f172a;">Relatório Comparativo de Evolução Física</h1>
+<p class="print-subtitle" style="font-size: 0.84rem; color: #475569; margin: 0;">Protocolo Pollock 1984 – 7 Dobras &amp; Bioimpedância Elétrica</p>
+</div>
+<div style="text-align: right; font-size: 0.9rem; line-height: 1.4;">
+<div style="font-size: 1.02rem; font-weight: 800; color: #0f172a;"><strong id="print-comp-pro-nome">Profissional Responsável</strong></div>
+<div style="font-size: 0.88rem; font-weight: 700; color: #0071e3;"><span id="print-comp-pro-cref">CREF</span></div>
+<div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">Emissão: <strong id="print-data-emissao"></strong></div>
+</div>
+</div>
+</div>
+<!-- 1. Perfil Geral do Aluno e do Avaliador -->
+<div class="card" id="comparison-profile-card">
+<div class="card-header">
+<div class="card-title">
+<span>👤</span> <span id="comp-client-name">Selecione as avaliações</span>
+</div>
+<div id="comp-period-badge" style="font-size: 0.85rem; font-weight: 600; color: var(--primary-color); background: var(--primary-light); padding: 0.35rem 0.75rem; border-radius: 999px;">
+                            Período: -
+                        </div>
+</div>
+<!-- Cards Rápidos de Destaque -->
+<div class="stats-grid" id="comp-highlights-grid">
+<div class="stat-card weight">
+<span class="stat-label">Peso Corporal</span>
+<span class="stat-value" id="comp-stat-peso">-</span>
+<span class="stat-diff" id="comp-diff-peso">-</span>
+</div>
+<div class="stat-card muscle">
+<span class="stat-label">Massa Muscular</span>
+<span class="stat-value" id="comp-stat-mme">-</span>
+<span class="stat-diff" id="comp-diff-mme">-</span>
+</div>
+<div class="stat-card fat">
+<span class="stat-label">% Gordura BIA</span>
+<span class="stat-value" id="comp-stat-gordura-bia">-</span>
+<span class="stat-diff" id="comp-diff-gordura-bia">-</span>
+</div>
+<div class="stat-card age">
+<span class="stat-label">Idade Corporal</span>
+<span class="stat-value" id="comp-stat-idade-corp">-</span>
+<span class="stat-diff" id="comp-diff-idade-corp">-</span>
+</div>
+</div>
+<div id="comp-contact-meta" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; font-size: 0.85rem; color: var(--text-muted); background: #f9fafb; padding: 0.75rem 1rem; border-radius: var(--radius-md);">
+<div><strong>E-mail:</strong> <span id="comp-email">-</span></div>
+<div><strong>WhatsApp:</strong> <span id="comp-whatsapp">-</span></div>
+<div><strong>Fases:</strong> <span id="comp-fases">-</span></div>
+<div><strong>Avaliador:</strong> <span id="comp-avaliador">-</span></div>
+</div>
+</div>
+<!-- 1.1 DIAGNÓSTICO DE RECOMPOSIÇÃO CORPORAL (PADRÃO PRISMA 2) -->
+<div class="card" id="comp-prisma2-diag-card" style="margin-top: 1rem; border-left: 4px solid #007aff; background: linear-gradient(135deg, rgba(0, 122, 255, 0.04) 0%, rgba(16, 185, 129, 0.04) 100%);">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+<div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 0.5rem;">
+<span>🔬</span> Diagnóstico de Recomposição Corporal (Padrão Prisma 2)
+                            </div>
+<div class="tag" id="comp-prisma2-badge" style="font-size: 0.82rem; font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 999px;">
+                                Aguardando dados
+                            </div>
+</div>
+<!-- Grid de Métricas de Recomposição -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.65rem; margin-bottom: 0.85rem;">
+<div class="stat-card" style="padding: 0.65rem; background: var(--bg-card, #fff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 10px;">
+<span style="font-size: 0.72rem; color: var(--text-muted, #64748b); font-weight: 700; text-transform: uppercase;">Δ Massa Magra</span>
+<span id="comp-prisma2-delta-mm" style="font-size: 1.15rem; font-weight: 800; color: #059669; font-variant-numeric: tabular-nums; display: block; margin-top: 2px;">-- kg</span>
+</div>
+<div class="stat-card" style="padding: 0.65rem; background: var(--bg-card, #fff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 10px;">
+<span style="font-size: 0.72rem; color: var(--text-muted, #64748b); font-weight: 700; text-transform: uppercase;">Δ Massa Gorda</span>
+<span id="comp-prisma2-delta-mg" style="font-size: 1.15rem; font-weight: 800; color: #dc2626; font-variant-numeric: tabular-nums; display: block; margin-top: 2px;">-- kg</span>
+</div>
+<div class="stat-card" style="padding: 0.65rem; background: var(--bg-card, #fff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 10px;">
+<span style="font-size: 0.72rem; color: var(--text-muted, #64748b); font-weight: 700; text-transform: uppercase;">Δ % Gordura</span>
+<span id="comp-prisma2-delta-pg" style="font-size: 1.15rem; font-weight: 800; color: #0284c7; font-variant-numeric: tabular-nums; display: block; margin-top: 2px;">-- %</span>
+</div>
+<div class="stat-card" style="padding: 0.65rem; background: var(--bg-card, #fff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 10px;">
+<span style="font-size: 0.72rem; color: var(--text-muted, #64748b); font-weight: 700; text-transform: uppercase;">Taxa Semanal</span>
+<span id="comp-prisma2-taxa-semanal" style="font-size: 1.15rem; font-weight: 800; color: var(--text-main, #475569); font-variant-numeric: tabular-nums; display: block; margin-top: 2px;">-- kg/sem</span>
+</div>
+</div>
+<!-- Síntese Descritiva -->
+<div id="comp-prisma2-sintese" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-main, #334155); background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 10px; padding: 0.75rem 1rem;">
+                            Selecione duas avaliações para visualizar o diagnóstico morfológico.
+                        </div>
+<div style="margin-top: 0.65rem; display: flex; justify-content: flex-end;">
+<button class="btn btn-outline btn-sm" id="btn-inserir-parecer-prisma" onclick="inserirSintesePrismaNoParecer()" style="font-size: 0.78rem; font-weight: 700; color: #007aff; border-color: #007aff;" type="button">
+                                ⚡ Inserir Síntese do Prisma 2 no Parecer Técnico
+                            </button>
+</div>
+</div>
+<!-- 2. COMPARATIVO DE PERIMETRIA COMPLETO -->
+<div class="card" id="comparison-circunferencias-card">
+<div class="card-header">
+<div class="card-title">
+<span>📏</span> Comparativo de Perimetria / Circunferências (cm)
+                        </div>
+</div>
+<div class="comparison-table-wrapper">
+<table class="comparison-table">
+<thead>
+<tr>
+<th>Região Anatômica</th>
+<th id="th-circ-base-title">Avaliação 1</th>
+<th id="th-circ-curr-title">Avaliação 2</th>
+<th>Variação Absoluta (Δ)</th>
+<th>Evolução (%)</th>
+</tr>
+</thead>
+<tbody id="comparison-circ-tbody">
+<!-- Preenchido dinamicamente via JS -->
+</tbody>
+</table>
+</div>
+</div>
+<!-- 3. MÉTODO 1: COMPARATIVO DE DOBRAS CUTÂNEAS (POLLOCK 1984 - 7 DOBRAS) -->
+<div class="card" id="comparison-skinfolds-card">
+<div class="card-header">
+<div class="card-title">
+<span>1️⃣</span> Antropometria: Comparativo de Dobras Cutâneas (Pollock, 1984 – 7 Dobras)
+                        </div>
+</div>
+<div class="comparison-table-wrapper">
+<table class="comparison-table">
+<thead>
+<tr>
+<th>Dobra Cutânea / Parâmetro</th>
+<th id="th-dobras-base-title">Avaliação 1</th>
+<th id="th-dobras-curr-title">Avaliação 2</th>
+<th>Variação Absoluta (Δ)</th>
+<th>Evolução (%)</th>
+</tr>
+</thead>
+<tbody id="comparison-dobras-tbody">
+<!-- Preenchido dinamicamente via JS -->
+</tbody>
+</table>
+</div>
+<div id="dobras-analise-box" style="background:#f8fafc; border-left:4px solid var(--primary-color); border-radius:var(--radius-md); padding:0.85rem 1.1rem; font-size:0.85rem;">
+<strong>Análise Clínica das Dobras Cutâneas:</strong>
+<div id="dobras-analise-texto" style="margin-top:0.35rem; color:#334155;">-</div>
+</div>
+</div>
+<!-- 4. MÉTODO 2: COMPARATIVO DE BIOIMPEDÂNCIA COMPLETO -->
+<div class="card" id="comparison-inbody-card">
+<div class="card-header">
+<div class="card-title">
+<span>2️⃣</span> Bioimpedância Elétrica Completa (v4.6)
+                        </div>
+</div>
+<div class="comparison-table-wrapper">
+<table class="comparison-table">
+<thead>
+<tr>
+<th>Parâmetro de Bioimpedância</th>
+<th id="th-bia-base-title">Avaliação 1</th>
+<th id="th-bia-curr-title">Avaliação 2</th>
+<th>Variação Absoluta (Δ)</th>
+<th>Evolução (%)</th>
+</tr>
+</thead>
+<tbody id="comparison-bia-tbody">
+<!-- Preenchido dinamicamente via JS -->
+</tbody>
+</table>
+</div>
+</div>
+<!-- 5. GRÁFICOS VISUAIS DA IMAGEM -->
+<div class="card visual-charts-card" id="comp-visual-charts-card">
+<div class="card-header">
+<div class="card-title">
+<span>📊</span> Gráficos de Composição Corporal (Avaliação Mais Recente)
+                        </div>
+</div>
+<div class="charts-row-duo">
+<div class="chart-box" id="box-donut-chart">
+<h4>% de Gordura x % Massa Magra</h4>
+<div id="donut-chart-container"></div>
+<div class="chart-legend">
+<div class="legend-item"><span class="legend-color" style="background:#0ea5e9;"></span> Massa Magra</div>
+<div class="legend-item"><span class="legend-color" style="background:#0284c7;"></span> Gordura</div>
+</div>
+</div>
+<div class="chart-box" id="box-bar-chart">
+<h4>Massa Magra x Massa Gorda (kg)</h4>
+<div id="bar-chart-container"></div>
+<div class="chart-legend">
+<div class="legend-item"><span class="legend-color" style="background:#0284c7;"></span> Massa Magra (kg)</div>
+<div class="legend-item"><span class="legend-color" style="background:#0ea5e9;"></span> Massa Gorda (kg)</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 6. FOTOS LADO A LADO -->
+<div class="card" id="card-before-after" style="margin-bottom:1.5rem;">
+<div class="card-header">
+<div class="card-title">
+<span>✨</span> Comparação Antes &amp; Depois (Slider Interativo)
+                        </div>
+<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+<div class="ba-segmented-tabs">
+<button class="ba-tab-btn active" id="btn-mode-slider" onclick="alternarModoVisualizacaoFotos('slider')" type="button">↔️ Slider Interativo</button>
+<button class="ba-tab-btn" id="btn-mode-side" onclick="alternarModoVisualizacaoFotos('side')" type="button">⏹️ Lado a Lado</button>
+</div>
+<div class="ba-segmented-tabs">
+<button class="ba-tab-btn active" id="pose-btn-frente" onclick="mudarPoseSlider('frente')" type="button">Frente</button>
+<button class="ba-tab-btn" id="pose-btn-lado" onclick="mudarPoseSlider('lado')" type="button">Lado</button>
+<button class="ba-tab-btn" id="pose-btn-costas" onclick="mudarPoseSlider('costas')" type="button">Costas</button>
+</div>
+</div>
+</div>
+<div id="ba-stage-wrapper">
+<div class="before-after-stage" id="ba-stage">
+<div class="ba-layer ba-layer-before">
+<img alt="Foto Antes" decoding="async" id="ba-img-before" loading="lazy" src=""/>
+<span class="ba-tag before" id="ba-tag-before">Antes</span>
+</div>
+<div class="ba-layer ba-layer-after" id="ba-layer-after" style="width: 50%;">
+<img alt="Foto Depois" decoding="async" id="ba-img-after" loading="lazy" src=""/>
+<span class="ba-tag after" id="ba-tag-after">Depois</span>
+</div>
+<div class="ba-handle" id="ba-handle" style="left: 50%;">
+<div class="ba-handle-thumb">↔</div>
+</div>
+</div>
+<p style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-top:0.75rem;">
+                            👆 <strong>Arraste o divisor central ou deslize o dedo</strong> para comparar a evolução das fotos em tempo real.
+                        </p>
+</div>
+</div>
+<div class="hidden" id="ba-side-wrapper">
+<div class="card" id="comparison-photos-card">
+<div class="card-header">
+<div class="card-title">
+<span>📷</span> Comparação Fotográfica Lado a Lado
+                            </div>
+</div>
+<div class="photo-comparison-container" id="photo-comparison-grid">
+<div class="photo-pose-card">
+<div class="photo-pose-title">Frente</div>
+<div class="photo-duo">
+<div class="photo-item"><span id="label-foto-frente-base">Base</span><div class="photo-frame" id="box-foto-frente-base"></div></div>
+<div class="photo-item"><span id="label-foto-frente-curr">Atual</span><div class="photo-frame" id="box-foto-frente-curr"></div></div>
+</div>
+</div>
+<div class="photo-pose-card">
+<div class="photo-pose-title">Lado / Perfil</div>
+<div class="photo-duo">
+<div class="photo-item"><span id="label-foto-lado-base">Base</span><div class="photo-frame" id="box-foto-lado-base"></div></div>
+<div class="photo-item"><span id="label-foto-lado-curr">Atual</span><div class="photo-frame" id="box-foto-lado-curr"></div></div>
+</div>
+</div>
+<div class="photo-pose-card">
+<div class="photo-pose-title">Costas</div>
+<div class="photo-duo">
+<div class="photo-item"><span id="label-foto-costas-base">Base</span><div class="photo-frame" id="box-foto-costas-base"></div></div>
+<div class="photo-item"><span id="label-foto-costas-curr">Atual</span><div class="photo-frame" id="box-foto-costas-curr"></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 7. PARECER DO AVALIADOR -->
+<div class="card" id="comparison-pro-notes-card">
+<div class="professional-notes-box">
+<div class="pro-notes-title">✍️ Parecer Técnico &amp; Observações do Profissional Avaliador</div>
+<div class="no-print ef781-editor">
+<textarea aria-label="Parecer técnico do comparativo (editável)" id="ef781-parecer" maxlength="4000" placeholder="Escreva ou ajuste o parecer técnico desta comparação. Por padrão ele vem do parecer das avaliações." rows="7"></textarea>
+<div class="ef781-bar">
+<span id="ef781-status" role="status"></span>
+<div class="ef781-btns">
+<button class="btn btn-secondary btn-sm" id="ef781-restore" title="Descartar a edição e voltar ao texto automático" type="button">↺ Texto automático</button>
+<button class="btn btn-primary btn-sm" id="ef781-save" type="button">💾 Salvar parecer</button>
+</div>
+</div>
+</div>
+<div class="pro-notes-content ef781-print-text" id="comp-pro-notes-display">-</div>
+</div>
+</div>
+<!-- Assinaturas -->
+<div class="print-signature-area hidden">
+<div style="text-align: center; width: 45%;">
+<div style="border-top: 1px solid #000; margin-bottom: 0.3rem;"></div>
+<strong id="print-assinatura-avaliador">Profissional Responsável</strong>
+<div id="print-assinatura-registro" style="font-size:0.75rem; color:#475569;">CREF/CRN</div>
+</div>
+<div style="text-align: center; width: 45%;">
+<div style="border-top: 1px solid #000; margin-bottom: 0.3rem;"></div>
+<strong id="print-assinatura-aluno">Assinatura do Aluno / Paciente</strong>
+<div style="font-size:0.75rem; color:#475569;">Ciente dos resultados e orientações</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ============================================================== -->
+<!-- ABA COBRANÇA & PRECIFICAÇÃO (POSICIONADA APÓS DIAGNÓSTICO)    -->
+<!-- ============================================================== -->
+<section class="tab-panel" id="tab-cobranca">
+<div class="cob-container">
+<!-- Cabeçalho do Módulo de Cobrança -->
+<header class="cob-head">
+<div>
+<div class="cob-kicker">Módulo Financeiro &amp; Precificação</div>
+<h2>Cobranças</h2>
+<p>Simule valores e descontos de avaliações físicas (individual ou em dupla) e controle o histórico de pagamentos com detalhamento do valor total e por aluno.</p>
+</div>
+<div class="cob-head-actions">
+<button class="btn btn-secondary btn-sm" onclick="EFCobranca.resetarFormulario()" title="Limpar calculadora e iniciar novo orçamento" type="button">
+                            ↺ Nova Cobrança / Limpar
+                        </button>
+</div>
+</header>
+<!-- Grid Principal da Calculadora (2 Colunas Responsivas) -->
+<div class="cob-workspace-grid">
+<!-- COLUNA 1: Parâmetros, Alunos, Serviços e Descontos -->
+<div>
+<!-- Card 1: Modalidade & Identificação dos Alunos -->
+<div class="cob-card">
+<div class="cob-card-title">
+<span>1. Modalidade &amp; Aluno(s)</span>
+<span class="tag" id="cob-badge-modalidade">Individual</span>
+</div>
+<!-- Segmented Control Estilo Apple: 1 ou 2 Pessoas -->
+<div aria-label="Número de Pessoas" class="cob-segmented" role="radiogroup">
+<button class="cob-seg-btn active" id="cob-btn-pessoa-1" onclick="EFCobranca.setModalidade('1')" type="button">
+<span>👤</span> 1 Pessoa (Individual)
+                                </button>
+<button class="cob-seg-btn" id="cob-btn-pessoa-2" onclick="EFCobranca.setModalidade('2')" type="button">
+<span>👥</span> 2 Pessoas (Dupla / Casal)
+                                </button>
+</div>
+<!-- Banner Informativo quando Dupla -->
+<div class="cob-duo-banner hidden" id="cob-duo-alert">
+<div>
+<strong>👥 Modalidade em Dupla / Casal:</strong>
+<div style="font-size:0.78rem; opacity:0.85; margin-top:2px;">O valor total soma as avaliações e exibe o rateio exato por aluno (50% cada).</div>
+</div>
+<button class="btn btn-outline btn-sm" onclick="EFCobranca.aplicarDescontoDuplaPadrao()" style="background:#fff; border-color:#007aff; font-size:0.75rem; white-space:nowrap;" type="button">
+                                    ⚡ Aplicar Combo Dupla (15% OFF)
+                                </button>
+</div>
+<!-- Aluno 1 -->
+<div class="input-group" style="margin-bottom:0.75rem;">
+<label for="cob_select_aluno1">
+<span>Aluno Principal / Responsável *</span>
+<span style="font-size:0.72rem; color:var(--text-muted);">Puxar do cadastro ou digitar</span>
+</label>
+<select id="cob_select_aluno1" onchange="EFCobranca.aoSelecionarAluno(1, this.value)">
+<!-- Populado via JS -->
+</select>
+</div>
+<div class="input-row" style="margin-bottom:0.75rem;">
+<div class="input-group" style="flex:1;">
+<label for="cob_nome1">Nome do Aluno 1 *</label>
+<input id="cob_nome1" oninput="EFCobranca.recalcular()" placeholder="Ex: Carlos Mendes" type="text"/>
+</div>
+</div>
+<!-- Bloco Aluno 2 (Exibido somente quando 2 Pessoas) -->
+<div class="hidden" id="cob-aluno2-wrapper" style="margin-top:0.85rem; padding-top:0.85rem; border-top:1px dashed var(--border-color, #e2e8f0);">
+<div class="input-group" style="margin-bottom:0.75rem;">
+<label for="cob_select_aluno2">
+<span>2º Aluno (Parceiro / Dupla) *</span>
+<span style="font-size:0.72rem; color:var(--text-muted);">Puxar do cadastro ou digitar</span>
+</label>
+<select id="cob_select_aluno2" onchange="EFCobranca.aoSelecionarAluno(2, this.value)">
+<!-- Populado via JS -->
+</select>
+</div>
+<div class="input-row" style="margin-bottom:0;">
+<div class="input-group" style="flex:1;">
+<label for="cob_nome2">Nome do Aluno 2 *</label>
+<input id="cob_nome2" oninput="EFCobranca.recalcular()" placeholder="Ex: Mariana Duarte" type="text"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Serviço e Valor Base -->
+<div class="cob-card">
+<div class="cob-card-title">
+<span>2. Serviço &amp; Valor Base</span>
+</div>
+<div class="input-group" style="margin-bottom:0.85rem;">
+<label for="cob_servico_select">Tipo de Serviço / Pacote</label>
+<select id="cob_servico_select" onchange="EFCobranca.aoMudarServico(this.value)">
+<option value="completa">Avaliação Física Completa (Pollock 7D + BIA + Fotos)</option>
+<option value="reavaliacao">Reavaliação Periódica / Check-in de Evolução</option>
+<option value="bioimpedancia">Bioimpedância Elétrica Isolada (BIA)</option>
+<option value="treino_consultoria">Avaliação Física + Prescrição de Treino / Consultoria</option>
+<option value="trimestral">Pacote Trimestral (3 Avaliações Periódicas)</option>
+<option value="semestral">Pacote Semestral (6 Avaliações Periódicas)</option>
+<option value="personalizado">Serviço Personalizado (Digitar Descrição e Preço)</option>
+</select>
+</div>
+<div class="input-group hidden" id="cob-servico-custom-box" style="margin-bottom:0.85rem;">
+<label for="cob_servico_nome_custom">Descrição do Serviço Personalizado</label>
+<input id="cob_servico_nome_custom" oninput="EFCobranca.recalcular()" placeholder="Ex: Avaliação Física + Orientação Nutricional" type="text"/>
+</div>
+<div class="input-row">
+<div class="input-group">
+<label for="cob_valor_base">Valor Unitário por Pessoa (R$) *</label>
+<div style="display:flex; gap:0.4rem; align-items:center;">
+<input id="cob_valor_base" min="0" oninput="EFCobranca.recalcular()" placeholder="Ex: 150.00" step="0.01" style="font-weight:700;" type="number"/>
+<button class="btn btn-secondary btn-sm" onclick="EFCobranca.ajustarValorBase(10)" title="Aumentar R$ 10" type="button">+10</button>
+<button class="btn btn-secondary btn-sm" onclick="EFCobranca.ajustarValorBase(50)" title="Aumentar R$ 50" type="button">+50</button>
+</div>
+</div>
+<div class="input-group">
+<label for="cob_data">Data da Avaliação</label>
+<input id="cob_data" oninput="EFCobranca.recalcular()" type="date"/>
+</div>
+</div>
+</div>
+<!-- Card 3: Descontos Comerciais -->
+<div class="cob-card" style="margin-bottom:0;">
+<div class="cob-card-title">
+<span>3. Política de Descontos</span>
+<span class="tag" id="cob-badge-desconto-aplicado">0% off</span>
+</div>
+<div class="input-row">
+<div class="input-group">
+<label>Modalidade do Desconto</label>
+<div class="cob-segmented" style="margin-bottom:0;">
+<button class="cob-seg-btn active" id="cob-btn-desc-pct" onclick="EFCobranca.setTipoDesconto('porcentagem')" type="button">
+                                            % Porcentagem
+                                        </button>
+<button class="cob-seg-btn" id="cob-btn-desc-val" onclick="EFCobranca.setTipoDesconto('valor')" type="button">
+                                            R$ Fixo
+                                        </button>
+</div>
+</div>
+<div class="input-group">
+<label for="cob_desconto_input" id="cob-label-desconto-input">Desconto (%)</label>
+<input id="cob_desconto_input" min="0" oninput="EFCobranca.recalcular()" placeholder="0" step="0.01" style="font-weight:700;" type="number"/>
+</div>
+</div>
+<!-- Chips de Desconto Rápido -->
+<label style="font-size:0.74rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-top:0.75rem; margin-bottom:0.25rem; display:block;">
+                                Atalhos de Desconto de Mercado:
+                            </label>
+<div class="cob-chips-group">
+<button class="cob-chip active" id="cob-chip-0" onclick="EFCobranca.aplicarChipDesconto(0, 'porcentagem', 'Sem desconto')" type="button">0% Sem Desconto</button>
+<button class="cob-chip" id="cob-chip-10" onclick="EFCobranca.aplicarChipDesconto(10, 'porcentagem', 'Desconto à vista')" type="button">10% À Vista</button>
+<button class="cob-chip" id="cob-chip-15" onclick="EFCobranca.aplicarChipDesconto(15, 'porcentagem', 'Combo Especial Dupla')" type="button">15% Combo Dupla</button>
+<button class="cob-chip" id="cob-chip-20" onclick="EFCobranca.aplicarChipDesconto(20, 'porcentagem', 'Convênio / Academia')" type="button">20% Parceria</button>
+<button class="cob-chip" id="cob-chip-25" onclick="EFCobranca.aplicarChipDesconto(25, 'porcentagem', '2º Aluno 50% OFF')" type="button">25% (2º Aluno 50% OFF)</button>
+<button class="cob-chip" id="cob-chip-fidelidade" onclick="EFCobranca.aplicarChipDesconto(30, 'valor', 'Desconto Fidelidade Retorno')" type="button">R$ 30 Fidelidade</button>
+<button class="cob-chip" id="cob-chip-100" onclick="EFCobranca.aplicarChipDesconto(100, 'porcentagem', 'Cortesia')" type="button">100% Cortesia</button>
+</div>
+<div class="input-group" style="margin-top:0.85rem;">
+<label for="cob_desconto_motivo">Motivo do Desconto (opcional)</label>
+<input id="cob_desconto_motivo" oninput="EFCobranca.recalcular()" placeholder="Ex: Promoção de início de ano / Aluno fidelidade" type="text"/>
+</div>
+</div>
+</div>
+<!-- COLUNA 2: Resumo em Tempo Real e Ação de Registro -->
+<div>
+<!-- Card Hero: Resumo Financeiro ao Vivo com Total e Por Aluno -->
+<div class="cob-hero-card">
+<div class="cob-hero-rows">
+<div class="cob-hero-row">
+<span>Subtotal (<span id="cob-hero-qtd-lbl">1 pessoa</span>):</span>
+<b id="cob-hero-subtotal">R$ 150,00</b>
+</div>
+<div class="cob-hero-row discount">
+<span>Desconto aplicado:</span>
+<b id="cob-hero-desconto">- R$ 0,00</b>
+</div>
+</div>
+<!-- VALOR TOTAL -->
+<div class="cob-hero-total-group">
+<span class="cob-hero-total-label">Valor Total da Cobrança</span>
+<span class="cob-hero-total-val" id="cob-hero-total">R$ 150,00</span>
+</div>
+<!-- VALOR POR ALUNO (SEMPRE EM DESTAQUE) -->
+<div class="cob-hero-per-student-box">
+<div class="cob-hero-per-student-info">
+<span>👥 Valor por Aluno:</span>
+<small id="cob-hero-per-student-desc">Atendimento individual (1 aluno)</small>
+</div>
+<div class="cob-hero-per-student-val" id="cob-hero-per-person">
+                                    R$ 150,00
+                                </div>
+</div>
+<!-- SELETOR DE FORMAS DE PAGAMENTO (PIX, CRÉDITO, DÉBITO, DINHEIRO) -->
+<label style="font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:0.4rem;">
+                                Forma de Pagamento:
+                            </label>
+<div aria-label="Forma de Pagamento" class="cob-pay-segmented" role="radiogroup">
+<button class="cob-pay-seg-btn active" id="cob-pay-btn-pix" onclick="EFCobranca.setFormaPagamento('pix')" type="button">
+<span>📱</span> Pix
+                                </button>
+<button class="cob-pay-seg-btn" id="cob-pay-btn-credito" onclick="EFCobranca.setFormaPagamento('credito')" type="button">
+<span>💳</span> Crédito
+                                </button>
+<button class="cob-pay-seg-btn" id="cob-pay-btn-debito" onclick="EFCobranca.setFormaPagamento('debito')" type="button">
+<span>💳</span> Débito
+                                </button>
+<button class="cob-pay-seg-btn" id="cob-pay-btn-dinheiro" onclick="EFCobranca.setFormaPagamento('dinheiro')" type="button">
+<span>💵</span> Dinheiro
+                                </button>
+</div>
+<!-- Detalhe Crédito: Parcelamento -->
+<div class="cob-pay-subdetail hidden" id="cob-pay-detail-credito">
+<div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; font-size:0.8rem; color:#cbd5e1;">
+<span>Parcelas:</span>
+<select id="cob_select_parcelas" onchange="EFCobranca.aoMudarParcelas(this.value)" style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:0.25rem 0.5rem; font-size:0.8rem; font-weight:600;">
+<option value="1">1x (à vista)</option>
+<option value="2">2x</option>
+<option value="3">3x</option>
+<option value="4">4x</option>
+<option value="5">5x</option>
+<option value="6">6x</option>
+<option value="10">10x</option>
+<option value="12">12x</option>
+</select>
+</div>
+<div id="cob-parcela-resumo" style="font-size:0.75rem; color:#94a3b8; margin-top:4px; text-align:right;">
+                                    1x de R$ 150,00
+                                </div>
+</div>
+<!-- Detalhe Dinheiro: Troco -->
+<div class="cob-pay-subdetail hidden" id="cob-pay-detail-dinheiro">
+<div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; font-size:0.8rem; color:#cbd5e1;">
+<span>Valor entregue:</span>
+<input id="cob_dinheiro_recebido" min="0" oninput="EFCobranca.calcularTroco()" placeholder="R$ entregue" step="0.01" style="width:110px; background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:0.25rem 0.5rem; font-size:0.8rem; font-weight:700; text-align:right;" type="number"/>
+</div>
+<div id="cob-troco-display" style="font-size:0.75rem; color:#4ade80; margin-top:4px; text-align:right; font-weight:600;">
+                                    Troco: R$ 0,00
+                                </div>
+</div>
+<!-- SELETOR DE STATUS DO PAGAMENTO -->
+<label style="font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:0.4rem;">
+                                Status do Pagamento:
+                            </label>
+<div class="cob-status-segmented" role="radiogroup">
+<button class="cob-status-seg-btn active pago" id="cob-hero-status-pago" onclick="EFCobranca.setStatusPagamento('pago')" type="button">
+                                    🟢 Pago
+                                </button>
+<button class="cob-status-seg-btn pendente" id="cob-hero-status-pendente" onclick="EFCobranca.setStatusPagamento('pendente')" type="button">
+                                    🟡 Pendente
+                                </button>
+</div>
+<!-- BOTÃO PRINCIPAL: REGISTRAR NO HISTÓRICO -->
+<button class="cob-btn-save-hero" onclick="EFCobranca.salvarCobrancaNoHistorico()" type="button">
+                                💾 Registrar Pagamento no Histórico
+                            </button>
+<button class="cob-btn-reset-hero" onclick="EFCobranca.resetarFormulario()" type="button">
+                                ↺ Limpar / Novo Atendimento
+                            </button>
+</div>
+</div>
+</div>
+<!-- ========================================================== -->
+<!-- HISTÓRICO DE PAGAMENTOS COM TOTAIS E POR ALUNO           -->
+<!-- ========================================================== -->
+<div class="cob-history-card">
+<div class="cob-history-head">
+<div class="cob-history-title">
+<span>📋 Histórico de Pagamentos</span>
+<span class="tag" id="cob-history-total-count" style="font-size:0.8rem;">0 registros</span>
+</div>
+<div style="display:flex; gap:0.5rem; align-items:center;">
+<button class="btn btn-outline btn-sm" onclick="EFCobranca.exportarCsvHistorico()" title="Exportar histórico financeiro com total e por aluno em CSV" type="button">
+                                📊 Exportar CSV
+                            </button>
+<button class="btn btn-secondary btn-sm" onclick="EFCobranca.limparTodoHistorico()" title="Limpar todo o histórico de cobranças" type="button">
+                                🗑️ Limpar
+                            </button>
+</div>
+</div>
+<!-- Dashboard Rápido de Faturamento (5 Métricas: Totais e Por Aluno) -->
+<div class="cob-kpis-grid">
+<div class="cob-kpi-card">
+<div class="cob-kpi-icon" style="background:#ecfdf5; color:#10b981;">💰</div>
+<div class="cob-kpi-info">
+<span class="cob-kpi-label">Total Recebido (Pago)</span>
+<span class="cob-kpi-val" id="cob-kpi-faturado-mes" style="color:#059669;">R$ 0,00</span>
+<span class="cob-kpi-sub" id="cob-kpi-faturado-qtd">0 recebimento(s)</span>
+</div>
+</div>
+<div class="cob-kpi-card">
+<div class="cob-kpi-icon" style="background:#fffbeb; color:#d97706;">⏳</div>
+<div class="cob-kpi-info">
+<span class="cob-kpi-label">Total Pendente</span>
+<span class="cob-kpi-val" id="cob-kpi-pendente-mes" style="color:#d97706;">R$ 0,00</span>
+<span class="cob-kpi-sub" id="cob-kpi-pendente-qtd">0 pendência(s)</span>
+</div>
+</div>
+<div class="cob-kpi-card">
+<div class="cob-kpi-icon" style="background:#eff6ff; color:#007aff;">📈</div>
+<div class="cob-kpi-info">
+<span class="cob-kpi-label">Total Geral</span>
+<span class="cob-kpi-val" id="cob-kpi-total-geral" style="color:#007aff;">R$ 0,00</span>
+<span class="cob-kpi-sub">Pago + Pendente</span>
+</div>
+</div>
+<div class="cob-kpi-card">
+<div class="cob-kpi-icon" style="background:#f5edfa; color:#8b5cf6;">👥</div>
+<div class="cob-kpi-info">
+<span class="cob-kpi-label">Ticket Médio / Aluno</span>
+<span class="cob-kpi-val" id="cob-kpi-ticket-medio">R$ 0,00</span>
+<span class="cob-kpi-sub" id="cob-kpi-ticket-sub">Por aluno atendido</span>
+</div>
+</div>
+<div class="cob-kpi-card">
+<div class="cob-kpi-icon" style="background:#f1f5f9; color:#475569;">👤</div>
+<div class="cob-kpi-info">
+<span class="cob-kpi-label">Alunos Atendidos</span>
+<span class="cob-kpi-val" id="cob-kpi-total-alunos">0</span>
+<span class="cob-kpi-sub" id="cob-kpi-total-avaliacoes-sub">0 avaliações</span>
+</div>
+</div>
+</div>
+<!-- Barra de Ferramentas: Busca, Filtros e Alternância de Visão -->
+<div class="cob-toolbar">
+<input class="cob-search-input" id="cob-busca-historico" oninput="EFCobranca.filtrarHistorico()" placeholder="🔍 Buscar por aluno, serviço ou data..." type="text"/>
+<div class="cob-toolbar-filters">
+<button class="btn btn-secondary btn-sm active" id="cob-filter-btn-todos" onclick="EFCobranca.setFiltroStatus('todos')" type="button">Todas</button>
+<button class="btn btn-secondary btn-sm" id="cob-filter-btn-pago" onclick="EFCobranca.setFiltroStatus('pago')" type="button">🟢 Pagas</button>
+<button class="btn btn-secondary btn-sm" id="cob-filter-btn-pendente" onclick="EFCobranca.setFiltroStatus('pendente')" type="button">🟡 Pendentes</button>
+<button class="btn btn-secondary btn-sm" id="cob-filter-btn-pix" onclick="EFCobranca.setFiltroStatus('pix')" type="button">📱 Pix</button>
+<button class="btn btn-secondary btn-sm" id="cob-filter-btn-cartao" onclick="EFCobranca.setFiltroStatus('cartao')" type="button">💳 Cartão</button>
+<button class="btn btn-secondary btn-sm" id="cob-filter-btn-dinheiro" onclick="EFCobranca.setFiltroStatus('dinheiro')" type="button">💵 Dinheiro</button>
+<button class="btn btn-secondary btn-sm" id="cob-filter-btn-dupla" onclick="EFCobranca.setFiltroStatus('dupla')" type="button">👥 Duplas</button>
+<button class="btn btn-secondary btn-sm" id="cob-filter-btn-individual" onclick="EFCobranca.setFiltroStatus('individual')" type="button">👤 Individuais</button>
+</div>
+<!-- Alternador de Visão: Extrato vs Consolidado por Aluno -->
+<div class="cob-view-toggle">
+<button class="cob-view-btn active" id="cob-view-btn-extrato" onclick="EFCobranca.setVisaoHistorico('extrato')" type="button">
+                                📋 Lançamentos
+                            </button>
+<button class="cob-view-btn" id="cob-view-btn-alunos" onclick="EFCobranca.setVisaoHistorico('alunos')" type="button">
+                                👥 Consolidado por Aluno
+                            </button>
+</div>
+</div>
+<!-- Mensagem de Vazio -->
+<div class="cob-empty" id="cob-history-empty">
+<span>📋</span>
+<strong>Nenhum pagamento registrado no histórico.</strong>
+<p style="font-size:0.84rem; margin-top:0.35rem;">Preencha a calculadora acima e clique em "💾 Registrar Pagamento no Histórico".</p>
+</div>
+<!-- VISÃO 1: Tabela de Lançamentos Detalhados (com Total e Por Aluno) -->
+<div class="cob-table-wrapper hidden" id="cob-view-extrato-wrapper">
+<table class="cob-table">
+<thead>
+<tr>
+<th>Data</th>
+<th>Aluno(s)</th>
+<th>Modalidade</th>
+<th>Serviço</th>
+<th style="font-weight:800; color:#0f172a;">Valor Total</th>
+<th style="font-weight:800; color:#047857;">Valor por Aluno</th>
+<th>Forma Pagto</th>
+<th>Status</th>
+<th style="text-align:right;">Ações</th>
+</tr>
+</thead>
+<tbody id="cob-history-tbody">
+<!-- Preenchido dinamicamente via JS -->
+</tbody>
+<tfoot id="cob-history-tfoot">
+<!-- Rodapé com soma total e média por aluno -->
+</tfoot>
+</table>
+</div>
+<!-- VISÃO 2: Tabela Consolidada por Aluno -->
+<div class="cob-table-wrapper hidden" id="cob-view-alunos-wrapper">
+<table class="cob-table">
+<thead>
+<tr>
+<th>Aluno</th>
+<th style="text-align:center;">Qtd Avaliações</th>
+<th>Total Pago</th>
+<th>Total Pendente</th>
+<th style="font-weight:800;">Total Geral</th>
+<th>Média / Avaliação</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody id="cob-alunos-tbody">
+<!-- Preenchido dinamicamente via JS -->
+</tbody>
+<tfoot id="cob-alunos-tfoot">
+<!-- Rodapé consolidado -->
+</tfoot>
+</table>
+</div>
+</div>
+</div>
+</section>
+<!-- ============================================================== -->
+<!-- ABA COBRANÇA & PRECIFICAÇÃO (POSICIONADA APÓS DIAGNÓSTICO)    -->
+<!-- ============================================================== -->
+<!-- ABA COBRANÇA & PRECIFICAÇÃO (POSICIONADA APÓS DIAGNÓSTICO)    -->
+<!-- ============================================================== -->
+<!-- ABA COBRANÇA & PRECIFICAÇÃO (POSICIONADA APÓS DIAGNÓSTICO)    -->
+<!-- ============================================================== -->
+<!-- ABA COBRANÇA & PRECIFICAÇÃO (POSICIONADA APÓS DIAGNÓSTICO)    -->
+<!-- ============================================================== -->
+<!-- ABA COBRANÇA & PRECIFICAÇÃO (POSICIONADA APÓS DIAGNÓSTICO)    -->
+</main>
+<!-- ÁREA EXCLUSIVA DE IMPRESSÃO INDIVIDUAL EM PDF -->
+<div id="single-print-wrapper">
+<!-- Renderizado dinamicamente via JS antes de imprimir -->
+</div>
+<!-- ÁREA EXCLUSIVA DE IMPRESSÃO DO LAB EM PDF -->
+<div id="ef77-print" aria-hidden="true"></div>
+<!-- MODAL DE VISUALIZAÇÃO DETALHADA DE UMA AVALIAÇÃO INDIVIDUAL -->
+<div class="modal-overlay hidden" id="view-modal" onclick="if(event.target===this)fecharModalDetalhes()">
+<div class="modal-content">
+<div class="modal-header ef-details-header">
+<div>
+<h2 id="modal-client-name" style="font-size:1.3rem; font-weight:800; color:var(--text-main);">Mariana Duarte</h2>
+<span id="modal-assessment-date" style="font-size:0.85rem; color:var(--text-muted);">Semana 1 - 03/09/2026</span>
+</div>
+<div class="ef-details-actions">
+<button class="btn btn-primary btn-sm" id="btn-modal-aluno" onclick="abrirVisualizacaoPacienteWeb(window.avaliacaoEmVisualizacaoId || avaliacaoEmVisualizacaoId)">👁️ Visão do Aluno</button>
+<button class="btn btn-success btn-sm" id="btn-modal-pdf" onclick="imprimirAvaliacaoDaModal()" title="Imprimir avaliação em PDF com fotos">🖨️ PDF com fotos</button>
+<button class="btn btn-primary btn-sm" id="btn-modal-edit" onclick="editarDaModal()">✏️ Editar</button>
+</div>
+<button class="modal-close-btn" aria-label="Fechar detalhes" onclick="fecharModalDetalhes()">✕</button>
+</div>
+<div id="modal-body-content">
+<!-- Conteúdo detalhado injetado via JS -->
+</div>
+</div>
+</div>
+<!-- MODAL DE LAUDO WEB E COMPARTILHAMENTO WHATSAPP -->
+<div class="modal-overlay hidden" id="web-report-modal">
+<div class="modal-content" style="max-width: 600px;">
+<div class="modal-header">
+<div>
+<h2 style="font-size:1.25rem; font-weight:700; color:var(--text-main);">🌐 Laudo Web Interativo</h2>
+<span id="web-report-subtitle" style="font-size:0.8rem; color:var(--text-muted);">Link direto responsivo para visualização no smartphone do aluno</span>
+</div>
+<button class="modal-close-btn" onclick="fecharModalLaudoWeb()">✕</button>
+</div>
+<div style="padding:0.5rem 0;">
+<p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                    O Laudo Web permite que seu aluno visualize seus resultados no celular com gráficos dinâmicos sem a perda de formatação de PDFs.
+                </p>
+<label>Link Direto do Laudo:</label>
+<div class="web-link-box" style="display:flex; gap:0.5rem; margin:0.5rem 0 1.25rem; background:var(--surface-tertiary); padding:0.75rem; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+<input id="web-link-input" readonly="" style="flex:1; font-family:monospace; font-size:0.85rem; border:none; background:transparent;" type="text"/>
+<button class="btn btn-secondary btn-sm" onclick="copiarLinkLaudoWeb()" title="Copiar link do laudo" type="button">📋 Copiar Link</button>
+</div>
+<p style="margin:0.6rem 0 0;font-size:0.78rem;line-height:1.4;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:0.55rem 0.7rem;">⚠️ Este link só abre o laudo <strong>neste navegador/dispositivo</strong>, onde os dados estão salvos. Para entregar ao aluno, use <strong>👁️ Abrir Visão do Aluno › 🖨️ PDF</strong> e envie o arquivo.</p>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:1rem;">
+<button class="btn btn-whatsapp" id="btn-whatsapp-share" onclick="compartilharViaWhatsApp()">
+                        📲 Enviar via WhatsApp
+                    </button>
+<button class="btn btn-primary" onclick="abrirLaudoWebPaciente()">
+                        👁️ Abrir Visão do Aluno
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- TELA CHEIA: VISUALIZAÇÃO PACIENTE WEB (LAUDO MOBILE-FIRST V4.3) -->
+<div class="patient-view-overlay hidden" id="patient-view-overlay">
+<div class="patient-view-container">
+<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:1rem; margin-bottom:1.5rem;">
+<div>
+<span class="brand-badge">Laudo Interativo</span>
+<h1 id="pv-aluno-nome" style="font-size:1.6rem; font-weight:800; color:var(--text-main); margin-top:0.35rem;">Nome do Aluno</h1>
+<span id="pv-data-badge" style="font-size:0.85rem; color:var(--text-muted);">Data da Avaliação</span>
+</div>
+<div style="display:flex; gap:0.5rem;">
+<button class="btn btn-success btn-sm" id="pv-btn-pdf" onclick="imprimirDoPacienteWeb()">🖨️ PDF</button>
+<button class="btn btn-secondary btn-sm" onclick="fecharVisualizacaoPacienteWeb()">✕ Fechar</button>
+</div>
+</div>
+<!-- Conteúdo Dinâmico Injetado -->
+<div id="patient-view-content"></div>
+</div>
+</div>
+<!-- MODAL CENTRAL DE BACKUP & RESTAURAÇÃO INTELIGENTE (v7.4) -->
+<div aria-label="Central de Backup e Restauração" aria-modal="true" class="modal-overlay hidden" id="modal-central-backup" role="dialog">
+<div class="modal-card" style="max-width: 680px; width: 95%;">
+<div class="modal-header">
+<div>
+<div class="modal-title" style="display:flex; align-items:center; gap:8px;">
+<span>🛡️</span> <span>Central de Backup &amp; Restauração</span>
+</div>
+<p style="font-size:0.78rem; color:var(--text-muted); margin:3px 0 0 0;">
+                        Gestão segura de dados, exportação inteligente (completa ou leve) e restauração com pré-visualização.
+                    </p>
+</div>
+<button class="modal-close-btn" onclick="fecharModalCentralBackup()" type="button">×</button>
+</div>
+<!-- Abas do Modal -->
+<div style="padding: 0.85rem 1.25rem 0; background: var(--slate-50); border-bottom: 1px solid var(--border-color);">
+<div class="nav-tabs" style="width:100%; display:flex; justify-content:space-between;">
+<button class="nav-tab-btn active" id="bkp-tab-btn-exportar" onclick="alternarAbaBackup('exportar')" style="flex:1; text-align:center;" type="button">
+<span>⬇️</span> Exportar Backup
+                    </button>
+<button class="nav-tab-btn" id="bkp-tab-btn-importar" onclick="alternarAbaBackup('importar')" style="flex:1; text-align:center;" type="button">
+<span>⬆️</span> Restaurar / Importar
+                    </button>
+<button class="nav-tab-btn" id="bkp-tab-btn-diagnostico" onclick="alternarAbaBackup('diagnostico')" style="flex:1; text-align:center;" type="button">
+<span>📊</span> Saúde dos Dados
+                    </button>
+</div>
+</div>
+<div class="modal-body" style="padding: 1.25rem;">
+<!-- PAINEL 1: EXPORTAR BACKUP -->
+<div id="bkp-panel-exportar">
+<div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.1rem;">
+<div>
+<span style="font-size:0.75rem; color:#64748b; font-weight:600; text-transform:uppercase;">Status do Banco</span>
+<div id="bkp-resumo-banco" style="font-size:1.05rem; font-weight:700; color:#0f172a;">0 avaliações salvas</div>
+</div>
+<span class="brand-badge" id="bkp-status-badge" style="font-size:0.75rem; background:#34c759; color:#fff;">Backup em Dia</span>
+</div>
+<label style="font-size:0.85rem; font-weight:700; color:#1e293b; display:block; margin-bottom:0.6rem;">Escolha o Tipo de Backup:</label>
+<div style="display:grid; grid-template-columns:1fr; gap:0.75rem; margin-bottom:1.1rem;">
+<!-- Opção Completa -->
+<label class="bkp-option-card active" id="bkp-card-tipo-completo" onclick="selecionarTipoBackup('completo')">
+<input checked="" name="bkp_tipo_export" style="margin-top:2px;" type="radio" value="completo"/>
+<div>
+<div style="font-weight:700; font-size:0.92rem; color:#0f172a;">📦 Backup Completo (Recomendado)</div>
+<div style="font-size:0.78rem; color:#64748b; margin-top:2px;">
+                                    Todas as avaliações clínicas, dobras Pollock, bioimpedância, pareceres e <strong>todas as fotos padronizadas</strong> em alta resolução.
+                                </div>
+</div>
+</label>
+<!-- Opção Leve -->
+<label class="bkp-option-card" id="bkp-card-tipo-leve" onclick="selecionarTipoBackup('leve')">
+<input name="bkp_tipo_export" style="margin-top:2px;" type="radio" value="leve"/>
+<div>
+<div style="font-weight:700; font-size:0.92rem; color:#0f172a;">⚡ Backup Leve (Sem Fotos / Compacto)</div>
+<div style="font-size:0.78rem; color:#64748b; margin-top:2px;">
+                                    Preserva 100% dos dados clínicos, métricas e pareceres, removendo apenas as imagens. Arquivo ultrarrápido (&lt; 100 KB) para envio rápido por e-mail ou WhatsApp.
+                                </div>
+</div>
+</label>
+<!-- Opção por Aluno -->
+<label class="bkp-option-card" id="bkp-card-tipo-aluno" onclick="selecionarTipoBackup('aluno')">
+<input name="bkp_tipo_export" style="margin-top:2px;" type="radio" value="aluno"/>
+<div style="width:100%;">
+<div style="font-weight:700; font-size:0.92rem; color:#0f172a;">👤 Backup Filtrado por Aluno / Paciente</div>
+<div style="font-size:0.78rem; color:#64748b; margin-top:2px;">
+                                    Exporta exclusivamente o histórico e fotos de um aluno específico para entregar a ele ou arquivar individualmente.
+                                </div>
+<div class="hidden" id="bkp-aluno-selector-box" style="margin-top:0.6rem;">
+<select id="bkp-select-aluno" style="width:100%; padding:0.5rem 0.75rem; border-radius:8px; border:1px solid #cbd5e1; font-size:0.85rem; background:#fff;">
+<!-- Populado via JS -->
+</select>
+</div>
+</div>
+</label>
+</div>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem;">
+<label style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:#334155; cursor:pointer;">
+<input checked="" id="bkp-incluir-config" style="accent-color:#0071e3;" type="checkbox"/>
+<span>Incluir dados do profissional no arquivo (Nome, CREF e Clínica)</span>
+</label>
+</div>
+<div style="background:linear-gradient(135deg,#eff6ff,#f0fdf4); border:1px solid #bfdbfe; border-radius:12px; padding:.85rem 1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; gap:.75rem; flex-wrap:wrap;">
+<div><strong style="font-size:.85rem;">🔐 Proteção por chave mestra</strong><div id="ef-security-badge" style="font-size:.75rem;margin-top:3px;">Criptografia desativada</div></div>
+<button class="btn btn-outline btn-sm" onclick="abrirConfiguracaoCriptografia()" type="button">Configurar segurança</button>
+</div>
+<div style="display:flex; justify-content:flex-end; gap:0.5rem; flex-wrap:wrap;">
+<button class="btn btn-secondary" onclick="fecharModalCentralBackup()" type="button">Fechar</button>
+<button class="btn btn-outline" id="bkp-btn-copiar-json" onclick="executarCopiarBackupClipboard()" title="Copiar o JSON do backup para a área de transferência" type="button">📋 Copiar JSON</button>
+<button class="btn btn-primary" onclick="executarDownloadBackup()" type="button">
+<span>⬇️</span> Baixar Backup Seguro
+                        </button>
+</div>
+</div>
+<!-- PAINEL 2: RESTAURAR / IMPORTAR COM PRÉ-VISUALIZAÇÃO -->
+<div class="hidden" id="bkp-panel-importar">
+<!-- Banner de Rollback se houver snapshot -->
+<div class="hidden" id="bkp-rollback-banner" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+<div style="font-size:0.8rem; color:#1e40af;">
+                            🛡️ <strong>Ponto de segurança disponível:</strong> Você pode desfazer a última importação e voltar ao estado anterior.
+                        </div>
+<button class="btn btn-sm btn-outline" onclick="executarDesfazerUltimaImportacao()" style="white-space:nowrap;" type="button">
+                            ↩️ Desfazer Última Restauração
+                        </button>
+</div>
+<!-- Zona de Arraste / Seleção de Arquivo -->
+<div id="bkp-dropzone" onclick="document.getElementById('bkp-modal-file-input').click()" style="border:2px dashed #cbd5e1; border-radius:14px; padding:2rem 1.5rem; text-align:center; background:#f8fafc; cursor:pointer; transition:all 0.2s;">
+<div style="font-size:2.4rem; margin-bottom:0.5rem;">📥</div>
+<strong style="color:#0f172a; font-size:0.95rem; display:block;">Arraste o arquivo de backup (.json) aqui</strong>
+<span style="font-size:0.78rem; color:#64748b; margin-top:4px; display:block;">ou clique para selecionar do seu computador ou celular</span>
+<input accept=".json,.efx" id="bkp-modal-file-input" onchange="aoSelecionarArquivoBackupModal(event)" style="display:none;" type="file"/>
+</div>
+<!-- Opção de Colar JSON Diretamente -->
+<div id="bkp-paste-toggle-box" style="margin-top:0.85rem; text-align:center;">
+<button class="btn btn-outline btn-sm" id="bkp-btn-toggle-paste" onclick="alternarAreaColarJson()" style="font-size:0.78rem;" type="button">
+                            📋 Ou colar o texto JSON diretamente
+                        </button>
+</div>
+<div class="hidden" id="bkp-paste-container" style="margin-top:0.75rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.85rem;">
+<label for="bkp-textarea-paste" style="font-size:0.78rem; font-weight:700; color:#334155; display:block; margin-bottom:0.35rem;">Cole o JSON de backup abaixo:</label>
+<textarea id="bkp-textarea-paste" placeholder='{"app":"EvoluFisico", ...}' rows="4" style="width:100%; font-family:monospace; font-size:0.75rem; padding:0.5rem; border:1px solid #cbd5e1; border-radius:8px;"></textarea>
+<div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.5rem;">
+<button class="btn btn-secondary btn-sm" onclick="alternarAreaColarJson(false)" type="button">Cancelar</button>
+<button class="btn btn-primary btn-sm" onclick="processarJsonColado()" type="button">🔍 Inspecionar JSON</button>
+</div>
+</div>
+<!-- Cartão de Pré-visualização do Arquivo (Aparece ao selecionar arquivo) -->
+<div class="hidden" id="bkp-preview-card" style="margin-top:1.1rem; border:1px solid #cbd5e1; border-radius:14px; padding:1.1rem; background:#ffffff;">
+<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.85rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
+<div>
+<span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Arquivo Selecionado</span>
+<div id="bkp-prev-nome-arquivo" style="font-size:1rem; font-weight:700; color:#0f172a;">backup.json</div>
+<div id="bkp-prev-meta-info" style="font-size:0.76rem; color:#64748b;">0 KB • Versão Desconhecida</div>
+</div>
+<span class="brand-badge" id="bkp-prev-checksum-badge" style="font-size:0.72rem;">Validando...</span>
+</div>
+<!-- Resumo do Conteúdo -->
+<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:0.9rem;">
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.6rem; text-align:center;">
+<span style="font-size:0.68rem; color:#64748b; display:block;">Avaliações</span>
+<strong id="bkp-prev-qtd-avaliacoes" style="font-size:1.1rem; color:#0f172a;">0</strong>
+</div>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.6rem; text-align:center;">
+<span style="font-size:0.68rem; color:#64748b; display:block;">Alunos</span>
+<strong id="bkp-prev-qtd-alunos" style="font-size:1.1rem; color:#0f172a;">0</strong>
+</div>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.6rem; text-align:center;">
+<span style="font-size:0.68rem; color:#64748b; display:block;">Fotos</span>
+<strong id="bkp-prev-qtd-fotos" style="font-size:1.1rem; color:#0f172a;">0</strong>
+</div>
+</div>
+<!-- Diagnóstico de Conflitos -->
+<div id="bkp-prev-conflitos-box" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.75rem 0.9rem; margin-bottom:0.9rem; font-size:0.8rem; color:#166534;">
+<!-- Preenchido via JS -->
+</div>
+<!-- Lista de Alunos Inclusos no Arquivo -->
+<div id="bkp-prev-alunos-box" style="margin-bottom:0.9rem; padding:0.65rem 0.8rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
+<span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase; display:block; margin-bottom:0.35rem;">Alunos Identificados no Arquivo:</span>
+<div id="bkp-prev-lista-alunos-chips" style="display:flex; flex-wrap:wrap; gap:6px; max-height:90px; overflow-y:auto;">
+<!-- Chips inseridos via JS -->
+</div>
+</div>
+<!-- Seleção da Estratégia de Mesclagem -->
+<label style="font-size:0.82rem; font-weight:700; color:#1e293b; display:block; margin-bottom:0.4rem;">Como você deseja restaurar?</label>
+<div style="display:grid; gap:0.5rem; margin-bottom:1rem;">
+<label style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; color:#334155; padding:0.55rem 0.75rem; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer;">
+<input checked="" name="bkp_estrategia" style="margin-top:2px;" type="radio" value="merge"/>
+<div>
+<strong style="color:#0f172a;">🟢 Mesclar e Atualizar (Recomendado)</strong>
+<div style="font-size:0.74rem; color:#64748b;">Adiciona as avaliações novas e atualiza as existentes com as informações do backup. Mantém registros locais que não estão no arquivo.</div>
+</div>
+</label>
+<label style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; color:#334155; padding:0.55rem 0.75rem; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer;">
+<input name="bkp_estrategia" style="margin-top:2px;" type="radio" value="skip_existing"/>
+<div>
+<strong style="color:#0f172a;">🔵 Apenas Novos (Preservar Locais)</strong>
+<div style="font-size:0.74rem; color:#64748b;">Adiciona somente avaliações que ainda não existem. Nenhuma avaliação já presente no dispositivo será modificada.</div>
+</div>
+</label>
+<label style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; color:#334155; padding:0.55rem 0.75rem; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer;">
+<input name="bkp_estrategia" style="margin-top:2px;" type="radio" value="replace"/>
+<div>
+<strong style="color:#b91c1c;">🔴 Substituição Completa</strong>
+<div style="font-size:0.74rem; color:#64748b;">Substitui todo o banco pelo arquivo (um ponto de restauração de segurança é salvo automaticamente).</div>
+</div>
+</label>
+</div>
+<!-- Checkbox dados do profissional -->
+<div class="hidden" id="bkp-prev-config-box" style="margin-bottom:1rem; padding:0.6rem 0.8rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+<label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:#334155; cursor:pointer;">
+<input checked="" id="bkp-chk-restaurar-config" style="accent-color:#0071e3;" type="checkbox"/>
+<span id="bkp-prev-config-text">Restaurar dados do profissional incluídos no arquivo</span>
+</label>
+</div>
+<!-- Ações de Confirmação -->
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<button class="btn btn-secondary btn-sm" onclick="cancelarArquivoBackupPreview()" type="button">✕ Escolher Outro Arquivo</button>
+<button class="btn btn-success" id="bkp-btn-confirmar-import" onclick="confirmarImportacaoBackup()" type="button">
+                                🚀 Confirmar Restauração
+                            </button>
+</div>
+</div>
+</div>
+<!-- PAINEL 3: DIAGNÓSTICO & SAÚDE DO BANCO -->
+<div class="hidden" id="bkp-panel-diagnostico">
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:1.25rem;">
+<div class="kpi-card" style="padding:1rem;">
+<div class="kpi-info">
+<span class="kpi-title">Avaliações</span>
+<span class="kpi-value" id="bkp-diag-avaliacoes">0</span>
+</div>
+</div>
+<div class="kpi-card" style="padding:1rem;">
+<div class="kpi-info">
+<span class="kpi-title">Alunos</span>
+<span class="kpi-value" id="bkp-diag-alunos">0</span>
+</div>
+</div>
+<div class="kpi-card" style="padding:1rem;">
+<div class="kpi-info">
+<span class="kpi-title">Fotos Guardadas</span>
+<span class="kpi-value" id="bkp-diag-fotos">0</span>
+</div>
+</div>
+<div class="kpi-card" style="padding:1rem;">
+<div class="kpi-info">
+<span class="kpi-title">Tamanho Estimado</span>
+<span class="kpi-value" id="bkp-diag-tamanho" style="font-size:1.2rem;">0 KB</span>
+</div>
+</div>
+</div>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem; margin-bottom:1rem;">
+<h4 style="font-size:0.88rem; font-weight:700; color:#0f172a; margin-bottom:0.4rem;">🛡️ Ponto de Restauração de Segurança (Safety Snapshot)</h4>
+<p style="font-size:0.78rem; color:#64748b; line-height:1.45; margin-bottom:0.75rem;">
+                            O EvoluFísico guarda automaticamente uma cópia instantânea do banco antes de qualquer importação. Você também pode criar um ponto de restauração manual agora.
+                        </p>
+<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+<button class="btn btn-secondary btn-sm" onclick="criarSnapshotManual()" type="button">
+                                📸 Criar Ponto de Restauração Agora
+                            </button>
+<button class="btn btn-outline btn-sm" id="bkp-btn-reverter-diag" onclick="executarDesfazerUltimaImportacao()" type="button">
+                                ↩️ Reverter para Último Ponto de Segurança
+                            </button>
+</div>
+</div>
+<div style="font-size:0.78rem; color:#64748b; line-height:1.5;">
+<strong>ℹ️ Boas práticas de backup recomendadas:</strong>
+<ul style="margin:0.4rem 0 0 1.2rem;">
+<li>Exporte um <strong>Backup Completo</strong> periodicamente para arquivamento no seu computador ou nuvem (Google Drive, iCloud, OneDrive).</li>
+<li>Use o <strong>Backup Leve</strong> para conferências rápidas e transferência ágil via WhatsApp ou e-mail.</li>
+<li>Todos os backups incluem verificação de integridade digital SHA-256 e podem ser restaurados em qualquer navegador moderno sem necessidade de internet.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL DE CONFIGURAÇÃO DO PROFISSIONAL (CABEÇALHO DO PDF) -->
+<div class="modal-overlay hidden" id="modal-config-profissional">
+<div class="modal-card" style="max-width: 520px; width: 90%;">
+<div class="modal-header">
+<div class="modal-title">👨‍⚕️ Dados do Profissional (Cabeçalho do PDF)</div>
+<button class="modal-close-btn" onclick="fecharModalConfigProfissional()" type="button">×</button>
+</div>
+<div class="modal-body" style="padding:1.25rem;">
+<p style="font-size:0.88rem; color:#475569; margin-bottom:1rem; line-height:1.5;">
+                    Informe abaixo o seu nome e registro CREF. Esses dados serão exibidos em destaque no <strong>cabeçalho de todos os laudos e relatórios em PDF</strong> gerados pelo aplicativo.
+                </p>
+<div class="form-grid" style="display:grid; grid-template-columns:1fr; gap:0.9rem;">
+<div class="input-group">
+<label for="cfg_pro_nome" style="font-weight:700;">Nome do Profissional / Avaliador *</label>
+<input id="cfg_pro_nome" placeholder="Ex: Dr. Carlos Eduardo Silva / Prof. Marcos Souza" type="text"/>
+</div>
+<div class="input-group">
+<label for="cfg_pro_cref" style="font-weight:700;">Registro Profissional (CREF) *</label>
+<input id="cfg_pro_cref" placeholder="Ex: CREF 012345-G/PR" type="text"/>
+</div>
+<div class="input-group">
+<label for="cfg_pro_clinica" style="font-weight:700;">Nome da Clínica / Consultório (Opcional)</label>
+<input id="cfg_pro_clinica" placeholder="Ex: Studio Personal &amp; Saúde" type="text"/>
+</div>
+</div>
+</div>
+<div class="modal-footer" style="display:flex; justify-content:flex-end; gap:8px; padding:1rem 1.25rem; background:#f8fafc; border-top:1px solid #e2e8f0;">
+<button class="btn btn-secondary" onclick="fecharModalConfigProfissional()" type="button">Cancelar</button>
+<button class="btn btn-primary" onclick="salvarConfigProfissional()" type="button">💾 Salvar Dados</button>
+</div>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- MODAL DE RECIBO DIGITAL OFICIAL (PRINTABLE A4)                 -->
+
+    
+
+
+
+    <!-- ============================================================== -->
+<!-- MODAL DE RECIBO DIGITAL OFICIAL (PRINTABLE A4)                 -->
+<!-- ============================================================== -->
+<!-- MODAL DE RECIBO DIGITAL OFICIAL (PRINTABLE A4)                 -->
+
+<script src="./assets/js/03-utils.js"></script>
+<script id="ef-data-integrity" src="./assets/js/04-data-integrity.js"></script>
+<script src="./assets/js/05-app-runtime.js"></script>
+<script src="./assets/js/06-dashboard.js"></script>
+<script src="./assets/js/07-opinions.js"></script>
+<script src="./assets/js/08-student-report.js"></script>
+<script src="./assets/js/09-state-cache.js"></script>
+<script src="./assets/js/10-history-worker.js"></script>
+<script src="./assets/js/11-worker-pool.js"></script>
+<script src="./assets/js/12-calculation.js"></script>
+<!-- ===== v6.7 — DATA INTELLIGENCE ENGINE ===== -->
+<script src="./assets/js/13-history-analytics.js"></script>
+<!-- ===== v6.8 — PREDICTIVE & INSIGHT ENGINE ===== -->
+<script src="./assets/js/14-insights.js"></script>
+<link rel="stylesheet" href="./assets/css/15.css">
+<script src="./assets/js/15-decision-engine.js"></script>
+<script src="./assets/js/16-evolution-profile.js"></script>
+<script src="./assets/js/17-evolution-comparison.js"></script>
+<link rel="stylesheet" href="./assets/css/16.css">
+<script src="./assets/js/18-monitoring.js"></script>
+<script src="./assets/js/19-accessibility.js"></script>
+<link rel="stylesheet" href="./assets/css/17.css">
+<script id="ef77-script" src="./assets/js/20-lab.js"></script>
+<link rel="stylesheet" href="./assets/css/18.css">
+<script id="ef781-script" src="./assets/js/21-reports.js"></script>
+<script id="efdiag-script" src="./assets/js/22-diagnostics.js"></script>
+<script id="ef-splash-script" src="./assets/js/23-splash.js"></script>
+<script id="ef-cobranca-script" src="./assets/js/24-billing.js"></script>
+<link rel="stylesheet" href="./assets/css/19.css">
+<link rel="stylesheet" href="./assets/css/20.css">
+<link rel="stylesheet" href="./assets/css/21.css">
+<link rel="stylesheet" href="./assets/css/22.css">
+<script id="ef-sw-register" src="./assets/js/25-pwa.js"></script>
+<link rel="stylesheet" href="./assets/css/23-simple-interface.css">
+<link rel="stylesheet" href="./assets/css/24-fonts.css">
+<link rel="stylesheet" href="./assets/css/25-ficha-viva.css">
+<link rel="stylesheet" href="./assets/css/26-modern.css">
+<link rel="stylesheet" href="./assets/css/27-print-aurora.css">
+<script src="./assets/js/26-simple-interface.js"></script>
+<link rel="stylesheet" href="./assets/css/28-settings.css">
+<link rel="stylesheet" href="./assets/css/29-notifications.css">
+<script src="./assets/js/27-notifications.js"></script>
+</body>
+</html>
