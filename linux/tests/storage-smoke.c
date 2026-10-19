@@ -100,6 +100,15 @@ int main(void) {
   if(unkeyed_query)sqlite3_finalize(unkeyed_query);
   sqlite3_close(unkeyed);
   g_assert_false(ef_store_backup(&store,backup,&error));g_clear_error(&error);
+  sqlite3_stmt *mode=NULL;
+  g_assert_cmpint(sqlite3_prepare_v2(store.db,"PRAGMA journal_mode=WAL",-1,&mode,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_step(mode),==,SQLITE_ROW);sqlite3_finalize(mode);
+  char *unsafe_wal=g_build_filename(tmp,"unsafe-wal-backup.sqlite",NULL);
+  g_assert_false(ef_store_backup(&store,unsafe_wal,&error));g_clear_error(&error);
+  g_assert_false(g_file_test(unsafe_wal,G_FILE_TEST_EXISTS));
+  g_free(unsafe_wal);
+  g_assert_cmpint(sqlite3_prepare_v2(store.db,"PRAGMA journal_mode=DELETE",-1,&mode,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_step(mode),==,SQLITE_ROW);sqlite3_finalize(mode);
   g_assert_false(ef_store_backup(&store,"",&error));g_clear_error(&error);
   g_assert_false(ef_store_backup(&store,"relative.sqlite",&error));g_clear_error(&error);
   char *symlink_path=g_build_filename(tmp,"linked.sqlite",NULL);
