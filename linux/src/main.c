@@ -386,9 +386,14 @@ static void destroy_state(gpointer data) {
 }
 typedef struct { GtkApplication *app; GtkWidget *window; GtkWidget *password; GtkWidget *message; } UnlockState;
 static gboolean unlocked_session=FALSE;
+static guint failed_unlock_attempts=0;
+static gint64 unlock_blocked_until=0;
 static void activate(GtkApplication *app,gpointer data);
 static void unlock_clicked(GtkButton *button,gpointer data) {
   (void)button;UnlockState *unlock=data;
+  if(g_get_monotonic_time()<unlock_blocked_until) {
+    gtk_label_set_text(GTK_LABEL(unlock->message),"Muitas tentativas. Aguarde 30 segundos.");return;
+  }
   const char *password=gtk_editable_get_text(GTK_EDITABLE(unlock->password));
   if(strlen(password)<12) {
     gtk_label_set_text(GTK_LABEL(unlock->message),"Use uma senha com pelo menos 12 caracteres.");return;
@@ -397,9 +402,17 @@ static void unlock_clicked(GtkButton *button,gpointer data) {
   EfStore probe={0};GError *error=NULL;
   if(!ef_store_open(&probe,&error)) {
     gtk_label_set_text(GTK_LABEL(unlock->message),error ? error->message : "Não foi possível desbloquear.");
-    g_clear_error(&error);ef_store_set_passphrase(NULL);return;
+    g_clear_error(&error);ef_store_set_passphrase(NULL);
+    gtk_editable_set_text(GTK_EDITABLE(unlock->password),"");
+    if(++failed_unlock_attempts>=5) {
+      unlock_blocked_until=g_get_monotonic_time()+30*G_USEC_PER_SEC;
+      failed_unlock_attempts=0;
+      gtk_label_set_text(GTK_LABEL(unlock->message),"Muitas tentativas. Aguarde 30 segundos.");
+    }
+    return;
   }
   ef_store_close(&probe);
+  failed_unlock_attempts=0;
   unlocked_session=TRUE;
   gtk_window_destroy(GTK_WINDOW(unlock->window));
   activate(unlock->app,NULL);
