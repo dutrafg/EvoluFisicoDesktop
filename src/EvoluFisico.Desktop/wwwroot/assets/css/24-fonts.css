@@ -1,0 +1,4 @@
+/* Compatibilidade de tipografia no modo modular e offline.
+   O aplicativo ja utiliza pilhas de fontes locais/sistema em seus estilos.
+   Este arquivo evita a dependencia de arquivos de fontes externos e preserva
+   a referencia utilizada na geracao automatica do HTML. */
