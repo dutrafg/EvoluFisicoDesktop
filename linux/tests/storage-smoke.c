@@ -66,6 +66,8 @@ int main(void) {
   g_assert_false(ef_store_restore(&store,incompatible,&error));g_clear_error(&error);
   g_remove(incompatible);g_free(incompatible);
   g_assert_true(ef_store_delete_client(&store,2,&error));g_assert_no_error(error);
+  choices=ef_store_client_choices(&store,&error);
+  g_assert_no_error(error);g_assert_cmpuint(choices->len,==,0);g_ptr_array_unref(choices);
   assessments=ef_store_list_assessments(&store,2,&error);
   g_assert_no_error(error);g_assert_cmpuint(assessments->len,==,0);g_ptr_array_unref(assessments);
   charges=ef_store_list_charges(&store,2,&error);
