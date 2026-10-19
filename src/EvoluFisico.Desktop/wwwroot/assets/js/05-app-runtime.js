@@ -1218,15 +1218,17 @@
                 if (out.parecer_comparativo) delete out.parecer_comparativo[target.id];
                 return out;
             });
-            // Update surviving records first, then delete the target.
-            // Native writes are authenticated; failures keep the in-memory view unchanged.
+            // One SQLite transaction for linked comparison updates and deletion.
+            // No in-memory state changes until the native transaction commits.
+            const updates={};
+            const encoder=new TextEncoder();
             for(const item of nova){
                 const persisted=EF_Security.enabled
                     ? {id:item.id,__efEncrypted:true,payload:await EF_Security.encryptObject(item)}
                     : item;
-                await efNativeEvalStore().writeJSON(EF_NATIVE_EVAL_PREFIX+item.id,persisted);
+                updates[EF_NATIVE_EVAL_PREFIX+item.id]=encoder.encode(JSON.stringify(persisted));
             }
-            await efNativeEvalStore().delete(EF_NATIVE_EVAL_PREFIX+target.id);
+            await efNativeEvalStore().deleteEvaluation(EF_NATIVE_EVAL_PREFIX+target.id,updates);
             avaliacoes = nova; window.avaliacoes = nova;
             if (window.__EF63_STATE__) window.__EF63_STATE__.touch();
             atualizarContadorHistorico(); preencherSeletoresComparacao(); renderizarHistorico();
