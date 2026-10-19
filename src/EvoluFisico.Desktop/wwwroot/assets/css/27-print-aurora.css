@@ -1,0 +1,104 @@
+/* ==========================================================================
+   EvoluFísico 9.0 — PDFs (impressão) na identidade "Aurora"
+   Só visual. Cobre: laudo individual (.print-page), comparativo (.cm-*) e
+   laboratório (#ef77-print .lb-*). Estilos inline antigos em azul são
+   sobrescritos por seletores de atributo.
+   ========================================================================== */
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  :root {
+    --pa-ink: #0c1a14; --pa-muted: #5d6f66; --pa-line: #dfe8e2;
+    --pa-soft: #eef5f1; --pa-fir: #0a5c43; --pa-fir-2: #12805c;
+    --pa-deep: #0b1f17; --pa-lime: #c6f35a; --pa-lime-soft: #f2fbd6;
+  }
+
+  /* ---------- Laudo individual ---------- */
+  .print-page { font-family: "Segoe UI","Helvetica Neue",Arial,sans-serif !important; color: var(--pa-ink) !important; }
+  .print-page .print-header {
+    border-bottom: 0 !important;
+    background: linear-gradient(120deg, #08130e 0%, #0b2a1f 55%, #0a5c43 100%) !important;
+    border-radius: 12px !important;
+    padding: 14px 18px !important;
+    margin-bottom: 14px !important;
+    position: relative;
+    overflow: hidden;
+  }
+  .print-page .print-header::after {
+    content: ""; position: absolute; right: -30px; top: -30px; width: 110px; height: 110px;
+    border-radius: 50%; background: rgba(198,243,90,.18);
+  }
+  .print-page .print-header * { position: relative; z-index: 1; }
+  .print-page .print-header [style*="#0f172a"] { color: #ffffff !important; }
+  .print-page .print-header [style*="#475569"] { color: #a9c4b7 !important; letter-spacing: .06em; font-size: .72rem !important; }
+  .print-page .print-header [style*="#0071e3"] { color: var(--pa-lime) !important; }
+
+  /* qualquer acento azul remanescente vira esmeralda */
+  .print-page [style*="#0071e3"], .print-page [style*="#2563eb"] { color: var(--pa-fir) !important; border-color: var(--pa-fir) !important; }
+  .print-page [style*="background:#0071e3"], .print-page [style*="background: #0071e3"],
+  .print-page [style*="background:#2563eb"], .print-page [style*="background: #2563eb"] { background: var(--pa-fir) !important; color: #fff !important; }
+  .print-page [style*="border:1px solid #cbd5e1"], .print-page [style*="border: 1px solid #cbd5e1"] {
+    border-color: var(--pa-line) !important; border-radius: 10px !important;
+  }
+  .print-page [style*="border-bottom:1.5px solid #0f172a"], .print-page [style*="border-bottom: 1.5px solid #0f172a"] {
+    border-bottom: 2px solid var(--pa-lime) !important;
+  }
+  .print-page-1 > div[style*="background:#f8fafc"] { border-color: var(--pa-line) !important; background: var(--pa-soft) !important; }
+
+  .print-meta-grid {
+    background: var(--pa-soft) !important; border: 0 !important; border-radius: 10px !important;
+    padding: 9px 12px !important; gap: 6px 10px !important; color: var(--pa-muted);
+  }
+  .print-meta-grid strong { color: var(--pa-ink); }
+  .print-stat-box {
+    border: 1px solid var(--pa-line) !important; border-top: 3px solid var(--pa-fir-2) !important;
+    border-radius: 10px !important; background: #fff !important; padding: 8px 6px !important;
+  }
+  .print-stat-box:nth-child(2) { border-top-color: #16a36f !important; }
+  .print-stat-box:nth-child(3) { border-top-color: #c98a1a !important; }
+  .print-stat-box:nth-child(4) { border-top-color: var(--pa-deep) !important; }
+  .print-stat-box .p-lbl { color: var(--pa-muted) !important; letter-spacing: .08em; }
+  .print-stat-box .p-val { color: var(--pa-ink) !important; font-weight: 800; letter-spacing: -.02em; }
+  .print-stat-box .p-sub { color: var(--pa-fir-2) !important; }
+  .print-page-1 table th, .print-table th { background: var(--pa-soft) !important; color: #2f4a3d !important; }
+  .print-page-1 table tr:nth-child(even) { background: #f7faf8 !important; }
+  .print-table th, .print-table td { border-color: var(--pa-line) !important; }
+  .print-page-2 > div[style*="border:1.5px solid"] { border-color: var(--pa-line) !important; }
+
+  /* ---------- Comparativo ---------- */
+  #single-print-wrapper .cm-page { font-family: "Segoe UI","Helvetica Neue",Arial,sans-serif; color: var(--pa-ink); }
+  #single-print-wrapper .cm-head, #ef77-print .lb-head {
+    background: linear-gradient(120deg, #08130e 0%, #0b2a1f 55%, #0a5c43 100%);
+    border-radius: 4mm;
+  }
+  #single-print-wrapper .cm-kicker, #ef77-print .lb-kick { color: var(--pa-lime); }
+  #single-print-wrapper .cm-pro span, #ef77-print .lb-pro { color: #a9c4b7; }
+  #single-print-wrapper .cm-brand-sub { color: #a9c4b7; }
+  #single-print-wrapper .cm-chips span, #single-print-wrapper .cm-period,
+  #ef77-print .lb-chip { border-color: var(--pa-line); background: var(--pa-soft); }
+  #single-print-wrapper .cm-pt-now b, #ef77-print .lb-kv .hl { color: var(--pa-fir); }
+  #single-print-wrapper .cm-pline span { background: var(--pa-fir); }
+  #single-print-wrapper .cm-kpi, #single-print-wrapper .cm-card, #ef77-print .lb-card { border-color: var(--pa-line); border-radius: 3.5mm; }
+  #single-print-wrapper .cm-dot, #ef77-print .lb-h i { background: var(--acc, var(--pa-fir-2)); }
+  #single-print-wrapper .cm-table th, #ef77-print .lb-table th { background: var(--pa-soft); color: #2f4a3d; }
+  #single-print-wrapper .cm-blean { background: linear-gradient(90deg, #12805c, #16a36f); }
+  #single-print-wrapper .cm-lg-lean { background: #12805c; }
+  #single-print-wrapper .cm-tag-b { background: var(--pa-fir); }
+  #ef77-print .lb-chip.blue { background: var(--pa-lime-soft); border-color: #dcef9a; color: #3d5a05; }
+  #ef77-print .lb-table tbody tr.sel { background: var(--pa-lime-soft); }
+
+  /* rodapé discreto em todas as páginas de laudo */
+  .print-page::after, #single-print-wrapper .cm-page::after {
+    content: "EvoluFísico · Avaliação Física & Composição Corporal";
+    display: block; margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--pa-line);
+    font-size: 6.5pt; letter-spacing: .08em; color: var(--pa-muted); text-align: center;
+  }
+}
+/* Laudo PDF: isolamento de layout sem alterar o fluxo nativo da versão 8.9.3. */
+@media print {
+  body:not(.ef77-printing)[data-ef-print-target="report"] > :not(#single-print-wrapper) { display: none !important; }
+  body:not(.ef77-printing)[data-ef-print-target="report"] > #single-print-wrapper {
+    display: block !important; position: static !important; width: 100% !important;
+    margin: 0 !important; padding: 0 !important; background: #fff !important;
+    visibility: visible !important;
+  }
+}
