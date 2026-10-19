@@ -18,6 +18,7 @@ gboolean ef_store_open(EfStore *store, GError **error) {
   if (result != SQLITE_OK) { sql_error(store, error); ef_store_close(store); return FALSE; }
   sqlite3_busy_timeout(store->db, 5000);
   const char *schema = "PRAGMA foreign_keys=ON;"
+    "PRAGMA user_version=1;"
     "CREATE TABLE IF NOT EXISTS clients(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL CHECK(length(name) BETWEEN 1 AND 180), created_utc TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);";
   if (sqlite3_exec(store->db, schema, NULL, NULL, NULL) != SQLITE_OK) { sql_error(store, error); ef_store_close(store); return FALSE; }
   return TRUE;
