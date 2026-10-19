@@ -33,3 +33,11 @@ O código Windows em `main` permanece inalterado.
 - **Atenção:** backups e banco ainda não são criptografados; não inserir dados pessoais reais, não compartilhar os arquivos e não usar para atendimento.
 - A interface de restauração ainda não está disponível: a API será exposta após confirmação, criptografia e fluxo seguro de recuperação.
 - Os testes de recuperação utilizam dados fictícios, não substituem homologação real.
+
+## Interface GTK4 — etapa 30
+
+- Clientes: cadastro, listagem e pesquisa em tempo real.
+- Configurações: verificar integridade, criar backup sem sobrescrever destino e restaurar com confirmação explícita.
+- O mecanismo de restauração mantém uma cópia temporária em memória para tentar reverter falhas durante a cópia. **Não substitui um backup externo independente.**
+- A edição de nomes e exclusão continuam disponíveis apenas na API interna; ainda não estão ligadas à interface.
+- **Segurança:** dados e backups continuam sem criptografia. Não usar dados pessoais reais nem considerar esta versão pronta para produção.
