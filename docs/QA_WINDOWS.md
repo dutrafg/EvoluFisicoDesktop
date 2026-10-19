@@ -31,3 +31,6 @@ O pipeline instala o Setup com `/VERYSILENT` em pasta temporaria, verifica `Evol
 
 ## Atualizações via Configurações — em desenvolvimento
 A interface Desktop mostra o botão **Verificar atualizações** e usa a ponte WebView2 para consultar GitHub Releases. Por enquanto o botão informa a versão publicada e oferece o link do instalador; **não faz download nem instalação automática**. A identificação instalada `9.0.0-beta.1` ainda é fixa e precisa ser sincronizada com cada build antes de comparar versões. Teste real de compilação, abertura do painel e navegação até o link permanece pendente.
+
+## Identidade visual do Windows
+O processo de build agora gera um `.ico` multirresolucao a partir de `icon-512.png` e o incorpora ao executavel WPF. O Inno Setup usa o mesmo arquivo para o icone do instalador e o registro do aplicativo instalado. O pipeline confere a assinatura ICO e a extracao de icone do EXE. **Ainda requer teste visual real** no atalho da area de trabalho, menu Iniciar, barra de tarefas, lista de aplicativos e instalador. Em atualizacoes, o Windows pode manter icones em cache temporariamente.
