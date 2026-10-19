@@ -8,21 +8,19 @@
 
     const DB_KEY = 'evolufisico_cobrancas_db';
     let billingCache = null, billingRaw = null;
+    const EF_NATIVE_BILLING_KEY='ef-billing-main';
+    function billingNativeStore(){
+        if(!window.EFNativeStorage)throw new Error('SQLite nativo indisponível para cobranças.');
+        return window.EFNativeStorage;
+    }
     async function loadBilling() {
-        const raw=localStorage.getItem(DB_KEY);
-        if (billingCache && raw===billingRaw) return structuredClone(billingCache);
-        if (!raw) { billingCache=[]; billingRaw=raw; return []; }
-        let data;
-        try { data=JSON.parse(raw); } catch(e) {
-            console.warn('[EvoluFísico] Histórico financeiro corrompido:', e);
-            billingCache=[]; billingRaw=raw; return [];
-        }
-        const list=data&&data.__efEncrypted?await EF_Security.decryptObject(data.payload):data;
-        if (!Array.isArray(list)) throw new Error('Histórico financeiro inválido. Restaure um backup.');
-        billingCache=list;billingRaw=raw;
+        const packet=await billingNativeStore().readJSON(EF_NATIVE_BILLING_KEY);
+        if(packet===null){billingCache=[];billingRaw=null;return [];}
+        const list=packet&&packet.__efEncrypted?await EF_Security.decryptObject(packet.payload):packet;
+        if(!Array.isArray(list))throw new Error('Histórico financeiro inválido no SQLite.');
+        billingCache=structuredClone(list);billingRaw=JSON.stringify(packet);
         return structuredClone(list);
     }
-
 
     function esc(v) {
         return String(v == null ? '' : v)
@@ -89,7 +87,7 @@
         if (!Array.isArray(lista)) throw new Error('Histórico financeiro inválido');
         const packet=protectedMode?{__efEncrypted:true,payload:await EF_Security.encryptObject(lista,key)}:lista;
         const raw=JSON.stringify(packet);
-        localStorage.setItem(DB_KEY,raw);
+        await billingNativeStore().writeJSON(EF_NATIVE_BILLING_KEY,packet);
         billingRaw=raw;billingCache=structuredClone(lista);
         return true;
     }
