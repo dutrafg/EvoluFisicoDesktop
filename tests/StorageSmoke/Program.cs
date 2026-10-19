@@ -88,7 +88,7 @@ try
     store.VerifyEncryptedRecords(password);
     Console.WriteLine("PASS: All encrypted records authenticated");
     var snapshot = Path.Combine(dir, "snapshot.sqlite");
-    store.BackupTo(snapshot);
+    store.BackupTo(snapshot, password);
     var restored = new EncryptedSqliteStore(snapshot);
     Check(restored.VerifyIntegrity(), "SQLite snapshot integrity");
     Check(sample.SequenceEqual(restored.Load("patient-002", password)!), "Encrypted record restored from snapshot");
@@ -104,6 +104,16 @@ try
     try { restored.VerifyEncryptedRecords(password); throw new Exception("Tampering should fail authentication"); }
     catch (InvalidDataException) { Console.WriteLine("PASS: Authenticated record verification detects tampering"); }
 
+    var protectedBackup = Path.Combine(dir, "authenticated-backup.sqlite");
+    File.WriteAllText(protectedBackup, "Previous backup must survive failure");
+    try
+    {
+        restored.BackupTo(protectedBackup, password);
+        throw new Exception("Corrupt ciphertext must block backup");
+    }
+    catch (InvalidDataException) { Console.WriteLine("PASS: Tampered ciphertext blocks backup publication"); }
+    Check(File.ReadAllText(protectedBackup) == "Previous backup must survive failure",
+        "Existing backup preserved when encrypted snapshot authentication fails");
     try { store.BackupTo(Path.Combine(dir, "test.sqlite")); throw new Exception("Backup must reject source overwrite"); }
     catch (ArgumentException) { Console.WriteLine("PASS: Active database overwrite rejected"); }
 }
