@@ -107,6 +107,10 @@ gboolean ef_store_backup(EfStore *store, const char *destination, GError **error
     g_set_error_literal(error,ef_error(),13,"Destino de backup inválido"); return FALSE;
   }
   if(!ef_store_check_integrity(store,error)) return FALSE;
+  if(g_file_test(destination,G_FILE_TEST_EXISTS)) {
+    g_set_error_literal(error,ef_error(),20,"Destino já existe: backup não sobrescrito");
+    return FALSE;
+  }
   char *uuid=g_uuid_string_random();
   char *temporary=g_strdup_printf("%s.tmp-%s",destination,uuid);
   g_free(uuid);
