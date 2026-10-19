@@ -1,0 +1,19 @@
+/* Desktop palette: tint only the desktop sidebar, preserve contrast and print layout. */
+@media screen and (min-width: 1200px) {
+  body.ef-simple-ui[data-ef-palette] .top-navbar {
+    background: color-mix(in srgb, var(--ef-selected-color, #75d7a9) 16%, var(--ef-surface, #fff)) !important;
+    border-right-color: color-mix(in srgb, var(--ef-selected-dark, #086849) 22%, var(--ef-line, #dfe5ea)) !important;
+    transition: background-color .2s ease, border-color .2s ease;
+  }
+  html.ef-dark-mode body.ef-simple-ui[data-ef-palette] .top-navbar,
+  body.ef-simple-ui.dark-mode[data-ef-palette] .top-navbar {
+    background: color-mix(in srgb, var(--ef-selected-dark, #086849) 24%, var(--ef-surface, #101820)) !important;
+  }
+  body.ef-simple-ui[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn.active {
+    border-color: color-mix(in srgb, var(--ef-selected-dark, #086849) 28%, transparent) !important;
+    box-shadow: inset 3px 0 var(--ef-selected-dark, #086849) !important;
+  }
+}
+@media print {
+  body.ef-simple-ui .top-navbar { background: transparent !important; }
+}
