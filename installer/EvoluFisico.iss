@@ -5,6 +5,8 @@
 AppId={{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+SetupIconFile=..\src\EvoluFisico.Desktop\Assets\EvoluFisico.ico
+UninstallDisplayIcon={app}\{#MyAppExeName}
 DefaultDirName={autopf}\EvoluFisico Desktop
 DefaultGroupName={#MyAppName}
 OutputDir=..\installer-output
