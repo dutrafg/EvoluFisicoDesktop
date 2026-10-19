@@ -47,6 +47,11 @@ try
     try { store.ImportBatch(new System.Collections.Generic.Dictionary<string, byte[]> { ["valid"] = sample, [""] = sample }); throw new Exception("Invalid batch should fail"); }
     catch (ArgumentException) { Console.WriteLine("PASS: Invalid batch rejected"); }
     Check(store.Load("valid") is null, "Failed batch leaves database unchanged");
+    Check(store.ListRecordIds().Contains("batch-a"), "Protected record listing");
+    Check(store.Delete("batch-a"), "Protected record deletion");
+    Check(store.Load("batch-a") is null, "Deleted record is no longer readable");
+    Check(!store.Delete("batch-a"), "Repeated deletion is idempotent");
+    Check(!store.ListRecordIds().Contains("batch-a"), "Deleted record absent from listing");
     var snapshot = Path.Combine(dir, "snapshot.sqlite");
     store.BackupTo(snapshot);
     var restored = new EncryptedSqliteStore(snapshot);
