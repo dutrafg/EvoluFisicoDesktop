@@ -80,6 +80,47 @@ internal sealed class EncryptedSqliteStore
         return result is byte[] bytes ? ProtectedVault.Decrypt(bytes, masterPassword) : null;
     }
 
+    /// <summary>Creates a consistent SQLite snapshot without exposing decrypted patient data.</summary>
+    internal void BackupTo(string destination)
+    {
+        if (string.IsNullOrWhiteSpace(destination))
+            throw new ArgumentException("Caminho de backup inválido.", nameof(destination));
+        var fullSource = Path.GetFullPath(_path);
+        var fullDestination = Path.GetFullPath(destination);
+        if (string.Equals(fullSource, fullDestination, StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("O backup não pode substituir o banco ativo.", nameof(destination));
+        Directory.CreateDirectory(Path.GetDirectoryName(fullDestination)!);
+        var temporary = fullDestination + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            using (var source = Open())
+            {
+                using var backup = new SqliteConnection(new SqliteConnectionStringBuilder
+                {
+                    DataSource = temporary, Mode = SqliteOpenMode.ReadWriteCreate, Pooling = false
+                }.ToString());
+                backup.Open();
+                source.BackupDatabase(backup);
+            }
+            using (var verification = new SqliteConnection(new SqliteConnectionStringBuilder
+            {
+                DataSource = temporary, Mode = SqliteOpenMode.ReadOnly, Pooling = false
+            }.ToString()))
+            {
+                verification.Open();
+                using var check = verification.CreateCommand();
+                check.CommandText = "PRAGMA integrity_check";
+                if (!string.Equals(check.ExecuteScalar() as string, "ok", StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException("Backup SQLite não passou na verificação de integridade.");
+            }
+            File.Move(temporary, fullDestination, true);
+        }
+        finally
+        {
+            if (File.Exists(temporary)) File.Delete(temporary);
+        }
+    }
+
     internal bool VerifyIntegrity()
     {
         using var db = Open();
