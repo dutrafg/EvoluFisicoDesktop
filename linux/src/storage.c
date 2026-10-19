@@ -200,7 +200,7 @@ static gboolean verify_encrypted_snapshot(const char *path,GError **error) {
   if(ok) {
     sqlite3_stmt *stmt=NULL;
     if(sqlite3_prepare_v2(db,"PRAGMA user_version",-1,&stmt,NULL)!=SQLITE_OK)ok=FALSE;
-    else {ok=sqlite3_step(stmt)==SQLITE_ROW && sqlite3_column_int(stmt,0)==1;sqlite3_finalize(stmt);}
+    else {ok=sqlite3_step(stmt)==SQLITE_ROW && (sqlite3_column_int(stmt,0)==1 || sqlite3_column_int(stmt,0)==2);sqlite3_finalize(stmt);}
     if(!ok && error && !*error)g_set_error_literal(error,ef_error(),72,"Versão do backup incompatível");
   }
   sqlite3_close(db);
