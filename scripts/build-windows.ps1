@@ -17,6 +17,50 @@ foreach ($size in @('192','512')) {
     throw "Arquivo PNG invalido: $output"
   }
 }
+# Build a multi-resolution Windows .ico from the application's original PNG.
+$iconDir = Join-Path $root 'src/EvoluFisico.Desktop/Assets'
+New-Item -ItemType Directory -Force -Path $iconDir | Out-Null
+$iconPath = Join-Path $iconDir 'EvoluFisico.ico'
+Add-Type -AssemblyName System.Drawing
+$sourcePng = Join-Path $web 'icon-512.png'
+$frames = @()
+foreach ($size in @(16, 24, 32, 48, 64, 128, 256)) {
+  $bitmap = [System.Drawing.Bitmap]::new($size, $size)
+  try {
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    try {
+      $graphics.Clear([System.Drawing.Color]::Transparent)
+      $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+      $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
+      $original = [System.Drawing.Image]::FromFile($sourcePng)
+      try { $graphics.DrawImage($original, 0, 0, $size, $size) } finally { $original.Dispose() }
+    } finally { $graphics.Dispose() }
+    $stream = [System.IO.MemoryStream]::new()
+    try {
+      $bitmap.Save($stream, [System.Drawing.Imaging.ImageFormat]::Png)
+      $frames += ,@{ Size = $size; Bytes = $stream.ToArray() }
+    } finally { $stream.Dispose() }
+  } finally { $bitmap.Dispose() }
+}
+$stream = [System.IO.File]::Create($iconPath)
+try {
+  $writer = [System.IO.BinaryWriter]::new($stream)
+  try {
+    $writer.Write([uint16]0); $writer.Write([uint16]1); $writer.Write([uint16]$frames.Count)
+    $offset = 6 + 16 * $frames.Count
+    foreach ($frame in $frames) {
+      $size = [int]$frame.Size
+      $writer.Write([byte]($size % 256)); $writer.Write([byte]($size % 256))
+      $writer.Write([byte]0); $writer.Write([byte]0)
+      $writer.Write([uint16]1); $writer.Write([uint16]32)
+      $writer.Write([uint32]$frame.Bytes.Length); $writer.Write([uint32]$offset)
+      $offset += $frame.Bytes.Length
+    }
+    foreach ($frame in $frames) { $writer.Write([byte[]]$frame.Bytes) }
+  } finally { $writer.Dispose() }
+} finally { $stream.Dispose() }
+if ((Get-Item $iconPath).Length -lt 1024) { throw 'Windows icon generation failed' }
+Write-Host "Windows icon generated: $iconPath"
 # Identify each beta build so the updater can distinguish installed and published releases.
 $revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0,7).ToLowerInvariant() } else { 'local' }
 $tag = "desktop-v9.0-beta-$revision"
