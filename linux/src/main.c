@@ -218,7 +218,7 @@ static void save_charge(GtkButton *button,gpointer data) {
 }
 static void delete_client_confirmed(GtkDialog *dialog,gint response,gpointer data) {
   AppState *state=data;
-  gint64 id=GPOINTER_TO_INT(g_object_get_data(G_OBJECT(dialog),"client-id"));
+  gint64 id=*(gint64*)g_object_get_data(G_OBJECT(dialog),"client-id");
   gtk_window_destroy(GTK_WINDOW(dialog));
   if(response!=GTK_RESPONSE_ACCEPT)return;
   GError *error=NULL;
@@ -232,7 +232,7 @@ static void delete_client_confirmed(GtkDialog *dialog,gint response,gpointer dat
 }
 static void delete_client_clicked(GtkButton *button,gpointer data) {
   AppState *state=data;gint64 id=0;
-  if(!read_id(state->client_delete_id,&id) || id>G_MAXINT) {
+  if(!read_id(state->client_delete_id,&id)) {
     gtk_label_set_text(GTK_LABEL(state->status),"Informe ID de cliente válido.");return;
   }
   GtkWidget *window=gtk_widget_get_ancestor(GTK_WIDGET(button),GTK_TYPE_WINDOW);
@@ -240,7 +240,8 @@ static void delete_client_clicked(GtkButton *button,gpointer data) {
     "Excluir cliente %" G_GINT64_FORMAT " e TODAS as avaliações e cobranças vinculadas?",id);
   gtk_dialog_add_button(GTK_DIALOG(dialog),"Cancelar",GTK_RESPONSE_CANCEL);
   gtk_dialog_add_button(GTK_DIALOG(dialog),"Excluir tudo",GTK_RESPONSE_ACCEPT);
-  g_object_set_data(G_OBJECT(dialog),"client-id",GINT_TO_POINTER((int)id));
+  gint64 *id_copy=g_new(gint64,1);*id_copy=id;
+  g_object_set_data_full(G_OBJECT(dialog),"client-id",id_copy,g_free);
   g_signal_connect(dialog,"response",G_CALLBACK(delete_client_confirmed),state);
   gtk_window_present(GTK_WINDOW(dialog));
 }
