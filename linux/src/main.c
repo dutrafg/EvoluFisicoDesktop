@@ -18,6 +18,7 @@ typedef struct {
   GtkWidget *assessment_weight;
   GtkWidget *assessment_height;
   GtkWidget *assessment_status;
+  GtkWidget *assessment_folder;
   GtkWidget *assessment_list;
   GtkWidget *charge_cents;
   GtkWidget *charge_description;
