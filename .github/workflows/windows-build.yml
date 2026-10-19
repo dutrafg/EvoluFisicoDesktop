@@ -33,6 +33,9 @@ jobs:
         shell: pwsh
         run: ./scripts/build-windows.ps1
 
+      - name: Run 30 Windows stability safety gates
+        run: node tests/windows-stable-gates.cjs
+
       - name: Validate migration JavaScript syntax
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/29-legacy-migration.js
