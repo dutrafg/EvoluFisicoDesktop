@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -56,6 +57,18 @@ public partial class MainWindow : Window
             Browser.CoreWebView2.SetVirtualHostNameToFolderMapping(
                 "evolufisico.local", web, CoreWebView2HostResourceAccessKind.DenyCors);
 
+            Browser.CoreWebView2.NewWindowRequested += (_, args) =>
+            {
+                args.Handled = true;
+                if (Uri.TryCreate(args.Uri, UriKind.Absolute, out var target)
+                    && target.Scheme == Uri.UriSchemeHttps
+                    && target.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase)
+                    && target.AbsolutePath.StartsWith("/dutrafg/EvoluFisicoDesktop/releases/download/", StringComparison.OrdinalIgnoreCase))
+                {
+                    try { Process.Start(new ProcessStartInfo(target.AbsoluteUri) { UseShellExecute = true }); }
+                    catch (Exception ex) { MessageBox.Show("Não foi possível abrir o download: " + ex.Message); }
+                }
+            };
             Browser.CoreWebView2.NavigationCompleted += (_, args) =>
             {
                 if (!args.IsSuccess)
