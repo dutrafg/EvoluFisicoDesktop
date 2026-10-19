@@ -123,6 +123,26 @@ function mount(){
  move('btn-security-pill','ef-setting-security');
  move('folder-status-pill','ef-setting-storage');
  const backupButtons=[...oldActions.querySelectorAll('button')];backupButtons.forEach(b=>{b.classList.add('ef-settings-action');$('ef-setting-backup').append(b)});
+ // Desktop-only update panel: does not change the web edition.
+ if(window.chrome && window.chrome.webview){
+   const grid=$('ef-setting-backup')?.closest('.ef-settings-grid') || $('ef-setting-backup')?.parentElement?.parentElement;
+   if(grid){
+     const panel=document.createElement('article');
+     panel.className='ef-settings-card';
+     panel.innerHTML='<h3>Atualizações do aplicativo</h3><p>Verifique se há uma versão mais recente do EvoluFisico Desktop para Windows.</p><div class="ef-settings-controls"><button class="btn btn-outline btn-sm ef-settings-action" id="ef-desktop-check-update" type="button">Verificar atualizações</button><p id="ef-desktop-update-status" role="status" aria-live="polite"></p></div>';
+     grid.append(panel);
+     const btn=$('ef-desktop-check-update'), status=$('ef-desktop-update-status');
+     btn.addEventListener('click',()=>{status.textContent='Consultando versões publicadas…';window.chrome.webview.postMessage('check-updates')});
+     window.chrome.webview.addEventListener('message',e=>{
+       const m=e.data;
+       if(!m || m.type!=='desktop-update')return;
+       status.textContent=m.message||'';
+       if(m.downloadUrl && /^https:\/\/github\.com\/dutrafg\/EvoluFisicoDesktop\/releases\/download\//.test(m.downloadUrl)){
+         const a=document.createElement('a');a.href=m.downloadUrl;a.textContent='Baixar instalador';a.target='_blank';a.rel='noopener noreferrer';status.append(' ',a);
+       }
+     });
+   }
+ }
  oldActions.remove();
  const brand=header.querySelector('.brand-wrapper');brand.onclick=e=>{e.preventDefault();window.switchTab('tab-painel')};
  setupForm();arrangeNavigation();arrangeDetails();
