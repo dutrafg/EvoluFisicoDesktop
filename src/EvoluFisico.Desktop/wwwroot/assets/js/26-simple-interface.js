@@ -138,7 +138,10 @@ function mount(){
        if(!m || m.type!=='desktop-update')return;
        btn.disabled=false;
        status.textContent=m.message||'';
-       if(m.downloadUrl && /^https:\/\/github\.com\/dutrafg\/EvoluFisicoDesktop\/releases\/download\//.test(m.downloadUrl)){
+       const releaseKey='ef-desktop-dismissed-update';
+       let dismissed=false;
+       try{dismissed=localStorage.getItem(releaseKey)===m.downloadUrl}catch(_){/* Storage may be disabled. */}
+       if(m.downloadUrl && !dismissed && /^https:\/\/github\.com\/dutrafg\/EvoluFisicoDesktop\/releases\/download\//.test(m.downloadUrl)){
          let banner=$('ef-desktop-update-banner');
          if(!banner){
            banner=document.createElement('div');
@@ -151,7 +154,7 @@ function mount(){
          const title=document.createElement('strong');title.textContent='Atualização disponível';banner.append(title);
          const description=document.createElement('p');description.textContent=m.message||'Uma nova versão está disponível.';banner.append(description);
          const download=document.createElement('a');download.href=m.downloadUrl;download.target='_blank';download.rel='noopener noreferrer';download.textContent='Baixar nova versão';download.style.cssText='color:#a9d7ff;text-decoration:underline;margin-right:18px';banner.append(download);
-         const close=document.createElement('button');close.type='button';close.textContent='Agora não';close.style.cssText='border:0;background:transparent;color:white;cursor:pointer';close.addEventListener('click',()=>banner.remove());banner.append(close);
+         const close=document.createElement('button');close.type='button';close.textContent='Agora não';close.style.cssText='border:0;background:transparent;color:white;cursor:pointer';close.addEventListener('click',()=>{try{localStorage.setItem(releaseKey,m.downloadUrl)}catch(_){/* Storage may be disabled. */}banner.remove()});banner.append(close);
        }
        if(m.downloadUrl && /^https:\/\/github\.com\/dutrafg\/EvoluFisicoDesktop\/releases\/download\//.test(m.downloadUrl)){
          const a=document.createElement('a');a.href=m.downloadUrl;a.textContent='Baixar instalador';a.target='_blank';a.rel='noopener noreferrer';status.append(' ',a);
