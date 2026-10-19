@@ -222,7 +222,25 @@ static void save_assessment(GtkButton *button,gpointer data) {
   const char *date=gtk_editable_get_text(GTK_EDITABLE(state->assessment_date));
   GError *error=NULL;
   if(ef_store_add_assessment(&state->store,id,date,weight,height,&error)) {
-    gtk_label_set_text(GTK_LABEL(state->assessment_status),"Avaliação registrada (sem criptografia).");
+    const char *folder=gtk_editable_get_text(GTK_EDITABLE(state->assessment_folder));
+    if(folder && *folder) {
+      char *saved_path=NULL;
+      GError *snapshot_error=NULL;
+      if(ef_store_snapshot_to_folder(&state->store,folder,&saved_path,&snapshot_error)) {
+        gtk_label_set_text(GTK_LABEL(state->assessment_status),
+          "Avaliação salva no SQLCipher e cópia criptografada gravada na pasta.");
+      }else{
+        char *warning=g_strdup_printf("Avaliação SALVA no SQLCipher, mas a cópia na pasta FALHOU: %s",
+          snapshot_error ? snapshot_error->message : "erro desconhecido");
+        gtk_label_set_text(GTK_LABEL(state->assessment_status),warning);
+        g_free(warning);
+      }
+      g_free(saved_path);
+      g_clear_error(&snapshot_error);
+    }else{
+      gtk_label_set_text(GTK_LABEL(state->assessment_status),
+        "Avaliação salva no SQLCipher. Nenhuma pasta de cópia configurada.");
+    }
     refresh_assessments(state,id);
     gtk_editable_set_text(GTK_EDITABLE(state->assessment_weight),"");
     gtk_editable_set_text(GTK_EDITABLE(state->assessment_height),"");
