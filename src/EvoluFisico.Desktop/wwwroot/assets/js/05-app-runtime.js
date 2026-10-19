@@ -1597,7 +1597,7 @@
             try {
                 const nomeSeguro = (registro.nome || 'aluno').toLowerCase().replace(/[^a-z0-9]/g, '_');
                 const semanaSegura = (registro.checkin_semana || 'checkin').toLowerCase().replace(/[^a-z0-9]/g, '_');
-                const pastaNome = `${nomeSeguro}_${registro.data_avaliacao}_${semanaSegura}`;
+                const pastaNome = `${nomeSeguro.slice(0,60)}_${registro.data_avaliacao}_${semanaSegura.slice(0,30)}_${idSeguro(registro.id || gerarIdSeguro()).slice(0,72)}`;
 
                 const subDir = await pastaHandle.getDirectoryHandle(pastaNome, { create: true });
                 const dadosNome = EF_Security.enabled && EF_Security.key ? 'dados_avaliacao.efx' : 'dados_avaliacao.json';
@@ -2161,7 +2161,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         panturrilha: getNum('panturrilha')
                     };
                     const valsPeri = Object.values(perimetria).filter(v => typeof v === 'number' && v > 0);
-                    const somaPeri = valsPeri.length > 0 ? valsPeri.reduce((a, b) => a + b, 0).toFixed(1) : null;
+                    const somaPeri = valsPeri.length > 0 ? Number(valsPeri.reduce((a, b) => a + b, 0).toFixed(1)) : null;
 
                     const dobras = {
                         triceps: getNum('dobra_triceps'),
@@ -2217,7 +2217,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         
                         peso: pesoGeral,
                         perimetria: perimetria,
-                        perimetria_soma: somaPeri.toFixed(1),
+                        perimetria_soma: somaPeri,
                         
                         dobras: dobras,
                         dobras_resultado: resultadoDobras,
@@ -2260,18 +2260,33 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         }
                     }
 
+                    // O SQLite já confirmou a avaliação antes da cópia opcional no disco.
                     await salvarAvaliacaoNoDB(registro);
-
-                    let pastaCriada = await gravarAvaliacaoEmSubpasta(registro);
+                    const registroConfirmado = avaliacoes.find(a => a.id === registro.id) || registro;
+                    let pastaCriada = false;
+                    let falhaDaPasta = false;
+                    try {
+                        pastaCriada = await gravarAvaliacaoEmSubpasta(registroConfirmado);
+                        if (!pastaCriada) {
+                            const configurada = pastaHandle || await obterPastaHandleDoIDB();
+                            falhaDaPasta = Boolean(configurada);
+                        }
+                    } catch (erroDaPasta) {
+                        console.warn('[Windows] A avaliação foi gravada no SQLite; erro na cópia física:', erroDaPasta);
+                        falhaDaPasta = true;
+                    }
                     const infoDb = document.getElementById('success-db-info');
                     const titleSuccess = document.getElementById('success-title');
                     
                     titleSuccess.textContent = modoEdicao ? 'Avaliação Atualizada com Sucesso!' : 'Avaliação Salva com Sucesso!';
 
                     if (pastaCriada) {
-                        infoDb.textContent = `Salvo no banco de dados IndexedDB e subpasta física criada: banco_dados/${pastaCriada}/`;
+                        infoDb.textContent = `Avaliação confirmada no SQLite criptografado e copiada para a pasta escolhida: ${pastaCriada}/`;
+                    } else if (falhaDaPasta) {
+                        infoDb.textContent = 'Avaliação salva no SQLite criptografado, mas a cópia na pasta não foi concluída. Clique em 📁 para reconectar a pasta e tentar novamente.';
+                        if (window.efToast) efToast('Cópia no disco pendente. A avaliação permanece salva no SQLite.', 'warn');
                     } else {
-                        infoDb.textContent = 'Salvo com sucesso no banco de dados de alta capacidade (IndexedDB). Conecte uma pasta física no topo caso deseje arquivos no disco.';
+                        infoDb.textContent = 'Avaliação confirmada no SQLite criptografado. Nenhuma pasta física está conectada; clique em 📁 para escolher uma pasta.';
                     }
 
                     Object.keys(urlsPreviewTemporarias).forEach(k => {
