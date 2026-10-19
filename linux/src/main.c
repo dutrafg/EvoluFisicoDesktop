@@ -31,15 +31,16 @@ typedef struct {
   GtkWidget *client_scroll;
   GtkWidget *assessment_scroll;
   GtkWidget *charge_scroll;
+  GArray *client_choice_ids;
 } AppState;
 
 static gboolean read_picker_id(GtkWidget *picker,gint64 *out) {
-  const char *id=gtk_combo_box_get_active_id(GTK_COMBO_BOX(picker));
-  if(!id || !*id)return FALSE;
-  char *end=NULL;errno=0;
-  gint64 parsed=g_ascii_strtoll(id,&end,10);
-  if(errno==ERANGE || !end || *end || parsed<=0)return FALSE;
-  *out=parsed;return TRUE;
+  guint index=gtk_drop_down_get_selected(GTK_DROP_DOWN(picker));
+  AppState *state=g_object_get_data(G_OBJECT(picker),"state");
+  if(!state || !state->client_choice_ids || index==GTK_INVALID_LIST_POSITION ||
+     index>=state->client_choice_ids->len)return FALSE;
+  *out=g_array_index(state->client_choice_ids,gint64,index);
+  return *out>0;
 }
 static gboolean read_id(GtkWidget *entry,gint64 *out) {
   const char *value=gtk_editable_get_text(GTK_EDITABLE(entry));
@@ -59,29 +60,40 @@ static gboolean read_positive_double(GtkWidget *entry,double *out) {
 }
 static void refresh_pickers(AppState *state) {
   if(!state->assessment_picker || !state->charge_picker || !state->store.db)return;
-  GtkComboBoxText *a=GTK_COMBO_BOX_TEXT(state->assessment_picker);
-  GtkComboBoxText *b=GTK_COMBO_BOX_TEXT(state->charge_picker);
-  char *selected_a=g_strdup(gtk_combo_box_get_active_id(GTK_COMBO_BOX(a)));
-  char *selected_b=g_strdup(gtk_combo_box_get_active_id(GTK_COMBO_BOX(b)));
-  gtk_combo_box_text_remove_all(a);gtk_combo_box_text_remove_all(b);
+  gint64 previous_a=0,previous_b=0;
+  read_picker_id(state->assessment_picker,&previous_a);
+  read_picker_id(state->charge_picker,&previous_b);
+  GtkStringList *names=gtk_string_list_new(NULL);
+  GArray *ids=g_array_new(FALSE,FALSE,sizeof(gint64));
   GError *error=NULL;
   GPtrArray *rows=ef_store_client_choices(&state->store,&error);
-  if(!rows) {g_warning("Erro ao atualizar seleção: %s",error ? error->message : "erro desconhecido");g_clear_error(&error);}
-  else {
+  if(!rows) {
+    g_warning("Erro ao atualizar seleção: %s",error ? error->message : "erro desconhecido");
+    g_clear_error(&error);
+  }else{
     for(guint i=0;i<rows->len;i++) {
       const char *row=g_ptr_array_index(rows,i);
-      char *end=NULL;gint64 id=g_ascii_strtoll(row,&end,10);
+      char *end=NULL;
+      gint64 id=g_ascii_strtoll(row,&end,10);
       if(id<=0 || !end || *end!=' ')continue;
-      char *key=g_strdup_printf("%" G_GINT64_FORMAT,id);
-      gtk_combo_box_text_append(a,key,row);
-      gtk_combo_box_text_append(b,key,row);
-      g_free(key);
+      gtk_string_list_append(names,row);
+      g_array_append_val(ids,id);
     }
     g_ptr_array_unref(rows);
   }
-  if(selected_a)gtk_combo_box_set_active_id(GTK_COMBO_BOX(a),selected_a);
-  if(selected_b)gtk_combo_box_set_active_id(GTK_COMBO_BOX(b),selected_b);
-  g_free(selected_a);g_free(selected_b);
+  gtk_drop_down_set_model(GTK_DROP_DOWN(state->assessment_picker),G_LIST_MODEL(names));
+  gtk_drop_down_set_model(GTK_DROP_DOWN(state->charge_picker),G_LIST_MODEL(names));
+  g_object_unref(names);
+  if(state->client_choice_ids)g_array_unref(state->client_choice_ids);
+  state->client_choice_ids=ids;
+  guint selected_a=GTK_INVALID_LIST_POSITION,selected_b=GTK_INVALID_LIST_POSITION;
+  for(guint i=0;i<ids->len;i++){
+    gint64 id=g_array_index(ids,gint64,i);
+    if(id==previous_a)selected_a=i;
+    if(id==previous_b)selected_b=i;
+  }
+  gtk_drop_down_set_selected(GTK_DROP_DOWN(state->assessment_picker),selected_a);
+  gtk_drop_down_set_selected(GTK_DROP_DOWN(state->charge_picker),selected_b);
 }
 static void refresh_clients(AppState *state) {
   GtkWidget *child;
@@ -431,7 +443,8 @@ static void activate(GtkApplication *app,gpointer data) {
       else gtk_label_set_text(GTK_LABEL(state->status),"Erro ao abrir SQLite. Cadastro indisponível.");
       gtk_widget_set_sensitive(save,state->store.db!=NULL);
     }else if(i==2){
-      state->assessment_picker=gtk_combo_box_text_new();
+      state->assessment_picker=gtk_drop_down_new(NULL,NULL);
+      g_object_set_data(G_OBJECT(state->assessment_picker),"state",state);
       state->assessment_date=gtk_entry_new();
       GDateTime *today=g_date_time_new_now_local();
       char *today_text=g_date_time_format(today,"%Y-%m-%d");
@@ -470,7 +483,8 @@ static void activate(GtkApplication *app,gpointer data) {
       g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
       gtk_widget_set_sensitive(save_assessment_button,state->store.db!=NULL);
     }else if(i==3){
-      state->charge_picker=gtk_combo_box_text_new();
+      state->charge_picker=gtk_drop_down_new(NULL,NULL);
+      g_object_set_data(G_OBJECT(state->charge_picker),"state",state);
       state->charge_cents=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_cents),"Valor em centavos (ex.: 2500 = R$ 25,00)");
       state->charge_description=gtk_entry_new();
