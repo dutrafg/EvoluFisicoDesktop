@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <glib/gstdio.h>
 extern int symlink(const char *target, const char *linkpath);
+extern int sqlite3_key(sqlite3 *db,const void *key,int key_length);
 int main(void) {
   char *tmp=g_dir_make_tmp("evolufisico-test-XXXXXX",NULL);
   g_assert_nonnull(tmp);
@@ -94,6 +95,14 @@ int main(void) {
   sqlite3_finalize(index_check);
   char *backup=g_build_filename(tmp,"backup.sqlite",NULL);
   g_assert_true(ef_store_backup(&store,backup,&error));g_assert_no_error(error);
+  sqlite3_stmt *backup_read=NULL;
+  sqlite3 *backup_db=NULL;
+  g_assert_cmpint(sqlite3_open_v2(backup,&backup_db,SQLITE_OPEN_READONLY,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_key(backup_db,"EvoluFisico-QA-Ficticio-2026!",strlen("EvoluFisico-QA-Ficticio-2026!")),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_prepare_v2(backup_db,"PRAGMA integrity_check",-1,&backup_read,NULL),==,SQLITE_OK);
+  g_assert_cmpint(sqlite3_step(backup_read),==,SQLITE_ROW);
+  g_assert_cmpstr((const char*)sqlite3_column_text(backup_read,0),==,"ok");
+  sqlite3_finalize(backup_read);sqlite3_close(backup_db);
   sqlite3 *unkeyed=NULL;sqlite3_stmt *unkeyed_query=NULL;
   g_assert_cmpint(sqlite3_open_v2(backup,&unkeyed,SQLITE_OPEN_READONLY,NULL),==,SQLITE_OK);
   g_assert_cmpint(sqlite3_prepare_v2(unkeyed,"SELECT name FROM clients",-1,&unkeyed_query,NULL),!=,SQLITE_OK);
