@@ -27,3 +27,4 @@ gboolean ef_store_charge_belongs_to(EfStore *store,gint64 charge_id,gint64 clien
 gboolean ef_store_delete_assessment_for_client(EfStore *store,gint64 assessment_id,gint64 client_id,GError **error);
 gboolean ef_store_delete_charge_for_client(EfStore *store,gint64 charge_id,gint64 client_id,GError **error);
 void ef_store_set_passphrase(const char *passphrase);
+gboolean ef_store_receive_charge(EfStore *store,gint64 charge_id,gint64 client_id,GError **error);
