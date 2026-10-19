@@ -33,6 +33,9 @@ jobs:
         shell: pwsh
         run: ./scripts/build-windows.ps1
 
+      - name: Test IndexedDB encrypted snapshot safety
+        run: node tests/indexeddb-snapshot.cjs
+
       - name: Test opt-in legacy data snapshot
         run: node tests/legacy-migration.cjs
 
