@@ -304,6 +304,24 @@ static void activate(GtkApplication *app,gpointer data) {
       gtk_box_append(GTK_BOX(page),state->assessment_list);
       g_signal_connect(save_assessment_button,"clicked",G_CALLBACK(save_assessment),state);
       gtk_widget_set_sensitive(save_assessment_button,state->store.db!=NULL);
+    }else if(i==3){
+      state->charge_client=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_client),"ID do cliente");
+      state->charge_cents=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_cents),"Valor em centavos (ex.: 2500 = R$ 25,00)");
+      state->charge_description=gtk_entry_new();
+      gtk_entry_set_placeholder_text(GTK_ENTRY(state->charge_description),"Descrição do serviço");
+      gtk_box_append(GTK_BOX(page),state->charge_client);
+      gtk_box_append(GTK_BOX(page),state->charge_cents);
+      gtk_box_append(GTK_BOX(page),state->charge_description);
+      GtkWidget *save_charge_button=gtk_button_new_with_label("Registrar cobrança");
+      gtk_box_append(GTK_BOX(page),save_charge_button);
+      state->charge_status=gtk_label_new("Protótipo sem criptografia — apenas dados fictícios.");
+      gtk_box_append(GTK_BOX(page),state->charge_status);
+      state->charge_list=gtk_list_box_new();
+      gtk_box_append(GTK_BOX(page),state->charge_list);
+      g_signal_connect(save_charge_button,"clicked",G_CALLBACK(save_charge),state);
+      gtk_widget_set_sensitive(save_charge_button,state->store.db!=NULL);
     }else if(i==5){
       state->backup_entry=gtk_entry_new();
       gtk_entry_set_placeholder_text(GTK_ENTRY(state->backup_entry),"Caminho completo do arquivo de backup .sqlite");
