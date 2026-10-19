@@ -37,6 +37,12 @@ int main(void) {
   filtered=ef_store_search_clients(&store,"Souza",&error);
   g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);g_ptr_array_unref(filtered);
   g_assert_false(ef_store_restore(&store,"/does/not/exist.sqlite",&error));g_clear_error(&error);
+  char *corrupt=g_build_filename(tmp,"corrupt.sqlite",NULL);
+  g_assert_true(g_file_set_contents(corrupt,"not a SQLite database", -1,&error));g_assert_no_error(error);
+  g_assert_false(ef_store_restore(&store,corrupt,&error));g_clear_error(&error);
+  filtered=ef_store_search_clients(&store,"Souza",&error);
+  g_assert_no_error(error);g_assert_cmpuint(filtered->len,==,1);g_ptr_array_unref(filtered);
+  g_remove(corrupt);g_free(corrupt);
   g_assert_true(ef_store_check_integrity(&store,&error));g_assert_no_error(error);
   g_remove(backup);g_free(backup);
   ef_store_close(&store);
