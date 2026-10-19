@@ -243,6 +243,22 @@ gboolean ef_store_backup(EfStore *store,const char *destination,GError **error) 
   g_unlink(temporary);g_free(temporary);
   return ok;
 }
+
+gboolean ef_store_snapshot_to_folder(EfStore *store,const char *folder,char **saved_path,GError **error) {
+  if(saved_path)*saved_path=NULL;
+  if(!folder || !g_path_is_absolute(folder) || !g_file_test(folder,G_FILE_TEST_IS_DIR) ||
+     g_file_test(folder,G_FILE_TEST_IS_SYMLINK)) {
+    g_set_error_literal(error,ef_error(),90,"Selecione uma pasta absoluta existente, sem links simbólicos.");
+    return FALSE;
+  }
+  char *name=g_strdup_printf("evolufisico-%s.sqlite",g_uuid_string_random());
+  char *destination=g_build_filename(folder,name,NULL);
+  g_free(name);
+  gboolean ok=ef_store_backup(store,destination,error);
+  if(ok && saved_path)*saved_path=g_strdup(destination);
+  g_free(destination);
+  return ok;
+}
 gboolean ef_store_restore(EfStore *store,const char *source,GError **error) {
   if(!store || !store->db || !source || !g_path_is_absolute(source) || g_file_test(source,G_FILE_TEST_IS_SYMLINK)) {
     g_set_error_literal(error,ef_error(),77,"Origem de restauração inválida");return FALSE;
