@@ -1,0 +1,13 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const snapshot=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/31-indexeddb-snapshot.js','utf8');
+const ui=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/assets/js/26-simple-interface.js','utf8');
+const html=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/index.html','utf8');
+assert.match(snapshot,/transaction\(name,'readonly'\)/);
+assert.match(snapshot,/originalsPreserved:true/);
+assert.match(snapshot,/EFNativeStorage\.importBatch/);
+assert.match(snapshot,/EFNativeStorage\.read/);
+assert.match(snapshot,/rows\.length!==store\.count/);
+assert.doesNotMatch(snapshot,/\.deleteDatabase\(|\.clear\(/);
+assert.match(ui,/ef-desktop-snapshot-idb/);
+assert.match(html,/31-indexeddb-snapshot\.js/);
+console.log('PASS: IndexedDB snapshot non-destructive static checks');
