@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install GTK4 build dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential meson ninja-build pkg-config libgtk-4-dev libsqlcipher-dev
+        run: sudo apt-get update && sudo apt-get install -y build-essential meson ninja-build pkg-config libgtk-4-dev libsqlcipher-dev xvfb imagemagick
       - name: Check source for unsafe SQL string formatting
         run: |
           if grep -nE 'sqlite3_exec\([^,]*, *g_strdup_printf|sqlite3_exec\([^,]*, *sprintf' linux/src/storage.c; then exit 1; fi
@@ -33,6 +33,29 @@ jobs:
           meson setup linux/build-strict linux --buildtype=debug -Dwerror=true
           meson compile -C linux/build-strict
           meson test -C linux/build-strict --print-errorlogs
+      - name: GTK4 headless visual smoke and screenshot
+        env:
+          EVOLUFISICO_DB_PASSPHRASE: "CI-Only-Fictitious-Visual-2026!"
+        run: |
+          mkdir -p linux/qa-artifacts
+          xvfb-run -a -s "-screen 0 1366x768x24" sh -c '
+            export XDG_DATA_HOME="$(mktemp -d)"
+            linux/build/evolufisico-linux &
+            app_pid=$!
+            sleep 5
+            kill -0 "$app_pid"
+            import -window root linux/qa-artifacts/gtk4-headless.png
+            kill "$app_pid"
+            wait "$app_pid" || true
+          '
+          test -s linux/qa-artifacts/gtk4-headless.png
+      - name: Upload visual QA screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evolufisico-linux-visual-qa
+          path: linux/qa-artifacts/*.png
+          if-no-files-found: ignore
       - name: Verify Debian package contents
         run: |
           dpkg-deb --contents linux/dist/*.deb | tee /tmp/evolufisico-deb-files.txt
