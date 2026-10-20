@@ -581,8 +581,8 @@
                 }
                 const lista = Array.isArray(avaliacoes) ? avaliacoes : [];
 
-                // Sem IndexedDB, o LocalStorage é o único destino: precisa gravar antes de qualquer remoção.
-                if (!db) {
+                // O SQLite nativo já é criptografado. Não criar cópia legível ao remover a senha web.
+                if (!db && !window.EFNativeStorage) {
                     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(lista)); }
                     catch (e) { throw new Error('Não foi possível gravar os dados sem criptografia (nada foi alterado): ' + e.message); }
                 }
@@ -613,7 +613,7 @@
                 } catch (e) { console.warn('Rascunho não pôde ser descriptografado:', e); }
 
                 // 4) Cópia em LocalStorage (opcional quando há IndexedDB: fotos podem estourar a cota) e remoção do cofre
-                if (db) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(lista)); } catch (e) { console.warn('Cópia em LocalStorage ignorada (cota):', e); } }
+                if (db && !window.EFNativeStorage) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(lista)); } catch (e) { console.warn('Cópia em LocalStorage ignorada (cota):', e); } }
                 if (window.EFCobranca) await EFCobranca.unprotect();
                 localStorage.removeItem(EF_SECURITY_META_KEY);
                 localStorage.removeItem(EF_SECURITY_STORAGE_KEY);
@@ -719,6 +719,9 @@
             },
 
             async saveVaultArray(arr) {
+                // No Desktop, avaliações pertencem ao SQLite protegido por DPAPI;
+                // nunca criar duplicatas em texto aberto no LocalStorage.
+                if (window.EFNativeStorage) return;
                 if (!this.enabled || !this.key) {
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
                     return;
@@ -794,7 +797,7 @@
             _updateUI() {
                 const badge = document.getElementById('ef-security-badge');
                 if (badge) {
-                    badge.textContent = this.enabled && this.key ? '🔐 Cofre desbloqueado' : (this.isConfigured() ? '🔒 Cofre bloqueado' : '⚪ Criptografia desativada');
+                    badge.textContent = this.enabled && this.key ? '🔐 Cofre desbloqueado' : (this.isConfigured() ? '🔒 Cofre bloqueado' : (window.EFNativeStorage ? '🔐 SQLite criptografado (Windows)' : '⚪ Criptografia desativada'));
                     badge.style.color = this.enabled && this.key ? '#15803d' : (this.isConfigured() ? '#b45309' : '#64748b');
                 }
             }
@@ -877,7 +880,7 @@
                           <span>🔓</span> <span>Resetar Senha / Desativar Cofre</span>
                         </h4>
                         <p style="font-size:0.78rem; color:#7c2d12; line-height:1.45; margin-bottom:0.85rem;">
-                          Descriptografa todos os registros e remove a chave mestra. Seus dados permanecerão salvos normalmente no navegador em modo padrão desprotegido.
+                          Remove a senha mestra opcional. No Windows, o SQLite continua criptografado automaticamente com AES-GCM e chave protegida pela conta Windows (DPAPI).
                         </p>
                         <div style="display:flex; justify-content:flex-end;">
                           <button type="button" class="btn btn-warning btn-sm" id="ef-btn-resetar-senha" onclick="executarResetarRemoverSenha()" style="background:#ea580c; color:#fff; border:0;">
@@ -1246,6 +1249,41 @@
             localStorage.removeItem(STORAGE_KEY);
         }
 
+        // Migração não destrutiva: converte cópias legadas legíveis para registros
+        // criptografados no SQLite. Remove a origem apenas após leitura confirmada.
+        async function protegerLegadosLocaisDesktop() {
+            if (!window.EFNativeStorage) return;
+            const keys = [
+                ['evolufisico_v3_db', 'ef-legacy-v3-db'],
+                ['evolufisico_cobrancas_db', 'ef-legacy-billing'],
+                ['evolufisico_backup_safety_snapshot', 'ef-legacy-snapshot']
+            ];
+            for (const [oldKey, recordId] of keys) {
+                const raw = localStorage.getItem(oldKey);
+                if (!raw) continue;
+                try {
+                    const data = JSON.parse(raw);
+                    await window.EFNativeStorage.writeJSON(recordId, {source:oldKey,data});
+                    const persisted = await window.EFNativeStorage.readJSON(recordId);
+                    if (persisted && persisted.source === oldKey && JSON.stringify(persisted.data) === JSON.stringify(data))
+                        localStorage.removeItem(oldKey);
+                } catch (error) {
+                    // Falha: conservar o dado original para não ocorrer perda silenciosa.
+                    console.warn('[Privacidade Windows] Não foi possível proteger cópia antiga:',oldKey,error);
+                }
+            }
+            const draftRaw = localStorage.getItem(AUTOSAVE_KEY);
+            if (draftRaw) try {
+                const raw = JSON.parse(draftRaw);
+                const draft = raw?.__efEncrypted ? await EF_Security.decryptObject(raw.payload) : raw;
+                await window.EFNativeStorage.writeJSON('ef-form-draft',draft);
+                const verified = await window.EFNativeStorage.readJSON('ef-form-draft');
+                if (JSON.stringify(verified) === JSON.stringify(draft)) localStorage.removeItem(AUTOSAVE_KEY);
+            } catch(error) {
+                console.warn('[Privacidade Windows] Rascunho legado não migrado:',error);
+            }
+        }
+
         const _iniciarAppPrincipal = async () => {
             const cofreOk = await EF_Security.inicializar();
             if (!cofreOk) {
@@ -1253,7 +1291,7 @@
                 return;
             }
             configurarWizardForm();
-            try { await initDB(); }
+            try { await initDB(); await protegerLegadosLocaisDesktop(); }
             catch(e) { console.error(e);alert('Não foi possível abrir os dados: '+e.message+'. Nenhum registro foi descartado.');return; }
             definirDataPadrao();
             if (typeof inicializarBeforeAfterSlider === 'function') inicializarBeforeAfterSlider();
@@ -4315,7 +4353,12 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         config: this.obterDadosProfissional(),
                         avaliacoes: JSON.parse(JSON.stringify(listaAvaliacoes))
                     };
-                    if (EF_Security.enabled && EF_Security.key) {
+                    if (window.EFNativeStorage) {
+                        await window.EFNativeStorage.writeJSON('ef-safety-snapshot-main', snapshot);
+                        const stored = await window.EFNativeStorage.readJSON('ef-safety-snapshot-main');
+                        if (!stored || stored.timestamp !== snapshot.timestamp || stored.totalAvaliacoes !== snapshot.totalAvaliacoes)
+                            throw new Error('A cópia protegida no SQLite não foi confirmada.');
+                    } else if (EF_Security.enabled && EF_Security.key) {
                         try {
                             localStorage.setItem(EF_SECURITY_SNAPSHOT_KEY, JSON.stringify(await EF_Security.encryptObject(snapshot)));
                             localStorage.removeItem('evolufisico_backup_safety_snapshot');
@@ -4343,6 +4386,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             },
 
             obterSnapshotSeguranca: function() {
+                if (window.EFNativeStorage) return { __encrypted: true, storage: 'sqlite' };
                 try {
                     const raw = localStorage.getItem(EF_SECURITY_SNAPSHOT_KEY);
                     if (raw) return { __encrypted: true };
@@ -4351,6 +4395,13 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 } catch (e) { return null; }
             },
             obterSnapshotSegurancaAsync: async function() {
+                if (window.EFNativeStorage) {
+                    const snapshot = await window.EFNativeStorage.readJSON('ef-safety-snapshot-main');
+                    if (snapshot) return snapshot;
+                    const old = await window.EFNativeStorage.readJSON('ef-legacy-snapshot');
+                    if (old && old.data) return old.data;
+                    return null;
+                }
                 try {
                     const raw = localStorage.getItem(EF_SECURITY_SNAPSHOT_KEY);
                     if (raw && EF_Security.enabled && EF_Security.key) return await EF_Security.decryptObject(JSON.parse(raw));
@@ -4360,6 +4411,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             },
 
             limparSnapshotSeguranca: function() {
+                if (window.EFNativeStorage) window.EFNativeStorage.delete('ef-safety-snapshot-main').catch(e => console.warn('Não foi possível limpar snapshot:',e));
                 localStorage.removeItem('evolufisico_backup_safety_snapshot');
                 localStorage.removeItem(EF_SECURITY_SNAPSHOT_KEY);
             },
@@ -5323,7 +5375,12 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                     delete rascunho.foto_extra;
                     delete rascunho.foto_lado;
                     try {
-                        if (EF_Security.enabled && EF_Security.key) EF_Security.encryptObject(rascunho).then(p => localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({__efEncrypted:true,payload:p}))); else localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(rascunho));
+                        if (window.EFNativeStorage) {
+                            window.EFNativeStorage.writeJSON('ef-form-draft',rascunho)
+                                .catch(error => console.warn('Rascunho protegido não foi gravado:',error));
+                        } else if (EF_Security.enabled && EF_Security.key) {
+                            EF_Security.encryptObject(rascunho).then(p => localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({__efEncrypted:true,payload:p})));
+                        } else localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(rascunho));
                     } catch(e) {}
                 }, 3200);
             });
@@ -5333,9 +5390,11 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
 
         async function verificarRascunhoExistente() {
             try {
-                const salvo = localStorage.getItem(AUTOSAVE_KEY);
+                const salvo = window.EFNativeStorage
+                    ? await window.EFNativeStorage.readJSON('ef-form-draft')
+                    : localStorage.getItem(AUTOSAVE_KEY);
                 if (salvo) {
-                    const raw = JSON.parse(salvo);
+                    const raw = typeof salvo === 'string' ? JSON.parse(salvo) : salvo;
                     const obj = raw?.__efEncrypted ? await EF_Security.decryptObject(raw.payload) : raw;
                     if (obj.nome || obj.email || obj.peso) {
                         const alertEl = document.getElementById('draft-alert');
@@ -5347,9 +5406,11 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
 
         async function aplicarRascunho() {
             try {
-                const salvo = localStorage.getItem(AUTOSAVE_KEY);
+                const salvo = window.EFNativeStorage
+                    ? await window.EFNativeStorage.readJSON('ef-form-draft')
+                    : localStorage.getItem(AUTOSAVE_KEY);
                 if (!salvo) return;
-                const raw = JSON.parse(salvo);
+                const raw = typeof salvo === 'string' ? JSON.parse(salvo) : salvo;
                 const obj = raw?.__efEncrypted ? await EF_Security.decryptObject(raw.payload) : raw;
                 const form = document.getElementById('checkin-form');
                 Object.keys(obj).forEach(key => {
@@ -5370,6 +5431,8 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
         function descartarRascunho() {
             clearTimeout(autoSaveTimeout);
             localStorage.removeItem(AUTOSAVE_KEY);
+            if (window.EFNativeStorage) window.EFNativeStorage.delete('ef-form-draft')
+                .catch(error => console.warn('Falha ao remover rascunho nativo:',error));
             const alertEl = document.getElementById('draft-alert');
             if (alertEl) alertEl.classList.add('hidden');
         }
