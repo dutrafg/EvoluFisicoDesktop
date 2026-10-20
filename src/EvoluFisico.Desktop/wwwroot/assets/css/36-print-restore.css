@@ -1,0 +1,11 @@
+
+/* Impressoes individuais e comparativas - Android e desktop.
+   O marcador nao altera a tela; aplica-se somente ao papel. */
+@media print {
+ body.ef-print-report-only > :not(#single-print-wrapper) { display:none !important; }
+ body.ef-print-report-only > #single-print-wrapper {
+    display:block !important; position:static !important;
+    width:100% !important; margin:0 !important; padding:0 !important;
+    background:#fff !important; visibility:visible !important;
+ }
+}
