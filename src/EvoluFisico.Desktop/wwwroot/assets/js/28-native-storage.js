@@ -75,6 +75,17 @@ window.EFNativeStorage=Object.freeze({
   return call('delete-evaluation',id,undefined,encoded);
  },
  delete:id=>call('delete',id),
+ // Protect selected-folder files with the same AES-GCM + Windows DPAPI envelope as SQLite.
+ protectBytes:async bytes=>{
+  if(!(bytes instanceof Uint8Array))throw new TypeError('Esperado Uint8Array');
+  return await call('protect-data',undefined,encode(bytes));
+ },
+ unprotectBytes:async payload=>{
+  if(typeof payload!=='string'||!payload)throw new TypeError('Pacote protegido inválido');
+  return decode(await call('unprotect-data',undefined,payload));
+ },
+ protectText:async text=>window.EFNativeStorage.protectBytes(encoder.encode(String(text))),
+ unprotectText:async payload=>decoder.decode(await window.EFNativeStorage.unprotectBytes(payload)),
  backup:()=>call('backup'),
  readJSON:async id=>{
   const bytes=await window.EFNativeStorage.read(id);
