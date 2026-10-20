@@ -129,6 +129,83 @@ var due=agenda.filter(function(x){return x.status!=='concluido'&&(x.date===today
 var overdue=returns.filter(function(x){return pd(x.date)<base}).length;
 return '<div class="ef90-alert-strip" role="status"><span class="ef90-alert-icon">!</span><div><b>Lembretes da agenda</b><p>'+due.length+' compromisso(s) hoje ou amanhã · '+overdue+' retorno(s) em atraso. Os avisos são mostrados enquanto o aplicativo estiver aberto; não são notificações externas.</p></div></div>'}
 
+
+/* Organização dos cards: preferências de layout apenas, sem dados de pacientes. */
+var HOME_LAYOUT_KEY='ef90_home_cards_order_v1';
+var HOME_CARDS=['agenda','tarefas','calendario','retornos'];
+var homeOrganizing=false;
+function readHomeOrder(){
+ var raw;try{raw=JSON.parse(storageGet(HOME_LAYOUT_KEY,'null'))}catch(e){raw=null}
+ if(!Array.isArray(raw)||raw.length!==HOME_CARDS.length||new Set(raw).size!==HOME_CARDS.length||raw.some(function(id){return HOME_CARDS.indexOf(id)<0}))
+   return HOME_CARDS.slice();
+ return raw;
+}
+function homeMoveCard(id,position){
+ var order=readHomeOrder(),from=order.indexOf(id),to=Number(position);
+ if(from<0||!Number.isInteger(to)||to<0||to>=order.length)return false;
+ if(from===to)return true;
+ order.splice(from,1);order.splice(to,0,id);
+ storageSet(HOME_LAYOUT_KEY,JSON.stringify(order));applyHomeCardLayout();
+ toast('Organização do Início salva.');return true;
+}
+function applyHomeCardLayout(){
+ var grid=$('#ef90-sortable');if(!grid)return;
+ var order=readHomeOrder();
+ order.forEach(function(id){var card=grid.querySelector('[data-ef-home-card="'+id+'"]');if(card)grid.appendChild(card)});
+ grid.classList.toggle('ef-home-organizing',homeOrganizing);
+ var cards=[].slice.call(grid.querySelectorAll('[data-ef-home-card]'));
+ cards.forEach(function(card){
+   var id=card.getAttribute('data-ef-home-card');
+   card.draggable=homeOrganizing;
+   var tools=card.querySelector('.ef-home-card-tools');
+   if(tools)tools.remove();
+   tools=document.createElement('div');tools.className='ef-home-card-tools no-print';
+   var toggle=document.createElement('button');
+   toggle.type='button';toggle.className='ef-home-move-tag';
+   toggle.textContent=homeOrganizing?'✓ Concluir':'↕ Mover';
+   toggle.setAttribute('aria-label',(homeOrganizing?'Concluir organização':'Reorganizar')+' cards do Início');
+   toggle.setAttribute('aria-pressed',String(homeOrganizing));
+   toggle.addEventListener('click',function(){homeOrganizing=!homeOrganizing;applyHomeCardLayout()});
+   tools.appendChild(toggle);
+   if(homeOrganizing){
+     var positions=document.createElement('div');positions.className='ef-home-move-actions';
+     var up=document.createElement('button');up.type='button';up.textContent='↑';up.title='Mover card para posição anterior';up.setAttribute('aria-label','Mover card anterior');
+     up.disabled=order.indexOf(id)===0;
+     up.addEventListener('click',function(){homeMoveCard(id,readHomeOrder().indexOf(id)-1)});
+     positions.appendChild(up);
+     var down=document.createElement('button');down.type='button';down.textContent='↓';down.title='Mover card para próxima posição';down.setAttribute('aria-label','Mover card seguinte');
+     down.disabled=order.indexOf(id)===order.length-1;
+     down.addEventListener('click',function(){homeMoveCard(id,readHomeOrder().indexOf(id)+1)});
+     positions.appendChild(down);
+     var select=document.createElement('select');select.setAttribute('aria-label','Escolher posição deste card');
+     order.forEach(function(_,i){var option=document.createElement('option');option.value=String(i);option.textContent='Posição '+(i+1);select.appendChild(option)});
+     select.value=String(order.indexOf(id));
+     select.addEventListener('change',function(){homeMoveCard(id,Number(select.value))});
+     positions.appendChild(select);
+     var reset=document.createElement('button');reset.type='button';reset.textContent='Padrão';reset.title='Restaurar a ordem inicial dos cards';
+     reset.addEventListener('click',function(){storageSet(HOME_LAYOUT_KEY,JSON.stringify(HOME_CARDS));applyHomeCardLayout();toast('Ordem padrão restaurada.')});
+     positions.appendChild(reset);tools.appendChild(positions);
+   }
+   card.appendChild(tools);
+   if(card.dataset.efHomeDnDBound==='true')return;
+   card.dataset.efHomeDnDBound='true';
+   card.addEventListener('dragstart',function(ev){
+     if(!homeOrganizing||ev.target.closest('input,select,textarea')){ev.preventDefault();return}
+     ev.dataTransfer.effectAllowed='move';
+     ev.dataTransfer.setData('text/plain',id);card.classList.add('ef-home-dragging');
+   });
+   card.addEventListener('dragover',function(ev){if(!homeOrganizing)return;ev.preventDefault();ev.dataTransfer.dropEffect='move';card.classList.add('ef-home-drop-target')});
+   card.addEventListener('dragleave',function(ev){if(!card.contains(ev.relatedTarget))card.classList.remove('ef-home-drop-target')});
+   card.addEventListener('drop',function(ev){
+     if(!homeOrganizing)return;ev.preventDefault();card.classList.remove('ef-home-drop-target');
+     var moving=ev.dataTransfer.getData('text/plain');
+     if(HOME_CARDS.indexOf(moving)>=0)homeMoveCard(moving,readHomeOrder().indexOf(id));
+   });
+   card.addEventListener('dragend',function(){grid.querySelectorAll('.ef-home-dragging,.ef-home-drop-target').forEach(function(x){x.classList.remove('ef-home-dragging','ef-home-drop-target')})});
+ });
+}
+window.ef90MoveHomeCard=homeMoveCard;
+
 function render(){var box=$('#ef55-painel');if(!box)return;
 var al=alunos(),av=lista(),base=today(),agenda=loadAgenda(),retornos=buildReturnEvents(al,base),allEvents=agenda.concat(retornos);
 var mes=av.filter(function(a){var d=pd(a.data_avaliacao);return d&&d.getMonth()===base.getMonth()&&d.getFullYear()===base.getFullYear()}).length;
@@ -152,17 +229,13 @@ box.innerHTML=''
 +'<section class="ef90-home ef90-compact">'
 +'<div class="ef90-simple-head"><div><h1>Agenda</h1><p>Organize suas avaliações, atendimentos e tarefas em um só lugar.</p></div><div class="ef90-hero-actions"><button type="button" class="btn btn-primary btn-sm" onclick="switchTab(\'tab-novo-checkin\')">Nova avaliação</button><button type="button" class="btn btn-secondary btn-sm" onclick="ef90JumpToday()">Hoje</button></div></div>'
 +'<div class="ef90-simple-stats"><span><strong>'+agendaS.today+'</strong> compromisso(s) hoje</span><span><strong>'+agendaS.week+'</strong> na semana</span><span><strong>'+atr+'</strong> retorno(s) atrasado(s)</span></div>'
-+'<div class="ef90-main-grid ef90-simple-grid">'
-+'<div class="ef90-left-stack">'
-+'<section class="ef55-card ef90-card"><div class="ef90-section-head"><div><h3>Agenda rápida</h3><p>Agende avaliações, reavaliações, retornos e acompanhamentos sem sair da página inicial.</p></div>'+'<button type="button" class="ef90-inline-btn" onclick="ef90ExportAgenda()">Exportar agenda e tarefas</button>'+'</div><form class="ef90-form" onsubmit="return ef90SaveAgenda(event)"><input id="ef90-date" type="date" value="'+esc(selISO)+'"><input id="ef90-time" type="time" value="09:00"><select id="ef90-duration" title="Duração do atendimento"><option value="30">30 minutos</option><option value="45">45 minutos</option><option value="60" selected>1 hora</option><option value="90">1h30</option><option value="120">2 horas</option></select><select id="ef90-type"><option value="avaliacao">Avaliação</option><option value="reavaliacao">Reavaliação</option><option value="retorno">Retorno</option><option value="followup">Acompanhamento</option></select><input id="ef90-student" type="text" list="ef90-student-list" placeholder="Nome do aluno ou compromisso"><datalist id="ef90-student-list">'+al.map(function(x){return '<option value="'+esc(x.nome)+'"></option>'}).join('')+'</datalist><label class="ef90-location-field" for="ef90-location"><span>Local do atendimento</span><input id="ef90-location" type="text" list="ef90-location-list" autocomplete="off" placeholder="Ex.: Academia Centro ou Studio A" maxlength="100"><datalist id="ef90-location-list">'+locais.map(function(nome){return '<option value="'+esc(nome)+'"></option>'}).join('')+'</datalist></label><input id="ef90-note" type="text" placeholder="Observação rápida"><button id="ef90-save-button" class="btn btn-primary btn-sm" type="submit">Adicionar</button><button type="button" class="ef90-inline-btn" onclick="ef90CancelEdit()">Cancelar edição</button></form></section>'
-+'<section class="ef55-card ef90-card"><div class="ef90-section-head"><div><h3>Calendário e agenda integrados</h3><p>Mês em visão geral com compromissos salvos manualmente e retornos vindos das avaliações.</p></div><div class="ef90-calendar-nav"><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(-1)">◀</button><strong>'+esc(monthLabel(monthDate))+'</strong><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(1)">▶</button></div></div>'+calendarGrid(eventosDoLocal,monthDate,selISO)+'<div class="ef90-day-panel"><div class="ef90-day-head"><h4>'+esc(dayHuman)+'</h4><div class="ef90-filter-wrap"><label for="ef90-filter-local">Local</label><select id="ef90-filter-local" onchange="ef90FiltrarLocal(this.value)" aria-label="Filtrar agenda por local de atendimento"><option value="__todos__"'+(localFiltro==='__todos__'?' selected':'')+'>Todos os locais</option><option value="__sem__"'+(localFiltro==='__sem__'?' selected':'')+'>Sem local informado</option>'+locais.map(function(nome){return '<option value="'+esc(nome)+'"'+(localFiltro===nome?' selected':'')+'>'+esc(nome)+'</option>'}).join('')+'</select><label for="ef90-filter">Ver</label><select id="ef90-filter" onchange="ef90Filter(this.value)"><option value="dia"'+(mode==='dia'?' selected':'')+'>Dia</option><option value="semana"'+(mode==='semana'?' selected':'')+'>Semana</option><option value="mes"'+(mode==='mes'?' selected':'')+'>Mês</option></select><button type="button" class="ef90-inline-btn" onclick="ef90QuickSchedule(\''+selISO+'\')">Agendar neste dia</button><span>'+dayList.length+' compromisso(s)</span></div></div>'+rows(dayList,function(e){var typeLabel={avaliacao:'Avaliação',reavaliacao:'Reavaliação',retorno:'Retorno',followup:'Acompanhamento'}[e.type]||'Compromisso';var action=e.source==='return'?'<button class="ef55-wa" onclick="ef90OpenWhatsapp(\''+jsEsc(e.student||'')+'\',\''+jsEsc(e.whatsapp||'')+'\',\''+jsEsc(e.date)+'\')">WhatsApp</button>':'<div class="ef90-row-actions"><button type="button" class="ef90-inline-btn" onclick="ef90EditAgenda(\''+jsEsc(e.id)+'\')">Reagendar</button><select class="ef90-status-select" aria-label="Situação do atendimento" onchange="ef90SetStatus(\''+jsEsc(e.id)+'\',this.value)">'+[['agendado','Agendado'],['confirmado','Confirmado'],['concluido','Concluído'],['faltou','Não compareceu'],['cancelado','Cancelado']].map(function(pair){return '<option value="'+pair[0]+'"'+((e.status||'agendado')===pair[0]?' selected':'')+'>'+pair[1]+'</option>'}).join('')+'</select><button type="button" class="ef90-inline-btn danger" onclick="ef90RemoveAgenda(\''+jsEsc(e.id)+'\')">Excluir</button></div>';return '<div class="ef90-day-item"><div class="ef90-day-time">'+esc(e.time||'—')+(e.source==='agenda'?' · '+esc(String(e.duration||60))+' min':'')+'</div><div class="ef90-day-body"><div><b>'+esc(e.student||typeLabel)+'</b>'+pill(e.source==='return'?'warn':'ok',typeLabel)+'</div><p>'+esc(e.note||'Sem observações.')+'</p><small>'+(e.local?'<span class="ef90-place-label">📍 '+esc(e.local)+'</span> · ':'')+(e.source==='return'?'Gerado automaticamente a partir da próxima avaliação':(({agendado:'Agendado',confirmado:'Presença confirmada',concluido:'Atendimento concluído',faltou:'Não compareceu',cancelado:'Cancelado'})[e.status]||'Agendado'))+'</small></div>'+action+'</div>'},'Nenhum compromisso neste dia.')+'</div></section>'
++'<div class="ef90-main-grid ef90-simple-grid ef-home-sortable" id="ef90-sortable">'
++'<section class="ef55-card ef90-card" data-ef-home-card="agenda"><div class="ef90-section-head"><div><h3>Agenda rápida</h3><p>Agende avaliações, reavaliações, retornos e acompanhamentos sem sair da página inicial.</p></div>'+'<button type="button" class="ef90-inline-btn" onclick="ef90ExportAgenda()">Exportar agenda e tarefas</button>'+'</div><form class="ef90-form" onsubmit="return ef90SaveAgenda(event)"><input id="ef90-date" type="date" value="'+esc(selISO)+'"><input id="ef90-time" type="time" value="09:00"><select id="ef90-duration" title="Duração do atendimento"><option value="30">30 minutos</option><option value="45">45 minutos</option><option value="60" selected>1 hora</option><option value="90">1h30</option><option value="120">2 horas</option></select><select id="ef90-type"><option value="avaliacao">Avaliação</option><option value="reavaliacao">Reavaliação</option><option value="retorno">Retorno</option><option value="followup">Acompanhamento</option></select><input id="ef90-student" type="text" list="ef90-student-list" placeholder="Nome do aluno ou compromisso"><datalist id="ef90-student-list">'+al.map(function(x){return '<option value="'+esc(x.nome)+'"></option>'}).join('')+'</datalist><label class="ef90-location-field" for="ef90-location"><span>Local do atendimento</span><input id="ef90-location" type="text" list="ef90-location-list" autocomplete="off" placeholder="Ex.: Academia Centro ou Studio A" maxlength="100"><datalist id="ef90-location-list">'+locais.map(function(nome){return '<option value="'+esc(nome)+'"></option>'}).join('')+'</datalist></label><input id="ef90-note" type="text" placeholder="Observação rápida"><button id="ef90-save-button" class="btn btn-primary btn-sm" type="submit">Adicionar</button><button type="button" class="ef90-inline-btn" onclick="ef90CancelEdit()">Cancelar edição</button></form></section>'
++'<section class="ef55-card ef90-card" data-ef-home-card="calendario"><div class="ef90-section-head"><div><h3>Calendário e agenda integrados</h3><p>Mês em visão geral com compromissos salvos manualmente e retornos vindos das avaliações.</p></div><div class="ef90-calendar-nav"><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(-1)">◀</button><strong>'+esc(monthLabel(monthDate))+'</strong><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(1)">▶</button></div></div>'+calendarGrid(eventosDoLocal,monthDate,selISO)+'<div class="ef90-day-panel"><div class="ef90-day-head"><h4>'+esc(dayHuman)+'</h4><div class="ef90-filter-wrap"><label for="ef90-filter-local">Local</label><select id="ef90-filter-local" onchange="ef90FiltrarLocal(this.value)" aria-label="Filtrar agenda por local de atendimento"><option value="__todos__"'+(localFiltro==='__todos__'?' selected':'')+'>Todos os locais</option><option value="__sem__"'+(localFiltro==='__sem__'?' selected':'')+'>Sem local informado</option>'+locais.map(function(nome){return '<option value="'+esc(nome)+'"'+(localFiltro===nome?' selected':'')+'>'+esc(nome)+'</option>'}).join('')+'</select><label for="ef90-filter">Ver</label><select id="ef90-filter" onchange="ef90Filter(this.value)"><option value="dia"'+(mode==='dia'?' selected':'')+'>Dia</option><option value="semana"'+(mode==='semana'?' selected':'')+'>Semana</option><option value="mes"'+(mode==='mes'?' selected':'')+'>Mês</option></select><button type="button" class="ef90-inline-btn" onclick="ef90QuickSchedule(\''+selISO+'\')">Agendar neste dia</button><span>'+dayList.length+' compromisso(s)</span></div></div>'+rows(dayList,function(e){var typeLabel={avaliacao:'Avaliação',reavaliacao:'Reavaliação',retorno:'Retorno',followup:'Acompanhamento'}[e.type]||'Compromisso';var action=e.source==='return'?'<button class="ef55-wa" onclick="ef90OpenWhatsapp(\''+jsEsc(e.student||'')+'\',\''+jsEsc(e.whatsapp||'')+'\',\''+jsEsc(e.date)+'\')">WhatsApp</button>':'<div class="ef90-row-actions"><button type="button" class="ef90-inline-btn" onclick="ef90EditAgenda(\''+jsEsc(e.id)+'\')">Reagendar</button><select class="ef90-status-select" aria-label="Situação do atendimento" onchange="ef90SetStatus(\''+jsEsc(e.id)+'\',this.value)">'+[['agendado','Agendado'],['confirmado','Confirmado'],['concluido','Concluído'],['faltou','Não compareceu'],['cancelado','Cancelado']].map(function(pair){return '<option value="'+pair[0]+'"'+((e.status||'agendado')===pair[0]?' selected':'')+'>'+pair[1]+'</option>'}).join('')+'</select><button type="button" class="ef90-inline-btn danger" onclick="ef90RemoveAgenda(\''+jsEsc(e.id)+'\')">Excluir</button></div>';return '<div class="ef90-day-item"><div class="ef90-day-time">'+esc(e.time||'—')+(e.source==='agenda'?' · '+esc(String(e.duration||60))+' min':'')+'</div><div class="ef90-day-body"><div><b>'+esc(e.student||typeLabel)+'</b>'+pill(e.source==='return'?'warn':'ok',typeLabel)+'</div><p>'+esc(e.note||'Sem observações.')+'</p><small>'+(e.local?'<span class="ef90-place-label">📍 '+esc(e.local)+'</span> · ':'')+(e.source==='return'?'Gerado automaticamente a partir da próxima avaliação':(({agendado:'Agendado',confirmado:'Presença confirmada',concluido:'Atendimento concluído',faltou:'Não compareceu',cancelado:'Cancelado'})[e.status]||'Agendado'))+'</small></div>'+action+'</div>'},'Nenhum compromisso neste dia.')+'</div></section>'
++'<section class="ef55-card ef90-card" data-ef-home-card="tarefas"><div class="ef90-section-head"><div><h3>Tarefas do dia</h3><p>Lista de tarefas para documentos, contatos e acompanhamentos.</p></div>'+pill('soft','lista de tarefas')+'</div><form class="ef90-task-form" onsubmit="event.preventDefault();ef90NewTask()"><input id="ef90-task-input" placeholder="Ex.: Confirmar avaliação de amanhã"><button type="submit" class="btn btn-primary btn-sm">Adicionar</button></form>'+rows(getTasks().filter(function(x){return x.date===selISO}),function(x){return '<div class="ef90-task-item"><input type="checkbox" '+(x.done?'checked ':'')+'onchange="ef90TaskDone(\''+jsEsc(x.id)+'\')"><span class="'+(x.done?'done':'')+'">'+esc(x.name)+'</span><button class="ef90-inline-btn danger" type="button" onclick="ef90TaskDelete(\''+jsEsc(x.id)+'\')">Excluir</button></div>'},'Nenhuma tarefa anotada para esta data.')+'</section>'
++'<section class="ef55-card ef90-card" data-ef-home-card="retornos"><div class="ef90-section-head"><div><h3>Reavaliações próximas</h3><p>Retornos automáticos vindos do cadastro das avaliações.</p></div></div>'+rows(ret,function(r){var a=r.x.last,c=r.dias<0?'bad':r.dias<=3?'warn':'ok',tx=r.dias<0?'Atrasado '+(-r.dias)+'d':r.dias===0?'Hoje':'em '+r.dias+'d';return '<div class="ef55-row" onclick="ef55Abrir(\''+jsEsc(a.id)+'\')"><div class="ef55-av">'+esc(ini(a.nome))+'</div><div class="t"><b>'+esc(a.nome)+'</b><span>'+fd(pd(a.data_proxima_avaliacao))+'</span></div><span class="ef55-pill '+c+'">'+tx+'</span><button class="ef55-wa" onclick="ef55Zap(event,\''+jsEsc(a.id)+'\')">WhatsApp</button></div>'},'Nenhuma reavaliação próxima.')+'</section>'
 +'</div>'
-+'<div class="ef90-right-stack">'
-+'<section class="ef55-card ef90-card"><div class="ef90-section-head"><div><h3>Tarefas do dia</h3><p>Lista de tarefas para documentos, contatos e acompanhamentos.</p></div>'+pill('soft','lista de tarefas')+'</div><form class="ef90-task-form" onsubmit="event.preventDefault();ef90NewTask()"><input id="ef90-task-input" placeholder="Ex.: Confirmar avaliação de amanhã"><button type="submit" class="btn btn-primary btn-sm">Adicionar</button></form>'+rows(getTasks().filter(function(x){return x.date===selISO}),function(x){return '<div class="ef90-task-item"><input type="checkbox" '+(x.done?'checked ':'')+'onchange="ef90TaskDone(\''+jsEsc(x.id)+'\')"><span class="'+(x.done?'done':'')+'">'+esc(x.name)+'</span><button class="ef90-inline-btn danger" type="button" onclick="ef90TaskDelete(\''+jsEsc(x.id)+'\')">Excluir</button></div>'},'Nenhuma tarefa anotada para esta data.')+'</section>'
-+'<section class="ef55-card ef90-card"><div class="ef90-section-head"><div><h3>Reavaliações próximas</h3><p>Retornos automáticos vindos do cadastro das avaliações.</p></div></div>'+rows(ret,function(r){var a=r.x.last,c=r.dias<0?'bad':r.dias<=3?'warn':'ok',tx=r.dias<0?'Atrasado '+(-r.dias)+'d':r.dias===0?'Hoje':'em '+r.dias+'d';return '<div class="ef55-row" onclick="ef55Abrir(\''+jsEsc(a.id)+'\')"><div class="ef55-av">'+esc(ini(a.nome))+'</div><div class="t"><b>'+esc(a.nome)+'</b><span>'+fd(pd(a.data_proxima_avaliacao))+'</span></div><span class="ef55-pill '+c+'">'+tx+'</span><button class="ef55-wa" onclick="ef55Zap(event,\''+jsEsc(a.id)+'\')">WhatsApp</button></div>'},'Nenhuma reavaliação próxima.')+'</section>'
-+'</div>'
-+'</div>'
-+'</section>'}
++'</section>';applyHomeCardLayout()}
 
 var nav=$('.nav-tabs');
 if(nav){nav.insertAdjacentHTML('afterbegin','<button class="nav-tab-btn" id="tab-btn-painel" onclick="switchTab(\'tab-painel\')"><span>📊</span> <span>Painel</span></button>')}
