@@ -1,0 +1,83 @@
+/* Refinamento desktop 9.0-beta: densidade, contraste e aproveitamento da área útil. */
+@media screen {
+  /* Tema claro com branco acinzentado, sem brilho excessivo e mantendo WCAG. */
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) {
+    --ef-page: #e3e9e4;
+    --ef-surface: #f1f4f1;
+    --ef-line: #c7d3ca;
+    --ef-soft: #dce9df;
+    --ef-ink: #1a2a21;
+    --ef-muted: #4e6357;
+    --bg-color: #e3e9e4;
+    --border-color: #c7d3ca;
+    color-scheme: light;
+  }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) :is(input,select,textarea,.ef-settings-card,.cob-card,.history-card,.form-container) {
+    border-color: var(--ef-line) !important;
+  }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) :is(input,select,textarea) {
+    background: #f7f9f7 !important;
+    color: var(--ef-ink) !important;
+  }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) input::placeholder {
+    color: #697c70;
+  }
+  body.ef-simple-ui .ef-settings-header { margin-bottom: 12px !important; }
+  body.ef-simple-ui .ef-settings-header h2 { margin: 4px 0 5px !important; font-size: clamp(23px,1.8vw,29px) !important; }
+  body.ef-simple-ui .ef-settings-header p { font-size: 13px !important; line-height: 1.45 !important; }
+  body.ef-simple-ui .ef-settings-grid { gap: 12px !important; align-items: start !important; }
+  body.ef-simple-ui .ef-settings-card {
+    padding: 16px 18px !important;
+    border-radius: 12px !important;
+    gap: 0 !important;
+  }
+  body.ef-simple-ui .ef-settings-card-icon {
+    height: 30px !important; width: 30px !important;
+    font-size: 16px !important; margin-bottom: 8px !important;
+    border-radius: 8px !important;
+  }
+  body.ef-simple-ui .ef-settings-card h3 { font-size: 15px !important; margin-bottom: 4px !important; }
+  body.ef-simple-ui .ef-settings-card p { font-size: 12px !important; line-height: 1.45 !important; margin-bottom: 10px !important; max-width: none !important; }
+  body.ef-simple-ui .ef-settings-card small { margin-top: 7px !important; }
+  body.ef-simple-ui .ef-settings-controls { gap: 7px !important; margin-top: 3px !important; align-items: center; }
+  body.ef-simple-ui .ef-settings-controls .ef-settings-action {
+    min-height: 35px !important; padding: 7px 11px !important;
+    font-size: 12px !important;
+  }
+  body.ef-simple-ui #ef-setting-appearance .ef-colors-field { margin-top: 9px !important; padding-top: 9px !important; }
+  body.ef-simple-ui #ef-setting-appearance .ef-colors-field p { margin-bottom: 7px !important; }
+  body.ef-simple-ui .ef-settings-page #ef-desktop-native-backup-status,
+  body.ef-simple-ui .ef-settings-page #ef-desktop-update-status { flex-basis: 100%; }
+}
+@media screen and (min-width: 1200px) {
+  body.ef-simple-ui .app-container {
+    max-width: none !important;
+    width: calc(100% - var(--ef-sidebar)) !important;
+    padding: 18px clamp(22px,3vw,60px) 36px !important;
+    box-sizing: border-box !important;
+  }
+  body.ef-simple-ui #tab-settings {
+    max-width: 1460px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  body.ef-simple-ui #tab-settings .ef-settings-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  }
+  body.ef-simple-ui #ef-setting-backup { justify-content: flex-start; }
+}
+@media screen and (min-width: 1900px) {
+  body.ef-simple-ui #tab-settings .ef-settings-grid {
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  }
+  body.ef-simple-ui #tab-settings .ef-settings-card-wide { grid-column: span 2 !important; }
+}
+@media screen and (max-width: 1199px) {
+  body.ef-simple-ui .ef-settings-page { width: 100%; }
+  body.ef-simple-ui .app-container { padding: 18px 16px 32px !important; }
+}
+@media screen and (max-width: 760px) {
+  body.ef-simple-ui .ef-settings-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  body.ef-simple-ui .ef-settings-card-wide { grid-column: auto !important; }
+  body.ef-simple-ui .ef-settings-card { padding: 15px !important; }
+}
