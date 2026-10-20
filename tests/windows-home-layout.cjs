@@ -19,10 +19,15 @@ check('Each card has accessible move controls and drag/drop',()=>{
  for(const snippet of ['aria-label','aria-pressed','ef-home-move-tag','ef-home-move-actions','dragstart','dragover','drop','dragend','ef-home-drop-target','Restaurar a ordem inicial']) assert.ok(source.includes(snippet),snippet);
  assert.match(source,/card\.draggable=homeOrganizing/);
 });
-check('Full width layout and fixed header not blurred or overlapping',()=>{
+check('Compact masonry columns and full width header without blur',()=>{
  assert.match(css,/max-width: none !important/);
  assert.match(css,/body\.ef-simple-ui #tab-painel #ef90-sortable/);
- assert.match(css,/grid-template-columns: repeat\(2,minmax\(0,1fr\)\) !important/);
+ assert.match(css,/column-count: 2 !important/);
+ assert.match(css,/column-width: 410px !important/);
+ assert.match(css,/column-fill: balance !important/);
+ assert.match(css,/break-inside: avoid-column !important/);
+ assert.match(css,/margin: 0 0 14px !important/);
+ assert.doesNotMatch(css,/grid-auto-flow: row !important/);
  assert.match(css,/padding-top: 89px !important/);
  assert.match(css,/backdrop-filter: none !important/);
  assert.match(css,/margin-left: var\(--ef-sidebar\) !important/);
@@ -62,3 +67,9 @@ check('Unknown card or position is rejected',()=>{
  assert.equal(api.homeMoveCard('agenda',99),false);
 });
 console.log('TOTAL:',passed,'Windows dashboard regression checks passed');
+check('Mobile uses one column and preserves drag/drop without fixed card heights',()=>{
+ assert.match(css,/@media screen and \(max-width: 720px\)[\s\S]*column-count: 1 !important/);
+ assert.match(css,/height: auto !important/);
+ assert.match(css,/-webkit-column-break-inside: avoid !important/);
+ assert.match(source,/function homeMoveCard\(id,position\)/);
+});
