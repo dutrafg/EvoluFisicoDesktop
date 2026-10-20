@@ -140,6 +140,52 @@ internal sealed class EncryptedSqliteStore
         tx.Commit();
     }
 
+    /// <summary>
+    /// Atomically restores the complete assessment set while leaving billing and
+    /// protected drafts untouched. Encrypt before transaction, verify before commit.
+    /// A failed read, encryption or verification never deletes earlier records.
+    /// </summary>
+    internal void ReplaceEvaluations(System.Collections.Generic.IReadOnlyDictionary<string, byte[]> records)
+    {
+        ArgumentNullException.ThrowIfNull(records);
+        if (records.Count > 1000) throw new InvalidDataException("Muitas avaliações no lote.");
+        long totalBytes = 0;
+        var encrypted = new System.Collections.Generic.Dictionary<string, byte[]>(StringComparer.Ordinal);
+        foreach (var pair in records)
+        {
+            if (!pair.Key.StartsWith("ef-eval-", StringComparison.Ordinal) || pair.Key.Length > 128)
+                throw new ArgumentException("Somente avaliações podem ser substituídas.");
+            ArgumentNullException.ThrowIfNull(pair.Value);
+            totalBytes += pair.Value.LongLength;
+            if (pair.Value.LongLength > 12_000_000 || totalBytes > 32_000_000)
+                throw new InvalidDataException("Backup excede os limites de segurança.");
+            encrypted.Add(pair.Key, ProtectedVault.Encrypt(pair.Value));
+        }
+        using var db = Open();
+        using var tx = db.BeginTransaction();
+        using (var delete = db.CreateCommand())
+        {
+            delete.Transaction = tx;
+            delete.CommandText = "DELETE FROM protected_records WHERE record_id LIKE 'ef-eval-%'";
+            delete.ExecuteNonQuery();
+        }
+        foreach (var pair in encrypted)
+        {
+            using var insert = db.CreateCommand();
+            insert.Transaction = tx;
+            insert.CommandText = "INSERT INTO protected_records(record_id,encrypted_payload,updated_utc) VALUES ($id,$blob,$now)";
+            insert.Parameters.AddWithValue("$id", pair.Key);
+            insert.Parameters.AddWithValue("$blob", pair.Value);
+            insert.Parameters.AddWithValue("$now", DateTimeOffset.UtcNow.ToString("O"));
+            if (insert.ExecuteNonQuery() != 1)
+                throw new InvalidDataException("Falha ao restaurar a avaliação.");
+            var verified = ProtectedVault.Decrypt(pair.Value);
+            if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(verified, records[pair.Key]))
+                throw new InvalidDataException("Falha na conferência da avaliação restaurada.");
+        }
+        tx.Commit();
+    }
+
     /// <summary>Deletes a protected record in a transaction. Does not imply secure disk erasure.</summary>
     internal bool Delete(string recordId)
     {
