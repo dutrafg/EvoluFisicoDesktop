@@ -51,14 +51,28 @@ function arrangeDetails(){
  const panel=$('ef55-painel');if(panel){
   const nodes=[$('ef68-insights'),$('ef70-engine')].filter(Boolean);
   if(nodes.length){
-   let area=$('ef-home-analysis');
-   if(!area){area=document.createElement('section');area.id='ef-home-analysis';area.className='ef-analysis-pair';panel.append(area)}
+   const grid=$('ef90-sortable');
+   let area=$('ef-home-analysis'),changed=false;
+   if(!grid&&!area){area=document.createElement('section');area.id='ef-home-analysis';area.className='ef-analysis-pair';panel.append(area)}
    nodes.forEach((node,index)=>{
     const id=index===0?'ef-home-insights':'ef-home-deep';
+    const homeCard=index===0?'insights':'detalhes';
     let card=$(id);
-    if(!card){card=document.createElement('details');card.id=id;card.className='ef-simple-fold ef-home-compact';card.innerHTML='<summary><span>'+(index===0?'Análises automáticas':'Análise detalhada')+'</span><small>'+(index===0?'Alertas e tendências':'Indicadores e recomendações')+'</small></summary><div class="ef-simple-fold-content"></div>';area.append(card)}
-    const slot=card.querySelector('.ef-simple-fold-content');if(node.parentNode!==slot)slot.append(node);
+    if(!card){
+     card=document.createElement('details');card.id=id;card.className='ef-simple-fold ef-home-compact';
+     card.innerHTML='<summary><span>'+(index===0?'Análises automáticas':'Análise detalhada')+'</span><small>'+(index===0?'Alertas e tendências':'Indicadores e recomendações')+'</small></summary><div class="ef-simple-fold-content"></div>';
+     changed=true;
+    }
+    if(grid){
+     card.classList.add('ef55-card','ef90-card');
+     card.dataset.efHomeCard=homeCard;
+     if(card.parentElement!==grid && !grid.contains(card)){grid.append(card);changed=true}
+    }else if(area&&card.parentElement!==area){area.append(card);changed=true}
+    const slot=card.querySelector('.ef-simple-fold-content');
+    if(slot&&node.parentNode!==slot){slot.append(node);changed=true}
    });
+   // Os cartões de análise participam do empacotamento junto com agenda e tarefas.
+   if(changed&&grid&&typeof window.ef90RefreshHomeLayout==='function')window.ef90RefreshHomeLayout();
   }
  }
  const patient=$('patient-view-content');if(patient){
