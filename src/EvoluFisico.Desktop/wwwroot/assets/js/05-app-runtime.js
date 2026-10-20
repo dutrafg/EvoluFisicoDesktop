@@ -601,27 +601,46 @@
                 }
                 if (db) await this._idbSubstituirTudo(lista.map(item => item));
 
-                // 2) Snapshot de segurança
-                try {
+                // 2) Snapshot/rascunho: nunca criar versões abertas no navegador Windows.
+                if (window.EFNativeStorage) {
                     const snapRaw = localStorage.getItem(EF_SECURITY_SNAPSHOT_KEY);
                     if (snapRaw) {
-                        let snapDec;
-                        try { snapDec = await this.decryptObject(JSON.parse(snapRaw), this.key); } catch (_) { snapDec = JSON.parse(snapRaw); }
-                        if (snapDec) localStorage.setItem('evolufisico_backup_safety_snapshot', JSON.stringify(snapDec));
+                        const snapshot = await this.decryptObject(JSON.parse(snapRaw), this.key);
+                        await window.EFNativeStorage.writeJSON('ef-safety-snapshot-main', snapshot);
+                        const confirmacao = await window.EFNativeStorage.readJSON('ef-safety-snapshot-main');
+                        if (JSON.stringify(confirmacao) !== JSON.stringify(snapshot))
+                            throw new Error('Snapshot não foi confirmado no SQLite. A chave não foi removida.');
                         localStorage.removeItem(EF_SECURITY_SNAPSHOT_KEY);
                     }
-                } catch (e) { console.warn('Erro ao decodificar snapshot na remoção de senha:', e); }
-
-                // 3) Rascunho do formulário
-                try {
-                    const salvo = localStorage.getItem(AUTOSAVE_KEY);
-                    if (salvo) {
-                        const raw = JSON.parse(salvo);
-                        if (raw && raw.__efEncrypted) {
-                            localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(await this.decryptObject(raw.payload, this.key)));
-                        }
+                    const draftRaw = localStorage.getItem(AUTOSAVE_KEY);
+                    if (draftRaw) {
+                        const raw = JSON.parse(draftRaw);
+                        const draft = raw?.__efEncrypted ? await this.decryptObject(raw.payload, this.key) : raw;
+                        await window.EFNativeStorage.writeJSON('ef-form-draft', draft);
+                        const confirmacao = await window.EFNativeStorage.readJSON('ef-form-draft');
+                        if (JSON.stringify(confirmacao) !== JSON.stringify(draft))
+                            throw new Error('Rascunho não foi confirmado no SQLite. A chave não foi removida.');
+                        localStorage.removeItem(AUTOSAVE_KEY);
                     }
-                } catch (e) { console.warn('Rascunho não pôde ser descriptografado:', e); }
+                } else {
+                    try {
+                        const snapRaw = localStorage.getItem(EF_SECURITY_SNAPSHOT_KEY);
+                        if (snapRaw) {
+                            let snapDec;
+                            try { snapDec = await this.decryptObject(JSON.parse(snapRaw), this.key); } catch (_) { snapDec = JSON.parse(snapRaw); }
+                            if (snapDec) localStorage.setItem('evolufisico_backup_safety_snapshot', JSON.stringify(snapDec));
+                            localStorage.removeItem(EF_SECURITY_SNAPSHOT_KEY);
+                        }
+                    } catch (e) { console.warn('Falha ao processar snapshot:', e); }
+                    try {
+                        const salvo = localStorage.getItem(AUTOSAVE_KEY);
+                        if (salvo) {
+                            const raw = JSON.parse(salvo);
+                            if (raw && raw.__efEncrypted)
+                                localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(await this.decryptObject(raw.payload, this.key)));
+                        }
+                    } catch (e) { console.warn('Falha ao processar rascunho:', e); }
+                }
 
                 // 4) Cópia em LocalStorage (opcional quando há IndexedDB: fotos podem estourar a cota) e remoção do cofre
                 if (db && !window.EFNativeStorage) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(lista)); } catch (e) { console.warn('Cópia em LocalStorage ignorada (cota):', e); } }
