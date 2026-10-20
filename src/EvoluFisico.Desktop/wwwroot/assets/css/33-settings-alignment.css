@@ -1,0 +1,11 @@
+
+/* Ajuste pontual da grade de Configurações: sem alterar o CSS ou os componentes originais. */
+@media screen {
+ body.ef-simple-ui #tab-settings .efs-subpage[data-efs-panel="geral"] > .ef-settings-grid.efs-general-aligned { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; gap:18px; }
+ body.ef-simple-ui #tab-settings .efs-general-stack { display:flex; flex-direction:column; gap:18px; min-width:0; align-self:start; }
+ body.ef-simple-ui #tab-settings .efs-general-stack > .ef-settings-card { width:100%; min-width:0; align-self:stretch; }
+ body.ef-simple-ui #tab-settings .efs-general-aligned > #efn-card { min-width:0; width:100%; align-self:start; }
+ @media(max-width:760px){
+  body.ef-simple-ui #tab-settings .efs-subpage[data-efs-panel="geral"] > .ef-settings-grid.efs-general-aligned {grid-template-columns:minmax(0,1fr);}
+ }
+}
