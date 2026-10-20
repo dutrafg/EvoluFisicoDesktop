@@ -247,6 +247,29 @@ public partial class MainWindow : Window
                     finally { System.Security.Cryptography.CryptographicOperations.ZeroMemory(payload); }
                     break;
                 }
+                case "replace-evaluations":
+                {
+                    var entries = root.GetProperty("records");
+                    if (entries.ValueKind != JsonValueKind.Object)
+                        throw new InvalidDataException("Lote de avaliações inválido.");
+                    var records = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+                    long totalBytes = 0;
+                    foreach (var entry in entries.EnumerateObject())
+                    {
+                        if (records.Count >= 1000 || !entry.Name.StartsWith("ef-eval-", StringComparison.Ordinal)
+                            || entry.Name.Length > 128 || entry.Value.ValueKind != JsonValueKind.String)
+                            throw new InvalidDataException("Identificador de avaliação inválido.");
+                        var base64 = entry.Value.GetString() ?? "";
+                        if (base64.Length > 16_000_000) throw new InvalidDataException("Registro excede o limite permitido.");
+                        var data = Convert.FromBase64String(base64);
+                        totalBytes += data.Length;
+                        if (totalBytes > 32_000_000) throw new InvalidDataException("Lote excede o limite total.");
+                        records.Add(entry.Name, data);
+                    }
+                    store.ReplaceEvaluations(records);
+                    result = "restored";
+                    break;
+                }
                 case "delete-evaluation":
                 {
                     var key = root.GetProperty("recordId").GetString() ?? "";
