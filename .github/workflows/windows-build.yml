@@ -51,6 +51,9 @@ jobs:
       - name: Regression tests for Windows assessment saving and receiving pending payments
         run: node tests/windows-assessment-billing-regression.cjs
 
+      - name: Validate encrypted storage, privacy and compact desktop layout
+        run: node tests/windows-privacy-layout.cjs
+
       - name: Validate SQLite-only frontend syntax
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
