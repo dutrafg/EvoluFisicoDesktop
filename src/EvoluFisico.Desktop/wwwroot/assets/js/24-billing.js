@@ -1,6 +1,6 @@
 /* 22-runtime.js */
 /* ==========================================================================
-   EVOLUFÍSICO v9.0-beta — MÓDULO DE COBRANÇA, PRECIFICAÇÃO E HISTÓRICO
+   EVOLUFÍSICO v9.1-beta — MÓDULO DE COBRANÇA, PRECIFICAÇÃO E HISTÓRICO
    Foco exclusivo na precificação e histórico com Totais e Por Aluno
    ========================================================================== */
 (function() {
@@ -1149,33 +1149,31 @@
 
     function mount() {
         loadBilling().then(renderizarHistoricoCompleto).catch(e=>console.warn("Cobranças indisponíveis: "+e.message));
-        const nav = document.querySelector('.nav-tabs');
-        const diagBtn = document.getElementById('tab-btn-diagnostics');
+        // Módulo Cobranças sempre pertence à área principal, nunca ao Diagnóstico.
+        const nav = document.querySelector('.top-navbar > .nav-tabs');
         let cobBtn = document.getElementById('tab-btn-cobranca');
-        
-        // 1. Botão da aba estritamente após tab-btn-diagnostics
-        if (!cobBtn) {
+        if (nav && !cobBtn) {
             cobBtn = document.createElement('button');
             cobBtn.className = 'nav-tab-btn';
             cobBtn.id = 'tab-btn-cobranca';
             cobBtn.type = 'button';
             cobBtn.onclick = function() { switchTab('tab-cobranca'); };
-            cobBtn.innerHTML = '<span>💳</span> <span>Cobrança</span>';
-
-            if (diagBtn && diagBtn.parentNode) {
-                diagBtn.parentNode.insertBefore(cobBtn, diagBtn.nextSibling);
-            } else if (nav) {
-                nav.appendChild(cobBtn);
-            }
-        } else if (diagBtn && cobBtn.previousElementSibling !== diagBtn && diagBtn.parentNode) {
-            diagBtn.parentNode.insertBefore(cobBtn, diagBtn.nextSibling);
+            cobBtn.textContent = 'Cobranças';
+            nav.appendChild(cobBtn);
+        } else if (nav && cobBtn && cobBtn.parentElement !== nav) {
+            nav.appendChild(cobBtn);
         }
 
-        // 2. Seção #tab-cobranca estritamente após #tab-diagnostics
-        const diagPanel = document.getElementById('tab-diagnostics');
+        // Diagnóstico é uma subpágina de Configurações desde 9.1-beta.
+        // Recoloca a área financeira no nível superior caso versões antigas a aninhem.
+        const workspace = document.querySelector('.app-container');
         const cobPanel = document.getElementById('tab-cobranca');
-        if (diagPanel && cobPanel && cobPanel.previousElementSibling !== diagPanel && diagPanel.parentNode) {
-            diagPanel.parentNode.insertBefore(cobPanel, diagPanel.nextSibling);
+        const settingsPanel = document.getElementById('tab-settings');
+        if (workspace && cobPanel && cobPanel.parentElement !== workspace) {
+            workspace.insertBefore(
+                cobPanel,
+                settingsPanel && settingsPanel.parentElement === workspace ? settingsPanel : null
+            );
         }
 
         popularSelectAlunos();
@@ -1216,7 +1214,7 @@
         protect: async function(key=EF_Security.key) { const list=await loadBilling(); await writeBilling(list,key,true); },
         unprotect: async function() {const list=await loadBilling();await writeBilling(list,null,false);},
         clearMemory: function(){billingCache=null;billingRaw=null;},
-        version: '9.0-beta',
+        version: '9.1-beta',
         mounted: true,
         state: state,
         mount: mount,
