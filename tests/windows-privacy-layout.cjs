@@ -19,7 +19,7 @@ const tests = [
 ['Opaque physical folder names omit client name',()=>assert.match(runtime,/window\.EFNativeStorage \? \x60avaliacao_\$\{registro\.data_avaliacao\}/)],
 ['Draft saved in native encrypted store',()=>{assert.match(runtime,/EFNativeStorage\.writeJSON\('ef-form-draft',rascunho\)/);assert.match(runtime,/EFNativeStorage\.readJSON\('ef-form-draft'\)/);assert.match(runtime,/EFNativeStorage\.delete\('ef-form-draft'\)/)}],
 ['Snapshots protected automatically and legacy copies verified before removal',()=>{assert.match(runtime,/EFNativeStorage\.writeJSON\('ef-safety-snapshot-main', snapshot\)/);assert.match(runtime,/async function protegerLegadosLocaisDesktop\(\)/);assert.match(runtime,/JSON\.stringify\(persisted\.data\) === JSON\.stringify\(data\)/)}],
-['Plain localStorage evaluation duplication blocked on desktop',()=>assert.match(runtime,/if \(window\.EFNativeStorage\) return;/)],
+['Assessment restoration replaces encrypted SQLite records rather than plaintext localStorage',()=>{assert.match(runtime,/EFNativeStorage\.replaceEvaluations\(records\)/);assert.match(bridge,/replaceEvaluations:async records=>/);assert.match(host,/store\.ReplaceEvaluations\(records\)/);assert.match(store,/internal void ReplaceEvaluations\(/)}],
 ['Stylesheet loads last and is cached',()=>{assert.match(html,/30-sidebar-palette\.css.*?31-desktop-refinement\.css/s);assert.match(sw,/31-desktop-refinement\.css/)}],
 ['Responsive spacing and comfortable light color theme',()=>{assert.match(css, /--ef-page: #e3e9e4/);assert.match(css, /max-width: 1460px/);assert.match(css, /max-width: 760px/);assert.match(css,/min-height: 35px/)}],
 ];
