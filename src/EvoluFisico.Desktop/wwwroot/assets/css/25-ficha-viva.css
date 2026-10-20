@@ -236,7 +236,10 @@ body.ef-simple-ui :is(h1, h2, h3, .brand-title, .ef55-kpi b, .kpi-value, .stat-v
     margin: 0 !important;
   }
   body.ef-simple-ui .ef55-chips > * {
-    white-space: nowrap;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    line-height: 1.08 !important;
+    text-align: center;
     border-radius: 999px !important;
     padding: 4px 10px !important;
     font-size: 11.5px !important;
@@ -447,7 +450,7 @@ body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn::before {
    ========================================================================== */
 @media screen and (max-width: 1199px) {
   body.ef-simple-ui {
-    padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(164px + env(safe-area-inset-bottom)) !important;
   }
   body.ef-simple-ui .top-navbar {
     background: transparent !important;
@@ -471,7 +474,8 @@ body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn::before {
     bottom: calc(10px + env(safe-area-inset-bottom));
     z-index: 200;
     display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-auto-rows: 54px;
     gap: 2px !important;
     width: auto !important;
     max-width: 560px;
@@ -521,7 +525,7 @@ body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn::before {
   body.ef-simple-ui #ef-tools-content > details[open] { border-radius: 20px !important; }
 
   /* o aviso flutuante nunca cobre a barra inferior */
-  #ef55-toasts { bottom: calc(86px + env(safe-area-inset-bottom)) !important; }
+  #ef55-toasts { bottom: calc(150px + env(safe-area-inset-bottom)) !important; }
 
   body.ef-simple-ui .ef55-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   body.ef-simple-ui .ef55-kpi:nth-child(3) { border-left: 0 !important; }
