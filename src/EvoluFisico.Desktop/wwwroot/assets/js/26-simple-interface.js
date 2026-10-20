@@ -1,4 +1,4 @@
-/* Interface 9.0-beta: reorganiza os mesmos controles, sem substituir suas funções. */
+/* Interface 9.1-beta: reorganiza os mesmos controles, sem substituir suas funções. */
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
@@ -36,6 +36,11 @@ function arrangeNavigation(){
    if($('tab-form-icon'))$('tab-form-icon').textContent='+';
   }else if(NAV_ICONS[id]){if(b.dataset.efIconReady!=='1'){b.innerHTML='<span class="ef-local-nav-icon">'+NAV_ICONS[id]+'</span><span>'+label+'</span>';b.dataset.efIconReady='1'}}else if(b.textContent!==label)b.textContent=label;
   const active=$(route)?.classList.contains('active');b.classList.toggle('active',!!active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+ }
+ // Cobranças é sempre um painel principal, independente de Diagnóstico/Configurações.
+ const billingPanel=$('tab-cobranca'),workspace=document.querySelector('.app-container'),settingsPanel=$('tab-settings');
+ if(workspace&&billingPanel&&billingPanel.parentElement!==workspace){
+  workspace.insertBefore(billingPanel,settingsPanel?.parentElement===workspace?settingsPanel:null);
  }
  const active=document.querySelector('.tab-panel.active');
  if(form)form.hidden=active?.id!=='tab-historico'&&active?.id!=='tab-novo-checkin';
@@ -91,7 +96,7 @@ function mount(){
  nav.setAttribute('aria-label','Navegação principal');
  const workspace=document.createElement('div');workspace.id='ef-workspace-heading';
  const title=document.createElement('span');title.id='ef-workspace-title';workspace.append(title);
- const version=document.createElement('small');version.textContent='9.0.0-beta.2';workspace.append(version);header.after(workspace);
+ const version=document.createElement('small');version.textContent='9.1.0-beta.1';workspace.append(version);header.after(workspace);
  const toggle=document.createElement('button');toggle.type='button';toggle.id='ef-sidebar-toggle';
  toggle.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';
  function setSidebar(hidden,save){document.body.classList.toggle('ef-sidebar-hidden',hidden);toggle.setAttribute('aria-expanded',String(!hidden));const t=hidden?'Mostrar barra lateral (Ctrl+B)':'Esconder barra lateral (Ctrl+B)';toggle.title=t;toggle.setAttribute('aria-label',t);if(save){try{localStorage.setItem('ef_sidebar_hidden',hidden?'1':'0')}catch(e){}}}
@@ -263,7 +268,7 @@ function mount(){
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
  const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
- window.EFSimpleUI={version:'9.0.0-beta.2',arrangeNavigation,arrangeDetails};
+ window.EFSimpleUI={version:'9.1.0-beta.1',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
