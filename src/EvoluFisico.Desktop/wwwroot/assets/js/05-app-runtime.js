@@ -856,7 +856,7 @@
                           <span>🔑</span> <span>Alterar Chave Mestra</span>
                         </h4>
                         <p style="font-size:0.78rem; color:#64748b; line-height:1.45; margin-bottom:0.85rem;">
-                          Define uma nova senha e re-criptografa todos os registros do IndexedDB e LocalStorage.
+                          Altera a chave mestra adicional do cofre web. O SQLite do Windows continua protegido por DPAPI independentemente dessa configuração.
                         </p>
                         <div class="input-group">
                           <label style="font-size:0.78rem; font-weight:600;">Nova chave mestra (mínimo 10 caracteres)</label>
@@ -930,10 +930,10 @@
                     </div>
                     <div class="modal-body" style="padding:1.25rem;">
                       <div class="info-box" style="margin-bottom:1rem;">
-                        <strong>AES-256-GCM + PBKDF2-SHA-256:</strong> Ao ativar, seus dados locais, fotos e backups serão protegidos com criptografia. A senha nunca é salva no disco.
+                        <strong>Windows: AES-256-GCM + DPAPI já está ativo no SQLite, mesmo sem chave mestra.</strong> Configure uma chave mestra adicional para exigir senha ao abrir o aplicativo. A senha não é gravada no disco.
                       </div>
                       <p style="font-size:.84rem;color:#334155;margin-bottom:1rem;line-height:1.5;">
-                        Protege o banco local (IndexedDB) e arquivos exportados contra acesso não autorizado no dispositivo.
+                        No Windows, avaliações e cobranças ficam no SQLite criptografado. Cópias geradas nas pastas passam a usar DPAPI; para acesso restrito ao aplicativo configure uma chave mestra. Arquivos legados e exportações manuais anteriores podem precisar de proteção adicional.
                       </p>
                       <div class="input-group">
                         <label style="font-size:0.78rem; font-weight:600;">Nova chave mestra (mínimo 10 caracteres)</label>
@@ -1665,7 +1665,7 @@
             try {
                 const nomeSeguro = (registro.nome || 'aluno').toLowerCase().replace(/[^a-z0-9]/g, '_');
                 const semanaSegura = (registro.checkin_semana || 'checkin').toLowerCase().replace(/[^a-z0-9]/g, '_');
-                const pastaNome = `${nomeSeguro.slice(0,60)}_${registro.data_avaliacao}_${semanaSegura.slice(0,30)}_${idSeguro(registro.id || gerarIdSeguro()).slice(0,72)}`;
+                const pastaNome = window.EFNativeStorage ? `avaliacao_${registro.data_avaliacao}_${idSeguro(registro.id || gerarIdSeguro()).slice(0,72)}` : `${nomeSeguro.slice(0,60)}_${registro.data_avaliacao}_${semanaSegura.slice(0,30)}_${idSeguro(registro.id || gerarIdSeguro()).slice(0,72)}`;
 
                 const subDir = await pastaHandle.getDirectoryHandle(pastaNome, { create: true });
                 const arquivoProtegido = Boolean((EF_Security.enabled && EF_Security.key) || window.EFNativeStorage);
