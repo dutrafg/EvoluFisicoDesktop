@@ -1,0 +1,8 @@
+
+#ef-setting-diagnostics .efdiag-filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0 16px;}
+#ef-setting-diagnostics .efdiag-filters label{color:var(--ef-muted);font-size:13px;font-weight:650;}
+#ef-setting-diagnostics .efdiag-filters select{min-height:39px;border:1px solid var(--ef-line);background:var(--ef-surface);color:var(--ef-ink);border-radius:10px;padding:6px 12px;max-width:100%;}
+#ef-setting-diagnostics .efdiag-section{margin:16px 0 9px;padding:8px 11px;background:var(--ef-soft);color:var(--ef-ink);border-radius:8px;font-size:13px;font-weight:750;}
+#ef-setting-diagnostics .efdiag-legend{color:var(--ef-muted);font-size:12px;line-height:1.5;margin-top:6px;}
+#ef-setting-diagnostics .efdiag-actions{flex-wrap:wrap}
+@media(max-width:500px){#ef-setting-diagnostics .efdiag-filters{align-items:stretch;flex-direction:column;}#ef-setting-diagnostics .efdiag-filters select{width:100%}#ef-setting-diagnostics .efdiag-actions{gap:8px;}}
