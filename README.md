@@ -1,4 +1,4 @@
-# EvoluFisico Desktop 9.0-beta
+# EvoluFisico Desktop 9.1-beta
 
 Migração para Windows com C#/.NET 8, WPF e WebView2.
 
@@ -16,3 +16,7 @@ Requer Windows x64, .NET 8 SDK, WebView2 Runtime e Inno Setup 6.
 O WebView2 utiliza perfil em `%LOCALAPPDATA%\EvoluFisicoDesktop\WebView2`. Não exclua esse diretório sem exportar seus dados. Persistência e impressão ainda exigem testes em Windows.
 
 O projeto não altera os repositórios EvoluFisico e Evolufisico2.
+
+## Correções da versão 9.1-beta
+
+O painel Cobranças permanece no menu principal, mesmo com Diagnóstico em Configurações > Manutenção. A barra de navegação em telas menores usa duas linhas para mostrar os módulos sem esconder funções. Foram preservados o SQLite criptografado, o recebimento pendente e as nove anamneses.
