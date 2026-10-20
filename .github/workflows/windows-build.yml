@@ -25,6 +25,9 @@ jobs:
         shell: pwsh
         run: python scripts/verify_frontend.py
 
+      - name: Validate imported assessment forms and native SQLite safeguards
+        run: node tests/forms-windows-integration.cjs
+
       - name: Validate desktop integrations
         shell: pwsh
         run: node tests/desktop-integration.cjs
