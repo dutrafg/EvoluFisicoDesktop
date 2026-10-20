@@ -51,6 +51,9 @@ jobs:
       - name: Run 34 Windows stability safety gates
         run: node tests/windows-stable-gates.cjs
 
+      - name: Regression test for 9.1 billing navigation and responsive menu
+        run: node tests/windows-billing-navigation-91.cjs
+
       - name: Regression tests for Windows assessment saving and receiving pending payments
         run: node tests/windows-assessment-billing-regression.cjs
 
