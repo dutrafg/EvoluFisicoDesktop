@@ -10,7 +10,7 @@ const routes={
  'tab-cobranca':['tab-btn-cobranca','Cobranças'],
  'tab-novo-checkin':['tab-btn-form','Nova avaliação'],
  'tab-lab77':['tab-btn-lab77','Calculadora'],
- 'tab-diagnostics':['tab-btn-diagnostics','Diagnóstico'],
+ 'tab-ef-forms':['tab-btn-ef-forms','Formulários'],
  'tab-settings':['tab-btn-settings','Configurações']
 };
 function fold(id,title,hint,nodes,parent,before=null){
@@ -23,8 +23,8 @@ function fold(id,title,hint,nodes,parent,before=null){
 }
 function arrangeNavigation(){
  const nav=document.querySelector('.top-navbar > .nav-tabs'),menu=$('ef-tools-content'),actions=$('ef-primary-actions');if(!nav||!menu||!actions)return;
- ['tab-painel','tab-historico','tab-comparison','tab-lab77','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
- ['tab-diagnostics','tab-settings'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
+ ['tab-painel','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
+ ['tab-settings'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  const form=$('tab-btn-form');if(form&&form.parentNode!==actions)actions.prepend(form);
  for(const [route,[id,label]] of Object.entries(routes)){
   const b=$(id);if(!b)continue;b.type='button';b.setAttribute('aria-controls',route);
@@ -40,7 +40,7 @@ function arrangeNavigation(){
  const active=document.querySelector('.tab-panel.active');
  if(form)form.hidden=active?.id!=='tab-historico'&&active?.id!=='tab-novo-checkin';
  const heading=$('ef-workspace-title');if(heading)heading.textContent=routes[active?.id]?.[1]||'EvoluFísico';
- $('ef-tools').classList.toggle('ef-tools-active',active?.id==='tab-diagnostics'||active?.id==='tab-settings');
+ $('ef-tools').classList.toggle('ef-tools-active',active?.id==='tab-settings');
 }
 function arrangeDetails(){
  const panel=$('ef55-painel');if(panel){
@@ -78,6 +78,7 @@ function setupForm(){
 }
 const NAV_ICONS={
  'tab-btn-diagnostics':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6H21"/></svg>',
+ 'tab-btn-ef-forms':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg>',
  'tab-btn-settings':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="var(--ef-surface, #fff)"/><circle cx="15" cy="17" r="2.4" fill="var(--ef-surface, #fff)"/></svg>'
 };
 const COLORS={verde:['#75d7a9','#086849'],azul:['#73aef9','#235cbd'],roxo:['#ad95ff','#6244ba'],laranja:['#f9b276','#a85517'],rosa:['#f3a5c5','#a53c71']};
