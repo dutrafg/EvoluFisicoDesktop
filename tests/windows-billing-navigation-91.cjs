@@ -35,7 +35,7 @@ function scenario({nestedPanel=false,nestedButton=false,missingButton=false}={})
   switchTab:id=>{clicked=id},console
  };
  new Function(...Object.keys(sandbox),mountCode+'\nmount();')(...Object.values(sandbox));
- return{workspace,settings,diagnostics,panel,navbar,button:byId.get('tab-btn-cobranca'),clicked:()=>clicked,recalc:()=>recalc,render:()=>render};
+ return{workspace,settings,diagnostics,panel,navbar,button:byId.get('tab-btn-cobranca')||navbar.children.find(x=>x.id==='tab-btn-cobranca'),clicked:()=>clicked,recalc:()=>recalc,render:()=>render};
 }
 check('Painel já correto permanece na área de trabalho',()=>{const a=scenario();assert.equal(a.panel.parentElement,a.workspace);assert(a.navbar.children.includes(a.button))});
 check('Painel aninhado em Diagnóstico retorna ao workspace',()=>{const a=scenario({nestedPanel:true});assert.equal(a.panel.parentElement,a.workspace);assert(a.workspace.children.indexOf(a.panel)<a.workspace.children.indexOf(a.settings))});
