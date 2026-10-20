@@ -503,6 +503,10 @@
                 });
             },
             async redefinirSenha(novaSenha) {
+                // A troca de senha do cofre web precisa migrar avaliações E finanças
+                // em uma única operação. Não alterar a chave no Windows sem tal transação.
+                if (window.EFNativeStorage)
+                    throw new Error('No Windows, para trocar a chave mestra com segurança, remova a chave atual e ative uma nova em Configurações. O SQLite permanece criptografado durante todo o processo.');
                 if (!this.enabled || !this.key) {
                     throw new Error('O cofre precisa estar desbloqueado para alterar a senha.');
                 }
@@ -587,7 +591,14 @@
                     catch (e) { throw new Error('Não foi possível gravar os dados sem criptografia (nada foi alterado): ' + e.message); }
                 }
 
-                // 1) IndexedDB em formato plano, numa única transação (registros gravados como estão)
+                // 1) No Desktop, regravar avaliações no SQLite (ainda protegido por DPAPI)
+                // ANTES de descartar o segredo web; caso falhe, manter cofre intacto.
+                if (window.EFNativeStorage) {
+                    const records = {};
+                    const encoder = new TextEncoder();
+                    for (const item of lista) records['ef-eval-' + item.id] = encoder.encode(JSON.stringify(item));
+                    await window.EFNativeStorage.replaceEvaluations(records);
+                }
                 if (db) await this._idbSubstituirTudo(lista.map(item => item));
 
                 // 2) Snapshot de segurança
