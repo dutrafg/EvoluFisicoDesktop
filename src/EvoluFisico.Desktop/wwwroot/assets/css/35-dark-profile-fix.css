@@ -1,0 +1,54 @@
+
+/* Correção isolada no resumo/evolução do perfil. CSS original intacto. */
+@media screen {
+  /* Escopo estrito ao painel do aluno, evitando efeitos nos geradores PDF. */
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content .professional-notes-box[style] {
+    background: var(--ef-surface, #172821) !important;
+    color: var(--ef-ink, #f1f5f9) !important;
+    border-color: var(--ef-accent, #34d399) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content .professional-notes-box[style] div[style*="color:#475569"] {
+    color: var(--ef-muted, #b8c6c0) !important;
+    border-color: var(--ef-line, #365047) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content .ef6-laudo {
+    background: var(--ef-surface, #172821) !important;
+    color: var(--ef-ink, #f1f5f9) !important;
+    border-color: var(--ef-line, #365047) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content .ef6-laudo strong[style*="color:#0f172a"] {
+    color: var(--ef-ink, #f1f5f9) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content .ef6-laudo [style*="background:#e2e8f0"] {
+    background: var(--ef-line, #365047) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content .ef6-laudo [style*="border-top:1px dashed #cbd5e1"] {
+    border-color: var(--ef-line, #365047) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content .ef6-laudo span[style*="border:1px solid #cbd5e1"] {
+    border-color: var(--ef-line, #365047) !important;
+    color: var(--ef-ink, #f1f5f9) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content #ef56-extra > div[style*="grid-template-columns"] > div {
+    background: var(--ef-surface, #172821) !important;
+    color: var(--ef-ink, #f1f5f9) !important;
+    border-color: var(--ef-line, #365047) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content #ef56-extra svg {
+    background: transparent !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content #ef56-extra svg text[fill="#1d1d1f"] {
+    fill: var(--ef-ink, #f1f5f9) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content #ef56-extra svg text[fill="#86868b"] {
+    fill: var(--ef-muted, #b8c6c0) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content #ef56-extra svg circle[fill="#fff"] {
+    fill: var(--ef-surface, #172821) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #patient-view-content #ef56-extra .btn-secondary {
+    background: var(--ef-soft, #243b32) !important;
+    color: var(--ef-ink, #f1f5f9) !important;
+    border-color: var(--ef-line, #365047) !important;
+  }
+}
