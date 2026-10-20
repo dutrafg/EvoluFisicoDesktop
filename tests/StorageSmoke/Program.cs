@@ -136,6 +136,31 @@ try
     Check(store.Load("eval-target") is null
         && Encoding.UTF8.GetString(store.Load("eval-linked")!) == "after",
         "Evaluation deletion atomically updates comparisons and removes target");
+    store.Save("ef-eval-before", Encoding.UTF8.GetBytes("old assessment"));
+    store.Save("ef-billing-main", Encoding.UTF8.GetBytes("unchanged billing"));
+    store.ReplaceEvaluations(new System.Collections.Generic.Dictionary<string, byte[]>
+    {
+        ["ef-eval-after"] = Encoding.UTF8.GetBytes("new assessment")
+    });
+    Check(store.Load("ef-eval-before") is null
+        && Encoding.UTF8.GetString(store.Load("ef-eval-after")!) == "new assessment",
+        "Atomic assessment restoration replaces obsolete evaluations");
+    Check(Encoding.UTF8.GetString(store.Load("ef-billing-main")!) == "unchanged billing",
+        "Assessment restoration preserves financial history");
+    try
+    {
+        store.ReplaceEvaluations(new System.Collections.Generic.Dictionary<string, byte[]>
+        {
+            ["ef-eval-should-not-write"] = sample,
+            ["ef-billing-not-allowed"] = sample
+        });
+        throw new Exception("Invalid assessment set must fail");
+    }
+    catch (ArgumentException) {
+        Check(store.Load("ef-eval-should-not-write") is null
+            && store.Load("ef-eval-after") is not null,
+            "Invalid assessment restore leaves earlier records untouched");
+    }
     // A verified backup must be a point-in-time copy, not a live database alias.
     store.Save("patient-001", Encoding.UTF8.GetBytes("post-backup-change"));
     Check(Encoding.UTF8.GetString(store.Load("patient-001")!) == "post-backup-change",
