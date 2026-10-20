@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main]
+    branches: [main, 'fix/home-masonry-compact-20261020']
   workflow_dispatch:
 
 concurrency:
