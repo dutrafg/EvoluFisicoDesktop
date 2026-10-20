@@ -132,34 +132,101 @@ return '<div class="ef90-alert-strip" role="status"><span class="ef90-alert-icon
 
 /* Organização dos cards: preferências de layout apenas, sem dados de pacientes. */
 var HOME_LAYOUT_KEY='ef90_home_cards_order_v1';
-var HOME_CARDS=['agenda','tarefas','calendario','retornos'];
+var HOME_CARDS=['agenda','calendario','tarefas','retornos','insights','detalhes'];
 var homeOrganizing=false;
+
 function readHomeOrder(){
  var raw;try{raw=JSON.parse(storageGet(HOME_LAYOUT_KEY,'null'))}catch(e){raw=null}
- if(!Array.isArray(raw)||raw.length!==HOME_CARDS.length||new Set(raw).size!==HOME_CARDS.length||raw.some(function(id){return HOME_CARDS.indexOf(id)<0}))
-   return HOME_CARDS.slice();
- return raw;
+ // Aceita as preferências antigas de 4 cartões sem perder a organização salva.
+ var valid=Array.isArray(raw)?raw.filter(function(id){return HOME_CARDS.indexOf(id)>=0}):[];
+ var unique=valid.filter(function(id,i){return valid.indexOf(id)===i});
+ HOME_CARDS.forEach(function(id){if(unique.indexOf(id)<0)unique.push(id)});
+ return unique;
 }
+function visibleHomeOrder(grid){
+ return readHomeOrder().filter(function(id){return Boolean(grid.querySelector('[data-ef-home-card="'+id+'"]'))});
+}
+var homeLayoutScheduled=false,homeResizeObserver=null,homeObservedGrid=null;
 function homeMoveCard(id,position){
- var order=readHomeOrder(),from=order.indexOf(id),to=Number(position);
- if(from<0||!Number.isInteger(to)||to<0||to>=order.length)return false;
+ var grid=$('#ef90-sortable'),visible=grid?visibleHomeOrder(grid):readHomeOrder();
+ var from=visible.indexOf(id),to=Number(position);
+ if(from<0||!Number.isInteger(to)||to<0||to>=visible.length)return false;
  if(from===to)return true;
- order.splice(from,1);order.splice(to,0,id);
- storageSet(HOME_LAYOUT_KEY,JSON.stringify(order));applyHomeCardLayout();
- toast('Organização do Início salva.');return true;
+ visible.splice(from,1);visible.splice(to,0,id);
+ var trailing=readHomeOrder().filter(function(x){return visible.indexOf(x)<0});
+ storageSet(HOME_LAYOUT_KEY,JSON.stringify(visible.concat(trailing)));
+ applyHomeCardLayout();
+ toast('Nova organização salva.');return true;
+}
+// Uma partição equilibrada evita o espaço vazio sob cartões baixos.
+// Ao contrário de grid em linhas, cada coluna empilha cartões sem reservar a altura da outra.
+function chooseHomeLanes(entries,columns){
+ if(columns<2||entries.length<2)return [entries.map(function(x){return x.id}),[]];
+ var n=entries.length,limit=Math.pow(2,n),best=Infinity,winning=1;
+ for(var mask=1;mask<limit-1;mask+=2){
+  var left=0,right=0,changes=0,last=-1;
+  for(var i=0;i<n;i++){
+   var lane=(mask>>i)&1;
+   if(last!==-1&&lane!==last)changes++;
+   last=lane;
+   if(lane)left+=entries[i].height;else right+=entries[i].height;
+  }
+  // Primeiro cartão à esquerda. O desempate prioriza estabilidade visual.
+  var penalty=Math.abs(left-right)+changes*5;
+  if(penalty<best){best=penalty;winning=mask}
+ }
+ var lanes=[[],[]];
+ entries.forEach(function(e,i){lanes[(winning>>i)&1?0:1].push(e.id)});
+ return lanes;
+}
+function layoutHomeColumns(){
+ var grid=$('#ef90-sortable');if(!grid||!grid.isConnected)return;
+ var cards=[].slice.call(grid.querySelectorAll('[data-ef-home-card]'));
+ if(!cards.length)return;
+ var map=new Map(cards.map(function(card){return [card.getAttribute('data-ef-home-card'),card]}));
+ var ordered=visibleHomeOrder(grid).filter(function(id){return map.has(id)});
+ var width=grid.clientWidth||grid.getBoundingClientRect().width||0;
+ // Apenas uma coluna quando não há espaço confortável para dois cards.
+ var columns=width>=920 && ordered.length>1?2:1;
+ var entries=ordered.map(function(id){
+  var card=map.get(id),height=Math.max(card.scrollHeight||0,card.offsetHeight||0,card.getBoundingClientRect().height||0,150);
+  return {id:id,height:height+14};
+ });
+ var assignment=chooseHomeLanes(entries,columns);
+ var lanes=[].slice.call(grid.querySelectorAll(':scope > .ef-home-lane'));
+ while(lanes.length<2){
+  var lane=document.createElement('div');
+  lane.className='ef-home-lane';
+  lane.setAttribute('data-ef-home-lane',String(lanes.length));
+  grid.appendChild(lane);lanes.push(lane);
+ }
+ grid.classList.toggle('ef-home-single-column',columns===1);
+ assignment.forEach(function(ids,i){
+  var lane=lanes[i];
+  ids.forEach(function(id,index){
+   var card=map.get(id);
+   if(lane.children[index]!==card)lane.insertBefore(card,lane.children[index]||null);
+  });
+ });
+}
+function scheduleHomeLayout(){
+ if(homeLayoutScheduled)return;
+ homeLayoutScheduled=true;
+ var raf=window.requestAnimationFrame||function(cb){return setTimeout(cb,30)};
+ raf(function(){homeLayoutScheduled=false;layoutHomeColumns()});
 }
 function applyHomeCardLayout(){
  var grid=$('#ef90-sortable');if(!grid)return;
- var order=readHomeOrder();
- order.forEach(function(id){var card=grid.querySelector('[data-ef-home-card="'+id+'"]');if(card)grid.appendChild(card)});
+ var order=visibleHomeOrder(grid);
  grid.classList.toggle('ef-home-organizing',homeOrganizing);
  var cards=[].slice.call(grid.querySelectorAll('[data-ef-home-card]'));
  cards.forEach(function(card){
-   var id=card.getAttribute('data-ef-home-card');
-   card.draggable=homeOrganizing;
-   var tools=card.querySelector('.ef-home-card-tools');
-   if(tools)tools.remove();
-   tools=document.createElement('div');tools.className='ef-home-card-tools no-print';
+  var id=card.getAttribute('data-ef-home-card');
+  card.draggable=homeOrganizing;
+  var state=(homeOrganizing?'edit|':'view|')+order.join('|');
+  if(card.dataset.efHomeControlState!==state){
+   var previous=card.querySelector('.ef-home-card-tools');if(previous)previous.remove();
+   var tools=document.createElement('div');tools.className='ef-home-card-tools no-print';
    var toggle=document.createElement('button');
    toggle.type='button';toggle.className='ef-home-move-tag';
    toggle.textContent=homeOrganizing?'✓ Concluir':'↕ Mover';
@@ -168,45 +235,57 @@ function applyHomeCardLayout(){
    toggle.addEventListener('click',function(){homeOrganizing=!homeOrganizing;applyHomeCardLayout()});
    tools.appendChild(toggle);
    if(homeOrganizing){
-     var positions=document.createElement('div');positions.className='ef-home-move-actions';
-     var up=document.createElement('button');up.type='button';up.textContent='↑';up.title='Mover card para posição anterior';up.setAttribute('aria-label','Mover card anterior');
-     up.disabled=order.indexOf(id)===0;
-     up.addEventListener('click',function(){homeMoveCard(id,readHomeOrder().indexOf(id)-1)});
-     positions.appendChild(up);
-     var down=document.createElement('button');down.type='button';down.textContent='↓';down.title='Mover card para próxima posição';down.setAttribute('aria-label','Mover card seguinte');
-     down.disabled=order.indexOf(id)===order.length-1;
-     down.addEventListener('click',function(){homeMoveCard(id,readHomeOrder().indexOf(id)+1)});
-     positions.appendChild(down);
-     var select=document.createElement('select');select.setAttribute('aria-label','Escolher posição deste card');
-     order.forEach(function(_,i){var option=document.createElement('option');option.value=String(i);option.textContent='Posição '+(i+1);select.appendChild(option)});
-     select.value=String(order.indexOf(id));
-     select.addEventListener('change',function(){homeMoveCard(id,Number(select.value))});
-     positions.appendChild(select);
-     var reset=document.createElement('button');reset.type='button';reset.textContent='Padrão';reset.title='Restaurar a ordem inicial dos cards';
-     reset.addEventListener('click',function(){storageSet(HOME_LAYOUT_KEY,JSON.stringify(HOME_CARDS));applyHomeCardLayout();toast('Ordem padrão restaurada.')});
-     positions.appendChild(reset);tools.appendChild(positions);
+    var positions=document.createElement('div');positions.className='ef-home-move-actions';
+    var index=order.indexOf(id);
+    var up=document.createElement('button');up.type='button';up.textContent='↑';up.title='Mover para posição anterior';up.setAttribute('aria-label','Mover card anterior');
+    up.disabled=index===0;up.addEventListener('click',function(){homeMoveCard(id,visibleHomeOrder(grid).indexOf(id)-1)});
+    positions.appendChild(up);
+    var down=document.createElement('button');down.type='button';down.textContent='↓';down.title='Mover para próxima posição';down.setAttribute('aria-label','Mover card seguinte');
+    down.disabled=index===order.length-1;down.addEventListener('click',function(){homeMoveCard(id,visibleHomeOrder(grid).indexOf(id)+1)});
+    positions.appendChild(down);
+    var select=document.createElement('select');select.setAttribute('aria-label','Escolher posição deste card');
+    order.forEach(function(_,i){var option=document.createElement('option');option.value=String(i);option.textContent='Posição '+(i+1);select.appendChild(option)});
+    select.value=String(index);select.addEventListener('change',function(){homeMoveCard(id,Number(select.value))});
+    positions.appendChild(select);
+    var reset=document.createElement('button');reset.type='button';reset.textContent='Padrão';reset.title='Restaurar a ordem inicial dos cards';
+    reset.addEventListener('click',function(){storageSet(HOME_LAYOUT_KEY,JSON.stringify(HOME_CARDS));applyHomeCardLayout();toast('Ordem padrão restaurada.')});
+    positions.appendChild(reset);tools.appendChild(positions);
    }
    card.appendChild(tools);
-   if(card.dataset.efHomeDnDBound==='true')return;
-   card.dataset.efHomeDnDBound='true';
-   card.addEventListener('dragstart',function(ev){
-     if(!homeOrganizing||ev.target.closest('input,select,textarea')){ev.preventDefault();return}
-     ev.dataTransfer.effectAllowed='move';
-     ev.dataTransfer.setData('text/plain',id);card.classList.add('ef-home-dragging');
-   });
-   card.addEventListener('dragover',function(ev){if(!homeOrganizing)return;ev.preventDefault();ev.dataTransfer.dropEffect='move';card.classList.add('ef-home-drop-target')});
-   card.addEventListener('dragleave',function(ev){if(!card.contains(ev.relatedTarget))card.classList.remove('ef-home-drop-target')});
-   card.addEventListener('drop',function(ev){
-     if(!homeOrganizing)return;ev.preventDefault();card.classList.remove('ef-home-drop-target');
-     var moving=ev.dataTransfer.getData('text/plain');
-     if(HOME_CARDS.indexOf(moving)>=0)homeMoveCard(moving,readHomeOrder().indexOf(id));
-   });
-   card.addEventListener('dragend',function(){grid.querySelectorAll('.ef-home-dragging,.ef-home-drop-target').forEach(function(x){x.classList.remove('ef-home-dragging','ef-home-drop-target')})});
+   card.dataset.efHomeControlState=state;
+  }
+  if(card.dataset.efHomeDnDBound==='true')return;
+  card.dataset.efHomeDnDBound='true';
+  card.addEventListener('dragstart',function(ev){
+   if(!homeOrganizing||ev.target.closest('input,select,textarea,button')){ev.preventDefault();return}
+   ev.dataTransfer.effectAllowed='move';ev.dataTransfer.setData('text/plain',id);card.classList.add('ef-home-dragging');
+  });
+  card.addEventListener('dragover',function(ev){if(!homeOrganizing)return;ev.preventDefault();ev.dataTransfer.dropEffect='move';card.classList.add('ef-home-drop-target')});
+  card.addEventListener('dragleave',function(ev){if(!card.contains(ev.relatedTarget))card.classList.remove('ef-home-drop-target')});
+  card.addEventListener('drop',function(ev){
+   if(!homeOrganizing)return;ev.preventDefault();card.classList.remove('ef-home-drop-target');
+   var moving=ev.dataTransfer.getData('text/plain');
+   if(HOME_CARDS.indexOf(moving)>=0)homeMoveCard(moving,visibleHomeOrder(grid).indexOf(id));
+  });
+  card.addEventListener('dragend',function(){grid.querySelectorAll('.ef-home-dragging,.ef-home-drop-target').forEach(function(x){x.classList.remove('ef-home-dragging','ef-home-drop-target')})});
  });
+ // Recalcula quando o calendário, as tarefas, a análise ou a janela alteram de tamanho.
+ if(typeof window.ResizeObserver==='function'){
+  if(!homeResizeObserver)homeResizeObserver=new ResizeObserver(scheduleHomeLayout);
+  if(homeObservedGrid!==grid){homeResizeObserver.disconnect();homeObservedGrid=grid}
+  homeResizeObserver.observe(grid);
+  cards.forEach(function(card){homeResizeObserver.observe(card)});
+ }
+ scheduleHomeLayout();
 }
 window.ef90MoveHomeCard=homeMoveCard;
+window.ef90RefreshHomeLayout=applyHomeCardLayout;
+window.ef90ChooseHomeLanes=chooseHomeLanes;
+window.addEventListener('resize',scheduleHomeLayout);
 
 function render(){var box=$('#ef55-painel');if(!box)return;
+var retainedHomeAnalysis=[].slice.call(box.querySelectorAll('#ef-home-insights,#ef-home-deep'));
+retainedHomeAnalysis.forEach(function(node){node.remove()});
 var al=alunos(),av=lista(),base=today(),agenda=loadAgenda(),retornos=buildReturnEvents(al,base),allEvents=agenda.concat(retornos);
 var mes=av.filter(function(a){var d=pd(a.data_avaliacao);return d&&d.getMonth()===base.getMonth()&&d.getFullYear()===base.getFullYear()}).length;
 var gs=al.map(function(x){return pg(x.last)}).filter(function(v){return v!=null});
@@ -235,7 +314,10 @@ box.innerHTML=''
 +'<section class="ef55-card ef90-card" data-ef-home-card="tarefas"><div class="ef90-section-head"><div><h3>Tarefas do dia</h3><p>Lista de tarefas para documentos, contatos e acompanhamentos.</p></div>'+pill('soft','lista de tarefas')+'</div><form class="ef90-task-form" onsubmit="event.preventDefault();ef90NewTask()"><input id="ef90-task-input" placeholder="Ex.: Confirmar avaliação de amanhã"><button type="submit" class="btn btn-primary btn-sm">Adicionar</button></form>'+rows(getTasks().filter(function(x){return x.date===selISO}),function(x){return '<div class="ef90-task-item"><input type="checkbox" '+(x.done?'checked ':'')+'onchange="ef90TaskDone(\''+jsEsc(x.id)+'\')"><span class="'+(x.done?'done':'')+'">'+esc(x.name)+'</span><button class="ef90-inline-btn danger" type="button" onclick="ef90TaskDelete(\''+jsEsc(x.id)+'\')">Excluir</button></div>'},'Nenhuma tarefa anotada para esta data.')+'</section>'
 +'<section class="ef55-card ef90-card" data-ef-home-card="retornos"><div class="ef90-section-head"><div><h3>Reavaliações próximas</h3><p>Retornos automáticos vindos do cadastro das avaliações.</p></div></div>'+rows(ret,function(r){var a=r.x.last,c=r.dias<0?'bad':r.dias<=3?'warn':'ok',tx=r.dias<0?'Atrasado '+(-r.dias)+'d':r.dias===0?'Hoje':'em '+r.dias+'d';return '<div class="ef55-row" onclick="ef55Abrir(\''+jsEsc(a.id)+'\')"><div class="ef55-av">'+esc(ini(a.nome))+'</div><div class="t"><b>'+esc(a.nome)+'</b><span>'+fd(pd(a.data_proxima_avaliacao))+'</span></div><span class="ef55-pill '+c+'">'+tx+'</span><button class="ef55-wa" onclick="ef55Zap(event,\''+jsEsc(a.id)+'\')">WhatsApp</button></div>'},'Nenhuma reavaliação próxima.')+'</section>'
 +'</div>'
-+'</section>';applyHomeCardLayout()}
++'</section>';
+var homeGrid=$('#ef90-sortable');
+retainedHomeAnalysis.forEach(function(card){if(homeGrid)homeGrid.appendChild(card)});
+applyHomeCardLayout()}
 
 var nav=$('.nav-tabs');
 if(nav){nav.insertAdjacentHTML('afterbegin','<button class="nav-tab-btn" id="tab-btn-painel" onclick="switchTab(\'tab-painel\')"><span>📊</span> <span>Painel</span></button>')}
