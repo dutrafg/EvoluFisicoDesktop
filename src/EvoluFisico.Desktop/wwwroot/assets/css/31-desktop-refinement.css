@@ -81,3 +81,126 @@
   body.ef-simple-ui .ef-settings-card-wide { grid-column: auto !important; }
   body.ef-simple-ui .ef-settings-card { padding: 15px !important; }
 }
+
+/* Início 9.0: largura total, cards reordenáveis e cabeçalho sem vidro/desfoque. */
+@media screen {
+  body.ef-simple-ui #tab-painel,
+  body.ef-simple-ui #ef55-painel,
+  body.ef-simple-ui #ef55-painel .ef90-home {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box;
+  }
+  body.ef-simple-ui #tab-painel.tab-panel.active {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable {
+    display: grid !important;
+    width: 100% !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    grid-auto-flow: row !important;
+    align-items: start !important;
+    gap: 14px !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable > [data-ef-home-card] {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    height: auto !important;
+    grid-column: auto !important;
+    align-self: start !important;
+    box-sizing: border-box;
+    position: relative;
+    padding-top: 47px !important;
+  }
+  body.ef-simple-ui #ef90-sortable.ef-home-organizing > [data-ef-home-card] {
+    padding-top: 91px !important;
+    outline: 1px dashed var(--ef-accent);
+    outline-offset: -4px;
+    cursor: grab;
+  }
+  body.ef-simple-ui #ef90-sortable [data-ef-home-card].ef-home-dragging {opacity: .55;cursor: grabbing;}
+  body.ef-simple-ui #ef90-sortable [data-ef-home-card].ef-home-drop-target {
+    outline: 2px solid var(--ef-accent); outline-offset: -3px;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-card-tools {
+    position: absolute;top: 10px;right: 12px;z-index: 2;
+    display: flex;align-items: flex-end;flex-direction: column;gap: 5px;
+    max-width: calc(100% - 24px);
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-move-tag,
+  body.ef-simple-ui #ef90-sortable .ef-home-move-actions :is(button,select) {
+    font: inherit;font-size: 12px;font-weight: 650;
+    min-height: 28px;padding: 4px 9px;border: 1px solid var(--ef-line);
+    border-radius: 8px;background: var(--ef-soft);color:var(--ef-ink);
+    cursor:pointer;box-shadow:none!important;filter:none!important;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-move-tag:hover,
+  body.ef-simple-ui #ef90-sortable .ef-home-move-actions button:hover:not(:disabled) {
+    border-color: var(--ef-accent);color: var(--ef-accent);
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-move-actions {
+    display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:5px;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-move-actions button:disabled {
+    opacity:.4;cursor:not-allowed;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-move-actions select {
+    max-width: 125px;min-width: 102px;
+  }
+  body.ef-simple-ui #ef90-sortable :is(.ef-home-move-tag,.ef-home-move-actions button,.ef-home-move-actions select):focus-visible {
+    outline: 2px solid var(--ef-accent); outline-offset: 2px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  body.ef-simple-ui .app-container {
+    margin: 0 0 0 var(--ef-sidebar) !important;
+    width: calc(100% - var(--ef-sidebar)) !important;
+    max-width: none !important;
+    padding-top: 89px !important;
+  }
+  body.ef-simple-ui #ef-workspace-heading {
+    height: 65px !important;
+    background: var(--ef-page) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+    border-bottom: 1px solid var(--ef-line) !important;
+    box-shadow: none !important;
+  }
+  body.ef-simple-ui #ef-primary-actions,
+  body.ef-simple-ui #ef-primary-actions :is(button,.btn) {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+    box-shadow: none !important;
+  }
+}
+@media screen and (min-width: 1888px) {
+  body.ef-simple-ui .app-container {
+    margin-left: var(--ef-sidebar) !important;
+  }
+}
+@media screen and (max-width: 1320px) {
+  body.ef-simple-ui #tab-painel #ef90-sortable {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+}
+@media screen and (max-width: 720px) {
+  body.ef-simple-ui #tab-painel #ef90-sortable > [data-ef-home-card] {
+    padding-top: 44px !important;
+  }
+  body.ef-simple-ui #ef90-sortable.ef-home-organizing > [data-ef-home-card] {
+    padding-top: 94px !important;
+  }
+}
+@media print {
+  .ef-home-card-tools {display: none !important;}
+  #ef90-sortable [data-ef-home-card] {padding-top: 12px !important;}
+}
