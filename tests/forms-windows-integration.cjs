@@ -1,0 +1,20 @@
+/* Porta EvoluFisico2 -> Windows: segurança e integridade de arquivos da interface. */
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=path.resolve(__dirname,'../src/EvoluFisico.Desktop/wwwroot'),file=p=>fs.readFileSync(path.join(root,p),'utf8');
+const html=file('index.html'),forms=file('assets/js/32-forms-clean.js'),diag=file('assets/js/22-diagnostics.js'),navigation=file('assets/js/26-simple-interface.js'),integrate=file('assets/js/33-settings-navigation.js');
+for(const p of ['assets/js/22-diagnostics.js','assets/js/26-simple-interface.js','assets/js/32-forms-clean.js','assets/js/33-settings-navigation.js'])new vm.Script(file(p),{filename:p});
+for(const p of ['assets/css/32-forms-clean.css','assets/css/33-settings-alignment.css','assets/css/34-diagnostics-expanded.css','assets/css/35-dark-profile-fix.css','assets/css/36-print-restore.css','assets/css/37-settings-navigation.css','assets/js/32-forms-clean.js','assets/js/33-settings-navigation.js'])assert(html.includes('./'+p),'Asset ausente do HTML: '+p);
+assert(html.indexOf('assets/js/28-native-storage.js')<html.indexOf('assets/js/32-forms-clean.js'),'Driver SQLite precisa iniciar antes de formulários');
+assert(forms.includes("window.EFNativeStorage.writeJSON(STORAGE_KEY,state)"),'Salvamento de formulário não usa SQLite');
+assert(forms.includes("window.EFNativeStorage.readJSON(STORAGE_KEY)"),'Carregamento de formulário não usa SQLite');
+assert(forms.includes("if(result!=='saved')throw Error"),'Falta verificar confirmação real do banco');
+assert(!forms.includes('localStorage.setItem(STORAGE_KEY'),'Formulário gravado sem proteção');
+assert(forms.includes('clientKey')&&forms.includes('syncProfileShortcut'),'Vínculo ao aluno não implementado');
+assert(forms.includes('pdfForm')&&forms.includes('openForClient'),'PDF ou histórico ausente');
+assert(diag.includes('efdiag-category')&&diag.includes('efdiag-export'),'Diagnóstico ampliado não carregado');
+assert(!navigation.includes("'tab-diagnostics':['tab-btn-diagnostics'"),'Diagnóstico continua no menu principal');
+assert(navigation.includes("'tab-ef-forms'")&&navigation.includes("'tab-btn-ef-forms'"),'Nova navegação ausente');
+assert(integrate.includes('efw-settings-tabs')&&integrate.includes('grids.manutencao.prepend(diag)'),'Diagnóstico não está na manutenção');
+for(const label of ['Iniciante','Intermediário','Avançado'])assert(forms.includes(label),'Anamneses sem nível: '+label);
+assert(file('sw.js').includes('assets/js/32-forms-clean.js'),'Cache offline sem formulário');
+console.log('PASS: Windows/SQLite, formulário, diagnóstico, tema e navegação integrados.');
