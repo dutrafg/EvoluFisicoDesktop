@@ -1439,8 +1439,14 @@
                                     var rawText = await file.text();
                                     if (subEntry.name.endsWith('.efx')) {
                                         try {
-                                            var dec = await EF_Security.decryptImportedText(rawText);
-                                            rawText = dec.text;
+                                            const envelope = JSON.parse(rawText);
+                                            if (envelope.security === 'AES-256-GCM+Windows-DPAPI') {
+                                                if (!window.EFNativeStorage) throw new Error('Arquivo protegido vinculado à conta Windows original.');
+                                                rawText = await window.EFNativeStorage.unprotectText(envelope.payload);
+                                            } else {
+                                                var dec = await EF_Security.decryptImportedText(rawText);
+                                                rawText = dec.text;
+                                            }
                                         } catch (e) { console.warn('Erro ao decodificar .efx na pasta:', e); continue; }
                                     }
                                     var rawObj = JSON.parse(rawText);
@@ -1662,11 +1668,19 @@
                 const pastaNome = `${nomeSeguro.slice(0,60)}_${registro.data_avaliacao}_${semanaSegura.slice(0,30)}_${idSeguro(registro.id || gerarIdSeguro()).slice(0,72)}`;
 
                 const subDir = await pastaHandle.getDirectoryHandle(pastaNome, { create: true });
-                const dadosNome = EF_Security.enabled && EF_Security.key ? 'dados_avaliacao.efx' : 'dados_avaliacao.json';
+                const arquivoProtegido = Boolean((EF_Security.enabled && EF_Security.key) || window.EFNativeStorage);
+                const dadosNome = arquivoProtegido ? 'dados_avaliacao.efx' : 'dados_avaliacao.json';
                 const fileHandle = await subDir.getFileHandle(dadosNome, { create: true });
                 const writable = await fileHandle.createWritable();
                 if (EF_Security.enabled && EF_Security.key) {
                     await writable.write(JSON.stringify({app:'EvoluFísico',security:'AES-256-GCM',version:1,encrypted:true,originalName:'dados_avaliacao.json',mimeType:'application/json',createdAt:new Date().toISOString(),payload:await EF_Security.encryptText(JSON.stringify(registro,null,2))},null,2));
+                } else if (window.EFNativeStorage) {
+                    await writable.write(JSON.stringify({
+                        app:'EvoluFísico Desktop',security:'AES-256-GCM+Windows-DPAPI',
+                        version:1,encrypted:true,originalName:'dados_avaliacao.json',
+                        mimeType:'application/json',createdAt:new Date().toISOString(),
+                        payload:await window.EFNativeStorage.protectText(JSON.stringify(registro,null,2))
+                    },null,2));
                 } else {
                     await writable.write(JSON.stringify(registro, null, 2));
                 }
@@ -1684,7 +1698,7 @@
                     if (b64) {
                         const blob = base64ToBlob(b64);
                         if (blob) {
-                            const encrypted = EF_Security.enabled && EF_Security.key;
+                            const encrypted = arquivoProtegido;
                             const h = await subDir.getFileHandle(encrypted ? `${p.nome}.efx` : `${p.nome}.jpg`, { create: true });
                             const w = await h.createWritable();
                             if (encrypted) {
@@ -1693,6 +1707,13 @@
                                     originalName: `${p.nome}.jpg`, mimeType: 'image/jpeg', createdAt: new Date().toISOString(),
                                     payload: await EF_Security.encryptBytes(await blob.arrayBuffer())
                                 }, null, 2));
+                            } else if (window.EFNativeStorage) {
+                                await w.write(JSON.stringify({
+                                    app:'EvoluFísico Desktop',security:'AES-256-GCM+Windows-DPAPI',
+                                    version:1,encrypted:true,originalName:`${p.nome}.jpg`,
+                                    mimeType:blob.type || 'image/jpeg',createdAt:new Date().toISOString(),
+                                    payload:await window.EFNativeStorage.protectBytes(new Uint8Array(await blob.arrayBuffer()))
+                                },null,2));
                             } else {
                                 await w.write(blob);
                             }
@@ -1701,7 +1722,7 @@
                     }
                 }
 
-                const txtHandle = await subDir.getFileHandle(EF_Security.enabled && EF_Security.key ? 'resumo_laudo.efx' : 'resumo_laudo.txt', { create: true });
+                const txtHandle = await subDir.getFileHandle(arquivoProtegido ? 'resumo_laudo.efx' : 'resumo_laudo.txt', { create: true });
                 const txtW = await txtHandle.createWritable();
                 const resumo = `LAUDO DE AVALIAÇÃO FÍSICA - POLLOCK 1984
 Aluno: ${registro.nome} | Data: ${registro.data_avaliacao} | Próxima: ${registro.data_proxima_avaliacao || '-'}
@@ -1717,6 +1738,12 @@ Pontos fortes: ${registro.parecer_v6?.pontos_fortes || '-'}
 Pontos de atenção: ${registro.parecer_v6?.pontos_atencao || '-'}
 Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 if (EF_Security.enabled && EF_Security.key) await txtW.write(JSON.stringify({app:'EvoluFísico',security:'AES-256-GCM',version:1,encrypted:true,originalName:'resumo_laudo.txt',mimeType:'text/plain;charset=utf-8',createdAt:new Date().toISOString(),payload:await EF_Security.encryptText(resumo)},null,2));
+                else if (window.EFNativeStorage) await txtW.write(JSON.stringify({
+                    app:'EvoluFísico Desktop',security:'AES-256-GCM+Windows-DPAPI',
+                    version:1,encrypted:true,originalName:'resumo_laudo.txt',
+                    mimeType:'text/plain;charset=utf-8',createdAt:new Date().toISOString(),
+                    payload:await window.EFNativeStorage.protectText(resumo)
+                },null,2));
                 else await txtW.write(resumo);
                 await txtW.close();
 
