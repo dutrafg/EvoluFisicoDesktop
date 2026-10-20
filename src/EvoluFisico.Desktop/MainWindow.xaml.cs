@@ -223,6 +223,30 @@ public partial class MainWindow : Window
                     result = "saved";
                     break;
                 }
+                case "protect-data":
+                {
+                    var base64 = root.GetProperty("data").GetString() ?? "";
+                    if (base64.Length > 16_000_000)
+                        throw new InvalidDataException("Arquivo excede o limite.");
+                    var plaintext = Convert.FromBase64String(base64);
+                    try { result = Convert.ToBase64String(ProtectedVault.Encrypt(plaintext)); }
+                    finally { System.Security.Cryptography.CryptographicOperations.ZeroMemory(plaintext); }
+                    break;
+                }
+                case "unprotect-data":
+                {
+                    var base64 = root.GetProperty("data").GetString() ?? "";
+                    if (base64.Length > 22_000_000)
+                        throw new InvalidDataException("Arquivo protegido excede o limite.");
+                    var payload = Convert.FromBase64String(base64);
+                    try {
+                        var plaintext = ProtectedVault.Decrypt(payload);
+                        try { result = Convert.ToBase64String(plaintext); }
+                        finally { System.Security.Cryptography.CryptographicOperations.ZeroMemory(plaintext); }
+                    }
+                    finally { System.Security.Cryptography.CryptographicOperations.ZeroMemory(payload); }
+                    break;
+                }
                 case "delete-evaluation":
                 {
                     var key = root.GetProperty("recordId").GetString() ?? "";
