@@ -10,10 +10,10 @@ let passed=0;
 function check(label,fn){fn();passed++;console.log('PASS',label)}
 check('4 dashboard cards have stable unique IDs',()=>{
  const ids=['agenda','tarefas','calendario','retornos'];
- ids.forEach(id=>assert.match(source,new RegExp("data-ef-home-card=\\\\\\""+id+"\\\\\\"")));
- assert.match(source,/id=\\"ef90-sortable\\"/);
- assert.doesNotMatch(source,/\+'<div class=\\"ef90-left-stack\\">/);
- assert.doesNotMatch(source,/\+'<div class=\\"ef90-right-stack\\">/);
+ ids.forEach(id=>assert.ok(source.includes('data-ef-home-card="'+id+'"'),id));
+ assert.ok(source.includes('id="ef90-sortable"'));
+ assert.ok(!source.includes("+'<div class=\"ef90-left-stack\">"));
+ assert.ok(!source.includes("+'<div class=\"ef90-right-stack\">"));
 });
 check('Each card has accessible move controls and drag/drop',()=>{
  for(const snippet of ['aria-label','aria-pressed','ef-home-move-tag','ef-home-move-actions','dragstart','dragover','drop','dragend','ef-home-drop-target','Restaurar a ordem inicial']) assert.ok(source.includes(snippet),snippet);
