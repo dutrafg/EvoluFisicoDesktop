@@ -100,34 +100,50 @@
     filter: none !important;
     animation: none !important;
   }
-  /* Colunas independentes: não reservar a altura do cartão mais alto
-     para os demais; mantém a ordem e os controles de movimentação. */
+  /* Empacotamento real por altura: duas colunas independentes sem linhas
+     com a altura reservada do maior cartão. O JS redistribui ao redimensionar. */
   body.ef-simple-ui #tab-painel #ef90-sortable {
-    display: block !important;
+    display: grid !important;
     width: 100% !important;
-    column-count: 2 !important;
-    column-width: 410px !important;
-    column-gap: 14px !important;
-    column-fill: balance !important;
-    grid-template-columns: none !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 14px !important;
+    align-items: start !important;
+    grid-auto-flow: row !important;
     box-sizing: border-box;
   }
-  body.ef-simple-ui #tab-painel #ef90-sortable > [data-ef-home-card] {
-    display: inline-block !important;
-    vertical-align: top !important;
-    -webkit-column-break-inside: avoid !important;
-    break-inside: avoid-column !important;
+  body.ef-simple-ui #tab-painel #ef90-sortable.ef-home-single-column {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable > .ef-home-lane {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    align-items: stretch !important;
+    align-self: start !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable > .ef-home-lane:empty {
+    display: none !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-lane > [data-ef-home-card] {
+    display: block !important;
+    break-inside: auto !important;
     min-width: 0 !important;
     min-height: 0 !important;
-    max-width: none !important;
+    max-width: 100% !important;
     width: 100% !important;
     height: auto !important;
-    margin: 0 0 14px !important;
+    margin: 0 !important;
     box-sizing: border-box;
     position: relative;
     padding-top: 47px !important;
   }
-  body.ef-simple-ui #ef90-sortable.ef-home-organizing > [data-ef-home-card] {
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-lane > details[data-ef-home-card] {
+    min-height: 96px;
+    padding-bottom: 12px !important;
+  }
+  body.ef-simple-ui #ef90-sortable.ef-home-organizing .ef-home-lane > [data-ef-home-card] {
     padding-top: 91px !important;
     outline: 1px dashed var(--ef-accent);
     outline-offset: -4px;
@@ -197,14 +213,13 @@
 }
 /* A largura útil (descontada a barra lateral) define automaticamente
    se cabem duas colunas; o celular permanece em uma coluna. */
-@media screen and (max-width: 720px) {
+@media screen and (max-width: 920px) {
   body.ef-simple-ui #tab-painel #ef90-sortable {
-    column-count: 1 !important;
-    column-width: auto !important;
+    grid-template-columns: minmax(0,1fr) !important;
   }
 }
 @media screen and (max-width: 720px) {
-  body.ef-simple-ui #tab-painel #ef90-sortable > [data-ef-home-card] {
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-lane > [data-ef-home-card] {
     padding-top: 44px !important;
   }
   body.ef-simple-ui #ef90-sortable.ef-home-organizing > [data-ef-home-card] {
