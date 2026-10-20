@@ -721,7 +721,20 @@
             async saveVaultArray(arr) {
                 // No Desktop, avaliações pertencem ao SQLite protegido por DPAPI;
                 // nunca criar duplicatas em texto aberto no LocalStorage.
-                if (window.EFNativeStorage) return;
+                if (window.EFNativeStorage) {
+                    if (!Array.isArray(arr)) throw new Error('Lote de avaliações inválido');
+                    const records = {};
+                    const encoder = new TextEncoder();
+                    for (const item of arr) {
+                        if (!item || !item.id) throw new Error('Avaliação sem identificador');
+                        const row = this.enabled && this.key
+                            ? {id:item.id,__efEncrypted:true,payload:await this.encryptObject(item)}
+                            : item;
+                        records['ef-eval-' + item.id] = encoder.encode(JSON.stringify(row));
+                    }
+                    await window.EFNativeStorage.replaceEvaluations(records);
+                    return;
+                }
                 if (!this.enabled || !this.key) {
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
                     return;
