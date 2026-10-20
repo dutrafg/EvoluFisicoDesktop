@@ -59,6 +59,21 @@ window.EFNativeStorage=Object.freeze({
   }
   return Number(await call('import-batch',undefined,undefined,encoded));
  },
+ // Backup restoration replaces only evaluations; billing and other encrypted records stay intact.
+ replaceEvaluations:async records=>{
+  if(!records || typeof records!=='object' || Array.isArray(records))throw new TypeError('Avaliações inválidas');
+  const entries=Object.entries(records);
+  if(entries.length>1000)throw new RangeError('Limite de avaliações excedido');
+  const encoded={};let total=0;
+  for(const [id,bytes] of entries){
+   if(!id.startsWith('ef-eval-') || id.length>128 || !(bytes instanceof Uint8Array))
+    throw new TypeError('Identificador de avaliação inválido');
+   total+=bytes.byteLength;
+   if(bytes.byteLength>12000000 || total>32000000)throw new RangeError('Backup excede os limites');
+   encoded[id]=encode(bytes);
+  }
+  return call('replace-evaluations',undefined,undefined,encoded);
+ },
  deleteEvaluation:async (id,records)=>{
   if(typeof id!=='string'||!id||id.length>128||!records||typeof records!=='object'||Array.isArray(records))
    throw new TypeError('Exclusão de avaliação inválida');
