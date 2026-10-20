@@ -1,0 +1,17 @@
+/* Layout de Configurações para Windows; mantém componentes, paletas e cartões originais. */
+@media screen{
+body.ef-simple-ui #tab-settings .efw-settings-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px;padding:4px;border:1px solid var(--ef-line);background:var(--ef-surface);border-radius:12px}
+body.ef-simple-ui #tab-settings .efw-settings-tabs button{appearance:none;border:0;background:transparent;color:var(--ef-muted);padding:10px 15px;border-radius:8px;cursor:pointer;font:inherit;font-size:13px;font-weight:650;min-height:40px}
+body.ef-simple-ui #tab-settings .efw-settings-tabs button[aria-selected="true"]{background:var(--ef-soft);color:var(--ef-ink);box-shadow:inset 0 0 0 1px var(--ef-line)}
+body.ef-simple-ui #tab-settings .efw-settings-panel[hidden]{display:none!important}
+body.ef-simple-ui #tab-settings .efw-settings-panel>.ef-settings-grid{align-items:start!important;align-content:start!important}
+body.ef-simple-ui #tab-settings .efs-general-stack{display:flex;flex-direction:column;gap:12px;min-width:0}
+body.ef-simple-ui #tab-settings .efs-general-stack>.ef-settings-card{width:100%;min-width:0}
+body.ef-simple-ui #tab-settings .ef-settings-card{height:auto!important;align-self:start}
+body.ef-simple-ui #tab-settings #tab-diagnostics{display:block!important;position:static!important;visibility:visible!important;width:100%!important;max-width:none!important;padding:0!important;margin:0!important}
+body.ef-simple-ui #tab-settings #tab-diagnostics .efdiag-wrap{margin:0;max-width:none}
+body.ef-simple-ui #tab-settings .efw-settings-panel[data-efw-panel="manutencao"]>.ef-settings-grid{grid-template-columns:minmax(0,1fr)!important}
+body.ef-simple-ui #tab-settings .efw-settings-panel[data-efw-panel="manutencao"] .ef-settings-card-wide{grid-column:auto!important}
+body.ef-simple-ui #tab-settings .efw-settings-panel[data-efw-panel="geral"]>.ef-settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:760px){body.ef-simple-ui #tab-settings .efw-settings-panel[data-efw-panel="geral"]>.ef-settings-grid{grid-template-columns:minmax(0,1fr)!important}body.ef-simple-ui #tab-settings .efw-settings-tabs button{flex:1 1 auto}}
+}
