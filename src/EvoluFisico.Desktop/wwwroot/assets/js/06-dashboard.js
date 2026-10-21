@@ -119,14 +119,108 @@ window.ef90EditAgenda=function(id){var a=loadAgenda().find(function(x){return x.
 window.ef90CancelEdit=function(){editingAgendaId=null;render()};
 window.ef90ExportAgenda=function(){var data={tipo:'agenda-evolufisico',versao:1,exportadoEm:new Date().toISOString(),compromissos:loadAgenda(),tarefas:getTasks()};var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='evolufisico-agenda-tarefas.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)};
 
+
+/* Recorrências são eventos independentes, cada um editável/cancelável.
+   A série toda é validada antes de atualizar o armazenamento. */
+function planRecurringAppointments(existing,template,repetitions,excludeId){
+ var count=Number(repetitions);
+ if(![1,2,4,8,12].includes(count))throw new Error('Escolha uma recorrência válida (até 12 semanas).');
+ var start=pd(template.date),span=intervalo(template);
+ if(!start||!/^([01]\d|2[0-3]):[0-5]\d$/.test(String(template.time||''))||
+    !Number.isFinite(Number(template.duration))||span.end>1440||span.end<=span.start)
+  throw new Error('Data, horário ou duração inválidos para a agenda.');
+ var candidates=[],reserved=existing.filter(function(a){return a.id!==excludeId});
+ for(var i=0;i<count;i++){
+  var date=toISO(addDays(start,i*7));
+  if(conflitante(reserved,date,template.time,template.duration,null))
+   throw new Error('Conflito de horário na recorrência de '+fd(pd(date))+'. Nenhum compromisso foi adicionado.');
+  var entry=Object.assign({},template,{
+   date:date,
+   id:i===0&&excludeId?excludeId:'ag-'+Date.now()+'-'+i+'-'+Math.random().toString(36).slice(2,9),
+   source:'agenda'
+  });
+  if(i>0){entry.status='agendado';entry.seriesOrigin=entry.seriesOrigin||template.date}
+  candidates.push(entry);reserved.push(entry);
+ }
+ return candidates;
+}
+function attendanceSummary(agenda,year,month){
+ var rows=agenda.filter(function(e){
+  var d=pd(e.date);
+  return d&&d.getFullYear()===year&&d.getMonth()===month;
+ });
+ var done=0,missed=0,cancelled=0;
+ rows.forEach(function(e){
+  if(e.status==='concluido')done++;
+  else if(e.status==='faltou')missed++;
+  else if(e.status==='cancelado')cancelled++;
+ });
+ var reviewed=done+missed;
+ return {done:done,missed:missed,cancelled:cancelled,
+  planned:rows.length, reviewed:reviewed,rate:reviewed?Math.round(100*done/reviewed):null};
+}
+function csvCell(value){
+ var str=String(value==null?'':value);
+ // Neutraliza fórmula ao abrir CSV em Excel/LibreOffice.
+ if(/^[\s]*[=+\-@]/.test(str))str="'"+str;
+ return '"'+str.replace(/"/g,'""')+'"';
+}
+function attendanceCsv(agenda,year,month){
+ var lines=[['Data','Horário','Aluno ou compromisso','Modalidade','Status','Duração (minutos)','Local','Observações'].map(csvCell).join(';')];
+ agenda.filter(function(a){
+  var d=pd(a.date);return d&&d.getFullYear()===year&&d.getMonth()===month;
+ }).sort(function(a,b){return String(a.date+' '+a.time).localeCompare(String(b.date+' '+b.time))})
+ .forEach(function(a){
+  lines.push([a.date,a.time,a.student,a.type,a.status||'agendado',a.duration,a.local,a.note].map(csvCell).join(';'));
+ });
+ return '\uFEFF'+lines.join('\r\n');
+}
+window.ef90ExportAttendance=function(){
+ var base=today(),data=attendanceCsv(loadAgenda(),base.getFullYear(),base.getMonth());
+ var blob=new Blob([data],{type:'text/csv;charset=utf-8;'});
+ var url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='evolufisico-presenca-'+toISO(new Date(base.getFullYear(),base.getMonth(),1)).slice(0,7)+'.csv';
+ document.body.appendChild(a);a.click();a.remove();
+ setTimeout(function(){URL.revokeObjectURL(url)},1000);
+ toast('Relatório CSV do mês exportado. O arquivo pode conter dados pessoais: armazene-o em local seguro.');
+};
+window.ef90DuplicateAgenda=function(id){
+ var original=loadAgenda().find(function(a){return String(a.id)===String(id)});
+ if(!original)return;
+ editingAgendaId=null;
+ var start=pd(original.date);if(!start)return;
+ var next=toISO(addDays(start,7));
+ setSelectedDay(next);setMonthOffset((pd(next).getFullYear()-today().getFullYear())*12+pd(next).getMonth()-today().getMonth());
+ render();
+ [['ef90-date',next],['ef90-time',original.time],['ef90-duration',original.duration||60],
+  ['ef90-type',original.type],['ef90-student',original.student],
+  ['ef90-location',original.local||''],['ef90-note',original.note||'']].forEach(function(pair){
+  var field=document.getElementById(pair[0]);if(field)field.value=pair[1]||'';
+ });
+ var repeat=document.getElementById('ef90-repeat-weeks');if(repeat)repeat.value='1';
+ var focus=document.getElementById('ef90-student');if(focus)focus.focus();
+ toast('Compromisso copiado para a próxima semana. Confira e salve.');
+};
+
 window.ef90SaveAgenda=function(ev){if(ev&&ev.preventDefault)ev.preventDefault();var date=$('#ef90-date'),time=$('#ef90-time'),type=$('#ef90-type'),student=$('#ef90-student'),note=$('#ef90-note'),durationEl=$('#ef90-duration'),localEl=$('#ef90-location');
 if(!date||!date.value){toast('Escolha a data do compromisso.','warn');return false}
 var nome=(student&&student.value||'').trim(),horario=(time&&time.value)||'09:00';
 if(!nome){toast('Informe o nome do aluno ou do compromisso.','warn');return false}
-var duracao=Number(durationEl&&durationEl.value)||60;var items=loadAgenda();if(conflitante(items,date.value,horario,duracao,editingAgendaId)){toast('O horário escolhido se sobrepõe a outro atendimento. Selecione outro intervalo.','warn');return false}
+var duracao=Number(durationEl&&durationEl.value)||60;var items=loadAgenda();
+var repeatEl=$('#ef90-repeat-weeks');
+var total=editingAgendaId?1:Number(repeatEl&&repeatEl.value||1);
+if(![1,2,4,8,12].includes(total)){toast('Selecione um intervalo de recorrência válido.','warn');return false}
 var correspondente=alunoCorrespondente(nome);
 var item={id:editingAgendaId||'ag-'+Date.now(),date:date.value,time:horario,duration:duracao,type:(type&&type.value)||'avaliacao',student:nome,local:localNormalizado(localEl&&localEl.value),refId:correspondente?correspondente.last.id:null,note:(note&&note.value||'').trim(),status:editingAgendaId?(items.find(function(x){return x.id===editingAgendaId})||{}).status||'agendado':'agendado',source:'agenda'};
-if(editingAgendaId)items=items.filter(function(x){return x.id!==editingAgendaId});items.push(item);items.sort(function(a,b){return (a.date+' '+a.time).localeCompare(b.date+' '+b.time)});saveAgenda(items);toast(editingAgendaId?'Compromisso reagendado.':'Compromisso adicionado à agenda.');editingAgendaId=null;setSelectedDay(item.date);render();return false};
+var novos;
+try{novos=planRecurringAppointments(items,item,total,editingAgendaId)}
+catch(error){toast(error.message,'warn');return false}
+if(editingAgendaId)items=items.filter(function(x){return x.id!==editingAgendaId});
+items.push.apply(items,novos);
+items.sort(function(a,b){return (a.date+' '+a.time).localeCompare(b.date+' '+b.time)});
+saveAgenda(items);
+toast(editingAgendaId?'Compromisso reagendado.':novos.length>1?novos.length+' compromissos semanais criados.':'Compromisso adicionado à agenda.');
+editingAgendaId=null;setSelectedDay(item.date);render();return false};
 
 var TASKKEY='ef90_tasks_v2', FILTERKEY='ef90_filter_v2';
 function getTasks(){try{var x=JSON.parse(storageGet(TASKKEY,'[]'));return Array.isArray(x)?x:[]}catch(e){return[]}}
@@ -318,6 +412,7 @@ var media=gs.length?(gs.reduce(function(s,v){return s+v},0)/gs.length).toFixed(1
 var ret=al.map(function(x){var r=recheckDate(x.last),d=r&&r.date;return d?{x:x,dias:Math.round((d-base)/864e5),data:d,estimada:r.estimated}:null}).filter(function(r){return r&&r.dias<=14}).sort(function(a,b){return a.dias-b.dias});
 var atr=ret.filter(function(r){return r.dias<0}).length;
 var agendaS=agendaStats(agenda,base);
+var presenca=attendanceSummary(agenda,base.getFullYear(),base.getMonth());
 var monthDate=new Date(base.getFullYear(),base.getMonth()+monthOffset(),1);
 var selISO=selectedDay();
 var mode=storageGet(FILTERKEY,'dia');if(['dia','semana','mes'].indexOf(mode)<0)mode='dia';
@@ -332,10 +427,10 @@ var weekEnd=addDays(startOfWeek(base),6);
 box.innerHTML=''
 +'<section class="ef90-home ef90-compact">'
 +'<div class="ef90-simple-head"><div><h1>Agenda</h1><p>Organize suas avaliações, atendimentos e tarefas em um só lugar.</p></div><div class="ef90-hero-actions"><button type="button" class="btn btn-primary btn-sm" onclick="switchTab(\'tab-novo-checkin\')">Nova avaliação</button><button type="button" class="btn btn-secondary btn-sm" onclick="ef90JumpToday()">Hoje</button></div></div>'
-+'<div class="ef90-simple-stats"><span><strong>'+agendaS.today+'</strong> compromisso(s) hoje</span><span><strong>'+agendaS.week+'</strong> na semana</span><span><strong>'+atr+'</strong> retorno(s) atrasado(s)</span></div>'
++'<div class="ef90-simple-stats"><span><strong>'+agendaS.today+'</strong> compromisso(s) hoje</span><span><strong>'+agendaS.week+'</strong> na semana</span><span><strong>'+atr+'</strong> retorno(s) atrasado(s)</span><span title="Atendimentos concluídos / (concluídos + faltas). Cancelamentos e pendências não entram na taxa."><strong>'+(presenca.rate===null?'—':presenca.rate+'%')+'</strong> presença no mês</span></div>'
 +'<div class="ef90-main-grid ef90-simple-grid ef-home-sortable" id="ef90-sortable">'
-+'<section class="ef55-card ef90-card" data-ef-home-card="agenda"><div class="ef90-section-head"><div><h3>Agenda rápida</h3><p>Agende avaliações, reavaliações, retornos e acompanhamentos sem sair da página inicial.</p></div>'+'<button type="button" class="ef90-inline-btn" onclick="ef90ExportAgenda()">Exportar agenda e tarefas</button>'+'</div><form class="ef90-form" onsubmit="return ef90SaveAgenda(event)"><input id="ef90-date" type="date" value="'+esc(selISO)+'"><input id="ef90-time" type="time" value="09:00"><select id="ef90-duration" title="Duração do atendimento"><option value="30">30 minutos</option><option value="45">45 minutos</option><option value="60" selected>1 hora</option><option value="90">1h30</option><option value="120">2 horas</option></select><select id="ef90-type"><option value="avaliacao">Avaliação</option><option value="reavaliacao">Reavaliação</option><option value="retorno">Retorno</option><option value="followup">Acompanhamento</option></select><input id="ef90-student" type="text" list="ef90-student-list" placeholder="Nome do aluno ou compromisso"><datalist id="ef90-student-list">'+al.map(function(x){return '<option value="'+esc(x.nome)+'"></option>'}).join('')+'</datalist><label class="ef90-location-field" for="ef90-location"><span>Local do atendimento</span><input id="ef90-location" type="text" list="ef90-location-list" autocomplete="off" placeholder="Ex.: Academia Centro ou Studio A" maxlength="100"><datalist id="ef90-location-list">'+locais.map(function(nome){return '<option value="'+esc(nome)+'"></option>'}).join('')+'</datalist></label><input id="ef90-note" type="text" placeholder="Observação rápida"><button id="ef90-save-button" class="btn btn-primary btn-sm" type="submit">Adicionar</button><button type="button" class="ef90-inline-btn" onclick="ef90CancelEdit()">Cancelar edição</button></form></section>'
-+'<section class="ef55-card ef90-card" data-ef-home-card="calendario"><div class="ef90-section-head"><div><h3>Calendário e agenda integrados</h3><p>Mês em visão geral com compromissos salvos manualmente e retornos vindos das avaliações.</p></div><div class="ef90-calendar-nav"><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(-1)">◀</button><strong>'+esc(monthLabel(monthDate))+'</strong><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(1)">▶</button></div></div>'+calendarGrid(eventosDoLocal,monthDate,selISO)+'<div class="ef90-day-panel"><div class="ef90-day-head"><h4>'+esc(dayHuman)+'</h4><div class="ef90-filter-wrap"><label for="ef90-filter-local">Local</label><select id="ef90-filter-local" onchange="ef90FiltrarLocal(this.value)" aria-label="Filtrar agenda por local de atendimento"><option value="__todos__"'+(localFiltro==='__todos__'?' selected':'')+'>Todos os locais</option><option value="__sem__"'+(localFiltro==='__sem__'?' selected':'')+'>Sem local informado</option>'+locais.map(function(nome){return '<option value="'+esc(nome)+'"'+(localFiltro===nome?' selected':'')+'>'+esc(nome)+'</option>'}).join('')+'</select><label for="ef90-filter">Ver</label><select id="ef90-filter" onchange="ef90Filter(this.value)"><option value="dia"'+(mode==='dia'?' selected':'')+'>Dia</option><option value="semana"'+(mode==='semana'?' selected':'')+'>Semana</option><option value="mes"'+(mode==='mes'?' selected':'')+'>Mês</option></select><button type="button" class="ef90-inline-btn" onclick="ef90QuickSchedule(\''+selISO+'\')">Agendar neste dia</button><span>'+dayList.length+' compromisso(s)</span></div></div>'+rows(dayList,function(e){var typeLabel={avaliacao:'Avaliação',reavaliacao:'Reavaliação',retorno:'Retorno',followup:'Acompanhamento'}[e.type]||'Compromisso';var action=e.source==='return'?'<button class="ef55-wa" onclick="ef90OpenWhatsapp(\''+jsEsc(e.student||'')+'\',\''+jsEsc(e.whatsapp||'')+'\',\''+jsEsc(e.date)+'\')">WhatsApp</button>':'<div class="ef90-row-actions"><button type="button" class="ef90-inline-btn" onclick="ef90EditAgenda(\''+jsEsc(e.id)+'\')">Reagendar</button><select class="ef90-status-select" aria-label="Situação do atendimento" onchange="ef90SetStatus(\''+jsEsc(e.id)+'\',this.value)">'+[['agendado','Agendado'],['confirmado','Confirmado'],['concluido','Concluído'],['faltou','Não compareceu'],['cancelado','Cancelado']].map(function(pair){return '<option value="'+pair[0]+'"'+((e.status||'agendado')===pair[0]?' selected':'')+'>'+pair[1]+'</option>'}).join('')+'</select><button type="button" class="ef90-inline-btn danger" onclick="ef90RemoveAgenda(\''+jsEsc(e.id)+'\')">Excluir</button></div>';return '<div class="ef90-day-item"><div class="ef90-day-time">'+esc(e.time||'—')+(e.source==='agenda'?' · '+esc(String(e.duration||60))+' min':'')+'</div><div class="ef90-day-body"><div><b>'+esc(e.student||typeLabel)+'</b>'+pill(e.source==='return'?'warn':'ok',typeLabel)+'</div><p>'+esc(e.note||'Sem observações.')+'</p><small>'+(e.local?'<span class="ef90-place-label">📍 '+esc(e.local)+'</span> · ':'')+(e.source==='return'?'Gerado automaticamente a partir da próxima avaliação':(({agendado:'Agendado',confirmado:'Presença confirmada',concluido:'Atendimento concluído',faltou:'Não compareceu',cancelado:'Cancelado'})[e.status]||'Agendado'))+'</small></div>'+action+'</div>'},'Nenhum compromisso neste dia.')+'</div></section>'
++'<section class="ef55-card ef90-card" data-ef-home-card="agenda"><div class="ef90-section-head"><div><h3>Agenda rápida</h3><p>Agende avaliações, reavaliações e atendimentos semanais sem sair do Início.</p></div><div class="ef90-agenda-toolbar"><button type="button" class="ef90-inline-btn" onclick="ef90ExportAgenda()">Backup da agenda</button><button type="button" class="ef90-inline-btn" onclick="ef90ExportAttendance()">Exportar presença CSV</button></div></div><form class="ef90-form" onsubmit="return ef90SaveAgenda(event)"><input id="ef90-date" type="date" value="'+esc(selISO)+'"><input id="ef90-time" type="time" value="09:00"><select id="ef90-duration" title="Duração do atendimento"><option value="30">30 minutos</option><option value="45">45 minutos</option><option value="60" selected>1 hora</option><option value="90">1h30</option><option value="120">2 horas</option></select><select id="ef90-type"><option value="avaliacao">Avaliação</option><option value="reavaliacao">Reavaliação</option><option value="retorno">Retorno</option><option value="followup">Acompanhamento</option></select><input id="ef90-student" type="text" list="ef90-student-list" placeholder="Nome do aluno ou compromisso"><datalist id="ef90-student-list">'+al.map(function(x){return '<option value="'+esc(x.nome)+'"></option>'}).join('')+'</datalist><label class="ef90-location-field" for="ef90-location"><span>Local do atendimento</span><input id="ef90-location" type="text" list="ef90-location-list" autocomplete="off" placeholder="Ex.: Academia Centro ou Studio A" maxlength="100"><datalist id="ef90-location-list">'+locais.map(function(nome){return '<option value="'+esc(nome)+'"></option>'}).join('')+'</datalist></label><input id="ef90-note" type="text" placeholder="Observação rápida"><label class="ef90-repeat-field" for="ef90-repeat-weeks">Repetir semanalmente<select id="ef90-repeat-weeks" aria-label="Quantidade de atendimentos semanais"><option value="1">Não repetir</option><option value="2">2 semanas</option><option value="4">4 semanas</option><option value="8">8 semanas</option><option value="12">12 semanas</option></select></label><button id="ef90-save-button" class="btn btn-primary btn-sm" type="submit">Adicionar</button><button type="button" class="ef90-inline-btn" onclick="ef90CancelEdit()">Cancelar edição</button></form></section>'
++'<section class="ef55-card ef90-card" data-ef-home-card="calendario"><div class="ef90-section-head"><div><h3>Calendário e agenda integrados</h3><p>Mês em visão geral com compromissos salvos manualmente e retornos vindos das avaliações.</p></div><div class="ef90-calendar-nav"><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(-1)">◀</button><strong>'+esc(monthLabel(monthDate))+'</strong><button type="button" class="btn btn-secondary btn-sm" onclick="ef90ShiftMonth(1)">▶</button></div></div>'+calendarGrid(eventosDoLocal,monthDate,selISO)+'<div class="ef90-day-panel"><div class="ef90-day-head"><h4>'+esc(dayHuman)+'</h4><div class="ef90-filter-wrap"><label for="ef90-filter-local">Local</label><select id="ef90-filter-local" onchange="ef90FiltrarLocal(this.value)" aria-label="Filtrar agenda por local de atendimento"><option value="__todos__"'+(localFiltro==='__todos__'?' selected':'')+'>Todos os locais</option><option value="__sem__"'+(localFiltro==='__sem__'?' selected':'')+'>Sem local informado</option>'+locais.map(function(nome){return '<option value="'+esc(nome)+'"'+(localFiltro===nome?' selected':'')+'>'+esc(nome)+'</option>'}).join('')+'</select><label for="ef90-filter">Ver</label><select id="ef90-filter" onchange="ef90Filter(this.value)"><option value="dia"'+(mode==='dia'?' selected':'')+'>Dia</option><option value="semana"'+(mode==='semana'?' selected':'')+'>Semana</option><option value="mes"'+(mode==='mes'?' selected':'')+'>Mês</option></select><button type="button" class="ef90-inline-btn" onclick="ef90QuickSchedule(\''+selISO+'\')">Agendar neste dia</button><span>'+dayList.length+' compromisso(s)</span></div></div>'+rows(dayList,function(e){var typeLabel={avaliacao:'Avaliação',reavaliacao:'Reavaliação',retorno:'Retorno',followup:'Acompanhamento'}[e.type]||'Compromisso';var action=e.source==='return'?'<button class="ef55-wa" onclick="ef90OpenWhatsapp(\''+jsEsc(e.student||'')+'\',\''+jsEsc(e.whatsapp||'')+'\',\''+jsEsc(e.date)+'\')">WhatsApp</button>':'<div class="ef90-row-actions"><button type="button" class="ef90-inline-btn" onclick="ef90EditAgenda(\''+jsEsc(e.id)+'\')">Reagendar</button><button type="button" class="ef90-inline-btn" onclick="ef90DuplicateAgenda(\''+jsEsc(e.id)+'\')">Duplicar</button><select class="ef90-status-select" aria-label="Situação do atendimento" onchange="ef90SetStatus(\''+jsEsc(e.id)+'\',this.value)">'+[['agendado','Agendado'],['confirmado','Confirmado'],['concluido','Concluído'],['faltou','Não compareceu'],['cancelado','Cancelado']].map(function(pair){return '<option value="'+pair[0]+'"'+((e.status||'agendado')===pair[0]?' selected':'')+'>'+pair[1]+'</option>'}).join('')+'</select><button type="button" class="ef90-inline-btn danger" onclick="ef90RemoveAgenda(\''+jsEsc(e.id)+'\')">Excluir</button></div>';return '<div class="ef90-day-item"><div class="ef90-day-time">'+esc(e.time||'—')+(e.source==='agenda'?' · '+esc(String(e.duration||60))+' min':'')+'</div><div class="ef90-day-body"><div><b>'+esc(e.student||typeLabel)+'</b>'+pill(e.source==='return'?'warn':'ok',typeLabel)+'</div><p>'+esc(e.note||'Sem observações.')+'</p><small>'+(e.local?'<span class="ef90-place-label">📍 '+esc(e.local)+'</span> · ':'')+(e.source==='return'?'Gerado automaticamente a partir da próxima avaliação':(({agendado:'Agendado',confirmado:'Presença confirmada',concluido:'Atendimento concluído',faltou:'Não compareceu',cancelado:'Cancelado'})[e.status]||'Agendado'))+'</small></div>'+action+'</div>'},'Nenhum compromisso neste dia.')+'</div></section>'
 +'<section class="ef55-card ef90-card" data-ef-home-card="tarefas"><div class="ef90-section-head"><div><h3>Tarefas do dia</h3><p>Lista de tarefas para documentos, contatos e acompanhamentos.</p></div>'+pill('soft','lista de tarefas')+'</div><form class="ef90-task-form" onsubmit="event.preventDefault();ef90NewTask()"><input id="ef90-task-input" placeholder="Ex.: Confirmar avaliação de amanhã"><button type="submit" class="btn btn-primary btn-sm">Adicionar</button></form>'+rows(getTasks().filter(function(x){return x.date===selISO}),function(x){return '<div class="ef90-task-item"><input type="checkbox" '+(x.done?'checked ':'')+'onchange="ef90TaskDone(\''+jsEsc(x.id)+'\')"><span class="'+(x.done?'done':'')+'">'+esc(x.name)+'</span><button class="ef90-inline-btn danger" type="button" onclick="ef90TaskDelete(\''+jsEsc(x.id)+'\')">Excluir</button></div>'},'Nenhuma tarefa anotada para esta data.')+'</section>'
 +'<section class="ef55-card ef90-card" data-ef-home-card="retornos"><div class="ef90-section-head"><div><h3>Reavaliações próximas</h3><p>Datas informadas nas avaliações têm prioridade. Quando não houver data, é possível estimar um intervalo sem modificar o cadastro.</p></div><label class="ef90-recheck-pref">Prazo padrão <select id="ef90-recheck-months" aria-label="Intervalo estimado de reavaliação" onchange="ef90SetRecheckInterval(this.value)">'+[[0,'Somente datas informadas'],[1,'1 mês'],[2,'2 meses'],[3,'3 meses'],[4,'4 meses'],[6,'6 meses'],[9,'9 meses'],[12,'12 meses']].map(function(v){return '<option value="'+v[0]+'"'+(recheckInterval()===v[0]?' selected':'')+'>'+v[1]+'</option>'}).join('')+'</select></label></div>'+rows(ret,function(r){var a=r.x.last,c=r.dias<0?'bad':r.dias<=3?'warn':'ok',tx=r.dias<0?'Atrasado '+(-r.dias)+'d':r.dias===0?'Hoje':'em '+r.dias+'d';return '<div class="ef55-row" onclick="ef55Abrir(\''+jsEsc(a.id)+'\')"><div class="ef55-av">'+esc(ini(a.nome))+'</div><div class="t"><b>'+esc(a.nome)+'</b><span>'+fd(r.data)+(r.estimada?' · data estimada':'')+'</span></div><span class="ef55-pill '+c+'">'+tx+'</span><button class="ef55-wa" onclick="ef55Zap(event,\''+jsEsc(a.id)+'\')">WhatsApp</button></div>'},'Nenhuma reavaliação próxima.')+'</section>'
 +'</div>'
