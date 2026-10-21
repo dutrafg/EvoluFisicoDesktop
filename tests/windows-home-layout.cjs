@@ -29,7 +29,8 @@ check('Automatic packing uses two actual flex lanes, not row-aligned cards',()=>
  assert.match(css,/flex-direction: column !important/);
  assert.match(source,/function chooseHomeLanes\(entries,columns\)/);
  assert.match(source,/function layoutHomeColumns\(\)/);
- assert.match(source,/lane\.insertBefore\(card/);
+ assert.match(source,/lane\.appendChild\(card\)/);
+ assert.match(source,/grid\.replaceChildren\(fragment\)/);
  assert.doesNotMatch(css,/column-fill: balance/);
 });
 check('Uses full main width and eliminates upper blur',()=>{
@@ -47,7 +48,8 @@ check('Responsive automatic sizing reacts to card heights and window width',()=>
 });
 check('Each card can be moved and layout restored by mouse or keyboard',()=>{
  for(const fragment of ['ef-home-move-tag','ef-home-move-actions','aria-label','aria-pressed','dragstart','dragover','dragend','Restaurar a ordem inicial','Posição ']) assert.ok(source.includes(fragment),fragment);
- assert.match(source,/card\.draggable=homeOrganizing/);
+ assert.match(source,/card\.draggable=false/);
+ assert.match(source,/drag\.draggable=true/);
 });
 check('Offline cache includes CSS and both JS modules',()=>{
  assert.match(index,/31-desktop-refinement\.css/);
@@ -61,9 +63,9 @@ const store=new Map();
 const storageGet=(k,fb)=>store.has(k)?store.get(k):fb;
 const storageSet=(k,v)=>store.set(k,v);
 let moves=0;
-const api=new Function('storageGet','storageSet','$','applyHomeCardLayout','toast',
+const api=new Function('storageGet','storageSet','$','applyHomeCardLayout','toast','window',
  snippet+"\nreturn {readHomeOrder,homeMoveCard,chooseHomeLanes};"
-)(storageGet,storageSet,()=>null,()=>{moves++},()=>{});
+)(storageGet,storageSet,()=>null,()=>{moves++},()=>{},{});
 const expected=['agenda','calendario','tarefas','retornos','insights','detalhes'];
 check('Default layout includes all 6 available widgets',()=>assert.deepEqual(api.readHomeOrder(),expected));
 check('Existing user layout with 4 cards is migrated without being reset',()=>{
@@ -74,9 +76,9 @@ check('Manual reordering persists through reload',()=>{
  assert.equal(api.homeMoveCard('detalhes',0),true);
  assert.equal(api.readHomeOrder()[0],'detalhes');
  assert.ok(moves>0);
- const reopened=new Function('storageGet','storageSet','$','applyHomeCardLayout','toast',
+ const reopened=new Function('storageGet','storageSet','$','applyHomeCardLayout','toast','window',
  snippet+"\nreturn readHomeOrder;"
- )(storageGet,storageSet,()=>null,()=>{},()=>{});
+ )(storageGet,storageSet,()=>null,()=>{},()=>{},{});
  assert.deepEqual(reopened(),api.readHomeOrder());
 });
 check('Corrupt saved layouts never discard a widget',()=>{
