@@ -7,6 +7,7 @@ on:
       - 'tests/windows-agenda-home-summary.cjs'
       - 'tests/windows-release-911-beta4.cjs'
       - 'tests/windows-stable-1-0.cjs'
+      - 'tests/windows-sync-evolufisico2-1-0.cjs'
       - 'scripts/build-windows.ps1'
       - 'tests/desktop-integration.cjs'
       - 'tests/windows-billing-navigation-91.cjs'
@@ -39,6 +40,8 @@ jobs:
         run: python scripts/verify_frontend.py
       - name: Validate stable 1.0 analysis algorithms and Windows release compatibility
         run: node tests/windows-stable-1-0.cjs
+      - name: Validate Evolufisico2 adherence, history and perimetry synchronization
+        run: node tests/windows-sync-evolufisico2-1-0.cjs
       - name: Validate legacy desktop theme, movable cards and preregistration
         run: node tests/windows-release-911-beta4.cjs
       - name: Validate native desktop bridges and version alignment
