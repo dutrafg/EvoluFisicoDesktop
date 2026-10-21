@@ -11,6 +11,7 @@ const routes={
  'tab-novo-checkin':['tab-btn-form','Nova avaliação'],
  'tab-lab77':['tab-btn-lab77','Calculadora'],
  'tab-ef-forms':['tab-btn-ef-forms','Formulários'],
+ 'tab-analises':['tab-btn-analises','Análises'],
  'tab-settings':['tab-btn-settings','Configurações']
 };
 function fold(id,title,hint,nodes,parent,before=null){
@@ -23,7 +24,7 @@ function fold(id,title,hint,nodes,parent,before=null){
 }
 function arrangeNavigation(){
  const nav=document.querySelector('.top-navbar > .nav-tabs'),menu=$('ef-tools-content'),actions=$('ef-primary-actions');if(!nav||!menu||!actions)return;
- ['tab-painel','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
+ ['tab-painel','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-analises','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  ['tab-settings'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  const form=$('tab-btn-form');if(form&&form.parentNode!==actions)actions.prepend(form);
  for(const [route,[id,label]] of Object.entries(routes)){
@@ -48,7 +49,7 @@ function arrangeNavigation(){
  $('ef-tools').classList.toggle('ef-tools-active',active?.id==='tab-settings');
 }
 function arrangeDetails(){
- const panel=$('ef55-painel');if(panel){
+ const panel=$('ef55-painel');if(panel&&!$('tab-analises')){
   const nodes=[$('ef68-insights'),$('ef70-engine')].filter(Boolean);
   if(nodes.length){
    const grid=$('ef90-sortable');
@@ -110,6 +111,7 @@ function setupForm(){
  document.addEventListener('invalid',e=>{let n=e.target;while(n){if(n.tagName==='DETAILS')n.open=true;n=n.parentElement}},true);
 }
 const NAV_ICONS={
+ 'tab-btn-analises':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.2A3.4 3.4 0 0 0 6.3 4.3 4.1 4.1 0 0 0 3 10.7a4 4 0 0 0 1.6 6.7 3.7 3.7 0 0 0 7.4.1V6.2ZM12 6.2a3.4 3.4 0 0 1 5.7-1.9 4.1 4.1 0 0 1 3.3 6.4 4 4 0 0 1-1.6 6.7 3.7 3.7 0 0 1-7.4.1V6.2Z"/><path d="M8.1 8c-2.1.4-2.8 2.2-2.4 3.8M15.9 8c2.1.4 2.8 2.2 2.4 3.8M8.5 14.6c1.7.1 3 1.5 3.5 2.9M15.5 14.6c-1.7.1-3 1.5-3.5 2.9"/></svg>',
  'tab-btn-diagnostics':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6H21"/></svg>',
  'tab-btn-ef-forms':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg>',
  'tab-btn-settings':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="var(--ef-surface, #fff)"/><circle cx="15" cy="17" r="2.4" fill="var(--ef-surface, #fff)"/></svg>'
@@ -125,7 +127,7 @@ function mount(){
  nav.setAttribute('aria-label','Navegação principal');
  const workspace=document.createElement('div');workspace.id='ef-workspace-heading';
  const title=document.createElement('span');title.id='ef-workspace-title';workspace.append(title);
- const version=document.createElement('small');version.textContent='9.1.1.beta.4.1';workspace.append(version);header.after(workspace);
+ const version=document.createElement('small');version.textContent='1.0 estável';workspace.append(version);header.after(workspace);
  const toggle=document.createElement('button');toggle.type='button';toggle.id='ef-sidebar-toggle';
  toggle.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';
  function setSidebar(hidden,save){document.body.classList.toggle('ef-sidebar-hidden',hidden);toggle.setAttribute('aria-expanded',String(!hidden));const t=hidden?'Mostrar barra lateral (Ctrl+B)':'Esconder barra lateral (Ctrl+B)';toggle.title=t;toggle.setAttribute('aria-label',t);if(save){try{localStorage.setItem('ef_sidebar_hidden',hidden?'1':'0')}catch(e){}}}
@@ -297,7 +299,7 @@ function mount(){
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
  const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
- window.EFSimpleUI={version:'9.1.1.beta.4.1',arrangeNavigation,arrangeDetails};
+ window.EFSimpleUI={version:'1.0.0',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
