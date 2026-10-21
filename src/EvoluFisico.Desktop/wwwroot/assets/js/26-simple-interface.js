@@ -100,9 +100,51 @@ const NAV_ICONS={
  'tab-btn-ef-forms':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg>',
  'tab-btn-settings':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="var(--ef-surface, #fff)"/><circle cx="15" cy="17" r="2.4" fill="var(--ef-surface, #fff)"/></svg>'
 };
-const COLORS={verde:['#75d7a9','#086849'],azul:['#73aef9','#235cbd'],roxo:['#ad95ff','#6244ba'],laranja:['#f9b276','#a85517'],rosa:['#f3a5c5','#a53c71']};
-function applyColor(v){const key=Object.prototype.hasOwnProperty.call(COLORS,v)?v:'verde';const [light,dark]=COLORS[key];document.documentElement.style.setProperty('--ef-selected-color',light);document.documentElement.style.setProperty('--ef-selected-dark',dark);document.documentElement.dataset.efPalette=key;document.body.dataset.efPalette=key;document.querySelectorAll('[data-ef-color]').forEach(b=>{const on=b.dataset.efColor===key;b.setAttribute('aria-pressed',String(on));b.classList.toggle('selected',on)})}
-function installColors(){const area=$('ef-setting-appearance');if(!area)return;const field=document.createElement('div');field.className='ef-colors-field';field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha uma das cinco opções. A preferência fica salva neste navegador.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>'<button type="button" data-ef-color="'+key+'" aria-label="Cor '+key+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i></i><span>'+key.charAt(0).toUpperCase()+key.slice(1)+'</span></button>').join('')+'</div>';area.append(field);field.addEventListener('click',e=>{const b=e.target.closest('[data-ef-color]');if(!b)return;try{localStorage.setItem('ef90_paleta',b.dataset.efColor)}catch(_){}applyColor(b.dataset.efColor)});let saved='verde';try{saved=localStorage.getItem('ef90_paleta')||saved}catch(_){}applyColor(saved)}
+const COLORS={
+ verde:['#75d7a9','#086849','#0c241d','#75d7a9'],
+ azul:['#73aef9','#235cbd','#0c241d','#73aef9'],
+ roxo:['#ad95ff','#6244ba','#0c241d','#ad95ff'],
+ laranja:['#f9b276','#a85517','#0c241d','#f9b276'],
+ rosa:['#f3a5c5','#a53c71','#0c241d','#f3a5c5'],
+ 'verde-escuro':['#176b4b','#104a35','#ffffff','#86e5b2'],
+ 'azul-escuro':['#2459a6','#183d73','#ffffff','#99c5ff'],
+ 'roxo-escuro':['#6540a8','#422c7c','#ffffff','#cdb5ff'],
+ 'laranja-escuro':['#ad541c','#75390d','#ffffff','#ffd3a0'],
+ 'rosa-escuro':['#a62c62','#762149','#ffffff','#ffbad6']
+};
+function applyColor(value){
+ const key=Object.prototype.hasOwnProperty.call(COLORS,value)?value:'verde';
+ const [main,dark,onColor,darkAccent]=COLORS[key];
+ const root=document.documentElement;
+ root.style.setProperty('--ef-selected-color',main);
+ root.style.setProperty('--ef-selected-dark',dark);
+ root.style.setProperty('--ef-selected-on-color',onColor);
+ root.style.setProperty('--ef-selected-darkmode-color',darkAccent);
+ root.dataset.efPalette=key;
+ document.body.dataset.efPalette=key;
+ document.querySelectorAll('[data-ef-color]').forEach(button=>{
+  const selected=button.dataset.efColor===key;
+  button.setAttribute('aria-pressed',String(selected));
+  button.classList.toggle('selected',selected);
+ });
+}
+function installColors(){
+ const area=$('ef-setting-appearance');if(!area)return;
+ const field=document.createElement('div');field.className='ef-colors-field';
+ field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha entre 5 cores suaves e 5 tons intensos. A preferência permanece salva neste dispositivo.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>{
+   const label=key.split('-').map((part,index)=>index===0?part.charAt(0).toUpperCase()+part.slice(1):part).join(' ');
+   return '<button type="button" data-ef-color="'+key+'" aria-label="Cor '+label+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i aria-hidden="true"></i><span>'+label+'</span></button>';
+ }).join('')+'</div>';
+ area.append(field);
+ field.addEventListener('click',e=>{
+  const button=e.target.closest('[data-ef-color]');if(!button)return;
+  if(!Object.prototype.hasOwnProperty.call(COLORS,button.dataset.efColor))return;
+  try{localStorage.setItem('ef90_paleta',button.dataset.efColor)}catch(_){}
+  applyColor(button.dataset.efColor);
+ });
+ let saved='verde';try{saved=localStorage.getItem('ef90_paleta')||saved}catch(_){}
+ applyColor(saved);
+}
 
 function mount(){
  document.body.classList.add('ef-simple-ui');
@@ -110,7 +152,7 @@ function mount(){
  nav.setAttribute('aria-label','Navegação principal');
  const workspace=document.createElement('div');workspace.id='ef-workspace-heading';
  const title=document.createElement('span');title.id='ef-workspace-title';workspace.append(title);
- const version=document.createElement('small');version.textContent='9.1.0-beta.4';workspace.append(version);header.after(workspace);
+ const version=document.createElement('small');version.textContent='9.1.0-beta.4.1';workspace.append(version);header.after(workspace);
  const toggle=document.createElement('button');toggle.type='button';toggle.id='ef-sidebar-toggle';
  toggle.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';
  function setSidebar(hidden,save){document.body.classList.toggle('ef-sidebar-hidden',hidden);toggle.setAttribute('aria-expanded',String(!hidden));const t=hidden?'Mostrar barra lateral (Ctrl+B)':'Esconder barra lateral (Ctrl+B)';toggle.title=t;toggle.setAttribute('aria-label',t);if(save){try{localStorage.setItem('ef_sidebar_hidden',hidden?'1':'0')}catch(e){}}}
@@ -282,7 +324,7 @@ function mount(){
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
  const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
- window.EFSimpleUI={version:'9.1.0-beta.4',arrangeNavigation,arrangeDetails};
+ window.EFSimpleUI={version:'9.1.0-beta.4.1',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
