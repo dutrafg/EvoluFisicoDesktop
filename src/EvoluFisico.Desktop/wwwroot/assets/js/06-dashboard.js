@@ -159,7 +159,7 @@ function readHomeOrder(){
 function visibleHomeOrder(grid){
  return readHomeOrder().filter(function(id){return Boolean(grid.querySelector('[data-ef-home-card="'+id+'"]'))});
 }
-var homeLayoutScheduled=false,homeResizeObserver=null,homeObservedGrid=null;
+var homeLayoutScheduled=false,homeResizeObserver=null,homeObservedGrid=null,homeLastSignature='',homeLastGrid=null;
 function homeMoveCard(id,position){
  var grid=$('#ef90-sortable'),visible=grid?visibleHomeOrder(grid):readHomeOrder();
  var from=visible.indexOf(id),to=Number(position);
@@ -175,7 +175,16 @@ function homeMoveCard(id,position){
 // Ao contrário de grid em linhas, cada coluna empilha cartões sem reservar a altura da outra.
 function chooseHomeLanes(entries,columns){
  if(columns<2||entries.length<2)return [entries.map(function(x){return x.id}),[]];
- var n=entries.length,limit=Math.pow(2,n),best=Infinity,winning=1;
+ var n=entries.length;
+ if(n>12){
+   var totals=[0,0],lanes=[[],[]];
+   entries.forEach(function(item,i){
+     var lane=i===0?0:i===1?1:totals[0]<=totals[1]?0:1;
+     lanes[lane].push(item.id);totals[lane]+=item.height;
+   });
+   return lanes;
+ }
+ var limit=Math.pow(2,n),best=Infinity,winning=1;
  for(var mask=1;mask<limit-1;mask+=2){
   var left=0,right=0,changes=0,last=-1;
   for(var i=0;i<n;i++){
@@ -205,6 +214,8 @@ function layoutHomeColumns(){
   var card=map.get(id),height=Math.max(card.scrollHeight||0,card.offsetHeight||0,card.getBoundingClientRect().height||0,150);
   return {id:id,height:height+14};
  });
+ var signature=columns+'|'+entries.map(function(e){return e.id+':'+Math.round(e.height)}).join(';');
+ if(grid===homeLastGrid&&signature===homeLastSignature)return;
  var assignment=chooseHomeLanes(entries,columns);
  var lanes=[].slice.call(grid.querySelectorAll(':scope > .ef-home-lane'));
  while(lanes.length<2){
@@ -221,6 +232,7 @@ function layoutHomeColumns(){
    if(lane.children[index]!==card)lane.insertBefore(card,lane.children[index]||null);
   });
  });
+ homeLastGrid=grid;homeLastSignature=signature;
 }
 function scheduleHomeLayout(){
  if(homeLayoutScheduled)return;
