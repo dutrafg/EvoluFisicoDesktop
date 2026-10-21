@@ -1,17 +1,34 @@
-/* Desktop palette: tint only the desktop sidebar, preserve contrast and print layout. */
+/* More legible and color-coordinated Windows sidebar in LIGHT theme. */
 @media screen and (min-width: 1200px) {
-  body.ef-simple-ui[data-ef-palette] .top-navbar {
-    background: color-mix(in srgb, var(--ef-selected-color, #75d7a9) 16%, var(--ef-surface, #fff)) !important;
-    border-right-color: color-mix(in srgb, var(--ef-selected-dark, #086849) 22%, var(--ef-line, #dfe5ea)) !important;
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode)[data-ef-palette] .top-navbar {
+    background: color-mix(in srgb, var(--ef-selected-dark,#086849) 28%, color-mix(in srgb, var(--ef-selected-color,#75d7a9) 20%, var(--ef-surface,#fff))) !important;
+    border-right-color: color-mix(in srgb, var(--ef-selected-dark,#086849) 38%, var(--ef-line,#dfe5ea)) !important;
     transition: background-color .2s ease, border-color .2s ease;
   }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode)[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn {
+    color: #263f36 !important;
+  }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode)[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn:hover {
+    background: color-mix(in srgb, var(--ef-surface,#fff) 67%, var(--ef-selected-color,#75d7a9)) !important;
+    border-color: color-mix(in srgb, var(--ef-selected-dark,#086849) 25%, transparent) !important;
+    color: var(--ef-selected-dark,#086849) !important;
+  }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode)[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn.active {
+    background: color-mix(in srgb, var(--ef-surface,#fff) 83%, var(--ef-selected-color,#75d7a9)) !important;
+    border-color: color-mix(in srgb, var(--ef-selected-dark,#086849) 40%, transparent) !important;
+    color: var(--ef-selected-dark,#086849) !important;
+    box-shadow: inset 3px 0 var(--ef-selected-dark,#086849) !important;
+  }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode)[data-ef-palette] .top-navbar > .nav-tabs::before {
+    color: #30493e !important;
+  }
+  html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode)[data-ef-palette] .top-navbar .brand-title {
+    color: #172e24 !important;
+  }
+  /* Keep the existing dark theme separate from these light-mode tweaks. */
   html.ef-dark-mode body.ef-simple-ui[data-ef-palette] .top-navbar,
   body.ef-simple-ui.dark-mode[data-ef-palette] .top-navbar {
-    background: color-mix(in srgb, var(--ef-selected-dark, #086849) 24%, var(--ef-surface, #101820)) !important;
-  }
-  body.ef-simple-ui[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn.active {
-    border-color: color-mix(in srgb, var(--ef-selected-dark, #086849) 28%, transparent) !important;
-    box-shadow: inset 3px 0 var(--ef-selected-dark, #086849) !important;
+    background: color-mix(in srgb, var(--ef-selected-dark,#086849) 24%, var(--ef-surface,#101820)) !important;
   }
 }
 @media print {
