@@ -1421,6 +1421,6 @@ html.ef-dark-mode body.ef-simple-ui{--ef-accent:var(--ef-selected-color,#75d7a9)
 body.ef-simple-ui .nav-tab-btn.active{border-color:var(--ef-selected-color)!important}
 body.ef-simple-ui .ef90-cal-day.today,body.ef-simple-ui .ef90-cal-day.selected{outline-color:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important}
 body.ef-simple-ui .ef90-kicker,body.ef-simple-ui .ef90-hero .ef90-kicker{color:var(--ef-selected-color)!important}
-body.ef-simple-ui #ef55-painel .btn-primary,body.ef-simple-ui #tab-settings .btn-primary{background:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important;color:#0c241d!important}
+body.ef-simple-ui #ef55-painel .btn-primary,body.ef-simple-ui #tab-settings .btn-primary{background:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important;color:var(--ef-selected-text,#0c241d)!important}
 body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-diagnostics::before,
 body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-settings::before{display:none!important;content:none!important}
