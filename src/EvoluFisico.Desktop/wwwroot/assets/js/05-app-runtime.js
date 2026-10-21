@@ -2394,7 +2394,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
 
                     // O SQLite já confirmou a avaliação antes da cópia opcional no disco.
                     await salvarAvaliacaoNoDB(registro);
-                    if(typeof window.ef91FinishPreCadastro==='function')await window.ef91FinishPreCadastro();
+                    if(typeof window.ef91FinishPreCadastro==='function')await window.ef91FinishPreCadastro(registro);
                     const registroConfirmado = avaliacoes.find(a => a.id === registro.id) || registro;
                     let pastaCriada = false;
                     let falhaDaPasta = false;
