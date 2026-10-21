@@ -193,7 +193,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-9.1-Windows-Setup
+          name: EvoluFisicoDesktop-9.1.1.beta.4-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14
@@ -206,7 +206,7 @@ jobs:
           $tag = 'desktop-v9.1-beta-' + '${{ github.sha }}'.Substring(0,7)
           gh release view $tag --repo ${{ github.repository }} *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 9.1 beta (Windows)' --notes 'Versao de testes para Windows x64. Instalador e pacote portatil. Faca backup antes de usar dados reais.' --prerelease --latest=false
+            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 9.1.1.beta.4 (Windows)' --notes 'Versao de testes para Windows x64. Instalador e pacote portatil. Faca backup antes de usar dados reais.' --prerelease --latest=false
             if ($LASTEXITCODE -ne 0) { throw 'Could not create GitHub release' }
           }
           $installer = Get-ChildItem installer-output -Filter '*.exe' -File | Select-Object -First 1
