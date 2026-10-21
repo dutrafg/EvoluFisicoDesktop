@@ -57,8 +57,8 @@ check('Version is consistent in UI, native exe, installer and build metadata',()
   'src/EvoluFisico.Desktop/MainWindow.xaml',
   'src/EvoluFisico.Desktop/MainWindow.xaml.cs',
   'src/EvoluFisico.Desktop/wwwroot/assets/js/26-simple-interface.js'
- ])assert.ok(fs.readFileSync(file,'utf8').includes('9.1.1.beta.4'),file);
- assert.ok(html.includes('v9.1.1.beta.4'));
+ ])assert.ok(fs.readFileSync(file,'utf8').includes('9.1.1.beta.4.1'),file);
+ assert.ok(html.includes('v9.1.1.beta.4.1'));
 });
 (async()=>{
  const stored=new Map();
