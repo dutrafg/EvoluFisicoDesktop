@@ -40,7 +40,7 @@ check('Uses full main width and eliminates upper blur',()=>{
  assert.match(css,/margin-left: var\(--ef-sidebar\) !important/);
 });
 check('Responsive automatic sizing reacts to card heights and window width',()=>{
- assert.match(source,/width>=920 && ordered\.length>1\?2:1/);
+ assert.match(source,/width>=920&&order\.length>1\?2:1/);
  assert.match(source,/new ResizeObserver\(scheduleHomeLayout\)/);
  assert.match(source,/homeResizeObserver\.observe\(card\)/);
  assert.match(source,/window\.addEventListener\('resize',scheduleHomeLayout\)/);
