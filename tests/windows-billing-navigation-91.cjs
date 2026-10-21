@@ -51,8 +51,8 @@ check('Navegação compacta usa 4 colunas e duas linhas',()=>{assert(css.include
 check('Alertas não cobrem a barra inferior',()=>assert(css.includes('#ef55-toasts { bottom: calc(150px + env(safe-area-inset-bottom))')));
 check('Versão Windows alinhada à versão do instalador',()=>{
  const source=fs.readFileSync('installer/EvoluFisico.iss','utf8');
- const version=source.match(/^#define MyAppVersion "([^"\\r\\n]+)"$/m)?.[1];
- assert.ok(version&&/^9\\.\\d+\\.\\d+[.-]beta[.\\d]+$/.test(version),'Versão do instalador válida');
+ const version=source.match(/^#define MyAppVersion "([^"\r\n]+)"$/m)?.[1];
+ assert.ok(version&&/^9\.\d+(?:\.\d+)?[.-]beta(?:[.-]\d+)+$/.test(version),'Versão do instalador válida');
  assert.ok(nav.includes("version.textContent='"+version+"'"),'UI deve exibir a versão instalada');
  assert.ok(html.includes('EvoluFísico v'+version),'HTML deve exibir a mesma versão');
 });
