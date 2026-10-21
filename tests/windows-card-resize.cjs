@@ -103,8 +103,9 @@ check('A wide card occupies whole page and others remain in compact independent 
  assert.equal(grid.querySelectorAll('[data-ef-home-card]').length,4);
 });
 check('No DOM nodes, input values or listeners are replaced while resizing',()=>{
- assert.deepEqual(grid.querySelectorAll('[data-ef-home-card]').sort((a,b)=>a.dataset.efHomeCard.localeCompare(b.dataset.efHomeCard)),
- cards.slice().sort((a,b)=>a.dataset.efHomeCard.localeCompare(b.dataset.efHomeCard)));
+ const rendered=grid.querySelectorAll('[data-ef-home-card]');
+ assert.equal(rendered.length,cards.length);
+ cards.forEach(card=>assert.ok(rendered.includes(card),'A DOM node was replaced: '+card.dataset.efHomeCard));
 });
 check('Responsive single column retains all cards and has no phantom card',()=>{
  grid.clientWidth=700;layout();
