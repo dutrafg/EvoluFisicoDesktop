@@ -15,6 +15,7 @@
    b.addEventListener('click',()=>window.switchTab(PAGE));
    const forms=$('tab-btn-ef-forms');if(forms?.parentNode===nav)forms.after(b);else nav.append(b);
   }
+  window.EFSimpleUI?.arrangeNavigation?.();
   const prev=$('ef-home-insights');if(prev&&prev.parentNode!==$('ef-analysis-container'))$('ef-analysis-container').append(prev);
   const legacy=$('ef-home-deep');if(legacy)legacy.remove();
   installHelp(section);
