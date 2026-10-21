@@ -1422,5 +1422,8 @@ body.ef-simple-ui .nav-tab-btn.active{border-color:var(--ef-selected-color)!impo
 body.ef-simple-ui .ef90-cal-day.today,body.ef-simple-ui .ef90-cal-day.selected{outline-color:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important}
 body.ef-simple-ui .ef90-kicker,body.ef-simple-ui .ef90-hero .ef90-kicker{color:var(--ef-selected-color)!important}
 body.ef-simple-ui #ef55-painel .btn-primary,body.ef-simple-ui #tab-settings .btn-primary{background:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important;color:var(--ef-selected-text,#0c241d)!important}
+/* A aba Análises já possui SVG de cérebro em .ef-local-nav-icon.
+   Oculta a máscara genérica ::before, que sem --ef-ico vira um quadrado branco. */
 body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-diagnostics::before,
-body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-settings::before{display:none!important;content:none!important}
+body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-settings::before,
+body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-analises::before{display:none!important;content:none!important}
