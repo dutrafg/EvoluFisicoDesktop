@@ -14,9 +14,8 @@ check('Palette contains original five and five stronger shades',()=>{
  const start=js.indexOf('const COLORS='),end=js.indexOf(';',start);
  const COLORS=new Function(js.slice(start,end+1)+'return COLORS;')();
  assert.equal(Object.keys(COLORS).length,10);
- for(const k of ['verde','azul','roxo','laranja','rosa']) {
-  assert.ok(COLORS[k]);assert.ok(COLORS[k+'-escuro']);
-  assert.match(COLORS[k+'-escuro'][0],/^#[0-9a-f]{6}$/i);
+ for(const k of ['verde','azul','roxo','laranja','rosa','azul-marinho','petroleo','esmeralda','indigo','ameixa']) {
+  assert.ok(COLORS[k],k);assert.match(COLORS[k][0],/^#[0-9a-f]{6}$/i);
  }
  assert.ok(js.includes('ef90_paleta'));
  assert.ok(js.includes("'--ef-selected-text'"));
@@ -50,15 +49,15 @@ check('New registration reuses first assessment step and persists separately',()
  assert.ok(html.includes('34-pre-cadastro.js'));
  assert.ok(fs.readFileSync(root+'sw.js','utf8').includes('34-pre-cadastro.js'));
 });
-check('Version is consistent in UI, native exe, installer and build metadata',()=>{
+check('Stable 1.0 version is consistent in UI, native exe, installer and build metadata',()=>{
  for(const file of [
   'installer/EvoluFisico.iss',
   'scripts/build-windows.ps1',
   'src/EvoluFisico.Desktop/MainWindow.xaml',
   'src/EvoluFisico.Desktop/MainWindow.xaml.cs',
   'src/EvoluFisico.Desktop/wwwroot/assets/js/26-simple-interface.js'
- ])assert.ok(fs.readFileSync(file,'utf8').includes('9.1.1.beta.4.1'),file);
- assert.ok(html.includes('v9.1.1.beta.4.1'));
+ ])assert.ok(fs.readFileSync(file,'utf8').includes(file.endsWith('MainWindow.xaml')||file.endsWith('26-simple-interface.js')?'1.0 estável':'1.0.0'),file);
+ assert.ok(html.includes('v1.0 estável'));
 });
 check('Intense colors meet WCAG AA with white foreground',()=>{
  const start=js.indexOf('const COLORS='),end=js.indexOf(';',start);
@@ -67,7 +66,7 @@ check('Intense colors meet WCAG AA with white foreground',()=>{
   const parts=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
   return parts.reduce((sum,v,i)=>sum+(v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4))*[.2126,.7152,.0722][i],0);
  };
- for(const key of Object.keys(all).filter(k=>k.endsWith('-escuro'))){
+ for(const key of ['azul-marinho','petroleo','esmeralda','indigo','ameixa']){
   assert.ok(1.05/(luminance(all[key][0])+.05)>=4.5,key);
  }
 });
@@ -78,7 +77,7 @@ check('Sidebar navigation on dark light-mode sidebar uses high-contrast labels',
  assert.ok(palette.includes('75%, #13251d'));
 });
 check('Selected intensive colors provide a light accent in dark mode',()=>{
- assert.ok(js.includes('DARK_MODE_COLORS'));
+ assert.ok(js.includes('INTENSE_COLORS'));
  assert.ok(js.includes('--ef-selected-darkmode-accent'));
  assert.ok(base.includes('--ef-selected-darkmode-accent'));
 });

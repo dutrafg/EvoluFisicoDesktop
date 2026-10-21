@@ -11,6 +11,7 @@ const routes={
  'tab-novo-checkin':['tab-btn-form','Nova avaliação'],
  'tab-lab77':['tab-btn-lab77','Calculadora'],
  'tab-ef-forms':['tab-btn-ef-forms','Formulários'],
+ 'tab-analises':['tab-btn-analises','Análises'],
  'tab-settings':['tab-btn-settings','Configurações']
 };
 function fold(id,title,hint,nodes,parent,before=null){
@@ -23,7 +24,7 @@ function fold(id,title,hint,nodes,parent,before=null){
 }
 function arrangeNavigation(){
  const nav=document.querySelector('.top-navbar > .nav-tabs'),menu=$('ef-tools-content'),actions=$('ef-primary-actions');if(!nav||!menu||!actions)return;
- ['tab-painel','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
+ ['tab-painel','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-analises','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  ['tab-settings'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  const form=$('tab-btn-form');if(form&&form.parentNode!==actions)actions.prepend(form);
  for(const [route,[id,label]] of Object.entries(routes)){
@@ -48,7 +49,7 @@ function arrangeNavigation(){
  $('ef-tools').classList.toggle('ef-tools-active',active?.id==='tab-settings');
 }
 function arrangeDetails(){
- const panel=$('ef55-painel');if(panel){
+ const panel=$('ef55-painel');if(panel&&!$('tab-analises')){
   const nodes=[$('ef68-insights'),$('ef70-engine')].filter(Boolean);
   if(nodes.length){
    const grid=$('ef90-sortable');
@@ -110,14 +111,47 @@ function setupForm(){
  document.addEventListener('invalid',e=>{let n=e.target;while(n){if(n.tagName==='DETAILS')n.open=true;n=n.parentElement}},true);
 }
 const NAV_ICONS={
+ 'tab-btn-analises':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.2A3.4 3.4 0 0 0 6.3 4.3 4.1 4.1 0 0 0 3 10.7a4 4 0 0 0 1.6 6.7 3.7 3.7 0 0 0 7.4.1V6.2ZM12 6.2a3.4 3.4 0 0 1 5.7-1.9 4.1 4.1 0 0 1 3.3 6.4 4 4 0 0 1-1.6 6.7 3.7 3.7 0 0 1-7.4.1V6.2Z"/><path d="M8.1 8c-2.1.4-2.8 2.2-2.4 3.8M15.9 8c2.1.4 2.8 2.2 2.4 3.8M8.5 14.6c1.7.1 3 1.5 3.5 2.9M15.5 14.6c-1.7.1-3 1.5-3.5 2.9"/></svg>',
  'tab-btn-diagnostics':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6H21"/></svg>',
  'tab-btn-ef-forms':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg>',
  'tab-btn-settings':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="var(--ef-surface, #fff)"/><circle cx="15" cy="17" r="2.4" fill="var(--ef-surface, #fff)"/></svg>'
 };
-const COLORS={verde:['#75d7a9','#086849'],azul:['#73aef9','#235cbd'],roxo:['#ad95ff','#6244ba'],laranja:['#f9b276','#a85517'],rosa:['#f3a5c5','#a53c71'],'verde-escuro':['#166b50','#085139'],'azul-escuro':['#245b9b','#174178'],'roxo-escuro':['#65479c','#4b317e'],'laranja-escuro':['#a64c22','#7d3616'],'rosa-escuro':['#a13b68','#79274d']};
-const DARK_MODE_COLORS={'verde-escuro':'#86e5b2','azul-escuro':'#99c5ff','roxo-escuro':'#cdb5ff','laranja-escuro':'#ffd3a0','rosa-escuro':'#ffbad6'};
-function applyColor(v){const key=Object.prototype.hasOwnProperty.call(COLORS,v)?v:'verde';const [light,dark]=COLORS[key];document.documentElement.style.setProperty('--ef-selected-text',key.endsWith('-escuro')?'#fff':'#0c241d');document.documentElement.style.setProperty('--ef-selected-darkmode-accent',DARK_MODE_COLORS[key]||COLORS[key][0]);document.documentElement.style.setProperty('--ef-selected-color',light);document.documentElement.style.setProperty('--ef-selected-dark',dark);document.documentElement.dataset.efPalette=key;document.body.dataset.efPalette=key;document.querySelectorAll('[data-ef-color]').forEach(b=>{const on=b.dataset.efColor===key;b.setAttribute('aria-pressed',String(on));b.classList.toggle('selected',on)})}
-function installColors(){const area=$('ef-setting-appearance');if(!area)return;const field=document.createElement('div');field.className='ef-colors-field';field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha entre cinco tons originais e cinco opções mais escuras. A preferência fica salva neste navegador.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>'<button type="button" data-ef-color="'+key+'" aria-label="Cor '+key+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i></i><span>'+key.split('-').map(part=>part.charAt(0).toUpperCase()+part.slice(1)).join(' ')+'</span></button>').join('')+'</div>';area.append(field);field.addEventListener('click',e=>{const b=e.target.closest('[data-ef-color]');if(!b)return;try{localStorage.setItem('ef90_paleta',b.dataset.efColor)}catch(_){}applyColor(b.dataset.efColor)});let saved='verde';try{saved=localStorage.getItem('ef90_paleta')||saved}catch(_){}applyColor(saved)}
+const COLORS={
+ verde:['#75d7a9','#086849'],azul:['#73aef9','#235cbd'],roxo:['#ad95ff','#6244ba'],
+ laranja:['#f9b276','#a85517'],rosa:['#f3a5c5','#a53c71'],
+ 'azul-marinho':['#233f68','#85a9e4'],petroleo:['#145c68','#71c1c9'],esmeralda:['#17624e','#76c8a3'],
+ indigo:['#343f79','#9faaf0'],ameixa:['#653a65','#d2a4d0']
+};
+const LEGACY_COLORS={
+ 'verde-escuro':'esmeralda','azul-escuro':'azul-marinho',
+ 'roxo-escuro':'indigo','laranja-escuro':'petroleo','rosa-escuro':'ameixa',
+ terracota:'petroleo',vinho:'ameixa'
+};
+const INTENSE_COLORS=new Set(['azul-marinho','petroleo','esmeralda','indigo','ameixa']);
+function applyColor(v){
+ const normalized=LEGACY_COLORS[v]||v;
+ const key=Object.prototype.hasOwnProperty.call(COLORS,normalized)?normalized:'verde';
+ const [main,secondary]=COLORS[key],intense=INTENSE_COLORS.has(key);
+ const root=document.documentElement;
+ root.style.setProperty('--ef-selected-text',intense?'#fff':'#0c241d');
+ root.style.setProperty('--ef-selected-darkmode-accent',intense?secondary:main);
+ root.style.setProperty('--ef-selected-color',main);
+ root.style.setProperty('--ef-selected-dark',intense?main:secondary);
+ root.dataset.efPalette=key;document.body.dataset.efPalette=key;
+ document.querySelectorAll('[data-ef-color]').forEach(b=>{
+  const active=b.dataset.efColor===key;b.setAttribute('aria-pressed',String(active));b.classList.toggle('selected',active);
+ });
+}
+function installColors(){
+ const area=$('ef-setting-appearance');if(!area)return;
+ const field=document.createElement('div');field.className='ef-colors-field';
+ field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha entre cinco cores originais e cinco tons sóbrios. As escolhas anteriores serão preservadas e compatibilizadas.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>'<button type="button" data-ef-color="'+key+'" aria-label="Cor '+key.split('-').join(' ')+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i></i><span>'+key.split('-').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ')+'</span></button>').join('')+'</div>';
+ area.append(field);
+ field.addEventListener('click',e=>{const b=e.target.closest('[data-ef-color]');if(!b)return;try{localStorage.setItem('ef90_paleta',b.dataset.efColor)}catch(_){}applyColor(b.dataset.efColor)});
+ let saved='verde';try{saved=localStorage.getItem('ef90_paleta')||saved}catch(_){}
+ if(LEGACY_COLORS[saved]){saved=LEGACY_COLORS[saved];try{localStorage.setItem('ef90_paleta',saved)}catch(_){}}
+ applyColor(saved);
+}
 
 function mount(){
  document.body.classList.add('ef-simple-ui');
@@ -125,7 +159,7 @@ function mount(){
  nav.setAttribute('aria-label','Navegação principal');
  const workspace=document.createElement('div');workspace.id='ef-workspace-heading';
  const title=document.createElement('span');title.id='ef-workspace-title';workspace.append(title);
- const version=document.createElement('small');version.textContent='9.1.1.beta.4.1';workspace.append(version);header.after(workspace);
+ const version=document.createElement('small');version.textContent='1.0 estável';workspace.append(version);header.after(workspace);
  const toggle=document.createElement('button');toggle.type='button';toggle.id='ef-sidebar-toggle';
  toggle.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';
  function setSidebar(hidden,save){document.body.classList.toggle('ef-sidebar-hidden',hidden);toggle.setAttribute('aria-expanded',String(!hidden));const t=hidden?'Mostrar barra lateral (Ctrl+B)':'Esconder barra lateral (Ctrl+B)';toggle.title=t;toggle.setAttribute('aria-label',t);if(save){try{localStorage.setItem('ef_sidebar_hidden',hidden?'1':'0')}catch(e){}}}
@@ -297,7 +331,7 @@ function mount(){
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
  const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
- window.EFSimpleUI={version:'9.1.1.beta.4.1',arrangeNavigation,arrangeDetails};
+ window.EFSimpleUI={version:'1.0.0',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();

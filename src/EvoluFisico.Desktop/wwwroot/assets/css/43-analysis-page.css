@@ -1,0 +1,63 @@
+/* EvoluFisico 1.0 — modulo Analises Automaticas, resumo e paletas profissionais. */
+@media screen {
+ body.ef-simple-ui #tab-analises.ef-analyses-page{max-width:none!important;width:100%!important;min-width:0;box-sizing:border-box;padding:20px clamp(14px,2.8vw,42px) 44px!important;}
+ #tab-analises .ef-analyses-heading{display:flex;justify-content:space-between;gap:18px;align-items:center;margin:0 0 20px;flex-wrap:wrap}
+ #tab-analises .ef-analyses-heading h1{margin:3px 0 7px;color:var(--ef-ink);font-size:clamp(1.5rem,2.5vw,2.2rem);line-height:1.25}
+ #tab-analises .ef-analyses-heading p{margin:0;color:var(--ef-muted);line-height:1.55;max-width:740px;font-size:.9rem}
+ .ef-analyses-overline{font-size:.68rem;letter-spacing:.11em;font-weight:800;color:var(--ef-accent)}
+ .ef-analyses-tag{white-space:nowrap;border:1px solid var(--ef-line);border-radius:8px;background:var(--ef-soft);color:var(--ef-muted);padding:8px 12px;font-size:.75rem}
+ #ef-analysis-container{width:100%;min-width:0;margin:0 auto;max-width:1700px}
+ #tab-analises #ef-home-insights{display:block!important;width:100%!important;max-width:none!important;margin:0!important;background:var(--ef-surface,#fff);color:var(--ef-ink);border-radius:12px;border:1px solid var(--ef-line);box-sizing:border-box}
+ #tab-analises #ef-home-insights>summary{display:none!important}
+ #tab-analises .efu-root{padding:clamp(12px,2vw,26px)}
+ #tab-analises .efu-heading h3{margin:0 0 7px}
+ #tab-analises .efu-header{scroll-margin-top:15px}
+ #ef-analyses-quick{width:100%;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:13px;border:1px solid var(--ef-line);border-radius:12px;background:var(--ef-surface);padding:15px 18px;margin:14px 0 19px;color:var(--ef-ink)}
+ #ef-analyses-quick .ef-analyses-quick-icon{border-radius:10px;background:var(--ef-soft);color:var(--ef-accent);width:43px;height:43px;display:grid;place-items:center;font-size:22px;flex:none}
+ #ef-analyses-quick .ef-analyses-quick-copy{display:flex;flex-direction:column;gap:4px;flex:1 1 220px;min-width:0}
+ #ef-analyses-quick .ef-analyses-quick-copy strong{font-size:.94rem}
+ #ef-analyses-quick .ef-analyses-quick-copy span{font-size:.79rem;color:var(--ef-muted);line-height:1.45}
+ #ef-analyses-quick .ef-analyses-open{border-radius:8px;border:1px solid var(--ef-line);background:var(--ef-soft);color:var(--ef-ink);padding:10px 15px;font-weight:700;cursor:pointer}
+ #ef-analyses-quick .ef-analyses-open:hover{border-color:var(--ef-accent);color:var(--ef-accent)}
+ #ef-analyses-quick .ef-analyses-open:focus-visible{outline:2px solid var(--ef-accent);outline-offset:2px}
+ #tab-analises .efu-header{display:block!important;margin-bottom:22px}
+ #tab-analises .efu-heading{max-width:none!important;margin-bottom:16px}
+ #tab-analises .efu-subtitle{max-width:900px}
+ #tab-analises .efu-controls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px!important;max-width:none!important;min-width:0!important;width:100%!important}
+ #tab-analises .efu-controls>.efu-selector{grid-column:1;max-width:none!important}
+ #tab-analises .efu-controls>.efu-demo-bar{grid-column:2;align-self:stretch}
+ #tab-analises .efu-controls>.efu-sample-picker,#tab-analises .efu-controls>.efu-links{grid-column:1/-1;width:100%!important}
+ #tab-analises .efu-controls,#tab-analises .efu-sample-picker,#tab-analises .efu-links{min-width:0;max-width:100%;box-sizing:border-box}
+ #tab-analises .efu-date-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;min-width:0} 
+ #tab-analises .efu-date-grid{min-width:0}
+ /* Dark variant contrast: keep very dark selection usable in light and dark surfaces. */
+ [data-ef-palette="azul-marinho"]{--ef-palette-ink:#233f68}
+ [data-ef-palette="petroleo"]{--ef-palette-ink:#145c68}
+ [data-ef-palette="esmeralda"]{--ef-palette-ink:#17624e}
+ [data-ef-palette="indigo"]{--ef-palette-ink:#343f79}
+ [data-ef-palette="ameixa"]{--ef-palette-ink:#653a65}
+}
+@media screen and (max-width:700px){body.ef-simple-ui #tab-analises.ef-analyses-page{padding:14px 10px 30px!important}#tab-analises .efu-root{padding:11px}#tab-analises .efu-controls{grid-template-columns:1fr!important}#tab-analises .efu-controls>.efu-selector,#tab-analises .efu-controls>.efu-demo-bar{grid-column:1!important}#tab-analises .efu-date-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#ef-analyses-quick{padding:12px;gap:9px}#ef-analyses-quick .ef-analyses-open{width:100%}}
+@media print{#ef-analyses-quick,.ef-analyses-tag,.ef-analyses-heading{display:none!important}}
+/* Ajuda acessível do módulo Análises. */
+@media screen {
+ #tab-analises .ef-analyses-heading>.ef-analysis-help-trigger{margin-left:auto;flex:0 0 36px;width:36px;height:36px;border-radius:10px;border:1px solid var(--ef-line);background:var(--ef-soft);color:var(--ef-ink);font-size:19px;font-weight:750;cursor:pointer}
+ #tab-analises .ef-analyses-heading>.ef-analysis-help-trigger:hover{border-color:var(--ef-accent)}
+ #tab-analises .ef-analyses-heading>.ef-analysis-help-trigger:focus-visible,#tab-analises .efu-help-mini:focus-visible{outline:2px solid var(--ef-accent);outline-offset:2px}
+ #tab-analises .efu-help-mini{appearance:none;border:1px solid var(--ef-line);border-radius:50%;width:19px;height:19px;min-height:19px;margin-left:5px;padding:0;background:var(--ef-soft);color:var(--ef-ink);font-size:12px;font-weight:750;cursor:pointer;vertical-align:middle}
+ #tab-analises .efu-kpi small:has(.efu-help-mini){display:flex;align-items:center;flex-wrap:wrap;gap:2px}
+ #tab-analises .ef-analysis-glossary{box-sizing:border-box;width:min(720px,calc(100vw - 28px));max-width:720px;max-height:min(85vh,900px);padding:0;border:1px solid var(--ef-line);border-radius:14px;background:var(--ef-surface,#fff);color:var(--ef-ink);box-shadow:0 20px 70px rgba(0,0,0,.26);overflow:hidden}
+ #tab-analises .ef-analysis-glossary::backdrop{background:rgba(6,14,20,.72)}
+ #tab-analises .ef-analysis-glossary-head{display:flex;align-items:flex-start;gap:16px;justify-content:space-between;padding:20px 22px 12px;border-bottom:1px solid var(--ef-line)}
+ #tab-analises .ef-analysis-glossary-head h2{font-size:1.32rem;line-height:1.3;margin:4px 0 6px;color:var(--ef-ink)}
+ #tab-analises .ef-analysis-glossary-head p{margin:0;color:var(--ef-muted);font-size:.87rem}
+ #tab-analises .ef-analysis-help-close{cursor:pointer;white-space:nowrap;border:1px solid var(--ef-line);border-radius:8px;padding:9px 11px;background:var(--ef-soft);color:var(--ef-ink);font-weight:700}
+ #tab-analises .ef-analysis-glossary-content{max-height:min(55vh,580px);overflow-y:auto;overscroll-behavior:contain;padding:10px 22px 18px}
+ #tab-analises .ef-analysis-glossary-content section{padding:12px 0;border-bottom:1px solid var(--ef-line)}
+ #tab-analises .ef-analysis-glossary-content section:last-child{border-bottom:0}
+ #tab-analises .ef-analysis-glossary-content h3{margin:0 0 5px;color:var(--ef-ink);font-size:.95rem}
+ #tab-analises .ef-analysis-glossary-content p{margin:0;color:var(--ef-muted);font-size:.85rem;line-height:1.6}
+ #tab-analises .ef-analysis-glossary-foot{margin:0;padding:11px 22px 15px;color:var(--ef-muted);font-size:.78rem;border-top:1px solid var(--ef-line)}
+}
+@media screen and (max-width:600px){#tab-analises .ef-analyses-heading>.ef-analysis-help-trigger{margin-left:0}#tab-analises .ef-analysis-glossary-head{padding:14px;gap:8px}#tab-analises .ef-analysis-glossary-content{padding:8px 14px 12px}#tab-analises .ef-analysis-glossary-foot{padding:10px 14px}#tab-analises .ef-analysis-glossary-head h2{font-size:1.1rem}}
+@media print{#tab-analises .ef-analysis-help-trigger,#tab-analises .efu-help-mini,#tab-analises .ef-analysis-glossary{display:none!important}}

@@ -21,8 +21,8 @@ var C={
     if(!(h>0&&pesc>0&&cint>0))return null;var r;
     if(sexo==='F'){if(!(quad>0)||cint+quad-pesc<=0)return null;r=495/(1.29579-0.35004*log10(cint+quad-pesc)+0.221*log10(h))-450}
     else{if(cint-pesc<=0)return null;r=495/(1.0324-0.19077*log10(cint-pesc)+0.15456*log10(h))-450}
-    return isFinite(r)?Math.max(2,Math.min(60,r)):null},
-  rfm:function(sexo,h,cint){if(!(h>0&&cint>0))return null;return Math.max(2,Math.min(60,(sexo==='F'?76:64)-20*(h/cint)))},
+    return isFinite(r)&&r>=2&&r<=60?r:null},
+  rfm:function(sexo,h,cint){if(!(h>0&&cint>0))return null;var raw=(sexo==='F'?76:64)-20*(h/cint);return Number.isFinite(raw)&&raw>=2&&raw<=60?raw:null},
   whtr:function(h,cint){return h>0&&cint>0?cint/h:null},
   bri:function(h,cint){if(!(h>0&&cint>0))return null;var a=(cint/100)/(2*Math.PI),b=0.5*(h/100);if(a>=b)return null;return 364.2-365.5*Math.sqrt(1-(a*a)/(b*b))},
   absi:function(h,peso,cint){if(!(h>0&&peso>0&&cint>0))return null;var hm=h/100,bmi=peso/(hm*hm);return(cint/100)/(Math.pow(bmi,2/3)*Math.sqrt(hm))},

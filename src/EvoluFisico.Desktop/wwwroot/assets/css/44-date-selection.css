@@ -1,0 +1,19 @@
+
+.ef-unified .efu-sample-picker{margin:11px 0 12px;padding:13px;background:var(--ef-soft,#f3f7f5);border:1px solid var(--ef-line,#d6e2dd);border-radius:12px;min-width:0}
+.ef-unified .efu-sample-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--ef-ink,#243a31);font-size:.84rem}
+.ef-unified .efu-sample-heading span{font-size:.7rem;color:var(--ef-muted,#516b5c);font-weight:650}
+.ef-unified .efu-sample-picker p{font-size:.73rem;line-height:1.48;margin:6px 0 10px;color:var(--ef-muted,#5b7266)}
+.ef-unified .efu-date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.ef-unified .efu-date-field{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:.72rem;font-weight:700;color:var(--ef-ink,#243a31)}
+.ef-unified .efu-date-field select{width:100%;min-width:0;max-width:100%;font-size:.79rem;font:inherit;color:var(--ef-ink,#22382a);background:var(--ef-card,#fff);border:1px solid var(--ef-line,#ceded3);border-radius:8px;min-height:39px;padding:7px 8px;box-sizing:border-box}
+.ef-unified .efu-sample-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:11px}
+.ef-unified .efu-sample-actions .efu-action{min-height:35px}
+.ef-unified .efu-picks-apply{background:var(--ef-selected-color,#2d648a);border-color:var(--ef-selected-color,#2d648a);color:white}
+.ef-unified .efu-sample-actions button:disabled{opacity:.5;cursor:not-allowed}
+.ef-unified .efu-selection-status{display:block;width:100%;font-size:.73rem;color:var(--ef-muted,#516858);font-weight:650;line-height:1.4}
+@media(max-width:540px){.ef-unified .efu-date-grid{grid-template-columns:1fr}.ef-unified .efu-sample-picker{padding:11px}.ef-unified .efu-sample-actions button{flex:1 1 115px}}
+html.ef-dark-mode .ef-unified .efu-sample-picker{background:#182332;border-color:#3d4b61}
+html.ef-dark-mode .ef-unified .efu-date-field select{color:#eef4ff;background:#202b3b;border-color:#45516a}
+html.ef-dark-mode .ef-unified .efu-sample-heading,html.ef-dark-mode .ef-unified .efu-date-field{color:#ecf3ff}
+html.ef-dark-mode .ef-unified .efu-sample-picker :is(p,.efu-sample-heading span,.efu-selection-status){color:#bac8da}
+@media print{.ef-unified .efu-sample-picker{display:none!important}}

@@ -63,10 +63,10 @@ try {
 } finally { $stream.Dispose() }
 if ((Get-Item $iconPath).Length -lt 1024) { throw 'Windows icon generation failed' }
 Write-Host "Windows icon generated: $iconPath"
-# Identify each beta build so the updater can distinguish installed and published releases.
+# Identify each release build so the updater can distinguish installed and published releases.
 $revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0,7).ToLowerInvariant() } else { 'local' }
-$tag = "desktop-v9.1-beta-$revision"
-$versionInfo = @{ tag = $tag; version = '9.1.1.beta.4.1'; revision = $revision; built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
+$tag = "desktop-v1.0-$revision"
+$versionInfo = @{ tag = $tag; version = '1.0.0'; revision = $revision; built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
 [System.IO.File]::WriteAllText((Join-Path $web 'desktop-version.json'), $versionInfo, [System.Text.UTF8Encoding]::new($false))
 dotnet restore $project
 if ($LASTEXITCODE -ne 0) { throw 'Falha no restore' }

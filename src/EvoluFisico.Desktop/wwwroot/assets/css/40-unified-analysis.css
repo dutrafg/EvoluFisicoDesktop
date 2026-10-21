@@ -1,0 +1,60 @@
+
+/* Relatório por aluno, integrado à identidade visual do EvoluFísico. */
+#ef-home-insights.ef-unified{display:block;overflow:visible;min-width:0;border:0;background:transparent;box-shadow:none}
+#ef-home-insights > summary{display:none!important}
+.ef-unified *{box-sizing:border-box}
+.ef-unified .efu-header{display:flex;gap:14px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;margin-bottom:13px}
+.ef-unified .efu-heading{min-width:175px;flex:1 1 230px}
+.ef-unified h3{font-size:1.1rem;font-weight:750;margin:0 0 5px;line-height:1.35;color:var(--ef-ink,#172d25)}
+.ef-unified .efu-subtitle{font-size:.79rem;line-height:1.5;color:var(--ef-muted,#667a70);margin:0;max-width:600px}
+.ef-unified .efu-selector{display:flex;flex-direction:column;gap:6px;flex:0 1 295px;min-width:175px;max-width:100%;font-size:.76rem;color:var(--ef-ink,#25362c);font-weight:650}
+.ef-unified .efu-selector select{width:100%;min-width:0;min-height:38px;max-width:100%;border-radius:9px;border:1px solid var(--ef-line,#dce4de);background:var(--ef-card,#fff);color:var(--ef-ink,#16291e);padding:7px 28px 7px 11px;font:inherit;font-size:.84rem}
+.ef-unified .efu-controls{flex:0 1 305px;min-width:190px;max-width:100%;display:grid;gap:7px}
+.ef-unified .efu-controls .efu-selector{min-width:0;max-width:none;flex:initial}
+.ef-unified .efu-links{display:flex;flex-wrap:wrap;gap:6px}
+.ef-unified .efu-links .efu-action{flex:1 1 115px}
+.ef-unified .efu-selector select:focus-visible,.ef-unified button:focus-visible,.ef-unified summary:focus-visible{outline:2px solid var(--ef-accent,#1684a7);outline-offset:2px}
+.ef-unified .efu-context{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 14px;color:var(--ef-muted,#61746a);font-size:.73rem}
+.ef-unified .efu-chip{display:inline-flex;align-items:center;padding:5px 9px;border-radius:7px;border:1px solid var(--ef-line,#dfe6e1);background:var(--ef-soft,#f4f8f5);font-weight:600;color:var(--ef-ink,#25362c)}
+.ef-unified .efu-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.ef-unified .efu-kpi{min-width:0;border:1px solid var(--ef-line,#dce6df);border-radius:12px;background:var(--ef-soft,#f5f8f6);padding:12px 13px;display:flex;flex-direction:column;gap:5px}
+.ef-unified .efu-kpi small{font-size:.7rem;font-weight:600;color:var(--ef-muted,#667b70);line-height:1.25}
+.ef-unified .efu-kpi strong{color:var(--ef-ink,#172b20);font-size:1.25rem;font-weight:750;line-height:1.2;overflow-wrap:anywhere}
+.ef-unified .efu-kpi span{font-size:.68rem;line-height:1.35;color:var(--ef-muted,#607568)}
+.ef-unified .efu-section{border:1px solid var(--ef-line,#dfe5e0);border-radius:11px;margin-top:10px;overflow:hidden;background:var(--ef-card,#fff);min-width:0}
+.ef-unified .efu-section > summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:9px;min-height:44px;padding:10px 12px;cursor:pointer;font-size:.82rem;font-weight:750;color:var(--ef-ink,#23372a);user-select:none}
+.ef-unified .efu-section > summary::-webkit-details-marker{display:none}
+.ef-unified .efu-section > summary:after{content:'⌄';transition:transform .15s;color:var(--ef-muted,#64766e)}
+.ef-unified .efu-section[open] > summary:after{transform:rotate(180deg)}
+.ef-unified .efu-section[open] > summary{border-bottom:1px solid var(--ef-line,#dfe5e0)}
+.ef-unified .efu-section-body{padding:11px 12px;min-width:0}
+.ef-unified .efu-measure-title{font-size:.76rem;margin:8px 0 7px;color:var(--ef-ink,#20352b)}
+.ef-unified .efu-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ef-unified .efu-metric{min-width:0;border-radius:9px;background:var(--ef-soft,#f3f7f4);padding:10px 11px}
+.ef-unified .efu-metric small{display:block;font-size:.68rem;color:var(--ef-muted,#607468);margin-bottom:5px}
+.ef-unified .efu-metric strong{font-size:.87rem;font-weight:700;color:var(--ef-ink,#1b3324)}
+.ef-unified .efu-metric span{display:block;margin-top:4px;font-size:.7rem;color:var(--ef-muted,#61756a)}
+.ef-unified .efu-notice{font-size:.75rem;line-height:1.55;color:var(--ef-muted,#65766b);margin:5px 0}
+.ef-unified .efu-findings{display:grid;gap:8px}
+.ef-unified .efu-finding{border-radius:9px;padding:9px 10px;border:1px solid var(--ef-line,#e2e6e3);background:var(--ef-soft,#f6f9f6);min-width:0}
+.ef-unified .efu-finding b{display:block;color:var(--ef-ink,#20352b);font-size:.78rem;line-height:1.35}
+.ef-unified .efu-finding p{margin:5px 0 0;color:var(--ef-muted,#617369);font-size:.73rem;line-height:1.45}
+.ef-unified .efu-finding[data-severity="warn"]{border-left:3px solid #dfaa4d}
+.ef-unified .efu-finding[data-severity="good"]{border-left:3px solid #3a9f77}
+.ef-unified .efu-finding[data-severity="info"]{border-left:3px solid #7195b7}
+.ef-unified .efu-history{overflow:auto;max-height:260px;overscroll-behavior:contain}
+.ef-unified .efu-history table{width:100%;min-width:380px;border-collapse:collapse;font-size:.72rem}
+.ef-unified .efu-history th,.ef-unified .efu-history td{padding:9px 7px;text-align:left;border-bottom:1px solid var(--ef-line,#dae3de);white-space:nowrap;color:var(--ef-ink,#213c2a)}
+.ef-unified .efu-history th{color:var(--ef-muted,#69766f);font-weight:700}
+.ef-unified .efu-action{border:1px solid var(--ef-line,#dbe5df);background:var(--ef-soft,#e9f3ed);color:var(--ef-ink,#24513a);border-radius:8px;padding:7px 10px;cursor:pointer;font:inherit;font-size:.72rem;font-weight:650;min-height:32px}
+.ef-unified .efu-foot{margin:12px 0 0;color:var(--ef-muted,#627369);font-size:.68rem;line-height:1.5}
+.ef-unified .efu-empty{padding:20px 12px;border:1px dashed var(--ef-line,#dae1db);border-radius:10px;color:var(--ef-muted,#566c5f);font-size:.82rem;line-height:1.6}
+@media(min-width:1200px){.ef-unified .efu-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:540px){.ef-unified .efu-header{display:block}.ef-unified .efu-controls{margin-top:12px;max-width:none}.ef-unified .efu-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.ef-unified .efu-metrics{grid-template-columns:1fr}.ef-unified .efu-kpi{padding:10px}.ef-unified .efu-kpi strong{font-size:1.06rem}.ef-unified .efu-section-body{padding:9px}}
+@media(max-width:340px){.ef-unified .efu-kpis{grid-template-columns:1fr}}
+html.ef-dark-mode .ef-unified .efu-section,html.ef-dark-mode .ef-unified .efu-selector select{background:#202b3b;color:#eef4ff;border-color:#37465c}
+html.ef-dark-mode .ef-unified .efu-kpi,html.ef-dark-mode .ef-unified .efu-metric,html.ef-dark-mode .ef-unified .efu-chip,html.ef-dark-mode .ef-unified .efu-finding{background:#182332;border-color:#3d4b61}
+html.ef-dark-mode .ef-unified :is(h3,.efu-section>summary,.efu-kpi strong,.efu-metric strong,.efu-finding b,.efu-selector,.efu-history td,.efu-action){color:#ecf3ff}
+html.ef-dark-mode .ef-unified :is(.efu-subtitle,.efu-context,.efu-kpi small,.efu-kpi span,.efu-metric small,.efu-metric span,.efu-finding p,.efu-notice,.efu-foot,.efu-history th){color:#b4c1d5}
+html.ef-dark-mode .ef-unified .efu-action{background:#24364c;border-color:#45516a}
+@media print{.ef-unified .efu-action,.ef-unified .efu-selector{display:none!important}}
