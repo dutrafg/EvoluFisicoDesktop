@@ -60,6 +60,9 @@ jobs:
       - name: Validate encrypted storage, privacy and compact desktop layout
         run: node tests/windows-privacy-layout.cjs
 
+      - name: Validate 9.1.1.beta.4 theme, movable analysis cards and preregistration
+        run: node tests/windows-release-911-beta4.cjs
+
       - name: Test home card reordering, full-width dashboard and header clarity
         run: node tests/windows-home-layout.cjs
 
