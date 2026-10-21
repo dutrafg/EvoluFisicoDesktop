@@ -247,3 +247,24 @@ body.ef-simple-ui #ef90-sortable .ef90-recheck-pref select:focus-visible {
 @media screen and (max-width:720px) {
  body.ef-simple-ui #ef90-sortable .ef90-recheck-pref {width:100%;max-width:none}
 }
+
+/* Ferramentas da agenda: controles compactos em grades responsivas. */
+body.ef-simple-ui #ef90-sortable .ef90-agenda-toolbar {
+ display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:flex-end;
+}
+body.ef-simple-ui #ef90-sortable .ef90-repeat-field {
+ display:flex;flex-direction:column;gap:5px;min-width:145px;
+ color:var(--ef-muted);font-size:12px;font-weight:600;
+}
+body.ef-simple-ui #ef90-sortable .ef90-repeat-field select {
+ background:var(--ef-surface);color:var(--ef-ink);
+ border:1px solid var(--ef-line);border-radius:8px;
+ padding:7px 8px;min-height:37px;width:100%;font:inherit;
+}
+body.ef-simple-ui #ef90-sortable .ef90-repeat-field select:focus-visible {
+ outline:2px solid var(--ef-accent);outline-offset:2px;
+}
+@media screen and (max-width:780px) {
+ body.ef-simple-ui #ef90-sortable .ef90-agenda-toolbar {justify-content:flex-start;}
+ body.ef-simple-ui #ef90-sortable .ef90-repeat-field {width:100%;}
+}
