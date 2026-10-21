@@ -268,3 +268,113 @@ body.ef-simple-ui #ef90-sortable .ef90-repeat-field select:focus-visible {
  body.ef-simple-ui #ef90-sortable .ef90-agenda-toolbar {justify-content:flex-start;}
  body.ef-simple-ui #ef90-sortable .ef90-repeat-field {width:100%;}
 }
+
+/* Cards flexíveis: blocos de colunas independentes, largura integral opcional e altura ajustável.
+   Nenhum conteúdo é cortado: o ajuste de altura adiciona espaço inferior, não impõe max-height. */
+@media screen {
+  body.ef-simple-ui #tab-painel #ef90-sortable > .ef-home-pair {
+    display: grid !important;
+    grid-column: 1 / -1 !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    align-items: start !important;
+    gap: 14px !important;
+    min-width: 0;
+    width: 100%;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable > .ef-home-pair > .ef-home-lane {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    min-width: 0 !important;
+    align-items: stretch !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable > .ef-home-pair > .ef-home-lane:empty {
+    display: none !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-pair .ef-home-lane > [data-ef-home-card],
+  body.ef-simple-ui #tab-painel #ef90-sortable > [data-ef-card-rendered-width="full"] {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    position: relative !important;
+    padding-top: 47px !important;
+    padding-bottom: calc(18px + var(--ef-card-extra,0px)) !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable > [data-ef-card-rendered-width="full"] {
+    grid-column: 1 / -1 !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable.ef-home-organizing .ef-home-pair [data-ef-home-card],
+  body.ef-simple-ui #tab-painel #ef90-sortable.ef-home-organizing > [data-ef-card-rendered-width="full"] {
+    padding-top: 164px !important;
+    outline: 1px dashed var(--ef-accent);
+    outline-offset: -3px;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-card-tools {
+    gap: 6px !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-size-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-width: 100%;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-size-actions button {
+    min-height: 30px;
+    padding: 4px 9px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    color: var(--ef-ink);
+    background: var(--ef-soft);
+    border: 1px solid var(--ef-line);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-size-actions button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-drag-handle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 11px;
+    min-height: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    color: var(--ef-ink);
+    border: 1px dashed var(--ef-accent);
+    background: var(--ef-soft);
+    cursor: grab;
+    user-select: none;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable .ef-home-drag-handle:active {cursor: grabbing;}
+  body.ef-simple-ui #tab-painel #ef90-sortable :is(.ef-home-size-actions button,.ef-home-drag-handle):focus-visible {
+    outline: 2px solid var(--ef-accent);
+    outline-offset: 2px;
+  }
+}
+@media screen and (max-width: 920px) {
+  body.ef-simple-ui #tab-painel #ef90-sortable > .ef-home-pair {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+  body.ef-simple-ui #tab-painel #ef90-sortable.ef-home-organizing .ef-home-pair [data-ef-home-card],
+  body.ef-simple-ui #tab-painel #ef90-sortable.ef-home-organizing > [data-ef-card-rendered-width="full"] {
+    padding-top: 180px !important;
+  }
+}
+@media print {
+  body.ef-simple-ui #tab-painel #ef90-sortable [data-ef-home-card] {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    outline: none !important;
+  }
+}
