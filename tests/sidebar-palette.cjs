@@ -10,7 +10,8 @@ assert.match(js,/document\.body\.dataset\.efPalette=key/,'Palette selection must
 assert.match(js,/localStorage\.setItem\('ef90_paleta'/,'Palette selection must persist');
 assert.match(css,/@media screen and \(min-width: 1200px\)/,'Tint is limited to desktop');
 assert.match(css,/body\.ef-simple-ui\[data-ef-palette\] \.top-navbar/,'Sidebar must react to palette');
-assert.match(css,/var\(--ef-selected-color/,'Selected palette must affect sidebar background');
+assert.match(css,/var\(--ef-selected-dark/,'Selected palette must affect sidebar background');
+assert.match(css,/--ef-muted: #d1e3d9/,'Desktop sidebar labels need readable contrast');
 assert.match(css,/ef-dark-mode/,'Dark mode must be supported');
 assert.match(css,/@media print/,'Printing must remain unaffected');
 console.log('PASS: Desktop sidebar palette CSS integration contracts');
