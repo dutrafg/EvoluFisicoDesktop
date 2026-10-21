@@ -1,0 +1,33 @@
+/* Refinamentos solicitados: paletas fortes, comandos somente em organização, relatório de análise. */
+@media screen {
+ body.ef-simple-ui #tab-painel .ef-proto-toolbar{justify-content:flex-end!important;padding:9px 12px!important;margin:10px 0 14px!important}
+ body.ef-simple-ui #tab-painel .ef-proto-toolbar .ef-proto-left,body.ef-simple-ui #tab-painel .ef-proto-toolbar .ef-proto-status{display:none!important}
+ body.ef-simple-ui #tab-painel .ef-proto-toolbar .ef-proto-right{width:100%;justify-content:flex-end}
+ body.ef-simple-ui #tab-painel [data-ef-proto-card]:not(.ef-proto-editing) > .ef-proto-tools,
+ body.ef-simple-ui #tab-painel [data-ef-proto-card]:not(.ef-proto-editing) > .ef-proto-grip{display:none!important}
+ body.ef-simple-ui #tab-painel #efu-student-select{scroll-margin-top:120px}
+ .ef-colors-list{display:flex!important;flex-wrap:wrap!important;gap:9px!important}
+ .efu-report-overlay{position:fixed;z-index:2147482000;inset:0;background:rgba(12,26,38,.68);padding:20px;display:grid;place-items:center;overscroll-behavior:contain}
+ .efu-report-modal{width:min(920px,100%);max-height:min(92dvh,1000px);display:flex;flex-direction:column;border-radius:14px;background:var(--ef-card,#fff);box-shadow:0 24px 80px #0c1b2b50;border:1px solid var(--ef-line,#d5dfe5);overflow:hidden;color:var(--ef-ink,#1d3543)}
+ .efu-report-head,.efu-report-footer{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--ef-soft,#f1f5f8);flex-wrap:wrap}
+ .efu-report-head{border-bottom:1px solid var(--ef-line,#d9e2e8)}
+ .efu-report-head h2{font-size:20px;color:var(--ef-ink,#1b344a);margin:3px 0}.efu-report-head small{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;font-weight:750;color:var(--ef-muted,#53748b)}.efu-report-head p{margin:0;font-size:12px;color:var(--ef-muted,#63788a)}
+ .efu-report-head button,.efu-report-footer button{border:1px solid var(--ef-line,#bfcfdb);border-radius:8px;background:var(--ef-card,#fff);padding:10px 13px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--ef-ink,#1d3444)}
+ .efu-report-footer button.efu-report-primary{background:#1c5d89;color:#fff;border-color:#1c5d89}
+ .efu-report-content{padding:15px 20px;overflow-y:auto;overscroll-behavior:contain;display:grid;gap:12px;min-height:0}
+ .efu-report-hint,.efu-report-alert{font-size:12px;line-height:1.5;margin:0;color:var(--ef-muted,#52667a)}.efu-report-alert{padding:10px 12px;background:#fff2d7;border:1px solid #c99140;border-radius:7px;color:#624416}
+ .efu-report-label{display:grid;gap:6px;font-size:13px;color:var(--ef-ink,#263a4d);font-weight:700}
+ .efu-report-label input,.efu-report-label textarea{resize:vertical;width:100%;min-width:0;padding:11px 12px;border:1px solid var(--ef-line,#b5c6d0);border-radius:8px;background:var(--ef-card,#fff);color:var(--ef-ink,#183043);font:400 13px/1.5 system-ui,Arial,sans-serif}
+ .efu-report-label textarea{min-height:100px}.efu-report-label :focus-visible{outline:2px solid var(--ef-selected-color,#376a9a);outline-offset:1px}
+ .efu-report-alert-small{font-size:11px;color:var(--ef-muted,#64798b);margin-right:auto}
+ .ef-unified .efu-lab-evidence{border-left:3px solid var(--ef-selected-color,#2f6489);border-radius:8px;padding:10px 12px;background:var(--ef-soft,#f1f5f7);font-size:.75rem;line-height:1.5}
+ .ef-unified .efu-lab-evidence strong{display:block;margin-bottom:4px;color:var(--ef-ink,#1d3545)}
+ .ef-unified .efu-report-start{background:#235e86;color:white;border-color:#235e86}
+ html.ef-dark-mode .efu-report-modal{background:#202b3b;color:#f0f4fc;border-color:#3c506a}
+ html.ef-dark-mode .efu-report-head,html.ef-dark-mode .efu-report-footer{background:#182432}
+ html.ef-dark-mode .efu-report-hint{color:#b9c6d4}
+ html.ef-dark-mode .efu-report-alert{background:#3e3219;color:#ffe7b5;border-color:#a77b2d}
+ html.ef-dark-mode .efu-report-footer button:not(.efu-report-primary){background:#26394e;color:#f0f4fc;border-color:#51657a}
+ }
+@media(max-width:650px){.efu-report-overlay{padding:6px}.efu-report-modal{max-height:96dvh;border-radius:10px}.efu-report-head,.efu-report-footer{padding:10px 12px}.efu-report-content{padding:10px 12px}.efu-report-footer button{flex:1 1 145px}}
+@media print{.efu-report-overlay{display:none!important}}
