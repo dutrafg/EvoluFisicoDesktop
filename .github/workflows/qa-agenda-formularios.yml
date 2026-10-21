@@ -1,0 +1,40 @@
+name: QA Agenda e Formulários
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/EvoluFisico.Desktop/wwwroot/**'
+      - 'tests/windows-agenda-home-summary.cjs'
+      - 'tests/windows-home-layout.cjs'
+      - 'tests/windows-agenda-recorrencia.cjs'
+      - '.github/workflows/qa-agenda-formularios.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/06-dashboard.js
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/32-forms-clean.js
+      - name: Validate frontend resources
+        run: python scripts/verify_frontend.py
+      - name: Test agenda metrics and responsive layout
+        run: node tests/windows-agenda-home-summary.cjs
+      - name: Verify existing card layout
+        run: node tests/windows-home-layout.cjs
+      - name: Verify recurring appointments and attendance
+        run: node tests/windows-agenda-recorrencia.cjs
+      - name: Verify card resizing
+        run: node tests/windows-card-resize.cjs
+      - name: Verify form integration
+        run: node tests/forms-windows-integration.cjs
