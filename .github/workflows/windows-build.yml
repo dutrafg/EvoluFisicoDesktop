@@ -69,6 +69,9 @@ jobs:
       - name: Test recurring agenda, attendance indicators and safe CSV export
         run: node tests/windows-agenda-recorrencia.cjs
 
+      - name: Verify per-card width, height, drag handles and saved layout
+        run: node tests/windows-card-resize.cjs
+
       - name: Validate SQLite-only frontend syntax
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
