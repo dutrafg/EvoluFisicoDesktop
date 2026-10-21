@@ -109,6 +109,7 @@ function card(a){
     ''+
     '<button class="btn btn-success btn-sm" onclick="imprimirAvaliacaoIndividualPDF(\''+jsEsc(a.id)+'\')">🖨️ PDF</button>'+
     '<button class="btn btn-secondary btn-sm" onclick="abrirModalDetalhes(\''+jsEsc(a.id)+'\')">🔍 Detalhes</button>'+
+    '<button class="btn btn-secondary btn-sm" data-ef-nova-avaliacao="1" onclick="novaAvaliacaoParaAluno(\''+jsEsc(a.id)+'\')" title="Nova avaliação com apenas dados cadastrais">➕ Nova avaliação</button>'+ 
     '<button class="btn btn-warning btn-sm" onclick="editarAvaliacao(\''+jsEsc(a.id)+'\')">✏️</button>'+
     '<button class="btn btn-danger btn-sm" onclick="excluirAvaliacao(\''+jsEsc(a.id)+'\')">🗑️</button></div>';
   return el;

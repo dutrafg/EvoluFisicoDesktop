@@ -63,6 +63,9 @@ jobs:
       - name: Validate desktop 1.0 analysis migration and stability gates
         run: node tests/windows-stable-1-0.cjs
 
+      - name: Validate Evolufisico2 sync (adherence, history and perimetry)
+        run: node tests/windows-sync-evolufisico2-1-0.cjs
+
       - name: Validate legacy desktop features and preregistration
         run: node tests/windows-release-911-beta4.cjs
 
