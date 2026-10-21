@@ -60,7 +60,10 @@ jobs:
       - name: Validate encrypted storage, privacy and compact desktop layout
         run: node tests/windows-privacy-layout.cjs
 
-      - name: Validate 9.1.1.beta.4 theme, movable analysis cards and preregistration
+      - name: Validate desktop 1.0 analysis migration and stability gates
+        run: node tests/windows-stable-1-0.cjs
+
+      - name: Validate legacy desktop features and preregistration
         run: node tests/windows-release-911-beta4.cjs
 
       - name: Test home card reordering, full-width dashboard and header clarity
@@ -128,14 +131,14 @@ jobs:
             if (!(Test-Path (Join-Path $publish $file))) { throw "Missing published file: $file" }
           }
           $manifest = Get-Content (Join-Path $publish 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
-          $expected = 'desktop-v9.1-beta-' + '${{ github.sha }}'.Substring(0,7)
+          $expected = 'desktop-v1.0-' + '${{ github.sha }}'.Substring(0,7)
           if ($manifest.tag -ne $expected) { throw "Version manifest mismatch: $($manifest.tag) vs $expected" }
           Write-Host 'Portable Windows application validated for packaging'
 
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-9.1-Windows-Portable
+          name: EvoluFisicoDesktop-1.0-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -172,7 +175,7 @@ jobs:
             if (!(Test-Path (Join-Path $target $file))) { throw "Installed file missing: $file" }
           }
           $installedVersion = Get-Content (Join-Path $target 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
-          $expectedVersion = 'desktop-v9.1-beta-' + '${{ github.sha }}'.Substring(0,7)
+          $expectedVersion = 'desktop-v1.0-' + '${{ github.sha }}'.Substring(0,7)
           if ($installedVersion.tag -ne $expectedVersion) { throw 'Installed version does not match release version' }
           $installedIcon = Join-Path $target 'EvoluFisico.ico'
           if (!(Test-Path $installedIcon)) { throw 'Installed application icon missing' }
@@ -196,20 +199,20 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-9.1.1.beta.4-Windows-Setup
+          name: EvoluFisicoDesktop-1.0-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14
 
-      - name: Publish downloadable beta release
+      - name: Publish stable 1.0 Windows release
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = 'desktop-v9.1-beta-' + '${{ github.sha }}'.Substring(0,7)
+          $tag = 'desktop-v1.0-' + '${{ github.sha }}'.Substring(0,7)
           gh release view $tag --repo ${{ github.repository }} *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 9.1.1.beta.4 (Windows)' --notes 'Versao de testes para Windows x64. Instalador e pacote portatil. Faca backup antes de usar dados reais.' --prerelease --latest=false
+            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 1.0 estável (Windows)' --notes 'Versao 1.0 estavel Windows x64 com Analises EF68/EF70/EF77. Recomendado backup antes de atualizar.' --latest
             if ($LASTEXITCODE -ne 0) { throw 'Could not create GitHub release' }
           }
           $installer = Get-ChildItem installer-output -Filter '*.exe' -File | Select-Object -First 1
