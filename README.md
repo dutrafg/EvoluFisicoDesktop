@@ -6,6 +6,9 @@ Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HT
 
 - **Início:** agenda rápida, calendário, compromissos do dia/semana, retornos atrasados, pré-cadastros e organização de cartões; resumo com acesso às Análises.
 - **Avaliações:** cadastros, fichas, medidas, dobras, bioimpedância, histórico e impressão/PDF. Alunos homônimos são separados por identificador.
+  - **Nova avaliação pelo histórico:** reaproveita somente identificação, contato, sexo, idade, altura e dados profissionais, nunca peso, dobras, perimetria, fotos ou parecer anterior; mantém o ID permanente do aluno.
+  - **Aderência para iniciantes:** “Nunca treinou” e “Nunca fez dieta” são opções não aplicáveis, sem redução indevida do score; se ambos os planos não começaram, exibe “Não avaliável”, inclusive no relatório.
+  - **Perimetria:** soma salva como valor numérico (ou nulo quando ausente), sem transformar em texto.
 - **Evolução:** acompanhamento longitudinal, comparações entre datas e indicadores derivados com ressalvas de metodologia.
 - **Calculadora/Laboratório EF77:** estimativas antropométricas e energéticas, índices, verificação de valores fora do domínio e diferenças entre métodos.
 - **Formulários:** anamneses por níveis e modelos personalizáveis, com vínculo ao aluno e persistência protegida.
@@ -29,6 +32,7 @@ Requer Windows x64, .NET 8 SDK, Microsoft Edge WebView2 Runtime e Inno Setup 6.
 
 ```powershell
 node tests/windows-stable-1-0.cjs
+node tests/windows-sync-evolufisico2-1-0.cjs
 node tests/desktop-integration.cjs
 node tests/windows-release-911-beta4.cjs
 node tests/windows-billing-navigation-91.cjs
