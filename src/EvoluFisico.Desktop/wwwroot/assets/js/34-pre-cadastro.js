@@ -84,10 +84,17 @@ function setup(){
  refresh();
 }
 window.ef91RefreshPreCadastros=refresh;
-window.ef91FinishPreCadastro=async function(){
- if(!activeId)return;
+window.ef91FinishPreCadastro=async function(registro){
+ if(!activeId||!registro)return;
  const id=activeId;
- try{const items=await list();await persist(items.filter(x=>x.id!==id));activeId=null;refresh();}
+ try{
+  const items=await list();
+  const current=items.find(x=>x.id===id);
+  if(!current)return;
+  const comparable=s=>String(s||'').trim().toLocaleLowerCase('pt-BR');
+  // Não conclui um pré-cadastro quando o profissional salva outro paciente.
+  if(comparable(current.values.email)!==comparable(registro.email)||comparable(current.values.nome)!==comparable(registro.nome))return;
+  await persist(items.filter(x=>x.id!==id));activeId=null;refresh();}
  catch(e){console.warn('Avaliação salva, mas pré-cadastro não foi baixado da fila:',e)}
 };
 window.EFPreCadastro=Object.freeze({start:window.ef91NovoCadastro,save,refresh,resume,remove,list,getActiveId:()=>activeId});
