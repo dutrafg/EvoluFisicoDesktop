@@ -110,7 +110,7 @@ check('Version is consistent in UI, native exe, installer and build metadata',()
   assert.equal(stored.get('ef-pre-registration-v1').length,1);
   assert.equal(stored.get('ef-pre-registration-v1')[0].values.nome,'Cliente Atualizado');
  });
- await window.ef91FinishPreCadastro();
+ await window.ef91FinishPreCadastro({nome:'Cliente Atualizado',email:'teste@example.com'});
  check('A completed assessment removes only the matching preregistration',()=>{
   assert.equal(stored.get('ef-pre-registration-v1').length,0);
   assert.equal(window.EFPreCadastro.getActiveId(),null);
