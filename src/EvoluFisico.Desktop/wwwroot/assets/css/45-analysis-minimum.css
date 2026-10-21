@@ -1,0 +1,9 @@
+
+.ef-unified .efu-analysis-blocked{padding:18px 19px;border-radius:13px;border:2px solid #d38a21;background:#fff8e9;color:#51370f;margin:10px 0 16px;box-shadow:0 1px 4px #33200813}
+.ef-unified .efu-analysis-blocked .efu-block-title{display:flex;gap:9px;align-items:center;margin:0 0 7px}
+.ef-unified .efu-analysis-blocked h4{margin:0;font-size:1rem;font-weight:800;color:inherit}
+.ef-unified .efu-analysis-blocked p{font-size:.87rem;line-height:1.58;margin:9px 0;color:inherit}
+.ef-unified .efu-links .efu-report-start:disabled{opacity:.52;cursor:not-allowed;filter:grayscale(.15)}
+html.ef-dark-mode .ef-unified .efu-analysis-blocked,body.dark-mode .ef-unified .efu-analysis-blocked{background:#382915;border-color:#e4ab51;color:#fff1d9}
+@media(max-width:540px){.ef-unified .efu-analysis-blocked{padding:14px 12px}.ef-unified .efu-analysis-blocked p{font-size:.8rem}}
+@media print{.ef-unified .efu-analysis-blocked{display:none!important}}
