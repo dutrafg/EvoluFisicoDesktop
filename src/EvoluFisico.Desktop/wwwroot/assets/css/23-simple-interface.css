@@ -1417,10 +1417,10 @@ body.ef-simple-ui #ef-home-analysis .ef-home-compact .ef55-card{min-width:0;widt
 body.ef-simple-ui #tab-btn-diagnostics,body.ef-simple-ui #tab-btn-settings{display:flex!important;align-items:center;gap:12px}
 /* Paletas: usa a cor escolhida nos elementos de destaque sem alterar cores semânticas de alertas. */
 body.ef-simple-ui{--ef-accent:var(--ef-selected-dark,#086849)!important;--ef-fir-2:var(--ef-selected-dark,#086849)!important}
-html.ef-dark-mode body.ef-simple-ui{--ef-accent:var(--ef-selected-color,#75d7a9)!important;--ef-fir-2:var(--ef-selected-color,#75d7a9)!important}
+html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode{--ef-accent:var(--ef-selected-darkmode-color,#75d7a9)!important;--ef-fir-2:var(--ef-selected-darkmode-color,#75d7a9)!important}
 body.ef-simple-ui .nav-tab-btn.active{border-color:var(--ef-selected-color)!important}
 body.ef-simple-ui .ef90-cal-day.today,body.ef-simple-ui .ef90-cal-day.selected{outline-color:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important}
 body.ef-simple-ui .ef90-kicker,body.ef-simple-ui .ef90-hero .ef90-kicker{color:var(--ef-selected-color)!important}
-body.ef-simple-ui #ef55-painel .btn-primary,body.ef-simple-ui #tab-settings .btn-primary{background:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important;color:#0c241d!important}
+body.ef-simple-ui #ef55-painel .btn-primary,body.ef-simple-ui #tab-settings .btn-primary{background:var(--ef-selected-color)!important;border-color:var(--ef-selected-color)!important;color:var(--ef-selected-on-color,#0c241d)!important}
 body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-diagnostics::before,
 body.ef-simple-ui .top-navbar > .nav-tabs > #tab-btn-settings::before{display:none!important;content:none!important}
