@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/EvoluFisico.Desktop/wwwroot/**'
       - 'tests/windows-agenda-home-summary.cjs'
+      - 'tests/windows-release-911-beta4.cjs'
       - 'tests/windows-home-layout.cjs'
       - 'tests/windows-agenda-recorrencia.cjs'
       - '.github/workflows/qa-agenda-formularios.yml'
@@ -25,9 +26,13 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/06-dashboard.js
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/26-simple-interface.js
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/34-pre-cadastro.js
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/32-forms-clean.js
       - name: Validate frontend resources
         run: python scripts/verify_frontend.py
+      - name: Validate release 9.1.1.beta.4 theme, movable cards and preregistration
+        run: node tests/windows-release-911-beta4.cjs
       - name: Test agenda metrics and responsive layout
         run: node tests/windows-agenda-home-summary.cjs
       - name: Verify existing card layout
