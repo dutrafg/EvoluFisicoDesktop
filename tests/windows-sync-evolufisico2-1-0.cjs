@@ -29,7 +29,7 @@ check('Calculated status and PDF never produce NaN/0 as missing adherence',()=>{
 });
 check('Both classic and incremental history display the action once per card',()=>{
  assert.match(runtime,/data-ef-nova-avaliacao="1" onclick="novaAvaliacaoParaAluno/);
- assert.match(incremental,/data-ef-nova-avaliacao=\\"1\\" onclick=\\"novaAvaliacaoParaAluno/);
+ assert.match(incremental,/data-ef-nova-avaliacao="1" onclick="novaAvaliacaoParaAluno/);
  assert.equal((runtime.match(/data-ef-nova-avaliacao="1"/g)||[]).length,1);
  assert.equal((incremental.match(/data-ef-nova-avaliacao=/g)||[]).length,1);
 });
