@@ -420,3 +420,23 @@ body.ef-simple-ui #ef90-sortable .ef90-repeat-field select:focus-visible {
     grid-column:1 / -1;width:100%;max-width:none;justify-self:stretch;
   }
 }
+
+/* Os cards de análise são seções recolhíveis dentro de cards movimentáveis.
+   A barra de ferramentas fica fora do <details> e é visível com conteúdo fechado. */
+@media screen {
+  body.ef-simple-ui #ef90-sortable .ef-home-analysis-card {
+    position:relative;overflow:visible;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-analysis-card > details.ef-simple-fold {
+    margin:0;min-width:0;border:0;box-shadow:none;background:transparent;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-analysis-card > details.ef-simple-fold > summary {
+    padding:4px 8px 10px 0;min-height:35px;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-analysis-card > details.ef-simple-fold > .ef-simple-fold-content {
+    padding:0;min-width:0;
+  }
+  body.ef-simple-ui #ef90-sortable .ef-home-analysis-card > .ef-home-card-tools {
+    display:flex !important;visibility:visible !important;
+  }
+}
