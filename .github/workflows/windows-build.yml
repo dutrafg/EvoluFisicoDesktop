@@ -63,6 +63,9 @@ jobs:
       - name: Test home card reordering, full-width dashboard and header clarity
         run: node tests/windows-home-layout.cjs
 
+      - name: Validate return interval and bounded performance caches
+        run: node tests/windows-performance-reassessment.cjs
+
       - name: Validate SQLite-only frontend syntax
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
