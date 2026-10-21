@@ -57,8 +57,30 @@ check('Version is consistent in UI, native exe, installer and build metadata',()
   'src/EvoluFisico.Desktop/MainWindow.xaml',
   'src/EvoluFisico.Desktop/MainWindow.xaml.cs',
   'src/EvoluFisico.Desktop/wwwroot/assets/js/26-simple-interface.js'
- ])assert.ok(fs.readFileSync(file,'utf8').includes('9.1.1.beta.4'),file);
- assert.ok(html.includes('v9.1.1.beta.4'));
+ ])assert.ok(fs.readFileSync(file,'utf8').includes('9.1.1.beta.4.1'),file);
+ assert.ok(html.includes('v9.1.1.beta.4.1'));
+});
+check('Intense colors meet WCAG AA with white foreground',()=>{
+ const start=js.indexOf('const COLORS='),end=js.indexOf(';',start);
+ const all=new Function(js.slice(start,end+1)+'return COLORS;')();
+ const luminance=hex=>{
+  const parts=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
+  return parts.reduce((sum,v,i)=>sum+(v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4))*[.2126,.7152,.0722][i],0);
+ };
+ for(const key of Object.keys(all).filter(k=>k.endsWith('-escuro'))){
+  assert.ok(1.05/(luminance(all[key][0])+.05)>=4.5,key);
+ }
+});
+check('Sidebar navigation on dark light-mode sidebar uses high-contrast labels',()=>{
+ assert.ok(palette.includes('color: #edf8f3 !important'));
+ assert.ok(palette.includes('color: #fff !important'));
+ assert.match(palette,/\.nav-tab-btn\.active/);
+ assert.ok(palette.includes('75%, #13251d'));
+});
+check('Selected intensive colors provide a light accent in dark mode',()=>{
+ assert.ok(js.includes('DARK_MODE_COLORS'));
+ assert.ok(js.includes('--ef-selected-darkmode-accent'));
+ assert.ok(base.includes('--ef-selected-darkmode-accent'));
 });
 (async()=>{
  const stored=new Map();
