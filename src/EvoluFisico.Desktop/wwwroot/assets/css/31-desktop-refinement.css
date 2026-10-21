@@ -440,3 +440,55 @@ body.ef-simple-ui #ef90-sortable .ef90-repeat-field select:focus-visible {
     display:flex !important;visibility:visible !important;
   }
 }
+
+/* Pré-cadastro no Início e na identificação da avaliação — 9.1.1.beta.4 */
+@media screen {
+  body.ef-simple-ui #ef91-prereg-list:not([hidden]) {
+    width:100%;display:block;min-width:0;box-sizing:border-box;
+    background:var(--ef-surface);border:1px solid var(--ef-line);
+    border-radius:12px;padding:14px 16px;margin:0 0 2px;
+  }
+  body.ef-simple-ui #ef91-prereg-list h3 {
+    font-size:15px;font-weight:750;color:var(--ef-ink);margin:0 0 3px;
+  }
+  body.ef-simple-ui #ef91-prereg-list p {
+    margin:0 0 11px;color:var(--ef-muted);font-size:12px;line-height:1.45;
+  }
+  body.ef-simple-ui #ef91-prereg-list .ef91-prereg-rows {display:grid;gap:8px;}
+  body.ef-simple-ui #ef91-prereg-list .ef91-prereg-row {
+    display:flex;gap:9px;align-items:center;flex-wrap:wrap;
+    min-width:0;padding:10px 12px;border-radius:9px;border:1px solid var(--ef-line);
+  }
+  body.ef-simple-ui #ef91-prereg-list .ef91-prereg-name {
+    flex:1 1 160px;min-width:0;overflow-wrap:anywhere;font-weight:650;color:var(--ef-ink);
+  }
+  body.ef-simple-ui #ef91-prereg-list button {
+    appearance:none;background:var(--ef-soft);color:var(--ef-ink);
+    border:1px solid var(--ef-line);border-radius:8px;
+    min-height:35px;padding:7px 11px;cursor:pointer;font:inherit;font-size:12px;font-weight:650;
+  }
+  body.ef-simple-ui #ef91-prereg-list button:hover {border-color:var(--ef-accent);}
+  body.ef-simple-ui #ef91-prereg-list .ef91-prereg-delete {color:var(--ef-danger,#ae3737);}
+  body.ef-simple-ui .ef91-prereg-toolbar {
+    display:flex;flex-wrap:wrap;align-items:center;gap:12px;
+    padding:12px 14px;margin:4px 0 20px;border:1px solid var(--ef-line);
+    border-radius:10px;background:var(--ef-soft);
+  }
+  body.ef-simple-ui .ef91-prereg-toolbar > button {
+    flex:0 0 auto;min-height:40px;border-radius:8px;font-weight:700;
+  }
+  body.ef-simple-ui .ef91-prereg-toolbar > span {
+    color:var(--ef-muted);font-size:12px;line-height:1.5;flex:1 1 210px;
+  }
+  body.ef-simple-ui #ef91-prereg-list button:focus-visible,
+  body.ef-simple-ui #ef91-prereg-save:focus-visible {
+    outline:2px solid var(--ef-accent);outline-offset:2px;
+  }
+}
+@media screen and (max-width:520px) {
+  body.ef-simple-ui #ef91-prereg-list .ef91-prereg-row button {flex:1 1 auto;}
+  body.ef-simple-ui .ef91-prereg-toolbar > button {width:100%;flex:1 1 100%;}
+}
+@media print {
+  #ef91-prereg-list,.ef91-prereg-toolbar {display:none!important;}
+}
