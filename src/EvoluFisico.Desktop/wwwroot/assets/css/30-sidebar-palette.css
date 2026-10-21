@@ -18,6 +18,25 @@
     border-color: color-mix(in srgb, var(--ef-selected-dark, #086849) 28%, transparent) !important;
     box-shadow: inset 3px 0 var(--ef-selected-dark, #086849) !important;
   }
+
+  /* As cores da navegação continuam legíveis sobre a nova barra lateral escura. */
+  body.ef-simple-ui[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn {
+    color: #edf8f3 !important;
+  }
+  body.ef-simple-ui[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn:hover {
+    background: rgba(255,255,255,.11) !important;
+    border-color: rgba(255,255,255,.22) !important;
+    color: #fff !important;
+  }
+  body.ef-simple-ui[data-ef-palette] .top-navbar > .nav-tabs > .nav-tab-btn.active {
+    background: rgba(255,255,255,.17) !important;
+    border-color: rgba(255,255,255,.24) !important;
+    color: #fff !important;
+    box-shadow: inset 3px 0 rgba(255,255,255,.95) !important;
+  }
+  body.ef-simple-ui[data-ef-palette] .top-navbar > .nav-tabs::before {
+    color: #d5e8dc !important;
+  }
 }
 @media print {
   body.ef-simple-ui .top-navbar { background: transparent !important; }
