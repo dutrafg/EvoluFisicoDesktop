@@ -42,6 +42,7 @@ check('Height remains within safe bounds',()=>{
 });
 check('Width restores to single column and reset removes redundant data',()=>{
  assert.equal(helpers.changeHomeSize('agenda','wide'),true);
+ assert.equal(helpers.changeHomeSize('agenda','larger'),true);
  assert.equal(helpers.changeHomeSize('agenda','reset'),true);
  assert.deepEqual(helpers.getHomeSize('agenda'),{width:'half',height:0});
  assert.equal(helpers.readHomeSizes().agenda,undefined);
