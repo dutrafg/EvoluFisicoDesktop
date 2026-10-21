@@ -28,6 +28,17 @@ check('Analyses are a distinct workspace with a brain icon and contextual help',
  assert.ok(page.includes('tab-btn-ef-forms'));
  assert.ok(page.includes('window.EFSimpleUI?.arrangeNavigation?.()'));
 });
+check('Análises keeps only the brain SVG; pseudo-icon square is suppressed',()=>{
+ const baseCss=read(root+'assets/css/25-ficha-viva.css');
+ const override=read(root+'assets/css/23-simple-interface.css');
+ const page=read(root+'assets/js/43-analysis-page.js');
+ assert.match(baseCss,/\.nav-tab-btn::before\s*\{[\s\S]*?content:\s*''/);
+ assert.ok(!baseCss.includes('#tab-btn-analises { --ef-ico:'),'No mask image is defined for Análises');
+ assert.match(override,/#tab-btn-analises::before\s*\{display:none!important;content:none!important\}/);
+ assert.ok(ui.includes("'tab-btn-analises':'<svg"),'The correct brain icon remains in JavaScript');
+ assert.ok(ui.includes('class="ef-local-nav-icon"'),'Only the inline SVG should be rendered');
+ assert.ok(page.includes("b.id=BTN"),'Análises navigation button remains functional');
+});
 check('Clinical confidence safeguards follow source 1.0 thresholds',()=>{
  const s=read(root+'assets/js/40-unified-safety.js'),a=read(root+'assets/js/44-unified-analysis.js');
  for(const rule of ['uniqueDates.length>=3&&days>=21','Math.min(confidence,40)','Math.min(confidence,45)','lab?.latest?.delta>=8'])assert.ok(s.includes(rule),rule);
