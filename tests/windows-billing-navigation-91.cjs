@@ -49,6 +49,6 @@ check('Navegação faz segunda conferência de posição',()=>assert(nav.include
 check('Sete módulos no menu incluindo Formulários/Cobranças',()=>{assert(nav.includes("'tab-ef-forms'"));assert(nav.includes("'tab-cobranca'"));assert(nav.includes("'tab-settings'"))});
 check('Navegação compacta usa 4 colunas e duas linhas',()=>{assert(css.includes('grid-template-columns: repeat(4, minmax(0, 1fr)) !important;'));assert(css.includes('grid-auto-rows: 54px;'));assert(css.includes('padding-bottom: calc(164px + env(safe-area-inset-bottom))'))});
 check('Alertas não cobrem a barra inferior',()=>assert(css.includes('#ef55-toasts { bottom: calc(150px + env(safe-area-inset-bottom))')));
-check('Versão Windows alinhada à correção 9.1-beta',()=>assert(nav.includes("version.textContent='9.1.0-beta.3'")&&html.includes('EvoluFísico v9.1-beta')));
+check('Versão Windows alinhada à correção 9.1-beta',()=>assert(nav.includes("version.textContent='9.1.0-beta.4'")&&html.includes('EvoluFísico v9.1-beta')));
 check('Recursos da versão 9.1 e novo Início permanecem no cache offline',()=>{assert(sw.includes('./assets/js/32-forms-clean.js'));assert(sw.includes('./assets/js/06-dashboard.js'));assert(sw.includes('./assets/css/31-desktop-refinement.css'));assert.match(sw,/const CACHE_NAME = 'evolufisico-desktop-[^']+';/)});
 console.log('PASS '+count+' verificações da correção 9.1-beta de Cobranças e layout Windows.');
