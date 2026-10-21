@@ -5,6 +5,9 @@ on:
     paths:
       - 'src/EvoluFisico.Desktop/wwwroot/**'
       - 'tests/windows-agenda-home-summary.cjs'
+      - 'tests/windows-palette-beta-4-1.cjs'
+      - 'installer/EvoluFisico.iss'
+      - 'scripts/build-windows.ps1'
       - 'tests/windows-home-layout.cjs'
       - 'tests/windows-agenda-recorrencia.cjs'
       - '.github/workflows/qa-agenda-formularios.yml'
@@ -28,6 +31,8 @@ jobs:
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/32-forms-clean.js
       - name: Validate frontend resources
         run: python scripts/verify_frontend.py
+      - name: Test dark palette, sidebar and beta.4.1 version
+        run: node tests/windows-palette-beta-4-1.cjs
       - name: Test agenda metrics and responsive layout
         run: node tests/windows-agenda-home-summary.cjs
       - name: Verify existing card layout
