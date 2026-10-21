@@ -93,7 +93,7 @@ const grid=new Node('grid');grid.clientWidth=1200;
 const cards=ids.slice(0,4).map(id=>{const node=new Node('card');node.dataset.efHomeCard=id;node.scrollHeight=id==='calendario'?770:220;node.offsetHeight=node.scrollHeight;grid.appendChild(node);return node});
 const document={createElement:type=>new Node(type),createDocumentFragment:()=>new Node('fragment')};
 const layout=new Function('$','document','visibleHomeOrder','readHomeSizes','getHomeSize','chooseHomeLanes',
- layoutCode+'\nreturn layoutHomeColumns;'
+ 'var homeLastGrid=null,homeLastSignature=\"\";\n'+layoutCode+'\nreturn layoutHomeColumns;'
 )(selector=>selector==='#ef90-sortable'?grid:null,document,helpers.visibleHomeOrder,helpers.readHomeSizes,helpers.getHomeSize,helpers.chooseHomeLanes);
 check('A wide card occupies whole page and others remain in compact independent stacks',()=>{
  layout();
