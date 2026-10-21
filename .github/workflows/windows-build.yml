@@ -66,6 +66,9 @@ jobs:
       - name: Validate return interval and bounded performance caches
         run: node tests/windows-performance-reassessment.cjs
 
+      - name: Test recurring agenda, attendance indicators and safe CSV export
+        run: node tests/windows-agenda-recorrencia.cjs
+
       - name: Validate SQLite-only frontend syntax
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
