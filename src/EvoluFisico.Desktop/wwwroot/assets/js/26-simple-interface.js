@@ -116,10 +116,42 @@ const NAV_ICONS={
  'tab-btn-ef-forms':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg>',
  'tab-btn-settings':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="var(--ef-surface, #fff)"/><circle cx="15" cy="17" r="2.4" fill="var(--ef-surface, #fff)"/></svg>'
 };
-const COLORS={verde:['#75d7a9','#086849'],azul:['#73aef9','#235cbd'],roxo:['#ad95ff','#6244ba'],laranja:['#f9b276','#a85517'],rosa:['#f3a5c5','#a53c71'],'verde-escuro':['#166b50','#085139'],'azul-escuro':['#245b9b','#174178'],'roxo-escuro':['#65479c','#4b317e'],'laranja-escuro':['#a64c22','#7d3616'],'rosa-escuro':['#a13b68','#79274d']};
-const DARK_MODE_COLORS={'verde-escuro':'#86e5b2','azul-escuro':'#99c5ff','roxo-escuro':'#cdb5ff','laranja-escuro':'#ffd3a0','rosa-escuro':'#ffbad6'};
-function applyColor(v){const key=Object.prototype.hasOwnProperty.call(COLORS,v)?v:'verde';const [light,dark]=COLORS[key];document.documentElement.style.setProperty('--ef-selected-text',key.endsWith('-escuro')?'#fff':'#0c241d');document.documentElement.style.setProperty('--ef-selected-darkmode-accent',DARK_MODE_COLORS[key]||COLORS[key][0]);document.documentElement.style.setProperty('--ef-selected-color',light);document.documentElement.style.setProperty('--ef-selected-dark',dark);document.documentElement.dataset.efPalette=key;document.body.dataset.efPalette=key;document.querySelectorAll('[data-ef-color]').forEach(b=>{const on=b.dataset.efColor===key;b.setAttribute('aria-pressed',String(on));b.classList.toggle('selected',on)})}
-function installColors(){const area=$('ef-setting-appearance');if(!area)return;const field=document.createElement('div');field.className='ef-colors-field';field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha entre cinco tons originais e cinco opções mais escuras. A preferência fica salva neste navegador.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>'<button type="button" data-ef-color="'+key+'" aria-label="Cor '+key+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i></i><span>'+key.split('-').map(part=>part.charAt(0).toUpperCase()+part.slice(1)).join(' ')+'</span></button>').join('')+'</div>';area.append(field);field.addEventListener('click',e=>{const b=e.target.closest('[data-ef-color]');if(!b)return;try{localStorage.setItem('ef90_paleta',b.dataset.efColor)}catch(_){}applyColor(b.dataset.efColor)});let saved='verde';try{saved=localStorage.getItem('ef90_paleta')||saved}catch(_){}applyColor(saved)}
+const COLORS={
+ verde:['#75d7a9','#086849'],azul:['#73aef9','#235cbd'],roxo:['#ad95ff','#6244ba'],
+ laranja:['#f9b276','#a85517'],rosa:['#f3a5c5','#a53c71'],
+ 'azul-marinho':['#233f68','#85a9e4'],petroleo:['#145c68','#71c1c9'],esmeralda:['#17624e','#76c8a3'],
+ indigo:['#343f79','#9faaf0'],ameixa:['#653a65','#d2a4d0']
+};
+const LEGACY_COLORS={
+ 'verde-escuro':'esmeralda','azul-escuro':'azul-marinho',
+ 'roxo-escuro':'indigo','laranja-escuro':'petroleo','rosa-escuro':'ameixa',
+ terracota:'petroleo',vinho:'ameixa'
+};
+const INTENSE_COLORS=new Set(['azul-marinho','petroleo','esmeralda','indigo','ameixa']);
+function applyColor(v){
+ const normalized=LEGACY_COLORS[v]||v;
+ const key=Object.prototype.hasOwnProperty.call(COLORS,normalized)?normalized:'verde';
+ const [main,secondary]=COLORS[key],intense=INTENSE_COLORS.has(key);
+ const root=document.documentElement;
+ root.style.setProperty('--ef-selected-text',intense?'#fff':'#0c241d');
+ root.style.setProperty('--ef-selected-darkmode-accent',intense?secondary:main);
+ root.style.setProperty('--ef-selected-color',main);
+ root.style.setProperty('--ef-selected-dark',intense?main:secondary);
+ root.dataset.efPalette=key;document.body.dataset.efPalette=key;
+ document.querySelectorAll('[data-ef-color]').forEach(b=>{
+  const active=b.dataset.efColor===key;b.setAttribute('aria-pressed',String(active));b.classList.toggle('selected',active);
+ });
+}
+function installColors(){
+ const area=$('ef-setting-appearance');if(!area)return;
+ const field=document.createElement('div');field.className='ef-colors-field';
+ field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha entre cinco cores originais e cinco tons sóbrios. As escolhas anteriores serão preservadas e compatibilizadas.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>'<button type="button" data-ef-color="'+key+'" aria-label="Cor '+key.split('-').join(' ')+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i></i><span>'+key.split('-').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ')+'</span></button>').join('')+'</div>';
+ area.append(field);
+ field.addEventListener('click',e=>{const b=e.target.closest('[data-ef-color]');if(!b)return;try{localStorage.setItem('ef90_paleta',b.dataset.efColor)}catch(_){}applyColor(b.dataset.efColor)});
+ let saved='verde';try{saved=localStorage.getItem('ef90_paleta')||saved}catch(_){}
+ if(LEGACY_COLORS[saved]){saved=LEGACY_COLORS[saved];try{localStorage.setItem('ef90_paleta',saved)}catch(_){}}
+ applyColor(saved);
+}
 
 function mount(){
  document.body.classList.add('ef-simple-ui');
