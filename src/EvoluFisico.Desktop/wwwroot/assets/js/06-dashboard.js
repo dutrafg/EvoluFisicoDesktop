@@ -239,6 +239,7 @@ return '<div class="ef90-alert-strip" role="status"><span class="ef90-alert-icon
 
 /* Organização dos cards: preferências de layout apenas, sem dados de pacientes. */
 var HOME_LAYOUT_KEY='ef90_home_cards_order_v1';
+var HOME_SIZE_KEY='ef90_home_card_sizes_v1';
 var HOME_CARDS=['agenda','calendario','tarefas','retornos','insights','detalhes'];
 var homeOrganizing=false;
 
@@ -250,6 +251,39 @@ function readHomeOrder(){
  HOME_CARDS.forEach(function(id){if(unique.indexOf(id)<0)unique.push(id)});
  return unique;
 }
+function readHomeSizes(){
+ var raw;try{raw=JSON.parse(storageGet(HOME_SIZE_KEY,'{}'))}catch(e){raw=null}
+ var sizes={};
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))return sizes;
+ HOME_CARDS.forEach(function(id){
+  if(!Object.prototype.hasOwnProperty.call(raw,id))return;
+  var item=raw[id];if(!item||typeof item!=='object'||Array.isArray(item))return;
+  var width=item.width==='full'?'full':'half';
+  var height=[0,80,160,240].indexOf(item.height)>=0?item.height:0;
+  if(width==='full'||height!==0)sizes[id]={width:width,height:height};
+ });
+ return sizes;
+}
+function getHomeSize(id,sizes){
+ var item=(sizes||readHomeSizes())[id]||{};
+ return {width:item.width==='full'?'full':'half',height:[0,80,160,240].indexOf(item.height)>=0?item.height:0};
+}
+function changeHomeSize(id,kind){
+ if(HOME_CARDS.indexOf(id)<0)return false;
+ var sizes=readHomeSizes(),before=getHomeSize(id,sizes),next={width:before.width,height:before.height};
+ if(kind==='wide')next.width=before.width==='full'?'half':'full';
+ else if(kind==='larger')next.height=Math.min(240,before.height+80);
+ else if(kind==='smaller')next.height=Math.max(0,before.height-80);
+ else if(kind==='reset')next={width:'half',height:0};
+ else return false;
+ if(before.width===next.width&&before.height===next.height)return false;
+ if(next.width==='half'&&next.height===0)delete sizes[id];else sizes[id]=next;
+ storageSet(HOME_SIZE_KEY,JSON.stringify(sizes));
+ homeLastSignature='';
+ applyHomeCardLayout();toast('Tamanho do card atualizado.');
+ return true;
+}
+window.ef90ResizeHomeCard=changeHomeSize;
 function visibleHomeOrder(grid){
  return readHomeOrder().filter(function(id){return Boolean(grid.querySelector('[data-ef-home-card="'+id+'"]'))});
 }
@@ -299,33 +333,44 @@ function layoutHomeColumns(){
  var grid=$('#ef90-sortable');if(!grid||!grid.isConnected)return;
  var cards=[].slice.call(grid.querySelectorAll('[data-ef-home-card]'));
  if(!cards.length)return;
- var map=new Map(cards.map(function(card){return [card.getAttribute('data-ef-home-card'),card]}));
- var ordered=visibleHomeOrder(grid).filter(function(id){return map.has(id)});
- var width=grid.clientWidth||grid.getBoundingClientRect().width||0;
- // Apenas uma coluna quando não há espaço confortável para dois cards.
- var columns=width>=920 && ordered.length>1?2:1;
- var entries=ordered.map(function(id){
-  var card=map.get(id),height=Math.max(card.scrollHeight||0,card.offsetHeight||0,card.getBoundingClientRect().height||0,150);
-  return {id:id,height:height+14};
+ var cardMap=new Map(cards.map(function(c){return [c.getAttribute('data-ef-home-card'),c]}));
+ var order=visibleHomeOrder(grid).filter(function(id){return cardMap.has(id)});
+ var sizes=readHomeSizes(),width=grid.clientWidth||grid.getBoundingClientRect().width||0;
+ var columns=width>=920&&order.length>1?2:1;
+ var entries=order.map(function(id){
+  var card=cardMap.get(id),pref=getHomeSize(id,sizes);
+  return {id:id,height:Math.max(card.scrollHeight||0,card.offsetHeight||0,card.getBoundingClientRect().height||0,100)+14,
+          width:columns===2?pref.width:'half'};
  });
- var signature=columns+'|'+entries.map(function(e){return e.id+':'+Math.round(e.height)}).join(';');
+ var signature=columns+'|'+entries.map(function(e){return e.id+':'+e.width+':'+Math.round(e.height)}).join(';');
  if(grid===homeLastGrid&&signature===homeLastSignature)return;
- var assignment=chooseHomeLanes(entries,columns);
- var lanes=[].slice.call(grid.querySelectorAll(':scope > .ef-home-lane'));
- while(lanes.length<2){
-  var lane=document.createElement('div');
-  lane.className='ef-home-lane';
-  lane.setAttribute('data-ef-home-lane',String(lanes.length));
-  grid.appendChild(lane);lanes.push(lane);
- }
- grid.classList.toggle('ef-home-single-column',columns===1);
- assignment.forEach(function(ids,i){
-  var lane=lanes[i];
-  ids.forEach(function(id,index){
-   var card=map.get(id);
-   if(lane.children[index]!==card)lane.insertBefore(card,lane.children[index]||null);
-  });
+ var groups=[],pending=[];
+ function flush(){if(pending.length){groups.push({type:'pair',entries:pending});pending=[]}}
+ entries.forEach(function(entry){
+  if(entry.width==='full'&&columns===2){flush();groups.push({type:'wide',id:entry.id})}
+  else pending.push(entry);
  });
+ flush();
+ var fragment=document.createDocumentFragment();
+ groups.forEach(function(group){
+  if(group.type==='wide'){
+   var wide=cardMap.get(group.id);wide.dataset.efCardRenderedWidth='full';fragment.appendChild(wide);return;
+  }
+  var pair=document.createElement('div');pair.className='ef-home-pair';
+  var arrangement=chooseHomeLanes(group.entries,columns);
+  arrangement.forEach(function(ids,i){
+   var lane=document.createElement('div');lane.className='ef-home-lane';
+   lane.setAttribute('data-ef-home-lane',String(i));
+   ids.forEach(function(id){
+    var card=cardMap.get(id);card.dataset.efCardRenderedWidth='half';lane.appendChild(card);
+   });
+   pair.appendChild(lane);
+  });
+  fragment.appendChild(pair);
+ });
+ grid.classList.toggle('ef-home-single-column',columns===1);
+ // Reparentear, sem recriar cards, preserva dados digitados e listeners.
+ grid.replaceChildren(fragment);
  homeLastGrid=grid;homeLastSignature=signature;
 }
 function scheduleHomeLayout(){
@@ -341,8 +386,12 @@ function applyHomeCardLayout(){
  var cards=[].slice.call(grid.querySelectorAll('[data-ef-home-card]'));
  cards.forEach(function(card){
   var id=card.getAttribute('data-ef-home-card');
-  card.draggable=homeOrganizing;
-  var state=(homeOrganizing?'edit|':'view|')+order.join('|');
+  card.draggable=false;
+  var prefs=getHomeSize(id);
+  card.dataset.efCardSize=prefs.height===0?'compacto':prefs.height===80?'normal':prefs.height===160?'ampliado':'extra';
+  card.dataset.efCardWidth=prefs.width;
+  card.style.setProperty('--ef-card-extra',prefs.height+'px');
+  var state=(homeOrganizing?'edit|':'view|')+order.join('|')+'|'+prefs.width+'|'+prefs.height;
   if(card.dataset.efHomeControlState!==state){
    var previous=card.querySelector('.ef-home-card-tools');if(previous)previous.remove();
    var tools=document.createElement('div');tools.className='ef-home-card-tools no-print';
@@ -366,6 +415,22 @@ function applyHomeCardLayout(){
     order.forEach(function(_,i){var option=document.createElement('option');option.value=String(i);option.textContent='Posição '+(i+1);select.appendChild(option)});
     select.value=String(index);select.addEventListener('change',function(){homeMoveCard(id,Number(select.value))});
     positions.appendChild(select);
+    var drag=document.createElement('span');drag.className='ef-home-drag-handle';
+    drag.draggable=true;drag.tabIndex=0;drag.textContent='⠿ Arrastar';
+    drag.title='Arraste a alça para outro card';drag.setAttribute('aria-label','Arraste para mover o card');
+    positions.appendChild(drag);
+    var sizesBar=document.createElement('div');sizesBar.className='ef-home-size-actions';
+    function sizeButton(action,label,title,disabled){
+     var btn=document.createElement('button');btn.type='button';btn.textContent=label;
+     btn.title=title;btn.disabled=Boolean(disabled);btn.setAttribute('aria-label',title);
+     btn.addEventListener('click',function(){changeHomeSize(id,action)});
+     sizesBar.appendChild(btn);
+    }
+    sizeButton('smaller','−','Diminuir altura do card',prefs.height===0);
+    sizeButton('larger','+','Aumentar altura do card',prefs.height===240);
+    sizeButton('wide',prefs.width==='full'?'↔ 1 coluna':'↔ 2 colunas','Alternar largura do card',false);
+    sizeButton('reset','Tamanho padrão','Restaurar tamanho do card',prefs.width==='half'&&prefs.height===0);
+    tools.appendChild(sizesBar);
     var reset=document.createElement('button');reset.type='button';reset.textContent='Padrão';reset.title='Restaurar a ordem inicial dos cards';
     reset.addEventListener('click',function(){storageSet(HOME_LAYOUT_KEY,JSON.stringify(HOME_CARDS));applyHomeCardLayout();toast('Ordem padrão restaurada.')});
     positions.appendChild(reset);tools.appendChild(positions);
@@ -376,7 +441,7 @@ function applyHomeCardLayout(){
   if(card.dataset.efHomeDnDBound==='true')return;
   card.dataset.efHomeDnDBound='true';
   card.addEventListener('dragstart',function(ev){
-   if(!homeOrganizing||ev.target.closest('input,select,textarea,button')){ev.preventDefault();return}
+   if(!homeOrganizing||!ev.target.closest('.ef-home-drag-handle')){ev.preventDefault();return}
    ev.dataTransfer.effectAllowed='move';ev.dataTransfer.setData('text/plain',id);card.classList.add('ef-home-dragging');
   });
   card.addEventListener('dragover',function(ev){if(!homeOrganizing)return;ev.preventDefault();ev.dataTransfer.dropEffect='move';card.classList.add('ef-home-drop-target')});
