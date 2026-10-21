@@ -4,7 +4,8 @@ body.ef-simple-ui #tab-btn-ef-forms{display:flex;align-items:center;gap:12px}
 body.ef-simple-ui #tab-btn-ef-forms .ef-local-nav-icon{width:20px;height:20px;flex:0 0 20px}
 body.ef-simple-ui #tab-btn-ef-forms .ef-local-nav-icon svg{width:20px;height:20px;display:block}
 #tab-ef-forms{color:var(--ef-ink)}
-#tab-ef-forms .ef2f-shell{width:100%;max-width:1210px;margin:0 auto;padding:14px 0 38px;min-width:0}
+#tab-ef-forms{width:100%;max-width:none;margin:0;min-width:0;box-sizing:border-box}
+#tab-ef-forms .ef2f-shell{width:100%;max-width:none;margin:0;padding:14px 0 38px;min-width:0;box-sizing:border-box}
 #tab-ef-forms :is(input,select,textarea){font:inherit;max-width:100%;min-width:0}
 #tab-ef-forms .ef2f-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;margin-bottom:20px}
 #tab-ef-forms .ef2f-header h1{font-size:clamp(1.45rem,2.4vw,2rem);letter-spacing:-.035em;margin:3px 0 6px;line-height:1.22;color:var(--ef-ink)}
