@@ -2481,6 +2481,44 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 switchTab('tab-novo-checkin');
             };
 
+            // Evolufisico2 1.0: criar novo atendimento sem reaproveitar dados clínicos.
+            // O ID do aluno é mantido mesmo para homônimos, mas o ID da avaliação é novo.
+            window.novaAvaliacaoParaAluno = function(id) {
+                const origem = encontrarAvaliacaoPorId(id);
+                if (!origem) {
+                    if (window.efToast) window.efToast('Avaliação de origem não encontrada.', 'warn');
+                    else alert('Avaliação de origem não encontrada.');
+                    return false;
+                }
+                window.resetFormulario();
+                const apenasCadastro = ['nome','email','whatsapp','sexo','idade','altura',
+                    'avaliador_clinica','avaliador_nome','avaliador_registro'];
+                apenasCadastro.forEach(campo => {
+                    const el = document.getElementById(campo);
+                    const valor = origem[campo];
+                    if (el && valor !== null && valor !== undefined) el.value = String(valor);
+                });
+                const seletor = document.getElementById('ef-client-identity');
+                const clienteId = origem.cliente_id || EFIdentity.ensure(origem, avaliacoes);
+                if (seletor && clienteId) {
+                    if (![...seletor.options].some(o => o.value === clienteId)) {
+                        seletor.add(new Option(origem.nome || 'Aluno existente', clienteId));
+                    }
+                    seletor.value = clienteId;
+                    seletor.dataset.changed = '1';
+                }
+                const titulo = document.getElementById('form-title-text');
+                if (titulo) titulo.textContent = 'Nova avaliação — ' + (origem.nome || 'Aluno');
+                const subtitulo = document.getElementById('form-subtitle-text');
+                if (subtitulo) subtitulo.textContent = 'Dados cadastrais aproveitados. Preencha novas medidas, fotos e observações.';
+                const rotulo = document.getElementById('tab-form-label');
+                if (rotulo) rotulo.textContent = 'Nova avaliação';
+                const idAtual = document.getElementById('avaliacao_id');
+                if (idAtual) idAtual.value = '';
+                if (window.EF6) window.EF6.renderResumo();
+                return true;
+            };
+
             const cancelarEdicao = window.cancelarEdicao = function() {
                 window.resetFormulario();
                 switchTab('tab-historico');
@@ -2731,6 +2769,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         <button class="btn btn-primary btn-sm" onclick="abrirVisualizacaoPacienteWeb('${esc(idSeguro(a.id))}')" title="Abrir Visão do Aluno (Tela Cheia Interativa)">👁️ Visão do Aluno</button>
                         <button class="btn btn-success btn-sm" onclick="imprimirAvaliacaoIndividualPDF('${esc(idSeguro(a.id))}')" title="Gerar laudo em PDF com fotos e bioimpedância">🖨️ PDF</button>
                         <button class="btn btn-secondary btn-sm" onclick="abrirModalDetalhes('${esc(idSeguro(a.id))}')" title="Ver avaliação completa">🔍 Detalhes</button>
+                        <button class="btn btn-secondary btn-sm" data-ef-nova-avaliacao="1" onclick="novaAvaliacaoParaAluno('${esc(idSeguro(a.id))}')" title="Criar nova avaliação preservando somente os dados cadastrais">➕ Nova avaliação</button>
                         <button class="btn btn-warning btn-sm" onclick="editarAvaliacao('${esc(idSeguro(a.id))}')" title="Editar dados">✏️</button>
                         <button class="btn btn-danger btn-sm" onclick="excluirAvaliacao('${esc(idSeguro(a.id))}')" title="Excluir">🗑️</button>
                     </div>
