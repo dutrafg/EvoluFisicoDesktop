@@ -1,0 +1,173 @@
+
+/* Organização — protótipo isolado do EvoluFísico2 (sem dependências externas) */
+@media screen {
+ .eforg-icon{width:21px;height:21px;display:inline-block;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+ #tab-btn-organizacao{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+ #tab-btn-organizacao .eforg-icon{width:19px;height:19px}
+ #tab-painel .eforg-home, #tab-organizacao .eforg-wrap{box-sizing:border-box;max-width:1680px;margin:0 auto;width:100%;}
+ #tab-painel .eforg-home{padding:clamp(16px,2.5vw,34px)}
+ #tab-organizacao .eforg-wrap{padding:clamp(12px,2.4vw,32px)}
+ #tab-organizacao{max-width:none!important;min-width:0!important;padding:0!important}
+ .eforg-wrap *{box-sizing:border-box}
+ .eforg-top{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+ .eforg-heading{display:flex;align-items:center;gap:13px;min-width:0}
+ .eforg-logo{width:50px;height:50px;display:grid;place-items:center;border-radius:12px;background:var(--ef-soft,#e9eff5);border:1px solid var(--ef-line,#d6e0e9);color:var(--ef-accent,#356898)}
+ .eforg-logo .eforg-icon{width:28px;height:28px}
+ .eforg-top h1,.eforg-home h1{font-size:clamp(1.45rem,2.6vw,2.05rem);line-height:1.18;margin:0;color:var(--ef-ink,var(--text-main,#243746));font-weight:740}
+ .eforg-top p,.eforg-home p{margin:5px 0 0;color:var(--ef-muted,#657381);font-size:.88rem;line-height:1.5}
+ .eforg-testing{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--ef-line,#ced8e1);padding:7px 11px;background:var(--ef-soft,#eff4f7);border-radius:7px;color:var(--ef-muted,#526475);font-size:.73rem;font-weight:650}
+ .eforg-tabs{display:flex;gap:8px;overflow-x:auto;max-width:100%;padding:3px 2px 13px;margin-bottom:13px;scrollbar-width:thin}
+ .eforg-tab{min-height:43px;display:inline-flex;align-items:center;gap:9px;border:1px solid var(--ef-line,#cfd9e3);border-radius:9px;padding:9px 16px;white-space:nowrap;background:var(--ef-surface,#fff);color:var(--ef-ink,#2d3f50);font:600 .86rem inherit;cursor:pointer;max-width:100%}
+ .eforg-tab .eforg-icon{width:18px;height:18px}
+ .eforg-tab[aria-selected="true"]{background:var(--ef-accent,#286a9d);border-color:var(--ef-accent,#286a9d);color:#fff;box-shadow:0 3px 8px #102b4430}
+ .eforg-tab:focus-visible,.eforg-button:focus-visible,.eforg-card button:focus-visible{outline:3px solid var(--ef-accent,#4280b7);outline-offset:2px}
+ .eforg-pane[hidden]{display:none!important}
+ .eforg-pane{width:100%;min-width:0}
+ .eforg-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:4px 0 15px}
+ .eforg-toolbar h2{margin:0;font-size:1.16rem;color:var(--ef-ink,#243746)}
+ .eforg-toolbar-left{flex:1;min-width:215px}
+ .eforg-toolbar p{font-size:.81rem;color:var(--ef-muted,#6e7a8a);margin:5px 0 0;line-height:1.4}
+ .eforg-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+ .eforg-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:39px;border-radius:8px;padding:9px 15px;white-space:nowrap;border:1px solid var(--ef-line,#cdd8e2);background:var(--ef-surface,#fff);color:var(--ef-ink,#243746);font-size:.82rem;font-weight:650;cursor:pointer}
+ .eforg-button-primary{background:var(--ef-accent,#306e9f);color:#fff;border-color:var(--ef-accent,#306e9f)}
+ .eforg-button-danger{color:#be3a43}
+ .eforg-button .eforg-icon{width:18px;height:18px}
+ .eforg-search{width:100%;min-width:0;min-height:47px;border:1px solid var(--ef-line,#ced8e1);border-radius:9px;padding:10px 13px;background:var(--ef-surface,#fff);color:var(--ef-ink,#263949);font:inherit}
+ .eforg-search::placeholder{color:var(--ef-muted,#728294)}
+ .eforg-filters{display:flex;gap:7px;overflow-x:auto;padding:9px 0 14px;scrollbar-width:thin}
+ .eforg-filter{font-size:.78rem;white-space:nowrap;border-radius:7px;border:1px solid var(--ef-line,#cdd8e2);background:transparent;color:var(--ef-muted,#637789);padding:7px 11px;min-height:34px;cursor:pointer}
+ .eforg-filter[aria-pressed="true"]{background:var(--ef-soft,#e5edf5);border-color:var(--ef-accent,#306e9f);color:var(--ef-ink,#253b4b);font-weight:750}
+ .eforg-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:5px 0 19px}
+ .eforg-stat,.eforg-card,.eforg-empty,.eforg-banner,.eforg-home-panel{background:var(--ef-surface,#fff);border:1px solid var(--ef-line,#d1dbe5);border-radius:12px;box-shadow:0 3px 15px rgba(14,31,50,.05);color:var(--ef-ink,#273d4c)}
+ .eforg-stat{padding:17px 18px}.eforg-stat b{display:block;font-size:1.45rem;line-height:1.25;font-variant-numeric:tabular-nums}.eforg-stat small{display:block;color:var(--ef-muted,#687c8b);margin-top:6px;font-size:.76rem}
+ .eforg-list{display:grid;gap:10px}.eforg-card{padding:18px 19px;display:flex;align-items:flex-start;gap:15px;justify-content:space-between;min-width:0}
+ .eforg-main{min-width:0;flex:1}.eforg-card h3{color:var(--ef-ink,#283e50);font-size:1rem;line-height:1.35;margin:0;font-weight:700;overflow-wrap:anywhere}
+ .eforg-card p{font-size:.84rem;line-height:1.55;color:var(--ef-muted,#5c7081);margin:7px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+ .eforg-tags{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 0}.eforg-tag{border:1px solid var(--ef-line,#d6dfe7);border-radius:6px;padding:4px 8px;font-size:.7rem;color:var(--ef-muted,#607389)}.eforg-tag.red{color:#bc4848}.eforg-tag.green{color:#218053}.eforg-tag.orange{color:#ac7422}
+ .eforg-row-buttons{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;align-items:center}.eforg-row-buttons .eforg-button{min-height:32px;padding:6px 10px;font-size:.73rem}
+ .eforg-empty{padding:45px 15px;text-align:center;color:var(--ef-muted,#657482);line-height:1.5;font-size:.9rem}.eforg-empty strong{display:block;color:var(--ef-ink,#273c4f);margin-bottom:5px}
+ .eforg-banner{padding:13px 15px;margin:0 0 17px;font-size:.78rem;line-height:1.6;color:var(--ef-muted,#526d80)}
+ .eforg-home-hero{padding:23px 25px;margin:0 0 18px;border-radius:13px;border:1px solid var(--ef-line,#d1dbe3);background:var(--ef-surface,#fff);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center}
+ .eforg-home-hero h1{display:flex;gap:10px;align-items:center}
+ .eforg-home-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:0 0 19px}
+ .eforg-home-panel{padding:19px}.eforg-home-panel h2{font-size:1.03rem;margin:0 0 13px}.eforg-home-links{display:flex;gap:10px;flex-wrap:wrap}
+ #tab-organizacao #ef55-painel{margin:0;max-width:none;width:100%;min-width:0}
+ #tab-organizacao #ef55-painel .ef90-home{max-width:none;width:100%;min-width:0}
+ #tab-organizacao .ef90-simple-head{display:none!important} /* already displayed by module header */
+ #tab-organizacao #ef-proto-toolbar .ef-proto-left small{font-size:.75rem}
+ #tab-organizacao #ef55-painel .ef90-home .ef90-main-grid{min-width:0}
+ #tab-organizacao .ef90-calendar-grid{min-width:0;width:100%}
+ #tab-organizacao .ef90-calendar-nav{display:grid;grid-template-columns:36px minmax(110px,1fr) 36px;gap:9px;align-items:center;max-width:280px}
+ #tab-organizacao .ef90-calendar-nav button{width:36px;height:36px;padding:0;display:grid;place-items:center;min-width:0}
+ #tab-organizacao .ef90-calendar-nav strong{text-align:center;white-space:normal;line-height:1.2}
+ #tab-organizacao .ef90-form{min-width:0}
+ #eforg-dialog{border:1px solid var(--ef-line,#ccd7e2);border-radius:12px;background:var(--ef-surface,#fff);color:var(--ef-ink,#273d4d);width:min(93vw,560px);padding:0;max-height:90dvh;box-shadow:0 24px 75px #0005}
+ #eforg-dialog::backdrop{background:rgba(5,13,22,.7)}
+ #eforg-dialog header{display:flex;align-items:center;justify-content:space-between;padding:20px 23px 15px;border-bottom:1px solid var(--ef-line,#d4dce5)}
+ #eforg-dialog h2{margin:0;font-size:1.15rem;color:var(--ef-ink,#273d4d)}
+ #eforg-form{padding:16px 23px 21px;display:grid;gap:13px;max-height:70dvh;overflow-y:auto}
+ #eforg-form label{display:grid;gap:6px;font-size:.79rem;font-weight:660;color:var(--ef-ink,#3a5063)}
+ #eforg-form input:not([type="checkbox"]),#eforg-form select,#eforg-form textarea{display:block;min-width:0;width:100%;padding:10px 11px;border:1px solid var(--ef-line,#cad6e0);border-radius:8px;background:var(--ef-surface,#fff);color:var(--ef-ink,#243748);font:inherit;min-height:42px}
+ #eforg-form textarea{min-height:85px;resize:vertical}
+ #eforg-form .eforg-check{display:flex;align-items:center;gap:8px}
+ #eforg-form .eforg-form-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;padding-top:9px}
+ #eforg-toast{position:fixed;z-index:99999;bottom:25px;right:25px;max-width:min(350px,90vw);padding:11px 16px;border-radius:9px;background:var(--ef-accent,#315f8f);color:#fff;box-shadow:0 10px 24px #0004;font-size:.83rem}
+ body.ef-simple-ui #tab-organizacao .eforg-wrap{background:transparent;min-height:400px}
+}
+@media screen and (max-width:780px){
+ #tab-organizacao .eforg-wrap{padding:13px 11px 33px}
+ .eforg-summary-grid,.eforg-home-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .eforg-row-buttons{justify-content:flex-start}.eforg-card{flex-direction:column;gap:11px;padding:15px}
+ .eforg-top h1,.eforg-home h1{font-size:1.35rem}
+ .eforg-tab{padding:9px 12px}
+ .eforg-home-hero{padding:17px}
+ #tab-organizacao .ef90-simple-stats{display:flex;overflow-x:auto;gap:7px}
+}
+@media screen and (max-width:480px){
+ .eforg-summary-grid,.eforg-home-kpis{grid-template-columns:1fr 1fr}
+ .eforg-stat{padding:12px}.eforg-stat b{font-size:1.2rem}
+ .eforg-logo{width:42px;height:42px}
+ .eforg-testing{margin-top:7px}
+ .eforg-top{gap:6px}
+ #eforg-dialog header,#eforg-form{padding-left:15px;padding-right:15px}
+ .eforg-button{min-height:40px}
+}
+@media print{#tab-organizacao .eforg-top,#tab-organizacao .eforg-tabs,#tab-organizacao .eforg-toolbar,#tab-organizacao .eforg-banner,#eforg-dialog{display:none!important}}
+/* QA mobile: prevent the 9 app modules from wrapping the fixed bottom navigation into two rows.
+   Preserve standard icons, with swipe horizontal for remaining items. */
+body.ef-simple-ui #tab-btn-painel::before,
+body.ef-simple-ui #tab-btn-organizacao::before {display:none!important;content:none!important}
+@media screen and (max-width:1199px){
+ body.ef-simple-ui .top-navbar > .nav-tabs{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  grid-template-columns:none!important;
+  justify-content:flex-start!important;
+  max-width:min(560px,calc(100vw - 24px))!important;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+  scrollbar-width:none;
+  min-height:70px;
+ }
+ body.ef-simple-ui .top-navbar > .nav-tabs::-webkit-scrollbar {display:none}
+ body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn{
+  flex:0 0 20%!important;
+  width:20%!important;
+  max-width:20%!important;
+  scroll-snap-align:center;
+  text-overflow:clip;
+  font-size:10px!important;
+  min-height:53px!important;
+  height:53px!important;
+  overflow:hidden;
+ }
+ body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn > span{display:block;max-width:100%;font-size:inherit;line-height:1.1;white-space:nowrap}
+ body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn > .eforg-icon{width:21px;height:21px}
+ #eforg-toast{bottom:calc(94px + env(safe-area-inset-bottom))!important}
+}
+@media screen and (max-width:600px){
+ body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn{
+  flex-basis:25%!important;
+  width:25%!important;
+  max-width:25%!important;
+  font-size:10px!important;
+ }
+}
+/* Os controles antigos do Início também permanecem em Organização. */
+/* Keep the analysis summary on the clinical home rather than mixing it into scheduling. */
+/* Conservar os componentes legados de Início dentro de Organização. */
+/* Home integration: keep one navigation entry and a single shared calendar. */
+#tab-organizacao{width:100%;min-width:0;scroll-margin-top:18px;}
+#tab-organizacao .eforg-wrap{padding-top:14px;}
+#tab-organizacao .eforg-top{border-bottom:1px solid var(--ef-line,#d7e0e6);padding-bottom:13px;}
+#tab-organizacao .eforg-heading h1{font-size:1.38rem;}
+#tab-organizacao .eforg-top .eforg-actions{justify-content:flex-end;}
+#tab-organizacao #ef55-painel{margin-top:4px!important;}
+#tab-painel .eforg-home{min-width:0;max-width:none;margin-bottom:12px;}
+#tab-painel .eforg-home-hero h1{margin:5px 0 6px;color:var(--ef-ink,#243b49);font-size:1.8rem;}
+#tab-painel .eforg-home-hero p{margin:0;color:var(--ef-muted,#697b84);line-height:1.5;font-size:.89rem;}
+.eforg-eyebrow{font-size:.69rem;letter-spacing:.11em;font-weight:750;color:var(--ef-muted,#657884);}
+.eforg-kpi-button{text-align:left;cursor:pointer;position:relative;transition:box-shadow .15s,border-color .15s;}
+.eforg-kpi-button:hover{border-color:var(--ef-accent,#286b91);box-shadow:0 5px 15px #1235;}
+.eforg-kpi-button:focus-visible,.eforg-upcoming-item:focus-visible{outline:3px solid var(--ef-accent,#286b91);outline-offset:2px;}
+.eforg-stat-icon{position:absolute;top:13px;right:13px;opacity:.7;}
+.eforg-stat-icon .eforg-icon{width:19px;height:19px;}
+.eforg-home-overview{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px;margin-bottom:18px;}
+.eforg-panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.eforg-panel-title h2{margin:0;font-size:.95rem;}
+.eforg-panel-title .eforg-button{padding:5px 10px;min-height:31px;font-size:.71rem;}
+.eforg-upcoming-item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;min-width:0;padding:9px 3px;cursor:pointer;background:transparent;color:var(--ef-ink,#263a4a);border:0;border-bottom:1px solid var(--ef-line,#dae1e8);font:inherit;}
+.eforg-upcoming-item:hover{color:var(--ef-accent,#216f93);}
+.eforg-upcoming-item:last-child{border-bottom:0;}
+.eforg-upcoming-item strong{font-size:.8rem;flex:1;min-width:0;overflow-wrap:anywhere;}
+.eforg-upcoming-item .eforg-icon{height:15px;width:15px;}
+.eforg-upcoming-date{color:var(--ef-muted,#677a87);font-size:.72rem;white-space:nowrap;}
+.eforg-no-upcoming{color:var(--ef-muted,#687985);font-size:.81rem;line-height:1.5;margin:0;}
+#tab-organizacao .eforg-tabs{margin-bottom:18px;}
+#tab-organizacao .eforg-wrap{max-width:1400px;margin-inline:auto;}
+@media screen and (max-width:850px){.eforg-home-overview{grid-template-columns:1fr}.eforg-home-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media screen and (max-width:480px){#tab-painel .eforg-home-hero h1{font-size:1.3rem}.eforg-home-hero{padding:13px!important}.eforg-upcoming-item{flex-wrap:wrap}.eforg-upcoming-date{white-space:normal}.eforg-home-overview .eforg-home-panel{padding:14px}.eforg-home-kpis{gap:8px}}
+
+

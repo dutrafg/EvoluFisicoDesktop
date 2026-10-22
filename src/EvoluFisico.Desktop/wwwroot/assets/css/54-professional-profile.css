@@ -1,0 +1,36 @@
+
+
+/* Identificação inicial profissional: mesmo armazenamento de Configurações. */
+#efprof-first-run[hidden] { display: none !important; }
+#efprof-first-run { position:fixed; inset:0; z-index:2147483000; background:rgba(7,25,18,.66); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); display:grid; place-items:center; padding:calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); box-sizing:border-box; overflow-y:auto; overscroll-behavior:contain; }
+#efprof-first-run, #efprof-first-run * { box-sizing:border-box; }
+#efprof-first-run .efprof-card { width:min(100%,530px); min-width:0; max-height:calc(100dvh - 32px); overflow-y:auto; background:#fff; border:1px solid #d4e7dc; border-radius:16px; box-shadow:0 24px 80px rgba(0,0,0,.24); color:#173329; padding:clamp(20px,4vw,30px); font-family:inherit; }
+#efprof-first-run .efprof-top { display:flex; align-items:center; gap:13px; margin-bottom:18px; }
+#efprof-first-run .efprof-logo { width:48px; height:48px; flex:none; display:grid; place-items:center; background:#e6f3eb; color:#146646; border-radius:11px; }
+#efprof-first-run .efprof-logo svg { width:27px; height:27px; }
+#efprof-first-run .efprof-kicker { color:#277553; font-size:11px; font-weight:750; letter-spacing:.11em; text-transform:uppercase; }
+#efprof-first-run h2 { font-size:clamp(21px,3vw,26px); line-height:1.2; font-weight:790; margin:5px 0 8px; color:#14372a; }
+#efprof-first-run .efprof-description { color:#64776b; font-size:13px; line-height:1.55; margin:0 0 19px; }
+#efprof-first-run .efprof-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+#efprof-first-run .efprof-field { display:flex; flex-direction:column; gap:6px; min-width:0; }
+#efprof-first-run .efprof-field.full { grid-column:1/-1; }
+#efprof-first-run label { color:#213d30; font-weight:700; font-size:12px; }
+#efprof-first-run .efprof-optional { font-weight:500; color:#6c8175; }
+#efprof-first-run input { width:100%; min-width:0; min-height:47px; background:#fff; border:1px solid #c8d8ce; border-radius:9px; color:#1b3a2b; padding:12px 13px; font:inherit; font-size:14px; outline:none; }
+#efprof-first-run input:focus { border-color:#138857; box-shadow:0 0 0 3px #0b8b561f; }
+#efprof-first-run .efprof-help { margin:0; font-size:11px; line-height:1.4; color:#718074; }
+#efprof-first-run .efprof-error { color:#b42318; font-size:12px; padding:9px 10px; background:#fff1ed; border:1px solid #f3c4b7; border-radius:8px; margin:12px 0 0; }
+#efprof-first-run .efprof-bottom { margin-top:20px; padding-top:17px; border-top:1px solid #edf1ed; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+#efprof-first-run .efprof-required {font-size:12px;color:#617569;}
+#efprof-first-run .efprof-submit { min-height:45px; background:#177a50; color:white; border:1px solid #177a50; padding:11px 21px; border-radius:9px; font:inherit; font-size:13px; font-weight:760; cursor:pointer; }
+#efprof-first-run .efprof-submit:hover { background:#0b6240; }
+#efprof-first-run .efprof-submit:focus-visible { outline:3px solid #59b58e; outline-offset:3px; }
+html.ef-dark-mode #efprof-first-run .efprof-card, body.dark-mode #efprof-first-run .efprof-card {background:#161f1c;color:#e8f5ed;border-color:#344b3e;}
+html.ef-dark-mode #efprof-first-run h2,html.ef-dark-mode #efprof-first-run label,body.dark-mode #efprof-first-run h2,body.dark-mode #efprof-first-run label {color:#eff9f2;}
+html.ef-dark-mode #efprof-first-run .efprof-description,html.ef-dark-mode #efprof-first-run .efprof-help,html.ef-dark-mode #efprof-first-run .efprof-optional,body.dark-mode #efprof-first-run .efprof-description,body.dark-mode #efprof-first-run .efprof-help,body.dark-mode #efprof-first-run .efprof-optional {color:#b7c8bd;}
+html.ef-dark-mode #efprof-first-run input,body.dark-mode #efprof-first-run input {background:#101815;color:#f5fff9;border-color:#456352;}
+html.ef-dark-mode #efprof-first-run input::placeholder,body.dark-mode #efprof-first-run input::placeholder {color:#97ae9e;}
+html.ef-dark-mode #efprof-first-run .efprof-bottom,body.dark-mode #efprof-first-run .efprof-bottom {border-color:#365140;}
+@media(max-width:480px){#efprof-first-run .efprof-fields{grid-template-columns:minmax(0,1fr);}#efprof-first-run .efprof-bottom{align-items:stretch;}#efprof-first-run .efprof-submit{width:100%;}#efprof-first-run .efprof-card{max-height:calc(100dvh - 20px);}}
+@media print { #efprof-first-run {display:none!important;} }
+

@@ -5,6 +5,7 @@ const $=id=>document.getElementById(id);
 const expanded=new Map();
 const routes={
  'tab-painel':['tab-btn-painel','Início'],
+ 'tab-organizacao':['tab-btn-organizacao','Organização'],
  'tab-historico':['tab-btn-history','Avaliações'],
  'tab-comparison':['tab-btn-compare','Evolução'],
  'tab-cobranca':['tab-btn-cobranca','Cobranças'],
@@ -24,7 +25,7 @@ function fold(id,title,hint,nodes,parent,before=null){
 }
 function arrangeNavigation(){
  const nav=document.querySelector('.top-navbar > .nav-tabs'),menu=$('ef-tools-content'),actions=$('ef-primary-actions');if(!nav||!menu||!actions)return;
- ['tab-painel','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-analises','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
+ ['tab-painel','tab-organizacao','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-analises','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  ['tab-settings'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  const form=$('tab-btn-form');if(form&&form.parentNode!==actions)actions.prepend(form);
  for(const [route,[id,label]] of Object.entries(routes)){
@@ -45,7 +46,7 @@ function arrangeNavigation(){
  }
  const active=document.querySelector('.tab-panel.active');
  if(form)form.hidden=active?.id!=='tab-historico'&&active?.id!=='tab-novo-checkin';
- const heading=$('ef-workspace-title');if(heading)heading.textContent=routes[active?.id]?.[1]||'EvoluFísico';
+ const heading=$('ef-workspace-title');if(heading)heading.textContent=active?.id==='tab-painel'?'':(routes[active?.id]?.[1]||'EvoluFísico');
  $('ef-tools').classList.toggle('ef-tools-active',active?.id==='tab-settings');
 }
 function arrangeDetails(){
@@ -159,7 +160,7 @@ function mount(){
  nav.setAttribute('aria-label','Navegação principal');
  const workspace=document.createElement('div');workspace.id='ef-workspace-heading';
  const title=document.createElement('span');title.id='ef-workspace-title';workspace.append(title);
- const version=document.createElement('small');version.textContent='1.0 estável';workspace.append(version);header.after(workspace);
+ header.after(workspace);
  const toggle=document.createElement('button');toggle.type='button';toggle.id='ef-sidebar-toggle';
  toggle.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';
  function setSidebar(hidden,save){document.body.classList.toggle('ef-sidebar-hidden',hidden);toggle.setAttribute('aria-expanded',String(!hidden));const t=hidden?'Mostrar barra lateral (Ctrl+B)':'Esconder barra lateral (Ctrl+B)';toggle.title=t;toggle.setAttribute('aria-label',t);if(save){try{localStorage.setItem('ef_sidebar_hidden',hidden?'1':'0')}catch(e){}}}
@@ -331,7 +332,7 @@ function mount(){
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
  const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
- window.EFSimpleUI={version:'1.0.0',arrangeNavigation,arrangeDetails};
+ window.EFSimpleUI={version:'1.0.4',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
