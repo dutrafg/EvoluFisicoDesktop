@@ -17,9 +17,9 @@
   host.append(btn);return true;
  }
  function refreshVersion(){
-  document.title='EvoluFísico2 '+VERSION+' — Início e Organização';
+  document.title='EvoluFísico Desktop '+VERSION+' — Início e Organização';
   document.documentElement.dataset.efAppVersion='1.0.4-stable';
-  document.querySelectorAll('.brand-version').forEach(el=>{el.textContent=VERSION;el.title='EvoluFísico2 '+VERSION+' — Versão estável';});
+  document.querySelectorAll('.brand-version').forEach(el=>{el.textContent=VERSION;el.title='EvoluFísico Desktop '+VERSION+' — Versão estável';});
   
   document.querySelectorAll('#efx-appearance-controls .efx-prebeta-tag').forEach(el=>el.textContent=VERSION);
  }
