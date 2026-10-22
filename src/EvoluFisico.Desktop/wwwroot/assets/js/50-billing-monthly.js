@@ -109,14 +109,47 @@
     </style></head><body><div class="toolbar no-print"><span>${safe(title)}</span><div class="buttons"><button id="cancel" type="button">← Voltar / Cancelar</button><button id="print" type="button" class="primary">Salvar como PDF / Imprimir</button></div></div><main class="sheet"><header><h1>EvoluFísico · Cobranças</h1><p><strong>${safe(title)}</strong></p><p>Profissional: ${safe(nome)}${cref?' · '+safe(cref):''}${clinica?' · '+safe(clinica):''}</p><p>Emitido em ${displayDate(localToday())}</p></header>${all?`<div class="summary"><b>Recebido no histórico: ${money(allTotals.paidTotal)}</b><b>A receber: ${money(allTotals.pendingTotal)}</b><b>Registros: ${list.length}</b></div>`:''}${periods.map(printTables).join('')}<p class="notice">Caixa mensal: valores pagos agrupados pela data do recebimento; valores a receber agrupados pelo vencimento. As cobranças antigas sem data própria de pagamento usam a data do lançamento como referência. Documento gerencial baseado nos registros do aplicativo; não equivale a extrato bancário ou documento fiscal.</p></main><script>document.getElementById('print').addEventListener('click',()=>window.print());document.getElementById('cancel').addEventListener('click',()=>{window.close();if(!window.closed)document.querySelector('.toolbar span').textContent='Prévia cancelada. Feche esta aba para voltar.'});document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('cancel').click()}});<\/script></body></html>`;
   }
   async function generatePDF(all) {
-    // A janela é aberta diretamente no clique para não ser bloqueada após await.
-    const w=window.open('','_blank');if(!w){alert('Permita pop-ups para abrir o relatório PDF.');return}
+    // WebView2: mantém a prévia dentro do aplicativo em vez de abrir uma aba externa.
     try {
       const list=await read();
-      w.document.open();w.document.write(printHtml(list,all));w.document.close();
-      w.focus();
+      const html=printHtml(list,all);
+      document.getElementById('ef-fin-pdf-preview')?.remove();
+      const dialog=document.createElement('dialog');
+      dialog.id='ef-fin-pdf-preview';
+      dialog.setAttribute('aria-label','Prévia financeira: imprimir ou cancelar');
+      dialog.style.cssText='width:min(96vw,1100px);height:min(95vh,960px);padding:0;border:1px solid #b8d2c6;border-radius:12px;box-shadow:0 20px 75px #0006;overflow:hidden';
+      const toolbar=document.createElement('div');
+      toolbar.style.cssText='display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:#113d2e;color:#fff;padding:13px 16px';
+      const title=document.createElement('strong');
+      title.textContent=all?'Histórico financeiro completo':'Histórico financeiro — '+monthName(selected);
+      const group=document.createElement('div');
+      group.style.cssText='display:flex;flex-wrap:wrap;gap:8px';
+      const cancel=document.createElement('button');
+      cancel.type='button';cancel.textContent='Voltar / Cancelar';cancel.dataset.efFinAction='cancel';
+      const print=document.createElement('button');
+      print.type='button';print.textContent='Salvar como PDF / Imprimir';print.dataset.efFinAction='print';
+      for(const btn of [cancel,print])btn.style.cssText='padding:10px 15px;border-radius:7px;border:1px solid #d9e9df;background:#eef8f1;color:#173a2b;cursor:pointer;min-height:42px;font:700 13px system-ui';
+      group.append(cancel,print);toolbar.append(title,group);
+      const frame=document.createElement('iframe');
+      frame.title='Prévia do relatório financeiro';
+      frame.setAttribute('sandbox','allow-same-origin');
+      frame.style.cssText='width:100%;height:calc(100% - 72px);border:0;background:white';
+      frame.srcdoc=html;
+      const close=()=>{if(dialog.open)dialog.close();dialog.remove()};
+      cancel.addEventListener('click',close);
+      dialog.addEventListener('cancel',e=>{e.preventDefault();close()});
+      print.addEventListener('click',()=>{
+        const win=frame.contentWindow;
+        if(!win){$('ef-fin-security').textContent='A prévia não está pronta para imprimir.';$('ef-fin-security').hidden=false;return}
+        win.focus();win.print();
+      });
+      dialog.append(toolbar,frame);document.body.append(dialog);
+      if(typeof dialog.showModal==='function')dialog.showModal();
+      else dialog.setAttribute('open','');
+      cancel.focus();
     } catch(e) {
-      w.close();$('ef-fin-security').textContent=e.message;$('ef-fin-security').hidden=false;
+      const warning=$('ef-fin-security');
+      if(warning){warning.textContent=e.message;warning.hidden=false}
     }
   }
   function init() {
