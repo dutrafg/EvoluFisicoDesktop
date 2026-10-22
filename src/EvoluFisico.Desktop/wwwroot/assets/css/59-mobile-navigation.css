@@ -1,0 +1,61 @@
+
+/* 1.0.4 estável: preservar menu lateral do desktop; reancorar a barra móvel.
+   A CSS anterior fixava a barra abaixo, mas herdava um TOP definido noutra regra.
+   O resultado era uma navegação sobreposta ao cabeçalho no tablet. */
+@media screen and (max-width:1199px) {
+  /* Blur no cabeçalho transforma-o em containing block de filhos fixed. */
+  body.ef-simple-ui .top-navbar {backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+  body.ef-simple-ui {padding-bottom:calc(112px + env(safe-area-inset-bottom, 0px)) !important;}
+  body.ef-simple-ui .top-navbar > .nav-tabs {
+    position:fixed !important;
+    top:auto !important;
+    inset-block-start:auto !important;
+    bottom:calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    inset-block-end:calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    left:50% !important;
+    right:auto !important;
+    transform:translateX(-50%) !important;
+    width:min(610px, calc(100vw - 20px)) !important;
+    max-width:min(610px, calc(100vw - 20px)) !important;
+    min-height:68px !important;
+    max-height:76px !important;
+    height:auto !important;
+    margin:0 !important;
+    padding:7px 8px !important;
+    display:flex !important;
+    flex-flow:row nowrap !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:4px !important;
+    grid-row:auto !important;
+    grid-column:auto !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    z-index:1500 !important;
+  }
+  body.ef-simple-ui .top-navbar > .nav-tabs::-webkit-scrollbar {display:none;}
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn {
+    position:relative !important;
+    min-height:52px !important;
+    height:52px !important;
+    flex-shrink:0 !important;
+    touch-action:manipulation;
+  }
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn:focus-visible {
+    outline:2px solid currentColor !important;
+    outline-offset:-3px !important;
+  }
+}
+@media screen and (max-width:600px) {
+  body.ef-simple-ui .top-navbar > .nav-tabs > .nav-tab-btn {
+    flex:0 0 25% !important;
+    width:25% !important;
+    max-width:25% !important;
+  }
+}
+@media print {
+  body.ef-simple-ui .top-navbar > .nav-tabs {display:none !important;}
+}
