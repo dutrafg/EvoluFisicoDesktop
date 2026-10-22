@@ -27,7 +27,7 @@
   function mount(){
     if(!document.body)return;
     document.body.dataset.efxVisual=get();
-    document.title='EvoluFísico2 1.0.4 estável | Início e Organização';
+    document.title='EvoluFísico Desktop 1.0.4 estável';
     const badge=document.querySelector('.brand-version');
     if(badge){badge.textContent='1.0.4 estável';badge.title='Versão 1.0.4 estável';}
     const host=document.getElementById('ef-setting-appearance')?.closest('.ef-settings-card');
