@@ -1,0 +1,124 @@
+
+/* EvoluFísico2 1.0.4 estável — efeitos opcionais, sem alterações em cálculos ou PDFs. */
+@media screen {
+ body.ef-simple-ui {--ef101-ease:cubic-bezier(.2,.8,.2,1);--ef101-depth:0 18px 35px rgba(8,43,28,.105),0 5px 11px rgba(6,40,26,.065), inset 0 1px 0 rgba(255,255,255,.65);--ef101-depth-hover:0 28px 48px rgba(7,44,29,.16),0 7px 14px rgba(8,40,27,.08), inset 0 1px 0 rgba(255,255,255,.7);}
+ :is(body.ef-simple-ui.dark-mode,html.ef-dark-mode body.ef-simple-ui){--ef101-depth:0 18px 38px rgba(0,0,0,.34),0 4px 12px rgba(0,0,0,.2),inset 0 1px 0 rgba(216,255,230,.06);--ef101-depth-hover:0 24px 49px rgba(0,0,0,.47),0 7px 20px rgba(0,0,0,.23),inset 0 1px 0 rgba(216,255,230,.08);}
+ /* Fundo discreto: textura pontilhada e iluminação, somente no modo Aprimorado. */
+ body.ef-simple-ui[data-efx-visual="advanced"] .app-container{
+  background-image:radial-gradient(circle at 1px 1px,rgba(23,110,75,.037) .75px,transparent 1px),radial-gradient(ellipse 74% 45% at 100% -10%,rgba(57,166,113,.11),transparent 72%),radial-gradient(ellipse 40% 34% at 4% 55%,rgba(79,160,131,.055),transparent 80%)!important;
+  background-size:24px 24px,auto,auto;background-repeat:repeat,no-repeat,no-repeat;
+ }
+ :is(body.ef-simple-ui.dark-mode,html.ef-dark-mode body.ef-simple-ui)[data-efx-visual="advanced"] .app-container{
+  background-image:radial-gradient(circle at 1px 1px,rgba(181,233,197,.031) .8px,transparent 1px),radial-gradient(ellipse 65% 36% at 98% -8%,rgba(52,154,110,.13),transparent 76%)!important;
+  background-size:26px 26px,auto;background-repeat:repeat,no-repeat;
+ }
+ /* Profundidade aplicada a todas as áreas funcionais, sem tocar em laudos, tabelas e impressão. */
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(
+  .efh-stat,.efh-panel,.efh-card,.eforg-card,.eforg-stat,.eforg-empty,.eforg-banner,.eforg-home-panel,
+  .ef-settings-card,.ef-history-folder,.history-card,.ef-proto-card,.efx-card-shell,
+  .card,.card-glass,.metric-card,.summary-card,.dashboard-kpi-grid > *,
+  .ef-billing-card,.billing-card,.ef-form-card,.ef-lab-card,.ef-analysis-card,
+  .efs-settings-card,.ef-diagnostic-card,.info-card,.kpi-card,.ef-today-card
+ ){
+  box-shadow:var(--ef101-depth)!important;
+  border-color:var(--efx-edge,rgba(17,113,75,.19))!important;
+  transition:box-shadow .26s var(--ef101-ease),border-color .26s ease, transform .26s var(--ef101-ease)!important;
+  backface-visibility:hidden;
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(
+  .efh-stat,.efh-panel,.eforg-card,.eforg-stat,.ef-settings-card,.history-card,.ef-history-folder,.card,.efx-card-shell
+ ){background-image:linear-gradient(156deg,rgba(255,255,255,.045),transparent 65%);}
+ /* Identidade tridimensional suave, sem girar a área de conteúdo ou o texto. */
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(.btn-primary,.eforg-button-primary,.efh-btn:not(.efh-btn-ghost),button.efprof-submit){
+  box-shadow:0 8px 15px rgba(11,114,72,.20),inset 0 1px 0 rgba(255,255,255,.36),inset 0 -2px 0 rgba(4,52,30,.11)!important;
+  border:1px solid rgba(12,91,58,.12)!important;
+  transition:transform .17s ease,box-shadow .17s ease,filter .17s ease!important;
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(.top-navbar,#ef-workspace-heading){
+  box-shadow:0 4px 22px rgba(8,45,31,.09)!important;
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] #ef-workspace-heading{
+  -webkit-backdrop-filter:blur(15px) saturate(135%);backdrop-filter:blur(15px) saturate(135%);
+  border-bottom:1px solid var(--efx-edge,rgba(30,114,67,.14));
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] .top-navbar:before{
+  content:"";pointer-events:none;position:absolute;inset:0 0 auto 0;height:115px;
+  background:radial-gradient(ellipse at 12% -12%,rgba(72,185,120,.14),transparent 75%);opacity:.72;
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(input:not([type=checkbox]):not([type=radio]),textarea,select):focus-visible{
+  outline:2px solid var(--ef-accent,#188461);outline-offset:2px;
+  box-shadow:0 0 0 5px rgba(30,157,98,.11),0 5px 14px rgba(5,48,32,.05)!important;
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(.nav-tab-btn.active,.eforg-tab[aria-selected=true],.eforg-filter[aria-pressed=true]){
+  box-shadow:0 6px 15px rgba(5,76,44,.14),inset 0 1px 0 rgba(255,255,255,.17)!important;
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(.tab-panel h2,.tab-panel h3,.efh-hero h1){letter-spacing:-.022em;}
+ @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  body.ef-simple-ui[data-efx-visual="advanced"] :is(
+   .efh-stat,.efh-panel,.eforg-card,.eforg-stat,.ef-settings-card,.history-card,
+   .ef-history-folder:not([open]),.ef-billing-card,.billing-card,.ef-lab-card,.ef-form-card,
+   .metric-card,.summary-card,.ef-analysis-card,.ef-diagnostic-card
+  ):hover:not(:has(.efx-card-tools)){
+   transform:perspective(1400px) translate3d(0,-4px,7px) rotateX(.48deg)!important;
+   box-shadow:var(--ef101-depth-hover)!important;border-color:rgba(33,146,91,.3)!important;
+  }
+  body.ef-simple-ui[data-efx-visual="advanced"] :is(.btn-primary,.eforg-button-primary,.efh-btn):hover{transform:translateY(-2px)!important;filter:brightness(1.035);}
+  body.ef-simple-ui[data-efx-visual="advanced"] :is(.btn-primary,.eforg-button-primary,.efh-btn):active{transform:translateY(1px)!important;box-shadow:inset 0 2px 5px rgba(0,0,0,.11)!important;}
+ }
+ /* Grade de Avaliações: no máximo quatro pastas, contagem na linha inferior. */
+ #tab-historico #history-list-grid.ef-history-view-grid{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;align-items:start;
+ }
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder{width:100%!important;min-width:0!important;max-width:100%!important;overflow:hidden;box-sizing:border-box;}
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder:not([open]) > summary{
+  display:grid!important;grid-template-columns:38px minmax(0,1fr)!important;
+  align-items:start!important;gap:8px 12px!important;padding:16px!important;min-height:147px!important;box-sizing:border-box;
+ }
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder:not([open]) > summary > .ef-folder-icon{
+  grid-column:1;grid-row:1;min-width:38px!important;width:38px!important;height:38px!important;
+ }
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder:not([open]) > summary > .ef-folder-main{
+  grid-column:2;grid-row:1;display:flex!important;flex-direction:column;gap:6px;min-width:0!important;max-width:100%!important;
+ }
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder:not([open]) > summary .ef-folder-name{
+  display:block;max-width:100%;font-size:14px;line-height:1.45;font-weight:760;
+  white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;
+ }
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder:not([open]) > summary .ef-folder-sub{
+  font-size:11px;line-height:1.5;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;
+ }
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder:not([open]) > summary > .ef-folder-side{
+  grid-column:2;grid-row:2;margin:0!important;min-width:0;max-width:100%;white-space:normal!important;
+  font-size:11px;line-height:1.4;overflow-wrap:break-word;
+ }
+ #tab-historico #history-list-grid.ef-history-view-grid > .ef-history-folder[open]{grid-column:1/-1!important;}
+ #tab-historico #history-list-grid.ef-history-view-list{display:flex!important;flex-direction:column!important;}
+ @media(max-width:1450px){#tab-historico #history-list-grid.ef-history-view-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}}
+ @media(max-width:1040px){#tab-historico #history-list-grid.ef-history-view-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+ @media(max-width:700px){#tab-historico #history-list-grid.ef-history-view-grid{grid-template-columns:minmax(0,1fr)!important;}}
+ /* Botão de busca visível e persistente no cabeçalho de TODOS os módulos. */
+ #ef-workspace-heading{display:flex!important;align-items:center!important;min-width:0;gap:10px;}
+ #ef-workspace-heading #efg-header-search{
+  display:inline-flex!important;align-items:center;justify-content:center;gap:9px;flex:none;
+  margin-left:auto;padding:8px 13px;min-height:42px;
+  border:1px solid var(--ef-line,#c8dbd0);border-radius:10px;
+  background:var(--ef-soft,#ecf6ee);color:var(--ef-ink,#164633);
+  font-family:inherit;font-size:13px;font-weight:650;line-height:1.3;cursor:pointer;position:relative;z-index:3;
+ }
+ #ef-workspace-heading #efg-header-search svg{width:19px;height:19px;stroke:currentColor;flex:none;}
+ #ef-workspace-heading #efg-header-search:hover{border-color:var(--ef-accent,#187c57);background:var(--ef-soft,#e2f3e6);}
+ #ef-workspace-heading #efg-header-search:focus-visible{outline:3px solid var(--ef-accent,#187c57);outline-offset:2px;}
+ body.ef-simple-ui[data-efx-visual="advanced"] #ef-workspace-heading #efg-header-search{box-shadow:0 5px 13px rgba(12,76,48,.12),inset 0 1px 0 rgba(255,255,255,.36)!important;}
+ :is(html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode) #ef-workspace-heading #efg-header-search{background:var(--ef-soft,#264238);color:var(--ef-ink,#e7fbed);border-color:var(--efx-edge,rgba(155,231,183,.3));}
+ @media(max-width:700px){#ef-workspace-heading #efg-header-search{width:44px;padding:8px!important;}#ef-workspace-heading #efg-header-search .efg-search-label{display:none;}#ef-workspace-heading small{display:none!important;}}
+ /* Modo Essencial = nenhum brilho, sombra ou inclinação adicional. */
+ body.ef-simple-ui[data-efx-visual="essential"] :is(.top-navbar,#ef-workspace-heading,.efh-stat,.efh-panel,.eforg-card,.eforg-stat,.ef-settings-card,.history-card,.ef-history-folder,.ef-billing-card,.billing-card,.ef-form-card,.ef-lab-card,.ef-analysis-card,.btn-primary,.eforg-button-primary,#efg-header-search){
+  box-shadow:none!important;filter:none!important;transform:none!important;transition:none!important;
+ }
+ body.ef-simple-ui[data-efx-visual="essential"] .app-container{background-image:none!important;}
+ body.ef-simple-ui[data-efx-visual="essential"] #ef-workspace-heading{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;}
+ body.ef-simple-ui[data-efx-visual="essential"] .top-navbar:before{display:none!important;}
+ @media(prefers-reduced-motion:reduce){body.ef-simple-ui[data-efx-visual="advanced"] :is(.efh-stat,.efh-panel,.eforg-card,.eforg-stat,.ef-settings-card,.history-card,.ef-history-folder,.efh-btn,.btn-primary){transform:none!important;transition:none!important;animation:none!important;}}
+ @media(prefers-reduced-transparency:reduce){body.ef-simple-ui[data-efx-visual="advanced"] #ef-workspace-heading{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}}
+}
+@media print{#efg-header-search{display:none!important;}}
