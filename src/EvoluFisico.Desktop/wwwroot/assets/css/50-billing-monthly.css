@@ -1,0 +1,43 @@
+/* EvoluFísico2 1.0.3 — histórico mensal de Cobranças */
+#ef-fin-panel{--ef-fin-green:#11704f;display:block;margin:22px 0;padding:clamp(16px,2vw,26px);border:1px solid var(--border-color,#d5e6db);border-radius:16px;color:var(--text-main,#19392c);background:var(--card-bg,var(--ef-surface,#fff));box-shadow:0 12px 34px rgba(5,40,27,.08);max-width:100%;min-width:0}
+#ef-fin-panel .ef-fin-head{display:flex;align-items:start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:16px}
+#ef-fin-panel h3{font-size:1.25rem;margin:0;color:var(--text-main,#1b3b2b)}
+#ef-fin-panel h4{font-size:1rem;margin:14px 0 10px;color:var(--text-main,#1b3b2b)}
+#ef-fin-panel p{font-size:.89rem;line-height:1.55;color:var(--text-muted,#657a70);margin:5px 0 0}
+#ef-fin-panel button{font:inherit;cursor:pointer;min-height:40px}
+#ef-fin-panel .ef-fin-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#ef-fin-panel .ef-fin-controls input{min-width:156px;min-height:41px;border:1px solid var(--border-color,#cedfd3);border-radius:9px;padding:7px 9px;background:var(--input-bg,var(--card-bg,#fff));color:var(--text-main,#173b2b);font:inherit}
+#ef-fin-panel button.ef-fin-btn{background:var(--input-bg,var(--card-bg,#fff));border:1px solid var(--border-color,#cadfd2);color:var(--text-main,#17402e);border-radius:9px;padding:8px 12px;white-space:normal}
+#ef-fin-panel button.ef-fin-btn:hover{background:var(--primary-light,#e7f6ec)}
+#ef-fin-panel button.ef-fin-btn.primary{background:var(--primary,#16714f);color:#fff;border-color:var(--primary,#16714f);font-weight:750}
+#ef-fin-panel .ef-fin-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:13px 0}
+#ef-fin-panel .ef-fin-kpi{border:1px solid var(--border-color,#dceae1);border-radius:12px;padding:15px;min-width:0;background:var(--bg-secondary,rgba(120,175,145,.07));overflow-wrap:anywhere}
+#ef-fin-panel .ef-fin-kpi span{font-size:.78rem;color:var(--text-muted,#60776b);font-weight:650;display:block}
+#ef-fin-panel .ef-fin-kpi strong{display:block;font-size:clamp(1.2rem,2vw,1.7rem);font-variant-numeric:tabular-nums;margin:8px 0;color:var(--text-main,#123d2e)}
+#ef-fin-panel .ef-fin-kpi small{font-size:.76rem;color:var(--text-muted,#60776b)}
+#ef-fin-panel .ef-fin-period-label{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#ef-fin-panel .ef-fin-blocks{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:15px;min-width:0}
+#ef-fin-panel .ef-fin-block{min-width:0;border:1px solid var(--border-color,#dfe9e1);border-radius:12px;padding:14px;background:var(--card-bg,#fff)}
+#ef-fin-panel .ef-fin-table-wrap{max-width:100%;overflow:auto}
+#ef-fin-panel .ef-fin-table{width:100%;border-collapse:collapse;table-layout:auto;font-size:.82rem;min-width:380px}
+#ef-fin-panel .ef-fin-table th,#ef-fin-panel .ef-fin-table td{padding:9px 7px;text-align:left;border-bottom:1px solid var(--border-color,#e4ece6);max-width:240px;overflow-wrap:anywhere;color:var(--text-main,#20392e)}
+#ef-fin-panel .ef-fin-table th{color:var(--text-muted,#60776b);font-weight:750;font-size:.76rem}
+#ef-fin-panel .ef-fin-table .ef-fin-num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+#ef-fin-panel .ef-fin-empty{padding:18px;color:var(--text-muted,#627a6b);text-align:center;border:1px dashed var(--border-color,#cedfd3);border-radius:9px}
+#ef-fin-panel .ef-fin-month-list{display:grid;gap:7px;max-width:100%}
+#ef-fin-panel .ef-fin-monthrow{display:grid;grid-template-columns:minmax(100px,1.5fr) minmax(90px,1fr) minmax(90px,1fr) auto;align-items:center;gap:9px;text-align:left;width:100%;padding:12px 14px;border:1px solid var(--border-color,#d7e6dc);border-radius:10px;color:var(--text-main,#224636);background:transparent}
+#ef-fin-panel .ef-fin-monthrow:hover,#ef-fin-panel .ef-fin-monthrow.is-active{border-color:var(--primary,#1a7d56);background:var(--primary-light,#e8f6ee)}
+#ef-fin-panel .ef-fin-monthrow strong{font-variant-numeric:tabular-nums;color:var(--primary,#0e6846)}
+#ef-fin-panel .ef-fin-monthrow small{color:var(--text-muted,#567261);text-align:right}
+#ef-fin-panel .ef-fin-listhead{display:grid;grid-template-columns:minmax(100px,1.5fr) minmax(90px,1fr) minmax(90px,1fr) auto;gap:9px;padding:8px 14px;font-size:.75rem;color:var(--text-muted,#627d6d);font-weight:700}
+#ef-fin-panel .ef-fin-alert{padding:12px 14px;margin:10px 0;border-radius:10px;border:1px solid #ce9560;background:#ffedce;color:#663a14}
+#ef-fin-panel .ef-fin-footnote{margin-top:18px!important;font-size:.75rem!important}
+#tab-cobranca .cob-kpi-card{min-width:0}
+#cob-finance-date-field{display:block;margin:10px 0 15px;border:1px solid rgba(255,255,255,.24);border-radius:9px;padding:11px 12px;color:var(--text-main,#183b2a)}
+#cob-finance-date-field label{font-size:.82rem;font-weight:650;display:flex;gap:7px;flex-direction:column}
+#cob-finance-date-field input{width:100%;max-width:270px;min-height:42px;border:1px solid #a0c7b1;border-radius:7px;padding:7px 9px;background:#fff;color:#163829;font:inherit;color-scheme:light}
+#cob-finance-date-field small{font-size:.74rem;color:var(--text-muted,#62766b);display:block;margin-top:4px}
+@media(max-width:1000px){#ef-fin-panel .ef-fin-blocks{grid-template-columns:1fr}}
+@media(max-width:680px){#ef-fin-panel .ef-fin-kpis{grid-template-columns:1fr}#ef-fin-panel .ef-fin-listhead{display:none}#ef-fin-panel .ef-fin-monthrow{grid-template-columns:1fr 1fr}#ef-fin-panel .ef-fin-monthrow span:first-child{grid-column:1/-1;font-weight:700}#ef-fin-panel .ef-fin-monthrow small{text-align:left}#ef-fin-panel .ef-fin-head{flex-direction:column}}
+@media(prefers-reduced-motion:no-preference){#ef-fin-panel .ef-fin-kpi,#ef-fin-panel .ef-fin-monthrow{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}#ef-fin-panel .ef-fin-kpi:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,80,45,.09)}}
+@media print{#ef-fin-panel{display:none!important}}
