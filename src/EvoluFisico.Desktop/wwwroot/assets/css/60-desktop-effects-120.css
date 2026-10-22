@@ -1,0 +1,57 @@
+/* Desktop 1.0.4: Efeitos Avançados 20% além do EvoluFisico2 1.0.4.
+   Sombras/blur/elevacao 1.2x sobre valores medidos no CSS web; sem afetar relatórios.
+   Respeita o modo Essencial, dispositivos sem hover e movimento reduzido. */
+@media screen {
+ body.ef-simple-ui[data-efx-visual="advanced"] {
+  --efx-blur:19.2px; /* 16px * 1.2 */
+  --efx-shift:-3.6px; /* -3px * 1.2 */
+  --efx-primary-shadow:0 14.4px 33.6px rgba(15,42,30,.102),0 2.4px 8.4px rgba(11,51,32,.05);
+  --efx-hover-shadow:0 28.8px 54px rgba(8,48,31,.168),0 4.8px 14.4px rgba(10,48,32,.084);
+  --ef101-depth:0 21.6px 42px rgba(8,43,28,.126),0 6px 13.2px rgba(6,40,26,.078),inset 0 1px rgba(255,255,255,.65);
+  --ef101-depth-hover:0 33.6px 57.6px rgba(7,44,29,.192),0 8.4px 16.8px rgba(8,40,27,.096),inset 0 1px rgba(255,255,255,.7);
+ }
+ :is(body.ef-simple-ui.dark-mode,html.ef-dark-mode body.ef-simple-ui)[data-efx-visual="advanced"]{
+  --efx-primary-shadow:0 16.8px 36px rgba(0,0,0,.24),0 4.8px 12px rgba(0,0,0,.17);
+  --efx-hover-shadow:0 28.8px 54px rgba(0,0,0,.36),0 6px 18px rgba(0,0,0,.24);
+  --ef101-depth:0 21.6px 45.6px rgba(0,0,0,.408),0 4.8px 14.4px rgba(0,0,0,.24),inset 0 1px rgba(216,255,230,.06);
+  --ef101-depth-hover:0 28.8px 58.8px rgba(0,0,0,.55),0 8.4px 24px rgba(0,0,0,.276),inset 0 1px rgba(216,255,230,.08);
+ }
+ /* Preserva o contraste da barra lateral desktop e evita que o vidro cubra seus ícones. */
+ @media(min-width:1200px) {
+  body.ef-simple-ui[data-efx-visual="advanced"][data-ef-palette] .top-navbar {
+   background:color-mix(in srgb,var(--ef-selected-dark,#086849) 75%,#13251d)!important;
+   border-right-color:color-mix(in srgb,var(--ef-selected-dark,#086849) 35%,#1b2b23)!important;
+  }
+  :is(body.ef-simple-ui.dark-mode,html.ef-dark-mode body.ef-simple-ui)[data-efx-visual="advanced"][data-ef-palette] .top-navbar {
+   background:color-mix(in srgb,var(--ef-selected-dark,#086849) 24%,var(--ef-surface,#101820))!important;
+  }
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] #ef-workspace-heading {
+  -webkit-backdrop-filter:blur(18px) saturate(142%)!important;
+  backdrop-filter:blur(18px) saturate(142%)!important;
+ }
+}
+@media screen and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(
+  .efh-stat,.efh-panel,.eforg-card,.eforg-stat,.ef-settings-card,.history-card,
+  .ef-history-folder:not([open]),.ef-billing-card,.billing-card,.ef-lab-card,
+  .ef-form-card,.metric-card,.summary-card,.ef-analysis-card,.ef-diagnostic-card
+ ):hover:not(:has(.efx-card-tools)){
+  transform:perspective(1400px) translate3d(0,-4.8px,8.4px) rotateX(.576deg)!important;
+  box-shadow:var(--ef101-depth-hover)!important;
+ }
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(.btn-primary,.eforg-button-primary,.efh-btn):hover {
+  transform:translateY(-2.4px)!important;
+ }
+}
+@media screen and (prefers-reduced-motion:reduce) {
+ body.ef-simple-ui[data-efx-visual="advanced"] :is(.efh-stat,.efh-panel,.eforg-card,.eforg-stat,.ef-settings-card,.history-card,.efh-btn) {
+  transition:none!important;animation:none!important;transform:none!important;
+ }
+}
+@media screen {
+ body.ef-simple-ui[data-efx-visual="essential"]{--efx-blur:0px;--efx-shift:0px;--efx-primary-shadow:none;--efx-hover-shadow:none;}
+}
+@media print {
+ body.ef-simple-ui[data-efx-visual="advanced"]{--efx-blur:0px;--efx-shift:0px;--efx-primary-shadow:none;--efx-hover-shadow:none;--ef101-depth:none;--ef101-depth-hover:none;}
+}
