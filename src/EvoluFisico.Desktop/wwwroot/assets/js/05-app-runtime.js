@@ -2702,34 +2702,180 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 elComFotos.textContent = String(countF);
             }
 
+
+            if (!document.getElementById('ef-history-folder-style')) {
+                const folha = document.createElement('style');
+                folha.id = 'ef-history-folder-style';
+                folha.textContent = `
+                    #tab-historico #history-list-grid {display:flex!important;flex-direction:column!important;gap:12px!important;min-width:0}
+
+                    /* Controle de visualização aprovado: grade com no máximo 4 colunas */
+                    #tab-historico #history-list-grid.ef-history-view-grid {
+                        display:grid!important;
+                        grid-template-columns:repeat(4,minmax(0,1fr))!important;
+                        align-items:start;gap:12px!important;
+                    }
+                    #tab-historico #history-list-grid.ef-history-view-list {display:flex!important;flex-direction:column!important}
+                    #tab-historico #history-list-grid.hidden {display:none!important}
+                    #tab-historico .ef-history-view-toolbar {
+                        display:flex;justify-content:space-between;align-items:center;
+                        gap:10px;flex-wrap:wrap;padding:12px 16px;
+                        border-bottom:1px solid var(--ef-line,var(--border-color,#e1e9e4));
+                    }
+                    #tab-historico .ef-history-view-label {font-size:13px;font-weight:650;color:var(--ef-muted,var(--text-muted,#64748b))}
+                    #tab-historico .ef-history-view-switch {
+                        display:inline-flex;align-items:center;gap:3px;padding:4px;
+                        border:1px solid var(--ef-line,var(--border-color,#e1e9e4));
+                        border-radius:10px;background:var(--ef-soft,var(--surface-secondary,#f3f6f4));
+                    }
+                    #tab-historico .ef-history-view-button {
+                        display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:35px;
+                        padding:7px 11px;border:1px solid transparent;border-radius:7px;background:transparent;
+                        color:var(--ef-muted,var(--text-muted,#64748b));font:inherit;font-size:13px;font-weight:650;
+                        cursor:pointer;white-space:nowrap;
+                    }
+                    #tab-historico .ef-history-view-button[aria-pressed="true"] {
+                        background:var(--ef-surface,var(--surface-color,#fff));color:var(--ef-accent,var(--primary,#0a5c43));
+                        border-color:var(--ef-line,var(--border-color,#e1e9e4));
+                        box-shadow:0 1px 4px rgba(0,0,0,.07);
+                    }
+                    #tab-historico .ef-history-view-button:focus-visible {outline:2px solid var(--ef-accent,var(--primary,#0a5c43));outline-offset:2px}
+                    #tab-historico .ef-history-view-button svg {width:16px;height:16px;flex-shrink:0}
+                    #tab-historico .ef-history-view-grid .ef-history-folder:not([open]) {min-height:150px}
+                    #tab-historico .ef-history-view-grid .ef-history-folder:not([open]) > summary {
+                        display:flex;flex-wrap:wrap;align-content:start;min-height:149px;padding:15px;gap:10px;
+                    }
+                    #tab-historico .ef-history-view-grid .ef-history-folder:not([open]) .ef-folder-icon {
+                        width:38px;height:38px;flex-basis:38px;
+                    }
+                    #tab-historico .ef-history-view-grid .ef-history-folder:not([open]) .ef-folder-main {
+                        flex:1 1 calc(100% - 55px);gap:6px;
+                    }
+                    #tab-historico .ef-history-view-grid .ef-history-folder:not([open]) .ef-folder-side {
+                        flex:1 1 100%;margin-left:48px;justify-content:space-between;min-width:0;
+                    }
+                    #tab-historico .ef-history-view-grid .ef-history-folder[open] {grid-column:1/-1}
+                    @media(max-width:1500px) {
+                        #tab-historico #history-list-grid.ef-history-view-grid {grid-template-columns:repeat(3,minmax(0,1fr))!important}
+                    }
+                    @media(max-width:1120px) {
+                        #tab-historico #history-list-grid.ef-history-view-grid {grid-template-columns:repeat(2,minmax(0,1fr))!important}
+                    }
+                    @media(max-width:720px) {
+                        #tab-historico #history-list-grid.ef-history-view-grid {grid-template-columns:minmax(0,1fr)!important}
+                        #tab-historico .ef-history-view-grid .ef-history-folder:not([open]) {min-height:unset}
+                        #tab-historico .ef-history-view-grid .ef-history-folder:not([open]) > summary {min-height:unset}
+                    }
+
+                    #tab-historico .ef-history-folder {display:block;width:100%;min-width:0;overflow:hidden;background:var(--ef-surface,var(--surface-color,#fff));border:1px solid var(--ef-line,var(--border-color,#dce4df));border-radius:13px;box-shadow:var(--ef-shadow-sm,0 1px 3px rgba(0,0,0,.05))}
+                    #tab-historico .ef-history-folder[open] {border-color:var(--ef-accent,var(--primary,#0a5c43))}
+                    #tab-historico .ef-history-folder>summary {display:flex;align-items:center;gap:14px;min-width:0;padding:18px 20px;cursor:pointer;list-style:none;color:var(--ef-ink,var(--text-main,#15291f));transition:background .16s ease}
+                    #tab-historico .ef-history-folder>summary::-webkit-details-marker {display:none}
+                    #tab-historico .ef-history-folder>summary:hover {background:var(--ef-soft,var(--primary-light,#eaf5ee))}
+                    #tab-historico .ef-folder-icon {width:44px;height:44px;display:grid;place-items:center;flex:0 0 44px;background:var(--ef-soft,var(--primary-light,#e7f2ea));color:var(--ef-accent,var(--primary,#0a5c43));border-radius:11px}
+                    #tab-historico .ef-folder-main {min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+                    #tab-historico .ef-folder-name {font-size:15px;font-weight:750;overflow-wrap:anywhere}
+                    #tab-historico .ef-folder-sub {font-size:12px;color:var(--ef-muted,var(--text-muted,#687b72));overflow-wrap:anywhere}
+                    #tab-historico .ef-folder-side {display:flex;align-items:center;gap:9px;flex-shrink:0}
+                    #tab-historico .ef-folder-count {background:var(--ef-soft,var(--primary-light,#e7f2ea));color:var(--ef-accent,var(--primary,#0a5c43));padding:5px 9px;border-radius:8px;font-size:12px;font-weight:750;white-space:nowrap}
+                    #tab-historico .ef-folder-chevron {display:grid;place-items:center;transition:transform .18s ease;color:var(--ef-muted,var(--text-muted,#687b72))}
+                    #tab-historico .ef-history-folder[open] .ef-folder-chevron {transform:rotate(180deg)}
+                    #tab-historico .ef-folder-contents {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:12px;padding:0 16px 16px}
+                    #tab-historico .ef-folder-contents .history-card {min-width:0;width:100%;margin:0}
+                    @media(max-width:600px) {
+                        #tab-historico .ef-history-folder>summary {padding:13px;gap:10px;flex-wrap:wrap}
+                        #tab-historico .ef-folder-icon {width:38px;height:38px;flex-basis:38px}
+                        #tab-historico .ef-folder-side {margin-left:48px}
+                        #tab-historico .ef-folder-contents {grid-template-columns:minmax(0,1fr);padding:0 9px 9px}
+                    }
+                `;
+                document.head.appendChild(folha);
+            }
+
             const grid = document.getElementById('history-list-grid');
             const empty = document.getElementById('history-empty-state');
             if (!grid || !empty) return;
-
-            grid.innerHTML = '';
-            
-            let lista = [...avaliacoes].reverse();
-            if (filtroTexto.trim() !== '') {
-                const termo = filtroTexto.toLowerCase();
-                lista = lista.filter(a => 
-                    (a.nome && a.nome.toLowerCase().includes(termo)) ||
-                    (a.email && a.email.toLowerCase().includes(termo)) ||
-                    (a.whatsapp && String(a.whatsapp).replace(/\D/g, '').includes(termo.replace(/\D/g, '') || '\u0000')) ||
-                    (a.checkin_semana && a.checkin_semana.toLowerCase().includes(termo)) ||
-                    (a.data_avaliacao && (a.data_avaliacao.includes(termo) || formatarData(a.data_avaliacao).includes(termo)))
-                );
+            // Mantém o modo escolhido entre visitas sem alterar o banco de avaliações.
+            let barraExibicao = document.getElementById('ef-history-view-toolbar');
+            if (!barraExibicao) {
+                barraExibicao = document.createElement('div');
+                barraExibicao.id = 'ef-history-view-toolbar';
+                barraExibicao.className = 'ef-history-view-toolbar no-print';
+                barraExibicao.innerHTML = `
+                    <span class="ef-history-view-label">Organizar pastas dos alunos</span>
+                    <div class="ef-history-view-switch" role="group" aria-label="Visualização das avaliações">
+                        <button type="button" class="ef-history-view-button" data-ef-history-view="list" aria-pressed="false" title="Mostrar um aluno por linha">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1"/></svg> Lista
+                        </button>
+                        <button type="button" class="ef-history-view-button" data-ef-history-view="grid" aria-pressed="true" title="Mostrar até quatro alunos por linha">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Grade
+                        </button>
+                    </div>
+                `;
+                const areaHistorico = grid.parentElement;
+                areaHistorico.insertBefore(barraExibicao, empty);
+                barraExibicao.querySelectorAll('[data-ef-history-view]').forEach(botao => {
+                    botao.addEventListener('click', () => window.EFHistoryView.set(botao.dataset.efHistoryView));
+                });
             }
+            window.EFHistoryView.apply();
 
-            if (lista.length === 0) {
+            const abertos = new Set(Array.from(grid.querySelectorAll('.ef-history-folder[open]'), p => p.dataset.efClientId));
+            const tinhaPastas = Boolean(grid.querySelector('.ef-history-folder'));
+            grid.replaceChildren();
+
+            const normalizarBusca = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').trim();
+            const termo = normalizarBusca(filtroTexto);
+            const termoNumerico = String(filtroTexto ?? '').replace(/\D/g,'');
+            const grupos = new Map();
+            for (const registro of avaliacoes) {
+                const chave = String(EFIdentity.key(registro) || registro.cliente_id || registro.id);
+                if (!grupos.has(chave)) grupos.set(chave, []);
+                grupos.get(chave).push(registro);
+            }
+            const pastas = [];
+            for (const [chave, todos] of grupos) {
+                todos.sort((x,y) => cmpAval(y,x));
+                const maisRecente = todos[0];
+                const nome = String(maisRecente.nome || todos.find(x => x.nome)?.nome || 'Aluno sem nome');
+                const infosAluno = [nome, ...todos.map(x => x.email || ''), ...todos.map(x => x.whatsapp || '')];
+                const combinaAluno = termo && infosAluno.some(v => normalizarBusca(v).includes(termo));
+                const filtrados = !termo || combinaAluno ? todos : todos.filter(x =>
+                    [x.checkin_semana,x.data_avaliacao,formatarData(x.data_avaliacao),x.email,x.nome].some(v => normalizarBusca(v).includes(termo)) ||
+                    (termoNumerico && termoNumerico.length >= 3 && String(x.whatsapp||'').replace(/\D/g,'').includes(termoNumerico))
+                );
+                if (filtrados.length) pastas.push({chave,nome,maisRecente,todos,filtrados});
+            }
+            const collator = new Intl.Collator('pt-BR',{sensitivity:'base',numeric:true});
+            pastas.sort((x,y) => collator.compare(x.nome,y.nome) || x.chave.localeCompare(y.chave));
+
+            if (!pastas.length) {
                 empty.classList.remove('hidden');
                 grid.classList.add('hidden');
                 return;
             }
-
             empty.classList.add('hidden');
             grid.classList.remove('hidden');
 
-            lista.forEach(a => {
+            pastas.forEach((grupo, indice) => {
+                const pasta = document.createElement('details');
+                pasta.className = 'ef-history-folder';
+                pasta.dataset.efClientId = grupo.chave;
+                pasta.open = Boolean(termo) || abertos.has(grupo.chave) || (!tinhaPastas && indice === 0 && window.EFHistoryView.get() === 'list');
+                const sumario = document.createElement('summary');
+                const sufixo = grupo.todos.length === 1 ? 'avaliação' : 'avaliações';
+                const contato = String(grupo.maisRecente.email || grupo.maisRecente.whatsapp || 'Histórico do aluno');
+                sumario.innerHTML = `
+                    <span class="ef-folder-icon" aria-hidden="true">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10H3z"/></svg>
+                    </span>
+                    <span class="ef-folder-main"><span class="ef-folder-name">${esc(grupo.nome)}</span>
+                    <span class="ef-folder-sub">${esc(contato)} · Última avaliação: ${esc(formatarData(grupo.maisRecente.data_avaliacao))}</span></span>
+                    <span class="ef-folder-side"><span class="ef-folder-count">${grupo.todos.length} ${sufixo}</span>
+                    <span class="ef-folder-chevron" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span></span>`;
+                const conteudo = document.createElement('div');
+                conteudo.className = 'ef-folder-contents';
+                grupo.filtrados.forEach(a => {
                 const b = a.bioimpedancia || {};
                 const d = a.dobras_resultado || {};
 
@@ -2769,14 +2915,43 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         <button class="btn btn-primary btn-sm" onclick="abrirVisualizacaoPacienteWeb('${esc(idSeguro(a.id))}')" title="Abrir Visão do Aluno (Tela Cheia Interativa)">👁️ Visão do Aluno</button>
                         <button class="btn btn-success btn-sm" onclick="imprimirAvaliacaoIndividualPDF('${esc(idSeguro(a.id))}')" title="Gerar laudo em PDF com fotos e bioimpedância">🖨️ PDF</button>
                         <button class="btn btn-secondary btn-sm" onclick="abrirModalDetalhes('${esc(idSeguro(a.id))}')" title="Ver avaliação completa">🔍 Detalhes</button>
-                        <button class="btn btn-secondary btn-sm" data-ef-nova-avaliacao="1" onclick="novaAvaliacaoParaAluno('${esc(idSeguro(a.id))}')" title="Criar nova avaliação preservando somente os dados cadastrais">➕ Nova avaliação</button>
+                        <button class="btn btn-secondary btn-sm" data-ef-nova-avaliacao="1" onclick="novaAvaliacaoParaAluno('${esc(idSeguro(a.id))}')" title="Nova avaliação com dados cadastrais do aluno, sem copiar medidas, fotos ou pareceres">➕ Nova avaliação</button>
                         <button class="btn btn-warning btn-sm" onclick="editarAvaliacao('${esc(idSeguro(a.id))}')" title="Editar dados">✏️</button>
                         <button class="btn btn-danger btn-sm" onclick="excluirAvaliacao('${esc(idSeguro(a.id))}')" title="Excluir">🗑️</button>
                     </div>
                 `;
-                grid.appendChild(card);
+                conteudo.appendChild(card);
+                });
+                pasta.append(sumario,conteudo);
+                grid.appendChild(pasta);
             });
         }
+        const EF_HISTORY_VIEW_STORAGE = 'ef-history-view-v1';
+        const lerVisualizacaoHistorico = () => {
+            try { return localStorage.getItem(EF_HISTORY_VIEW_STORAGE) === 'list' ? 'list' : 'grid'; }
+            catch (_) { return window.__efHistoryViewFallback === 'list' ? 'list' : 'grid'; }
+        };
+        const aplicarVisualizacaoHistorico = () => {
+            const grade = document.getElementById('history-list-grid');
+            if (!grade) return;
+            const modo = lerVisualizacaoHistorico();
+            grade.classList.toggle('ef-history-view-grid', modo === 'grid');
+            grade.classList.toggle('ef-history-view-list', modo === 'list');
+            document.querySelectorAll('#ef-history-view-toolbar [data-ef-history-view]').forEach(botao => {
+                botao.setAttribute('aria-pressed', String(botao.dataset.efHistoryView === modo));
+            });
+        };
+        window.EFHistoryView = {
+            get: lerVisualizacaoHistorico,
+            apply: aplicarVisualizacaoHistorico,
+            set(modo) {
+                if (modo !== 'list' && modo !== 'grid') return;
+                window.__efHistoryViewFallback = modo;
+                try { localStorage.setItem(EF_HISTORY_VIEW_STORAGE, modo); } catch (_) {}
+                aplicarVisualizacaoHistorico();
+            }
+        };
+        window.EFHistoryGroups = {render: renderizarHistorico};
 
         function filtrarAvaliacoes() {
             const input = document.getElementById('filtro-busca');
