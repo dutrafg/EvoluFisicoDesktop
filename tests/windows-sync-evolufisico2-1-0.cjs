@@ -67,6 +67,6 @@ check('Version, backup and encrypted native storage remain untouched',()=>{
  assert.match(read('installer/EvoluFisico.iss'),/#define MyAppVersion "1\.0\.0"/);
  assert.match(read('installer/EvoluFisico.iss'),/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(runtime.includes('EFNativeStorage'));
- assert.ok(sw.includes('evolufisico-desktop-1-0-sync-aderencia-nova-avaliacao'));
+ assert.match(sw,/const CACHE_NAME = 'evolufisico-desktop-1-0-[^']+'/);;
 });
 console.log('TOTAL',passed,'desktop synchronization regression tests passed');

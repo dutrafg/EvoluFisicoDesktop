@@ -20,6 +20,16 @@ Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HT
 
 A interpretação exige **ao menos 3 datas distintas e intervalo mínimo de 21 dias**. Séries com dados ausentes/inválidos, mudanças de método ou pouco intervalo entre coletas recebem bloqueios ou ressalvas. Pontuações (0–100) são **indicadores heurísticos da suficiência dos dados**, não porcentagens de acurácia clínica ou diagnósticos. O relatório por aluno pode ser editado em memória antes de **Imprimir / salvar PDF**, sem alterar fichas originais.
 
+## Sincronização de 22/10/2026 — Evolufisico2 1.0
+
+Base verificada: `dutrafg/Evolufisico2@7381ed1884ff` (branch `main`).
+
+- **Avaliações agrupadas por aluno:** cada pasta usa o identificador permanente do aluno (`cliente_id`), sem misturar homônimos. Pastas em ordem alfabética **A–Z**, com avaliações da mais recente à mais antiga.
+- **Lista ou grade:** escolha gravada localmente; a grade apresenta até quatro pastas por linha em telas grandes e reduz automaticamente para três, duas ou uma conforme a largura. Os botões de avaliação, edição, impressão, detalhes e nova avaliação continuam dentro das pastas.
+- **PDF cancelável no Desktop:** prévia em janela interna com **Voltar / Cancelar**, **Esc** e **Salvar como PDF / Imprimir**. Ao cancelar, nenhum diálogo de impressão é iniciado. O fluxo original de impressão via Windows WebView2 é preservado.
+- A integração mantém o banco SQLite criptografado, os backups, os IDs das avaliações e o identificador do instalador 1.0.0.
+- Testes adicionais: `node tests/windows-sync-20261022.cjs`. A impressão visual, a persistência após fechar o programa e a atualização com dados reais ainda exigem homologação prática.
+
 ## Dados, migração e segurança
 
 O Desktop permanece com banco **SQLite cifrado por mecanismos nativos do Windows**, distinto do IndexedDB usado no aplicativo web. Não substitua o frontend Windows pelos arquivos de armazenamento do Evolufisico2: os módulos de Análises foram integrados preservando o bridge de armazenamento e o cofre existentes. O perfil WebView2 permanece em `%LOCALAPPDATA%\EvoluFisicoDesktop\WebView2`.
@@ -33,6 +43,7 @@ Requer Windows x64, .NET 8 SDK, Microsoft Edge WebView2 Runtime e Inno Setup 6.
 ```powershell
 node tests/windows-stable-1-0.cjs
 node tests/windows-sync-evolufisico2-1-0.cjs
+node tests/windows-sync-20261022.cjs
 node tests/desktop-integration.cjs
 node tests/windows-release-911-beta4.cjs
 node tests/windows-billing-navigation-91.cjs

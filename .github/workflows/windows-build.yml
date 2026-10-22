@@ -65,6 +65,8 @@ jobs:
 
       - name: Validate Evolufisico2 sync (adherence, history and perimetry)
         run: node tests/windows-sync-evolufisico2-1-0.cjs
+      - name: Validate 2026-10-22 history folders and PDF cancellation
+        run: node tests/windows-sync-20261022.cjs
 
       - name: Validate legacy desktop features and preregistration
         run: node tests/windows-release-911-beta4.cjs

@@ -8,6 +8,7 @@ on:
       - 'tests/windows-release-911-beta4.cjs'
       - 'tests/windows-stable-1-0.cjs'
       - 'tests/windows-sync-evolufisico2-1-0.cjs'
+      - 'tests/windows-sync-20261022.cjs'
       - 'scripts/build-windows.ps1'
       - 'tests/desktop-integration.cjs'
       - 'tests/windows-billing-navigation-91.cjs'
@@ -42,6 +43,8 @@ jobs:
         run: node tests/windows-stable-1-0.cjs
       - name: Validate Evolufisico2 adherence, history and perimetry synchronization
         run: node tests/windows-sync-evolufisico2-1-0.cjs
+      - name: Validate 2026-10-22 history folders and PDF cancellation
+        run: node tests/windows-sync-20261022.cjs
       - name: Validate legacy desktop theme, movable cards and preregistration
         run: node tests/windows-release-911-beta4.cjs
       - name: Validate native desktop bridges and version alignment

@@ -115,6 +115,7 @@ function card(a){
   return el;
 }
 function updateHistory(filtro){
+  if(window.EFHistoryGroups&&typeof window.EFHistoryGroups.render==='function')return window.EFHistoryGroups.render(filtro||'');
    ensureIndex();setKpis();
    var grid=document.getElementById('history-list-grid'),empty=document.getElementById('history-empty-state');
    if(!grid||!empty)return;
