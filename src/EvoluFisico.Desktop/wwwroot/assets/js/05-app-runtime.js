@@ -2958,6 +2958,78 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             renderizarHistorico(input.value);
         }
 
+
+        // Prévia cancelável, mantendo a impressão Windows no WebView2 (sem nova aba externa).
+        function abrirPreviaPDFDesktop(wrapper, aval, imprimir) {
+            if (!wrapper || !wrapper.querySelector('.print-page, .cm-page')) return false;
+            if (typeof HTMLDialogElement === 'undefined' || !HTMLDialogElement.prototype.showModal) {
+                if (window.confirm('Imprimir / salvar o relatório de Avaliação Física? Cancelar não abrirá a impressão.')) imprimir();
+                return true;
+            }
+            const anterior = document.getElementById('ef-desktop-pdf-dialog');
+            if (anterior) anterior.remove();
+            if (!document.getElementById('ef-desktop-pdf-preview-css')) {
+                const css = document.createElement('style');
+                css.id = 'ef-desktop-pdf-preview-css';
+                css.textContent = [
+                    '.ef-desktop-pdf-dialog{width:min(96vw,1050px);max-width:1050px;max-height:94vh;border:1px solid #cbd5e1;border-radius:12px;background:#f3f6f5;color:#182d27;padding:0;box-shadow:0 20px 70px #081d1673;overflow:hidden}',
+                    '.ef-desktop-pdf-dialog::backdrop{background:rgba(8,22,19,.70)}',
+                    '.ef-desktop-pdf-toolbar{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;background:#123b2e;color:#fff;padding:14px 18px;font:500 14px/1.4 system-ui,sans-serif}',
+                    '.ef-desktop-pdf-toolbar strong{font-size:15px;display:block}',
+                    '.ef-desktop-pdf-toolbar small{font-size:12px;display:block;opacity:.84}',
+                    '.ef-desktop-pdf-actions{display:flex;gap:9px;flex-wrap:wrap}',
+                    '.ef-desktop-pdf-actions button{border:1px solid transparent;border-radius:7px;padding:10px 15px;background:#c6f35a;color:#152b1d;font:700 14px system-ui,sans-serif;cursor:pointer;min-height:42px}',
+                    '.ef-desktop-pdf-actions button[data-pdf-action="cancel"]{background:transparent;color:#fff;border-color:#a6b7b1}',
+                    '.ef-desktop-pdf-actions button:focus-visible{outline:3px solid #fff;outline-offset:2px}',
+                    '.ef-desktop-pdf-scroll{max-height:calc(94vh - 103px);overflow:auto;padding:16px;background:#e7eeeb}',
+                    '.ef-desktop-pdf-sheet{background:white;color:#111;max-width:210mm;width:100%;margin:0 auto;box-shadow:0 3px 20px #0002;overflow:hidden}',
+                    '.ef-desktop-pdf-sheet .print-page,.ef-desktop-pdf-sheet .cm-page{display:block!important;position:static!important;visibility:visible!important;margin:0 auto!important;page-break-after:auto}',
+                    '@media(max-width:620px){.ef-desktop-pdf-toolbar{align-items:stretch}.ef-desktop-pdf-actions{width:100%}.ef-desktop-pdf-actions button{flex:1;padding:10px 7px;font-size:12px}.ef-desktop-pdf-scroll{max-height:calc(94vh - 150px);padding:8px}}',
+                    '@media print{.ef-desktop-pdf-dialog{display:none!important}}'
+                ].join('\n');
+                document.head.appendChild(css);
+            }
+            const dialog = document.createElement('dialog');
+            dialog.id = 'ef-desktop-pdf-dialog';
+            dialog.className = 'ef-desktop-pdf-dialog';
+            dialog.setAttribute('aria-label', 'Prévia do relatório de Avaliação Física');
+            const toolbar = document.createElement('div');
+            toolbar.className = 'ef-desktop-pdf-toolbar';
+            const heading = document.createElement('div');
+            const title = document.createElement('strong');
+            title.textContent = 'Relatório de Avaliação Física';
+            const subtitle = document.createElement('small');
+            subtitle.textContent = (aval?.nome || 'Aluno') + ' — Confira o relatório antes de imprimir.';
+            heading.append(title,subtitle);
+            const actions = document.createElement('div');
+            actions.className = 'ef-desktop-pdf-actions';
+            const cancel = document.createElement('button');
+            cancel.type = 'button';
+            cancel.dataset.pdfAction = 'cancel';
+            cancel.textContent = '← Voltar / Cancelar';
+            const save = document.createElement('button');
+            save.type = 'button';
+            save.textContent = 'Salvar como PDF / Imprimir';
+            actions.append(cancel, save);
+            toolbar.append(heading,actions);
+            const scroll = document.createElement('div');
+            scroll.className = 'ef-desktop-pdf-scroll';
+            const sheet = document.createElement('div');
+            sheet.className = 'ef-desktop-pdf-sheet';
+            // Cópia apenas para visualização, nunca para salvar ou editar a avaliação.
+            sheet.innerHTML = wrapper.innerHTML;
+            scroll.append(sheet);
+            dialog.append(toolbar,scroll);
+            const fechar = () => { if (dialog.open) dialog.close(); dialog.remove(); };
+            cancel.addEventListener('click', fechar);
+            dialog.addEventListener('cancel', event => { event.preventDefault(); fechar(); });
+            save.addEventListener('click', () => { fechar(); imprimir(); });
+            document.body.appendChild(dialog);
+            dialog.showModal();
+            cancel.focus();
+            return true;
+        }
+
         function imprimirAvaliacaoIndividualPDF(id) {
             const aval = (typeof encontrarAvaliacaoPorId === 'function' ? encontrarAvaliacaoPorId(id) : null) || avaliacoes.find(a => a.id === id || String(a.id) === String(id));
             if (!aval) return;
@@ -3201,22 +3273,23 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 </div>
             `;
 
-            const oldDocTitle = document.title;
-            document.title = ' ';
-            const cleanupIndPrint = () => {
-                document.body.classList.remove('print-mode-single');
-                document.title = oldDocTitle;
-                if (typeof window.removeEventListener === 'function') window.removeEventListener('afterprint', cleanupIndPrint);
-            };
-            window.addEventListener('afterprint', cleanupIndPrint, { once: true });
-            document.body.classList.add('print-mode-single');
-            // Mantém a abertura original da versão 8.9.3. O marcador serve
-            // somente ao CSS de impressão, mesmo se o Android antecipar afterprint.
-            document.body.dataset.efPrintTarget = 'report';
-            clearTimeout(window.__efPrintGuardTimer);
-            window.__efPrintGuardTimer = setTimeout(() => { delete document.body.dataset.efPrintTarget; }, 120000);
-            window.print();
-            setTimeout(cleanupIndPrint, 1500);
+            // Cancelar (botão ou Esc) preserva os dados e não chama o spooler Windows.
+            abrirPreviaPDFDesktop(wrapper, aval, () => {
+                const oldDocTitle = document.title;
+                document.title = ' ';
+                const cleanupIndPrint = () => {
+                    document.body.classList.remove('print-mode-single');
+                    document.title = oldDocTitle;
+                    if (typeof window.removeEventListener === 'function') window.removeEventListener('afterprint', cleanupIndPrint);
+                };
+                window.addEventListener('afterprint', cleanupIndPrint, { once: true });
+                document.body.classList.add('print-mode-single');
+                document.body.dataset.efPrintTarget = 'report';
+                clearTimeout(window.__efPrintGuardTimer);
+                window.__efPrintGuardTimer = setTimeout(() => { delete document.body.dataset.efPrintTarget; }, 120000);
+                window.print();
+                setTimeout(cleanupIndPrint, 1500);
+            });
         }
 
         function imprimirComparativoPDF() {
