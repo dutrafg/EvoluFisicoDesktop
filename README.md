@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0 estável
+# EvoluFísico Desktop 1.0.4 estável
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -30,6 +30,22 @@ Base verificada: `dutrafg/Evolufisico2@7381ed1884ff` (branch `main`).
 - A integração mantém o banco SQLite criptografado, os backups, os IDs das avaliações e o identificador do instalador 1.0.0.
 - Testes adicionais: `node tests/windows-sync-20261022.cjs`. A impressão visual, a persistência após fechar o programa e a atualização com dados reais ainda exigem homologação prática.
 
+## Atualização 1.0.4 estável — 22/10/2026
+
+Sincronizada com `dutrafg/Evolufisico2@04d8e317`, incluindo:
+
+- **Início**: painel operacional com alertas, indicadores de avaliações, próximos compromissos, análise de evolução, resumo de cobranças e atalhos para ações reais. Cabeçalho inicial simplificado.
+- **Organização**: agenda/calendário, notas, tarefas e metas; pesquisa, edição, filtros, exportação/importação e cards configuráveis. O módulo novo ainda usa a persistência local WebView2 para notas e metas; faça exportação própria desses registros antes de reinstalar ou limpar o perfil.
+- **Cobranças**: caixa mensal que reinicia a competência a cada dia 1 sem apagar registros anteriores, histórico por mês e relatórios PDF do mês ou completos. Consulta as cobranças existentes no SQLite nativo; prévia financeira cancelável na janela do próprio aplicativo.
+- **Pesquisa global**: módulos, avaliações, clientes, agenda, notas, tarefas e configurações com Ctrl+K e atalhos de teclado, sem upload dos registros.
+- **Aparência**: Avançada ou Essencial; no Windows, o modo Avançado recebeu **20% a mais** de desfoque, elevação 3D e intensidade de sombras frente ao 1.0.4 web. O modo Essencial permanece leve e o sistema respeita a preferência por movimento reduzido.
+- **Identificação profissional**: primeira abertura sem nome cadastrado orienta o preenchimento; as preferências existentes permanecem.
+- **Navegação**: integração de Organização à sidebar, atalhos do Início e barras responsivas.
+
+Versão nativa, instalador e atualizador: **1.0.4 estável**. Identificador de instalação anterior preservado para atualizações. A versão 2.0 **não** será usada antes do marco 2.0 do Evolufisico2.
+
+A homologação automatizada verifica navegação, compatibilidade do instalador, cálculo financeiro com mudança de mês, persistência dos módulos anteriores, segurança SQLite, renderização sintática e o acréscimo de 20% nos efeitos. Testes em Windows real com dados do usuário, prévia de impressão e fidelidade visual ainda dependem de validação prática.
+
 ## Dados, migração e segurança
 
 O Desktop permanece com banco **SQLite cifrado por mecanismos nativos do Windows**, distinto do IndexedDB usado no aplicativo web. Não substitua o frontend Windows pelos arquivos de armazenamento do Evolufisico2: os módulos de Análises foram integrados preservando o bridge de armazenamento e o cofre existentes. O perfil WebView2 permanece em `%LOCALAPPDATA%\EvoluFisicoDesktop\WebView2`.
@@ -42,6 +58,7 @@ Requer Windows x64, .NET 8 SDK, Microsoft Edge WebView2 Runtime e Inno Setup 6.
 
 ```powershell
 node tests/windows-stable-1-0.cjs
+node tests/windows-sync-1-0-4.cjs
 node tests/windows-sync-evolufisico2-1-0.cjs
 node tests/windows-sync-20261022.cjs
 node tests/desktop-integration.cjs
@@ -56,8 +73,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0 estável
-- **Versão técnica:** `1.0.0`
+- **Produto:** EvoluFísico Desktop 1.0.4 estável
+- **Versão técnica:** `1.0.4`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026
