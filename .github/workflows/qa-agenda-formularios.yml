@@ -10,6 +10,7 @@ on:
       - 'tests/windows-sync-evolufisico2-1-0.cjs'
       - 'tests/windows-sync-20261022.cjs'
       - 'tests/windows-sync-1-0-4.cjs'
+      - 'tests/windows-svg-icons-1-0-5.cjs'
       - 'scripts/build-windows.ps1'
       - 'tests/desktop-integration.cjs'
       - 'tests/windows-billing-navigation-91.cjs'
@@ -48,6 +49,8 @@ jobs:
         run: node tests/windows-sync-20261022.cjs
       - name: Validate Evolufisico2 1.0.4 sync and +20% Desktop visual effects
         run: node tests/windows-sync-1-0-4.cjs
+      - name: Validate new SVG icons, menu preservation and 1.0.5
+        run: node tests/windows-svg-icons-1-0-5.cjs
       - name: Validate legacy desktop theme, movable cards and preregistration
         run: node tests/windows-release-911-beta4.cjs
       - name: Validate native desktop bridges and version alignment
