@@ -39,7 +39,7 @@
     for(const [key,val] of Object.entries(p))set(KEYS[key],val);
     syncEvaluationInputs(p);
     close();
-    window.EFHomeDashboard?.refresh?.();window.EFLayoutPreview?.refresh?.();
+    window.EFHomeDashboard?.refresh?.();
     window.dispatchEvent(new CustomEvent('ef-professional-profile-saved',{detail:{nickname:p.nickname,name:p.name}}));
     return true;
   }

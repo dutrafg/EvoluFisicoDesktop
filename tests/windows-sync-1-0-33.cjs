@@ -16,7 +16,7 @@ check('Naming helper exactly matches Evolufisico2',()=>{
 check('Scripts and styles load early and offline',()=>{
  assert.ok(html.includes('65-pdf-filenames.js'));assert.ok(html.indexOf('65-pdf-filenames.js')<html.indexOf('05-app-runtime.js'));
  for(const x of ['65-pdf-filenames.js','65-evaluations-action.css'])assert.ok(sw.includes(x)&&html.includes(x));
- assert.ok(sw.includes('evolufisico-desktop-1-0-8-pdf-names-new-evaluation'));
+ assert.ok(sw.includes('evolufisico-desktop-1-0-9-pdf-names-new-evaluation'));
 });
 check('New evaluation action moved into Avaliações, absent from sidebar',()=>{
  for(const s of ["const form=$('tab-btn-form'),history=$('tab-historico')","toolbar.id='ef-history-new-evaluation'","history.prepend(toolbar)","toolbar.append(form)","if(form)form.hidden=active?.id!=='tab-historico'"])assert.ok(nav.includes(s),s);
@@ -31,10 +31,10 @@ check('Lab, anamnesis, analysis and finance all use same rule',()=>{
  assert.ok(read(root+'assets/js/42-analysis-reports.js').includes('window.EF2PdfBaseName(profile.name)'));
  const finance=read(root+'assets/js/50-billing-monthly.js');assert.ok(finance.includes('const alunoPdf=nomes.length===1?nomes[0]'));assert.ok(finance.includes('window.EF2PdfBaseName(alunoPdf)'));
 });
-check('Native version 1.0.8 and encrypted storage +20% effects preserved',()=>{
+check('Native version 1.0.9 and encrypted storage +20% effects preserved',()=>{
  const iss=read('installer/EvoluFisico.iss'),native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
- assert.match(iss,/#define MyAppVersion "1\.0\.8"/);assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
- assert.ok(native.includes('CurrentVersion = "1.0.8"'));assert.ok(nav.includes("version:'1.0.8'"));
+ assert.match(iss,/#define MyAppVersion "1\.0\.9"/);assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
+ assert.ok(native.includes('CurrentVersion = "1.0.9"'));assert.ok(nav.includes("version:'1.0.9'"));
  assert.ok(read(root+'assets/css/60-desktop-effects-120.css').includes('--efx-blur:19.2px'));
  assert.ok(read(root+'assets/js/24-billing.js').includes('EF_NATIVE_BILLING_KEY'));
 });
