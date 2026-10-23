@@ -134,7 +134,7 @@ function applyColor(v){
  const key=Object.prototype.hasOwnProperty.call(COLORS,normalized)?normalized:'verde';
  const [main,secondary]=COLORS[key],intense=INTENSE_COLORS.has(key);
  const root=document.documentElement;
- root.style.setProperty('--ef-selected-text',intense?'#fff':'#0c241d');
+ root.style.setProperty('--ef-selected-text',['oliva','cobre','turquesa'].includes(key)?'#0c241d':intense?'#fff':'#0c241d');
  root.style.setProperty('--ef-selected-darkmode-accent',intense?secondary:main);
  root.style.setProperty('--ef-selected-color',main);
  root.style.setProperty('--ef-selected-dark',intense?main:secondary);
