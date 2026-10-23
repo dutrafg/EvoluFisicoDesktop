@@ -67,7 +67,7 @@ test('Billing confirmation rechecks SQLite before reopening and prevents duplica
  const build=new Function('notificar','registrar',wrapper.replace('registrarCobrancaNoHistorico()','registrar()')+
   'return {salvarCobrancaNoHistorico};');
  // The wrapper has one explicit registrar call and no mutation of the stored billing values.
- assert.equal((wrapper.match(/registrarCobrancaNoHistorico\(\)/g)||[]).length,2);
+ assert.equal((wrapper.match(/registrarCobrancaNoHistorico\(\)/g)||[]).length,1);
  assert.ok(wrapper.includes('notificar'));
 });
 test('Organização does not close a form nor mutate notes when local storage write fails',()=>{
