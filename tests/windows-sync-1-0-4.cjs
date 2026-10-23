@@ -4,8 +4,8 @@ const root='src/EvoluFisico.Desktop/wwwroot/';
 const read=p=>fs.readFileSync(p,'utf8');
 const html=read(root+'index.html'),sw=read(root+'sw.js'),ui=read(root+'assets/js/26-simple-interface.js');
 let passed=0;const check=(title,fn)=>{fn();passed++;console.log('PASS',title)};
-const js={50:'billing-monthly',51:'organization',52:'home-dashboard',53:'custom-cards',54:'professional-profile',55:'visual-effects',56:'global-search',57:'global-search-controls',58:'shortcuts',59:'mobile-navigation'};
-const css={50:'billing-monthly',51:'organization',52:'home-dashboard',53:'custom-cards',54:'professional-profile',55:'visual-effects',56:'global-search',57:'visual-polish',58:'decision-center',59:'mobile-navigation',60:'desktop-effects-120'};
+const js={50:'billing-monthly',51:'organization',52:'home-dashboard',54:'professional-profile',55:'visual-effects',56:'global-search',57:'global-search-controls',58:'shortcuts',59:'mobile-navigation'};
+const css={50:'billing-monthly',51:'organization',52:'home-dashboard',54:'professional-profile',55:'visual-effects',56:'global-search',57:'visual-polish',58:'decision-center',59:'mobile-navigation',60:'desktop-effects-120'};
 check('All stable EvoluFisico2 1.0.8 modules are loaded and offline',()=>{
  for(const [n,name] of Object.entries(js)){const asset='./assets/js/'+n+'-'+name+'.js';assert.ok(html.includes(asset),'HTML '+asset);assert.ok(sw.includes(asset),'cache '+asset);assert.doesNotThrow(()=>new Function(read(root+'assets/js/'+n+'-'+name+'.js')),asset)}
  for(const [n,name] of Object.entries(css)){const asset='./assets/css/'+n+'-'+name+'.css';assert.ok(html.includes(asset),'HTML '+asset);assert.ok(sw.includes(asset),'cache '+asset)}

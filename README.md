@@ -130,3 +130,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026
 
 “Estável” descreve o conjunto de funcionalidades e testes automatizados. PDFs em impressoras reais, reabertura offline, atualização com base de clientes existente e concordância com instrumentos clínicos permanecem pontos de homologação prática.
+
+
+## Migração candidata EFIA 2.0.1 — 23/10/2026
+
+Origem web `dutrafg/Evolufisico2@225184a684b5`. Cinco componentes EFIA incorporados e conectados à seleção de Análises. Usa as avaliações existentes no SQLite criptografado; sem banco paralelo. Impressão adaptada para iframe compatível com WebView2. Editor antigo de cards desativado sem exclusão de dados. A Dock nova e a central de trabalho da web ainda não foram portadas. Validação em Windows real e homologação de PDFs continuam pendentes.
