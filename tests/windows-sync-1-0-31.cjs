@@ -103,7 +103,7 @@ test('Sidebar buttons and phone Organisation tabs remain well positioned',()=>{
 });
 test('Version remains 1.0.x and native data/installer identity are preserved',()=>{
  const install=read('installer/EvoluFisico.iss'),native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
- assert.match(install,/#define MyAppVersion "1\.0\.8"/);
+ assert.match(install,/#define MyAppVersion "1\.0\.9"/);
  assert.match(install,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(native.includes('CurrentVersion = "1.0.9"'));
  assert.ok(nav.includes("version:'1.0.9'"));

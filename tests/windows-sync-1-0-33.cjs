@@ -33,7 +33,7 @@ check('Lab, anamnesis, analysis and finance all use same rule',()=>{
 });
 check('Native version 1.0.9 and encrypted storage +20% effects preserved',()=>{
  const iss=read('installer/EvoluFisico.iss'),native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
- assert.match(iss,/#define MyAppVersion "1\.0\.8"/);assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
+ assert.match(iss,/#define MyAppVersion "1\.0\.9"/);assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(native.includes('CurrentVersion = "1.0.9"'));assert.ok(nav.includes("version:'1.0.9'"));
  assert.ok(read(root+'assets/css/60-desktop-effects-120.css').includes('--efx-blur:19.2px'));
  assert.ok(read(root+'assets/js/24-billing.js').includes('EF_NATIVE_BILLING_KEY'));

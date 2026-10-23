@@ -59,7 +59,7 @@ check('The report is editable and does not overwrite clinical history',()=>{
 check('Stable 1.0 version matches native binary, Windows installer and updater',()=>{
  const native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
  const iss=read('installer/EvoluFisico.iss'),build=read('scripts/build-windows.ps1');
- assert.match(iss,/#define MyAppVersion "1\.0\.8"/);
+ assert.match(iss,/#define MyAppVersion "1\.0\.9"/);
  assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(native.includes('CurrentVersion = "1.0.9"'));
  assert.ok(native.includes('StartsWith("desktop-v1.0-")'));

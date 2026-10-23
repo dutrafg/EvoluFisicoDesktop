@@ -78,7 +78,7 @@ check('Windows install id, encrypted SQLite and stable patch version retained',(
  const iss=read('installer/EvoluFisico.iss');
  const native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
  const ui=read(root+'assets/js/26-simple-interface.js');
- assert.match(iss,/#define MyAppVersion "1\.0\.8"/);
+ assert.match(iss,/#define MyAppVersion "1\.0\.9"/);
  assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(native.includes('CurrentVersion = "1.0.9"'));
  assert.ok(ui.includes("version:'1.0.9'"));

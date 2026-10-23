@@ -88,7 +88,7 @@ check('Version 1.0.9 and Windows upgrade identity match',()=>{
  const installer=read('installer/EvoluFisico.iss');
  const native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
  const nav=read(root+'assets/js/26-simple-interface.js');
- assert.match(installer,/#define MyAppVersion "1\.0\.8"/);
+ assert.match(installer,/#define MyAppVersion "1\.0\.9"/);
  assert.match(installer,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(native.includes('CurrentVersion = "1.0.9"'));
  assert.ok(html.includes('v1.0.9 estável'));
