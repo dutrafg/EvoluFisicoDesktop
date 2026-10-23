@@ -120,7 +120,8 @@
     // e WebViews (retorna false sem mostrar nada), o que impedia a exclusão.
     function confirmar(msg, onConfirm, rotuloOk, opcoes = {}) {
         const antigo = document.getElementById('cob-confirm-overlay');
-        if (antigo) antigo.remove();
+        if (antigo) antigo.dispatchEvent(new Event('ef-close'));
+        const focusBefore = document.activeElement;
 
         const overlay = document.createElement('div');
         overlay.id = 'cob-confirm-overlay';
@@ -129,7 +130,7 @@
         overlay.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:1rem;';
         overlay.innerHTML =
             '<div style="background:var(--card-bg,#fff);color:var(--text-main,#0f172a);border-radius:14px;max-width:380px;width:100%;padding:1.25rem;box-shadow:0 20px 50px rgba(0,0,0,.35);">' +
-              '<div style="font-weight:700;margin-bottom:.5rem;">Confirmar exclusão</div>' +
+              '<div id="cob-confirm-title" style="font-weight:700;margin-bottom:.5rem;"></div>' +
               '<div id="cob-confirm-msg" style="font-size:.9rem;line-height:1.4;margin-bottom:1rem;"></div>' +
               '<div style="display:flex;gap:.5rem;justify-content:flex-end;">' +
                 '<button type="button" id="cob-confirm-cancel" class="btn btn-secondary btn-sm">Cancelar</button>' +
@@ -139,10 +140,12 @@
         document.body.appendChild(overlay);
         overlay.querySelector('#cob-confirm-msg').textContent = msg;
         overlay.querySelector('#cob-confirm-ok').textContent = rotuloOk || '🗑️ Excluir';
-        overlay.querySelector('div[style*="font-weight:700"]').textContent = opcoes.titulo || 'Confirmar exclusão';
+        overlay.querySelector('#cob-confirm-title').textContent = opcoes.titulo || 'Confirmar exclusão';
+        overlay.setAttribute('aria-labelledby','cob-confirm-title');
         if (opcoes.classeBotao === 'btn-success') overlay.querySelector('#cob-confirm-ok').className = 'btn btn-success btn-sm';
 
-        const fechar = () => { overlay.remove(); document.removeEventListener('keydown', onKey, true); };
+        const fechar = () => { overlay.remove(); document.removeEventListener('keydown', onKey, true); if(focusBefore?.isConnected)focusBefore.focus(); };
+        overlay.addEventListener('ef-close',fechar,{once:true});
         const onKey = (e) => { if (e.key === 'Escape') fechar(); };
         document.addEventListener('keydown', onKey, true);
 
@@ -532,7 +535,15 @@
         atualizarResumoParcelasETroco();
     }
 
+    let savingBilling = false;
     async function salvarCobrancaNoHistorico() {
+        if (savingBilling) return;
+        savingBilling = true;
+        try { return await registrarCobrancaNoHistorico(); }
+        catch (e) { notificar('Não foi possível registrar a cobrança: ' + e.message, 'error'); }
+        finally { savingBilling = false; }
+    }
+    async function registrarCobrancaNoHistorico() {
         await loadBilling();
         recalcularEAtualizarUI();
 
@@ -592,17 +603,21 @@
         }
     }
 
-    async function alternarStatusNoHistorico(id) {
-        await loadBilling();
-        const alvo = String(id);
-        const lista = carregarCobrancas();
-        const item = lista.find(c => String(c.id) === alvo);
+    function alternarStatusNoHistorico(id) {
+        const item = carregarCobrancas().find(c=>String(c.id)===String(id));
         if (!item) return;
-
-        item.status = item.status === 'pago' ? 'pendente' : 'pago';
-        item.dataRecebimento = item.status === 'pago' ? new Date().toISOString() : null;
-        if (!await salvarCobrancasDb(lista)) return;
-        renderizarHistoricoCompleto();
+        if (item.status !== 'pago') return receberCobrancaDoHistorico(id);
+        const alvo=String(id);
+        confirmar('Reabrir esta cobrança como pendente?',async function(){
+            await loadBilling();
+            const lista=carregarCobrancas();
+            const atual=lista.find(c=>String(c.id)===alvo);
+            if(!atual || atual.status!=='pago'){notificar('A cobrança já foi alterada.', 'info');return}
+            atual.status='pendente'; atual.dataRecebimento=null; atual.recebidoEm=null;
+            if(!await salvarCobrancasDb(lista))return;
+            renderizarHistoricoCompleto();
+            notificar('Cobrança reaberta como pendente.', 'success');
+        },'Reabrir cobrança',{titulo:'Confirmar reabertura'});
     }
 
     function receberCobrancaDoHistorico(id) {
@@ -954,7 +969,7 @@
         const tfoot = document.getElementById('cob-alunos-tfoot');
         if (!tbody) return;
 
-        const mapaAlunos = {};
+        const mapaAlunos = Object.create(null);
 
         cobrancas.forEach(c => {
             const vPorAluno = Number(c.valorPorAluno) || (Number(c.valorTotal) / (c.qPessoas || 1));
@@ -1214,7 +1229,7 @@
         protect: async function(key=EF_Security.key) { const list=await loadBilling(); await writeBilling(list,key,true); },
         unprotect: async function() {const list=await loadBilling();await writeBilling(list,null,false);},
         clearMemory: function(){billingCache=null;billingRaw=null;},
-        version: '9.1-beta',
+        version: '1.0.6',
         mounted: true,
         state: state,
         mount: mount,

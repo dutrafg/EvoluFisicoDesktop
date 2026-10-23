@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0.5 estável
+# EvoluFísico Desktop 1.0.6 estável
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -56,7 +56,24 @@ O Evolufisico2 publicou 1.0.29 **pré-beta** (commit a95067c), acrescentando íc
 - Cache offline WebView2/PWA renovado com os recursos de ícones.
 - Desktop 1.0.5 estável: mesmo AppId, banco SQLite cifrado, backups e versão principal 1.0. O salto para 2.0 só ocorrerá quando o Evolufisico2 lançar a própria versão principal 2.0.
 
-QA: node tests/windows-svg-icons-1-0-5.cjs, integrado à regressão Windows e testes do SQLite. A validação visual em monitores reais permanece necessária.
+QA: node tests/windows-svg-icons-1-0-5.cjs
+node tests/windows-sync-1-0-31.cjs, integrado à regressão Windows e testes do SQLite. A validação visual em monitores reais permanece necessária.
+## Sincronização 1.0.6 — 23/10/2026
+
+Verificada a versão web **Evolufisico2 1.0.31 Pré-Beta** (`09850d5`; auditoria em `docs/qa/QA_1.0.31.md`). As correções aplicáveis ao Desktop foram integradas, mantendo o canal **1.0.6 estável** do instalador Windows.
+
+- **Configurações → Geral:** opção para proteger contra recarga acidental, ativa inicialmente, com bloqueio de F5, Shift+F5, Ctrl/Cmd+R e avisos nativos de saída sempre que o WebView2 permitir. Preferência persistente e opção de desativação.
+- **Cobranças:** bloqueio de cliques simultâneos em Salvar, reabertura de pagamento somente com confirmação e nova leitura do SQLite, tratamento de nomes especiais como `__proto__` no agrupamento financeiro, modal com foco restaurado e histórico financeiro inválido impedindo sobrescrita.
+- **Organização:** os formulários de notas, tarefas e metas não são fechados nem tratados como salvos se o armazenamento local falhar. Alterações são aplicadas somente após confirmar a gravação; falhas são mostradas.
+- **Avaliações:** o cálculo de Pollock valida números finitos e idade entre 18 e 80 anos antes de fornecer o resultado; fórmulas e classificações anteriores são mantidas.
+- **Aparência e responsividade:** cinco tons novos (Grafite, Bordeaux, Oliva, Cobre e Turquesa), além dos dez anteriores, com correção de contraste. Melhor alinhamento das ações na barra lateral e abas de Organização em duas colunas quando a tela é estreita.
+- Os efeitos **Avançados +20%** do Desktop e o modo Essencial continuam sem mudanças.
+- Cache offline e versão do instalador atualizados para **1.0.6**, com o mesmo `AppId`, SQLite cifrado e padrão de releases `desktop-v1.0-...`.
+
+**Escopo intencionalmente distinto:** o mecanismo de espelhamento de pastas via IndexedDB e permissões do navegador da versão web não foi copiado para o Desktop, que mantém persistência SQLite nativa e procedimentos próprios de backup. Os dados de notas/metas de Organização ainda exigem exportação separada antes de limpar o perfil WebView2. O atualizador do Desktop continua buscando releases Windows do GitHub; não aplica automaticamente o HTML pré-beta.
+
+**Testes adicionados:** `node tests/windows-sync-1-0-31.cjs`, integrados ao QA e à compilação do instalador. A validação automatizada não substitui testar impressão, atualização com dados existentes, teclas de recarga e layouts no Windows real.
+
 ## Dados, migração e segurança
 
 O Desktop permanece com banco **SQLite cifrado por mecanismos nativos do Windows**, distinto do IndexedDB usado no aplicativo web. Não substitua o frontend Windows pelos arquivos de armazenamento do Evolufisico2: os módulos de Análises foram integrados preservando o bridge de armazenamento e o cofre existentes. O perfil WebView2 permanece em `%LOCALAPPDATA%\EvoluFisicoDesktop\WebView2`.
@@ -85,8 +102,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0.5 estável
-- **Versão técnica:** `1.0.5`
+- **Produto:** EvoluFísico Desktop 1.0.6 estável
+- **Versão técnica:** `1.0.6`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026

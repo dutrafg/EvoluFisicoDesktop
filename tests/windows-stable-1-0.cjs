@@ -59,18 +59,18 @@ check('The report is editable and does not overwrite clinical history',()=>{
 check('Stable 1.0 version matches native binary, Windows installer and updater',()=>{
  const native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
  const iss=read('installer/EvoluFisico.iss'),build=read('scripts/build-windows.ps1');
- assert.match(iss,/#define MyAppVersion "1\.0\.5"/);
+ assert.match(iss,/#define MyAppVersion "1\.0\.6"/);
  assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
- assert.ok(native.includes('CurrentVersion = "1.0.5"'));
+ assert.ok(native.includes('CurrentVersion = "1.0.6"'));
  assert.ok(native.includes('StartsWith("desktop-v1.0-")'));
  assert.ok(build.includes('desktop-v1.0-'));
- assert.ok(html.includes('v1.0.5 estável'));
- assert.ok(ui.includes("version:'1.0.5'"));
+ assert.ok(html.includes('v1.0.6 estável'));
+ assert.ok(ui.includes("version:'1.0.6'"));
 });
 check('Ten stable palettes migrate old dark choices without changing assessment data',()=>{
  const start=ui.indexOf('const COLORS='),end=ui.indexOf(';',start);
  const colors=new Function(ui.slice(start,end+1)+'return COLORS;')();
- const keys=['verde','azul','roxo','laranja','rosa','azul-marinho','petroleo','esmeralda','indigo','ameixa'];
+ const keys=['verde','azul','roxo','laranja','rosa','azul-marinho','petroleo','esmeralda','indigo','ameixa','grafite','bordeaux','oliva','cobre','turquesa'];
  assert.deepEqual(Object.keys(colors),keys);
  assert.ok(ui.includes("LEGACY_COLORS"));
  assert.ok(ui.includes("'verde-escuro':'esmeralda'"));
