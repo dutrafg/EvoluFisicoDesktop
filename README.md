@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0.8 estável
+# EvoluFísico Desktop 1.0.9 estável
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -123,8 +123,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0.8 estável
-- **Versão técnica:** `1.0.8`
+- **Produto:** EvoluFísico Desktop 1.0.9 estável
+- **Versão técnica:** `1.0.9`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026
@@ -135,3 +135,13 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 ## Migração candidata EFIA 2.0.1 — 23/10/2026
 
 Origem web `dutrafg/Evolufisico2@225184a684b5`. Cinco componentes EFIA incorporados e conectados à seleção de Análises. Usa as avaliações existentes no SQLite criptografado; sem banco paralelo. Impressão adaptada para iframe compatível com WebView2. Editor antigo de cards desativado sem exclusão de dados. A Dock nova e a central de trabalho da web ainda não foram portadas. Validação em Windows real e homologação de PDFs continuam pendentes.
+
+
+## Release Desktop 1.0.9 — EFIA 2.0.1
+
+- Importados motores EF78–EF82 integrados ao EF68/EF70/EF77 e ao cadastro do aluno já persistido no SQLite criptografado.
+- Resumo, Visão Profissional e Relatório do Aluno, com checagens de qualidade e impressão via iframe no WebView2.
+- Editor legado de cards desativado sem exclusão de dados do usuário.
+- AppId e atualizador Windows preservados; executável e instalador gerados em CI.
+- Escopo não migrado: Dock Padrão/Moderna e redesenho integral do Início da versão web.
+- A aprovação dos testes automatizados não substitui homologação dos PDFs e do armazenamento no Windows real com dados existentes.
