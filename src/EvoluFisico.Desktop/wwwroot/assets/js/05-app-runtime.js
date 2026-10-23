@@ -1883,7 +1883,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             const soma = (dobras.triceps || 0) + (dobras.subescapular || 0) + (dobras.peitoral || 0) +
                          (dobras.axilar || 0) + (dobras.suprailiaca || 0) + (dobras.abdominal || 0) + (dobras.coxa || 0);
 
-            if (![dobras.triceps,dobras.subescapular,dobras.peitoral,dobras.axilar,dobras.suprailiaca,dobras.abdominal,dobras.coxa].every(v=>v>0) || !(idade>0) || !(peso>0)) return null;
+            if (![dobras.triceps,dobras.subescapular,dobras.peitoral,dobras.axilar,dobras.suprailiaca,dobras.abdominal,dobras.coxa].every(v=>Number.isFinite(v)&&v>0) || !(Number.isFinite(idade)&&idade>=18&&idade<=80) || !(Number.isFinite(peso)&&peso>0)) return null;
 
             let densidade = 0;
             if (sexo === 'M') {
