@@ -3276,7 +3276,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             // Cancelar (botão ou Esc) preserva os dados e não chama o spooler Windows.
             abrirPreviaPDFDesktop(wrapper, aval, () => {
                 const oldDocTitle = document.title;
-                document.title = ' ';
+                document.title = window.EF2PdfBaseName(aval.nome);
                 const cleanupIndPrint = () => {
                     document.body.classList.remove('print-mode-single');
                     document.title = oldDocTitle;
@@ -3288,7 +3288,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 clearTimeout(window.__efPrintGuardTimer);
                 window.__efPrintGuardTimer = setTimeout(() => { delete document.body.dataset.efPrintTarget; }, 120000);
                 window.print();
-                setTimeout(cleanupIndPrint, 1500);
+                setTimeout(cleanupIndPrint, 120000);
             });
         }
 
@@ -3539,7 +3539,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             wrapper.innerHTML = paginas.join('');
 
             const oldCmpTitle = document.title;
-            document.title = ' ';
+            document.title = window.EF2PdfBaseName(a2.nome || a1.nome);
             const cleanupCmpPrint = () => {
                 document.body.classList.remove('print-mode-single');
                 document.title = oldCmpTitle;
@@ -3553,7 +3553,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             clearTimeout(window.__efPrintGuardTimer);
             window.__efPrintGuardTimer = setTimeout(() => { delete document.body.dataset.efPrintTarget; }, 120000);
             window.print();
-            setTimeout(cleanupCmpPrint, 1500);
+            setTimeout(cleanupCmpPrint, 120000);
         }
 
         function imprimirAvaliacaoDaModal() {
