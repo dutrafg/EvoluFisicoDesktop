@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0.6 estável
+# EvoluFísico Desktop 1.0.7 estável
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -57,7 +57,8 @@ O Evolufisico2 publicou 1.0.29 **pré-beta** (commit a95067c), acrescentando íc
 - Desktop 1.0.5 estável: mesmo AppId, banco SQLite cifrado, backups e versão principal 1.0. O salto para 2.0 só ocorrerá quando o Evolufisico2 lançar a própria versão principal 2.0.
 
 QA: node tests/windows-svg-icons-1-0-5.cjs
-node tests/windows-sync-1-0-31.cjs, integrado à regressão Windows e testes do SQLite. A validação visual em monitores reais permanece necessária.
+node tests/windows-sync-1-0-31.cjs
+node tests/windows-whats-new-1-0-7.cjs, integrado à regressão Windows e testes do SQLite. A validação visual em monitores reais permanece necessária.
 ## Sincronização 1.0.6 — 23/10/2026
 
 Verificada a versão web **Evolufisico2 1.0.31 Pré-Beta** (`09850d5`; auditoria em `docs/qa/QA_1.0.31.md`). As correções aplicáveis ao Desktop foram integradas, mantendo o canal **1.0.6 estável** do instalador Windows.
@@ -73,6 +74,15 @@ Verificada a versão web **Evolufisico2 1.0.31 Pré-Beta** (`09850d5`; auditoria
 **Escopo intencionalmente distinto:** o mecanismo de espelhamento de pastas via IndexedDB e permissões do navegador da versão web não foi copiado para o Desktop, que mantém persistência SQLite nativa e procedimentos próprios de backup. Os dados de notas/metas de Organização ainda exigem exportação separada antes de limpar o perfil WebView2. O atualizador do Desktop continua buscando releases Windows do GitHub; não aplica automaticamente o HTML pré-beta.
 
 **Testes adicionados:** `node tests/windows-sync-1-0-31.cjs`, integrados ao QA e à compilação do instalador. A validação automatizada não substitui testar impressão, atualização com dados existentes, teclas de recarga e layouts no Windows real.
+
+## Sincronização Desktop 1.0.7 estável — 23/10/2026
+
+Origem: `Evolufisico2@9fc2f68`, versão web **1.0.32 Pré-Beta**. O commit de funcionalidade `dd1af333` acrescentou o card **O que há de novidade** em Configurações → Manutenção, logo abaixo de Verificar Atualizações. As demais mudanças desse commit são atualização de versões, testes e cache; as correções 1.0.31 já estavam integradas ao Desktop 1.0.6.
+
+- **Configurações → Manutenção:** card de novidades imediatamente abaixo do verificador de atualizações próprio do Desktop, com ícone SVG acessível, versão 1.0.7 estável e resumo das melhorias anteriores (proteção contra F5, Cobranças, Organização, Avaliações, cores e layout).
+- **Integração:** sem chamadas externas nem acesso a registros de alunos; card permanece disponível offline, acompanha os temas e layout responsivo. Preserva as regras e mensagens do atualizador nativo Windows.
+- **Compatibilidade:** a versão técnica e o instalador foram alterados para 1.0.7, dentro da linha principal 1.0; AppId e SQLite criptografado não foram alterados. A mudança para 2.0 aguarda lançamento correspondente do Evolufisico2.
+- **QA adicional:** `node tests/windows-whats-new-1-0-7.cjs`; disponível nas pipelines de PR e geração do instalador Windows. A inspeção visual final no Windows ainda deve ser realizada após instalar.
 
 ## Dados, migração e segurança
 
@@ -102,8 +112,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0.6 estável
-- **Versão técnica:** `1.0.6`
+- **Produto:** EvoluFísico Desktop 1.0.7 estável
+- **Versão técnica:** `1.0.7`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026
