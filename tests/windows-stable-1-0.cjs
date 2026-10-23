@@ -70,7 +70,7 @@ check('Stable 1.0 version matches native binary, Windows installer and updater',
 check('Ten stable palettes migrate old dark choices without changing assessment data',()=>{
  const start=ui.indexOf('const COLORS='),end=ui.indexOf(';',start);
  const colors=new Function(ui.slice(start,end+1)+'return COLORS;')();
- const keys=['verde','azul','roxo','laranja','rosa','azul-marinho','petroleo','esmeralda','indigo','ameixa'];
+ const keys=['verde','azul','roxo','laranja','rosa','azul-marinho','petroleo','esmeralda','indigo','ameixa','grafite','bordeaux','oliva','cobre','turquesa'];
  assert.deepEqual(Object.keys(colors),keys);
  assert.ok(ui.includes("LEGACY_COLORS"));
  assert.ok(ui.includes("'verde-escuro':'esmeralda'"));
