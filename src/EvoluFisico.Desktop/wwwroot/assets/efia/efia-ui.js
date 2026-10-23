@@ -63,6 +63,21 @@ function documentFor(type){
  root.querySelectorAll('button,.efia-review').forEach(n=>n.remove());root.querySelectorAll('textarea').forEach(t=>{const p=document.createElement('p');p.style.whiteSpace='pre-wrap';p.textContent=t.id==='efia-private'?c.draft.private:c.draft.public;t.replaceWith(p)});root.querySelectorAll('details').forEach(d=>d.open=true);
  return {title,html:`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:15mm}body{font:11pt Arial,sans-serif;color:#182536;background:white}*{box-sizing:border-box}h1,h2,h3{break-after:avoid}h3{font-size:13pt}.efia-card{border:1px solid #cbd5e1;padding:12px;margin:12px 0;break-inside:avoid}.efia-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.efia-chart{width:100%;height:auto;color:#182536}.efia-chart polyline{fill:none;stroke:#334155;stroke-width:2.5}.efia-chart circle{fill:#334155}.efia-chart text{font:11px Arial;fill:#182536}table{width:100%;border-collapse:collapse;font-size:8pt;table-layout:fixed}th,td{border:1px solid #cbd5e1;padding:5px;overflow-wrap:anywhere}thead{display:table-header-group}tr{break-inside:avoid}p,li{line-height:1.5;overflow-wrap:anywhere}.efia-note{padding:8px;background:#f1f5f9}footer{font-size:9pt;border-top:1px solid #cbd5e1;margin-top:18px}</style></head><body><main>${root.innerHTML}</main><footer>EvoluFísico ${esc(document.querySelector('[data-efia-version]')?.dataset.efiaVersion||'2.0.0')} · Processamento local · Revisão profissional obrigatória</footer></body></html>`};
 }
-function print(type){try{const d=documentFor(type),w=window.open('','_blank','width=1000,height=800');if(!w){window.alert('Permita a abertura da janela de impressão para gerar o relatório.');return}w.opener=null;w.document.open();w.document.write(d.html);w.document.close();w.focus();w.print()}catch(e){window.alert(e.message)}}
+function print(type){
+ try{
+  const d=documentFor(type);
+  // WebView2 blocks popups: use a local print iframe instead of window.open.
+  const frame=document.createElement('iframe');
+  frame.title='Relatório EFIA para impressão';
+  frame.style.cssText='position:fixed;left:-10000px;top:0;width:1px;height:1px;opacity:0;pointer-events:none;border:0';
+  const remove=()=>setTimeout(()=>frame.remove(),1500);
+  frame.addEventListener('load',()=>{
+   try{const w=frame.contentWindow;if(!w)throw Error('Prévia indisponível.');
+    w.addEventListener('afterprint',remove,{once:true});w.focus();w.print();setTimeout(remove,60000);
+   }catch(e){remove();window.alert('Falha na impressão EFIA: '+e.message)}
+  },{once:true});
+  frame.srcdoc=d.html;document.body.appendChild(frame);
+ }catch(e){window.alert(e.message)}
+}
 window.EFIAView=Object.freeze({render,documentFor,getCurrent:()=>current?{profileKey:current.profileKey,selectedIds:[...current.selectedIds],result:structuredClone(current.result)}:null});
 })();
