@@ -1,8 +1,8 @@
-/* EvoluFísico Desktop 1.0.7 — novidades do sistema, sem consultar dados dos alunos. */
+/* EvoluFísico Desktop 1.0.8 — novidades do sistema, sem consultar dados dos alunos. */
 (function(){
 'use strict';
-const VERSION='1.0.7';
-const SUMMARY='Proteção contra recarga acidental; mais segurança ao salvar e confirmar cobranças; melhorias em notas, tarefas e metas; validação de avaliações; 15 cores profissionais e ajustes no layout desktop.';
+const VERSION='1.0.8';
+const SUMMARY='Nova avaliação dentro da tela Avaliações e nomes padronizados para PDF; proteção contra recarga acidental; mais segurança ao salvar e confirmar cobranças; melhorias em notas, tarefas e metas; validação de avaliações; 15 cores profissionais e ajustes no layout desktop.';
 function make(){
  const card=document.createElement('article');
  card.id='ef-desktop-whatsnew-card';

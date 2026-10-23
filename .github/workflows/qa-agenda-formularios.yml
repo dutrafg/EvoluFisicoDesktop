@@ -13,6 +13,7 @@ on:
       - 'tests/windows-svg-icons-1-0-5.cjs'
       - 'tests/windows-sync-1-0-31.cjs'
       - 'tests/windows-whats-new-1-0-7.cjs'
+      - 'tests/windows-sync-1-0-33.cjs'
       - 'scripts/build-windows.ps1'
       - 'tests/desktop-integration.cjs'
       - 'tests/windows-billing-navigation-91.cjs'
@@ -57,6 +58,8 @@ jobs:
         run: node tests/windows-sync-1-0-31.cjs
       - name: Validate 1.0.7 novidades card and release identity
         run: node tests/windows-whats-new-1-0-7.cjs
+      - name: Validate Evolufisico2 1.0.33 PDF filenames and contextual Nova avaliação
+        run: node tests/windows-sync-1-0-33.cjs
       - name: Validate legacy desktop theme, movable cards and preregistration
         run: node tests/windows-release-911-beta4.cjs
       - name: Validate native desktop bridges and version alignment

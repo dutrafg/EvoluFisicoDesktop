@@ -345,8 +345,7 @@ function exportPDF1(){
   box.innerHTML=pdfHTML(a,list,last,F);
 
   var oldTitle=document.title;
-  var safeNome=(a.nome||'Aluno').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚãõÃÕâêîôûÂÊÎÔÛçÇ\s_-]/g,'').trim();
-  document.title='EvoluFisico_Lab_'+safeNome.replace(/\s+/g,'_')+'_'+(a.data_avaliacao||new Date().toISOString().slice(0,10));
+  document.title=window.EF2PdfBaseName(a.nome==='Aluno(a) / Avaliação Lab'?'':a.nome);
 
   var cleaned=false;
   var done=function(){

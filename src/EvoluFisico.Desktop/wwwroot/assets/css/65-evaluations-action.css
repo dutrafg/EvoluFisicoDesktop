@@ -1,0 +1,16 @@
+/* 1.0.33 web -> Desktop 1.0.8: Nova avaliação pertence ao módulo Avaliações. */
+@media screen {
+ body.ef-simple-ui .top-navbar #ef-primary-actions:empty{display:none!important;margin:0!important;padding:0!important;border:0!important}
+ body.ef-simple-ui #ef-history-new-evaluation{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex-wrap:wrap;gap:10px;margin:0 0 16px;min-width:0;
+ }
+ body.ef-simple-ui #ef-history-new-evaluation #tab-btn-form{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+  position:static!important;width:auto!important;max-width:100%!important;
+  height:42px!important;min-height:42px!important;margin:0!important;padding:0 16px!important;
+  border-radius:10px!important;white-space:nowrap!important;
+ }
+ body.ef-simple-ui #ef-history-new-evaluation #tab-btn-form[hidden]{display:none!important}
+}
+@media print{#ef-history-new-evaluation{display:none!important}}

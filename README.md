@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0.7 estável
+# EvoluFísico Desktop 1.0.8 estável
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -58,7 +58,8 @@ O Evolufisico2 publicou 1.0.29 **pré-beta** (commit a95067c), acrescentando íc
 
 QA: node tests/windows-svg-icons-1-0-5.cjs
 node tests/windows-sync-1-0-31.cjs
-node tests/windows-whats-new-1-0-7.cjs, integrado à regressão Windows e testes do SQLite. A validação visual em monitores reais permanece necessária.
+node tests/windows-whats-new-1-0-7.cjs
+node tests/windows-sync-1-0-33.cjs, integrado à regressão Windows e testes do SQLite. A validação visual em monitores reais permanece necessária.
 ## Sincronização 1.0.6 — 23/10/2026
 
 Verificada a versão web **Evolufisico2 1.0.31 Pré-Beta** (`09850d5`; auditoria em `docs/qa/QA_1.0.31.md`). As correções aplicáveis ao Desktop foram integradas, mantendo o canal **1.0.6 estável** do instalador Windows.
@@ -83,6 +84,16 @@ Origem: `Evolufisico2@9fc2f68`, versão web **1.0.32 Pré-Beta**. O commit de fu
 - **Integração:** sem chamadas externas nem acesso a registros de alunos; card permanece disponível offline, acompanha os temas e layout responsivo. Preserva as regras e mensagens do atualizador nativo Windows.
 - **Compatibilidade:** a versão técnica e o instalador foram alterados para 1.0.7, dentro da linha principal 1.0; AppId e SQLite criptografado não foram alterados. A mudança para 2.0 aguarda lançamento correspondente do Evolufisico2.
 - **QA adicional:** `node tests/windows-whats-new-1-0-7.cjs`; disponível nas pipelines de PR e geração do instalador Windows. A inspeção visual final no Windows ainda deve ser realizada após instalar.
+
+## Sincronização 1.0.8 estável — 23/10/2026
+
+Origem: `dutrafg/Evolufisico2@1698f430`, versão web **1.0.33 Pré-Beta**, com as novidades dos commits `3b460014`, `f3c44ac4`, `6482036e` e `52449ee4`.
+
+- **Avaliações:** a ação contextual **Nova avaliação** foi retirada da sidebar e posicionada dentro da tela de Avaliações, junto à pesquisa. Ela fica oculta nos demais módulos e preserva o comportamento de criação de avaliação e os IDs dos alunos.
+- **Relatórios PDF:** padrão `EvolufisicoNomeDoAluno.pdf` em Avaliação Física, Comparativos, Laboratório, Formulários, Análises e Cobranças. Remove acentos/caracteres especiais e capitaliza as palavras: `João da Silva` gera `EvolufisicoJoaoDaSilva.pdf`. Em relatórios financeiros com múltiplos alunos, usa `Evolufisico.pdf`.
+- **Impressão Windows:** relatórios impressos usam o título normalizado, que orienta a sugestão de nome do diálogo de salvar PDF, mantendo as prévias canceláveis. O nome final ainda pode ser alterado pelo usuário ou pela impressora Windows selecionada; exportações diretas definem o arquivo.
+- **Compatibilidade:** versão técnica `1.0.8`, mesmo AppId do instalador, SQLite criptografado, backups, Organização, quinze cores e efeitos Avançados +20%. Não antecipar a versão 2.0.
+- **QA:** `node tests/windows-sync-1-0-33.cjs`, integrado à CI e compilação; testes em um Windows real permanecem necessários para validar a sugestão de nome no diálogo de impressão.
 
 ## Dados, migração e segurança
 
@@ -112,8 +123,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0.7 estável
-- **Versão técnica:** `1.0.7`
+- **Produto:** EvoluFísico Desktop 1.0.8 estável
+- **Versão técnica:** `1.0.8`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026

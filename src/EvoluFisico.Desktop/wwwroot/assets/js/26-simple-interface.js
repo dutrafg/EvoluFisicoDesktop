@@ -27,7 +27,21 @@ function arrangeNavigation(){
  const nav=document.querySelector('.top-navbar > .nav-tabs'),menu=$('ef-tools-content'),actions=$('ef-primary-actions');if(!nav||!menu||!actions)return;
  ['tab-painel','tab-organizacao','tab-historico','tab-comparison','tab-lab77','tab-ef-forms','tab-analises','tab-cobranca'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
  ['tab-settings'].forEach(route=>{const b=$(routes[route][0]);if(b&&b.parentNode!==nav)nav.append(b)});
- const form=$('tab-btn-form');if(form&&form.parentNode!==actions)actions.prepend(form);
+ // Mover a ação para Avaliações: barra lateral dedicada exclusivamente à navegação.
+ const form=$('tab-btn-form'),history=$('tab-historico');
+ if(form&&history){
+  let toolbar=$('ef-history-new-evaluation');
+  if(!toolbar){
+   toolbar=document.createElement('div');
+   toolbar.id='ef-history-new-evaluation';
+   toolbar.className='ef-history-new-evaluation no-print';
+   toolbar.setAttribute('aria-label','Ações de Avaliações');
+   const search=history.querySelector(':scope > .search-bar-container');
+   if(search)history.insertBefore(toolbar,search);
+   else history.prepend(toolbar);
+  }
+  if(form.parentNode!==toolbar)toolbar.append(form);
+ }
  for(const [route,[id,label]] of Object.entries(routes)){
   const b=$(id);if(!b)continue;b.type='button';b.setAttribute('aria-controls',route);
   // Keep the form icon/label and history count IDs used by existing code.
@@ -45,7 +59,7 @@ function arrangeNavigation(){
   workspace.insertBefore(billingPanel,settingsPanel?.parentElement===workspace?settingsPanel:null);
  }
  const active=document.querySelector('.tab-panel.active');
- if(form)form.hidden=active?.id!=='tab-historico'&&active?.id!=='tab-novo-checkin';
+ if(form)form.hidden=active?.id!=='tab-historico';
  const heading=$('ef-workspace-title');if(heading)heading.textContent=active?.id==='tab-painel'?'':(routes[active?.id]?.[1]||'EvoluFísico');
  $('ef-tools').classList.toggle('ef-tools-active',active?.id==='tab-settings');
 }
@@ -332,7 +346,7 @@ function mount(){
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
  const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
- window.EFSimpleUI={version:'1.0.7',arrangeNavigation,arrangeDetails};
+ window.EFSimpleUI={version:'1.0.8',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();

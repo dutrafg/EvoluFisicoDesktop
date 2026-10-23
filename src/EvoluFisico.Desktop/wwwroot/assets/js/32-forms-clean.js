@@ -198,8 +198,7 @@ function pdfForm(t, person=null){const name=person?.name||'';const internalId=pe
 }
 function exportFormPDF(id){
  const t=templateBy(id),c=requireClient();if(!t||!c)return;
- const safePart=v=>String(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').slice(0,45);
- const file='EvoluFisico_Anamnese_'+safePart(c.name)+'_'+safePart(t.title)+'.pdf';
+ const file=window.EF2PdfFileName(c.name);
  safeDownload(file,'application/pdf',pdfForm(t,c));message('PDF preenchível associado a '+c.name+' gerado. O cliente pode responder no leitor compatível e devolver. O PDF não é criptografado.');
 }
 
