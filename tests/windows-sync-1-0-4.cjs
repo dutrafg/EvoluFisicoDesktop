@@ -76,3 +76,5 @@ check('All modules still use native storage and stable 1.0.8 Windows version',()
  assert.match(installer,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
 });
 console.log('TOTAL',passed,'EvoluFisico Desktop 1.0.8 checks passed');
+// Execute the EFIA 2.0.1 smoke checks as part of the existing Windows CI gate.
+require('./windows-sync-efia-2-0-1.cjs');
