@@ -1,0 +1,12 @@
+/* Controle de recarga 1.0.6 — acompanha cartões Geral do Desktop */
+.efw-reload-card{padding:18px 20px;border:1px solid var(--ef-line,#d9e1dd);border-radius:12px;background:var(--ef-surface,#fff);color:var(--text-main,#20342c)}
+.efw-reload-card-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.efw-reload-card-heading strong{font-size:1rem}
+.efw-reload-card-heading span{font-size:.75rem;opacity:.72}
+.efw-reload-row{display:flex;align-items:center;justify-content:space-between;gap:15px;cursor:pointer}
+.efw-reload-row span{display:flex;flex-direction:column;gap:5px;flex:1;min-width:0}
+.efw-reload-row b{font-size:.9rem}.efw-reload-row small{font-size:.78rem;line-height:1.5;opacity:.82}
+.efw-reload-row input{width:21px;height:21px;accent-color:var(--ef-selected-dark,#086849);flex:none}
+#efw-reload-status{margin:10px 0 0;font-size:.77rem;opacity:.78}
+@media(max-width:600px){.efw-reload-card{padding:14px}.efw-reload-row{gap:8px}}
+@media print{#efw-reload-card{display:none!important}}
