@@ -121,14 +121,14 @@ const COLORS={
  verde:['#75d7a9','#086849'],azul:['#73aef9','#235cbd'],roxo:['#ad95ff','#6244ba'],
  laranja:['#f9b276','#a85517'],rosa:['#f3a5c5','#a53c71'],
  'azul-marinho':['#233f68','#85a9e4'],petroleo:['#145c68','#71c1c9'],esmeralda:['#17624e','#76c8a3'],
- indigo:['#343f79','#9faaf0'],ameixa:['#653a65','#d2a4d0']
+ indigo:['#343f79','#9faaf0'],ameixa:['#653a65','#d2a4d0'],grafite:['#64748b','#334155'],bordeaux:['#a85c70','#80364f'],oliva:['#83915a','#596638'],cobre:['#c08b65','#925833'],turquesa:['#49b8bc','#176c7d']
 };
 const LEGACY_COLORS={
  'verde-escuro':'esmeralda','azul-escuro':'azul-marinho',
  'roxo-escuro':'indigo','laranja-escuro':'petroleo','rosa-escuro':'ameixa',
  terracota:'petroleo',vinho:'ameixa'
 };
-const INTENSE_COLORS=new Set(['azul-marinho','petroleo','esmeralda','indigo','ameixa']);
+const INTENSE_COLORS=new Set(['azul-marinho','petroleo','esmeralda','indigo','ameixa','grafite','bordeaux','oliva','cobre','turquesa']);
 function applyColor(v){
  const normalized=LEGACY_COLORS[v]||v;
  const key=Object.prototype.hasOwnProperty.call(COLORS,normalized)?normalized:'verde';
@@ -146,7 +146,7 @@ function applyColor(v){
 function installColors(){
  const area=$('ef-setting-appearance');if(!area)return;
  const field=document.createElement('div');field.className='ef-colors-field';
- field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha entre cinco cores originais e cinco tons sóbrios. As escolhas anteriores serão preservadas e compatibilizadas.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>'<button type="button" data-ef-color="'+key+'" aria-label="Cor '+key.split('-').join(' ')+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i></i><span>'+key.split('-').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ')+'</span></button>').join('')+'</div>';
+ field.innerHTML='<strong>Cor principal do aplicativo</strong><p>Escolha entre cinco cores originais e dez tons profissionais. As escolhas anteriores serão preservadas e compatibilizadas.</p><div class="ef-colors-list" role="group" aria-label="Escolher cor">'+Object.keys(COLORS).map(key=>'<button type="button" data-ef-color="'+key+'" aria-label="Cor '+key.split('-').join(' ')+'" aria-pressed="false" style="--swatch:'+COLORS[key][0]+'"><i></i><span>'+key.split('-').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ')+'</span></button>').join('')+'</div>';
  area.append(field);
  field.addEventListener('click',e=>{const b=e.target.closest('[data-ef-color]');if(!b)return;try{localStorage.setItem('ef90_paleta',b.dataset.efColor)}catch(_){}applyColor(b.dataset.efColor)});
  let saved='verde';try{saved=localStorage.getItem('ef90_paleta')||saved}catch(_){}
@@ -332,7 +332,7 @@ function mount(){
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
  const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
- window.EFSimpleUI={version:'1.0.5',arrangeNavigation,arrangeDetails};
+ window.EFSimpleUI={version:'1.0.6',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
