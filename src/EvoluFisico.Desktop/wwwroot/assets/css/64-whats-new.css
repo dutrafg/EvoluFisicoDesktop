@@ -1,0 +1,32 @@
+/* "O que há de novidade" acompanha as superfícies desktop 1.0.7 e não altera impressão. */
+#tab-settings .efwhatsnew-card{
+ display:flex;flex-direction:column;gap:10px;min-width:0;
+ border:1px solid var(--ef-line,var(--border-color,#c6dcd0));
+ background:var(--ef-surface,var(--card-bg,#fff));
+ color:var(--text-main,#153c2d);
+ padding:clamp(16px,2vw,22px);
+ border-radius:12px;
+}
+#tab-settings .efwhatsnew-header{
+ display:flex;gap:12px;align-items:center;flex-wrap:wrap;min-width:0;
+}
+#tab-settings .efwhatsnew-symbol{
+ flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;
+ border-radius:11px;color:var(--ef-selected-dark,var(--ef-accent,#176647));
+ background:var(--ef-soft,rgba(63,169,114,.10));
+ border:1px solid var(--ef-line,var(--border-color,#d1e2da));
+}
+#tab-settings .efwhatsnew-text{flex:1 1 170px;min-width:0}
+#tab-settings .efwhatsnew-eyebrow{display:block;margin-bottom:3px;font-weight:800;font-size:10px;letter-spacing:.07em;opacity:.78}
+#tab-settings .efwhatsnew-text h3{margin:0;font-weight:750;font-size:1.02rem;line-height:1.3}
+#tab-settings .efwhatsnew-version{
+ align-self:center;border:1px solid var(--ef-line,var(--border-color,#d1e2da));
+ border-radius:7px;padding:6px 10px;font-weight:700;font-size:12px;
+ white-space:nowrap;color:var(--text-main,#173f2c);background:var(--ef-soft,rgba(63,169,114,.10));
+}
+#tab-settings .efwhatsnew-summary{margin:0;max-width:90ch;font-size:.87rem;line-height:1.6;color:var(--text-muted,var(--text-main,#53695d))}
+@media(max-width:520px){
+ #tab-settings .efwhatsnew-symbol{width:38px;height:38px;flex-basis:38px}
+ #tab-settings .efwhatsnew-version{margin-left:50px;align-self:flex-start}
+}
+@media print{#tab-settings .efwhatsnew-card{display:none!important}}

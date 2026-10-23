@@ -73,6 +73,8 @@ jobs:
         run: node tests/windows-svg-icons-1-0-5.cjs
       - name: Validate Evolufisico2 1.0.31 persistence, reload guard and billing fixes
         run: node tests/windows-sync-1-0-31.cjs
+      - name: Validate 1.0.7 novidades card and release identity
+        run: node tests/windows-whats-new-1-0-7.cjs
 
       - name: Validate legacy desktop features and preregistration
         run: node tests/windows-release-911-beta4.cjs
