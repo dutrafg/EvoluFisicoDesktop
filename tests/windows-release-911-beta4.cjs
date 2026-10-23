@@ -13,8 +13,8 @@ check('All changed JavaScript modules parse',()=>[js,home,p].forEach(x=>assert.d
 check('Palette contains original five and five stronger shades',()=>{
  const start=js.indexOf('const COLORS='),end=js.indexOf(';',start);
  const COLORS=new Function(js.slice(start,end+1)+'return COLORS;')();
- assert.equal(Object.keys(COLORS).length,10);
- for(const k of ['verde','azul','roxo','laranja','rosa','azul-marinho','petroleo','esmeralda','indigo','ameixa']) {
+ assert.equal(Object.keys(COLORS).length,15);
+ for(const k of ['verde','azul','roxo','laranja','rosa','azul-marinho','petroleo','esmeralda','indigo','ameixa','grafite','bordeaux','oliva','cobre','turquesa']) {
   assert.ok(COLORS[k],k);assert.match(COLORS[k][0],/^#[0-9a-f]{6}$/i);
  }
  assert.ok(js.includes('ef90_paleta'));
