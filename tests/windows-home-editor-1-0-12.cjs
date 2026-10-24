@@ -23,6 +23,8 @@ assert.ok(html.includes('<title>EvoluFísico Desktop</title>'));
 assert.ok(!html.includes('assets/js/53-custom-cards.js'),'old editor remains disabled');
 assert.ok(css.includes('grid-template-columns:repeat(12,minmax(0,1fr))'),'dense 12-column grid');
 assert.ok(css.includes('max-width:1040px')&&css.includes('max-width:580px'),'tablet and smartphone responsive');
+assert.ok(css.includes('#efh-dashboard.efhc-edit-mode .efhc-card-tools{display:flex!important}'),'editing controls must be visible when mounted root toggles class');
+assert.ok(!css.includes('#efh-dashboard .efhc-edit-mode .efhc-card-tools{display:flex}'),'reject descendant selector');
 assert.ok(css.includes('.efhc-handle{')&&css.includes('touch-action:none'),'touch capture limited to explicit handle');
 assert.ok(!css.includes('touch-action:none;*'),'does not globally disable touch');
 const store=new Map([

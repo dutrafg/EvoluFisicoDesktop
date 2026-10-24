@@ -89,7 +89,7 @@ function bindDrag(handle,shell){
  handle.addEventListener('pointerdown',e=>{
   if(!editing||e.button!==0)return;
   start={id:e.pointerId,x:e.clientX,y:e.clientY};
-  handle.setPointerCapture?.(e.pointerId);
+  try{handle.setPointerCapture?.(e.pointerId)}catch(_){}
  });
  handle.addEventListener('pointermove',e=>{
   if(!start||e.pointerId!==start.id)return;
@@ -146,7 +146,7 @@ function toolbar(){
  edit.setAttribute('aria-pressed','false');edit.addEventListener('click',()=>{editing=!editing;applyAll();message(editing?'Arraste pela alça Mover ou use as setas.':'Layout salvo.');});
  const auto=document.createElement('button');auto.id='efhc-auto';auto.type='button';auto.textContent='Auto-organizar';auto.addEventListener('click',()=>{
   for(const group of ['stats','strategy','cards']){state[group].sizes=defaultSizes(group);}
-  save();applyAll();message('Cards distribuídos automaticamente, sem espaços vazios.');
+  save();applyAll();message('Larguras redefinidas e cards encaixados na grade.');
  });
  const reset=document.createElement('button');reset.id='efhc-reset';reset.type='button';reset.textContent='Restaurar layout';reset.addEventListener('click',()=>{
   if(!window.confirm('Restaurar o layout padrão do Início? Nenhum registro será excluído.'))return;

@@ -56,7 +56,7 @@
   padding:6px;background:var(--ef-soft,#f0f6f2);
   color:var(--ef-ink,#15382a);min-width:0;
  }
- #tab-painel #efh-dashboard .efhc-edit-mode .efhc-card-tools{display:flex}
+ #tab-painel #efh-dashboard.efhc-edit-mode .efhc-card-tools{display:flex!important}
  #tab-painel #efh-dashboard .efhc-card-tools button,
  #tab-painel #efh-dashboard .efhc-card-tools select{
   height:30px;min-width:30px;max-width:100%;box-sizing:border-box;
@@ -91,3 +91,5 @@
  #tab-painel #efh-dashboard .efhc-status,
  #tab-painel #efh-dashboard .efhc-card-tools{display:none!important}
 }
+/* A captura do ponteiro nunca deve afetar o scroll geral, somente a alça. */
+@media screen{#tab-painel #efh-dashboard .efhc-cell:not(.efhc-editing) .efhc-card-tools{display:none!important}}
