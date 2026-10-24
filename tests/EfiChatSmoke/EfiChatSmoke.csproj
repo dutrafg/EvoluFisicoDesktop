@@ -10,8 +10,8 @@
     <Compile Include="../../src/EvoluFisico.Desktop/EfiAiRuntime.cs" Link="EfiAiRuntime.cs" />
     <Compile Include="../../src/EvoluFisico.Desktop/EfiAiModelManager.cs" Link="EfiAiModelManager.cs" />
     <Compile Include="../../src/EvoluFisico.Desktop/EfiAppPaths.cs" Link="EfiAppPaths.cs" />
-    <Content Include="../../publish/win-x64/ai-runtime/llama-server.exe"
-             Link="ai-runtime/llama-server.exe"
+    <Content Include="../../publish/win-x64/ai-runtime/**/*"
+             Link="ai-runtime/%(RecursiveDir)%(Filename)%(Extension)"
              CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
