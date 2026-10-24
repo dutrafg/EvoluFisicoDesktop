@@ -14,10 +14,12 @@ Data: 24/10/2026. Os resultados abaixo distinguem verificações automatizadas d
 | Run [40126487526](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40126487526), commit `cbda289cbd590c9a256cea086a42cc8a79c9c679` | Sucesso completo: bloqueios e supressão de tendências por tipo de cenário confirmados, build Windows, instalador, smoke install/uninstall e artefato enviado. |
 | Run [40126910352](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40126910352), commit `2767f8817ee6c9f07556945b330381edfb68c2ef` | Sucesso completo: smoke iniciou o executável e verificou processo ativo, além da campanha EFIA, build, instalação/desinstalação e upload do EXE. |
 | Run [40128372330](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40128372330), commit `08eee52b8d3c889b01d1a11491d04337563be5fb` | Sucesso completo: teste de bloqueio de PDF com rascunho desatualizado, build Windows e smoke de inicialização/instalação/desinstalação. |
+| Run [40130819687](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40130819687), commit `760fb46a7319c1c57493f6fde1b49e4516901396` | Sucesso completo: smoke de armazenamento SQLite em Windows, build EFI, instalador e inicialização/instalação/desinstalação. |
 
 ## Testes executados
 
 - Sintaxe EFI JavaScript: passou nos runs acima.
+- SQLite: `tests/StorageSmoke` passou no run Windows `40130819687`; cobriu criptografia/DPAPI e senha mestre, leituras/gravações, batches e rollback, integridade, rejeição de schema futuro sem downgrade, backup/restauração, exclusão atômica, adulteração e preservação de backup anterior em falha.
 - Rascunhos do relatório: passou `tests/analysis-report-staleness.cjs`; quando a versão do estado muda, o editor preserva o texto, bloqueia a emissão do PDF e orienta reabrir o relatório para revisar os dados atuais.
 - Perfil Unificado e regressão de tema: passou em `tests/unified-students-profile.cjs`; cobre separação de homônimos, agrupamento por ID persistente, cronologia, métricas e leitura conservadora de registros sem ID.
 - Avaliação em seis etapas: passou em `tests/evaluation-objectives.cjs`; confirma Objetivos na etapa 2, persistência de seleções múltiplas, edição e recuperação de rascunhos.
@@ -34,14 +36,14 @@ A campanha versionada executa o host EFIA com os oito componentes deterministica
 
 ## Testes ainda não executados
 
-- Migração em lote de banco legado, backup em cenário de interrupção/rollback e preservação de dados reais. A migração assistida de uma avaliação por vez já solicita backup e grava o registro individualmente.
+- Migração real de IndexedDB/LocalStorage para SQLite com dados existentes, corte de fonte de verdade, interrupção durante migração e atualização in-place preservando banco real. O smoke cobre atomicidade e rollback do armazenamento sintético, não a migração aplicada ao perfil de um usuário.
 - Atualização in-place sobre Alpha anterior com banco contendo dados e validação de preservação na desinstalação.
 - Abertura manual da interface instalada e fluxo real de gravação/leitura por módulo; o smoke só confirmou que o processo iniciou e permaneceu ativo por 8 segundos.
 - Homologação visual do Perfil em Windows/WebView2, avaliação em diferentes resoluções/escalas, navegação por teclado/toque e contraste completo.
-- Validação visual e impressão dos PDFs A4, backup/restauração e separação de relatório privado e compartilhável.
+- Validação visual/impressão dos PDFs A4, backup/restauração pelo fluxo do aplicativo, compatibilidade de formatos antigos e separação de relatório privado e compartilhável.
 - Estados EFI/Qwen: runtime ausente, modelo ausente/corrompido, retomada, cancelamento, timeout, falta de RAM e uso offline dentro do aplicativo.
 - Validação independente das fórmulas científicas contra referências externas e testes de invalidação persistida de pareceres.
 
 ## Resultado
 
-A branch possui build Windows e smoke automatizado de instalação/desinstalação aprovados no run `40128372330`; passaram a suíte integrada reforçada, a detecção de rascunho desatualizado e o smoke de processo inicializado. A implementação do Perfil e o novo fluxo de objetivos têm testes automatizados, mas a homologação manual do aplicativo instalado, migração de dados e atualização in-place continuam pendentes; a campanha integrada passou; a validação externa das fórmulas e a invalidação persistida seguem pendentes. A migração individual exige backup e foi coberta por teste estático/CI; a interação manual do diálogo de backup e consolidação de históricos reais ainda não foram homologadas. A versão não é candidata a estável.
+A branch possui build Windows e smoke automatizado de instalação/desinstalação aprovados no run `40130819687`; passaram o smoke SQLite, a suíte integrada reforçada, a detecção de rascunho desatualizado e o smoke de processo inicializado. A implementação do Perfil e o novo fluxo de objetivos têm testes automatizados, mas a homologação manual do aplicativo instalado, migração de dados e atualização in-place continuam pendentes; a campanha integrada passou; a validação externa das fórmulas e a invalidação persistida seguem pendentes. A migração individual de identidade exige backup e foi coberta por teste estático/CI; a interação manual do diálogo de backup e consolidação de históricos reais ainda não foram homologadas. A versão não é candidata a estável.

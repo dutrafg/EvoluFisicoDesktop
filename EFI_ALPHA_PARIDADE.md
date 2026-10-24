@@ -1,6 +1,6 @@
 # Matriz de paridade — EvoluFísico2 × Desktop EFI Alpha
 
-Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@08eee52`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
+Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@760fb46`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
 
 | Módulo/área | Estado na Alpha | Diferença e trabalho restante |
 |---|---|---|
@@ -18,7 +18,7 @@ Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop e
 | Backup e restauração | Presente, homologação incompleta | Implementações nativas existem; restauração, compatibilidade de formatos antigos e preservação em atualização pendem. |
 | Navegação e personalização | Parcial | Sidebar, cores e cards existem; ainda falta validação de layouts/miniapps atuais no Windows. |
 | Relatórios e PDF | Parcial | Relatórios nativos existem; rascunho obsoleto após alteração de estado agora bloqueia PDF e preserva as edições, com teste automatizado. Faltam verificação A4, separação privado/compartilhável e impressão manual. |
-| Armazenamento e segurança | Parcial; SQLite nativo | Banco criptografado e IDs persistentes são a base Windows. Registros legados podem ser vinculados um a um com confirmação e backup; migração em lote, interrupção/rollback e homologação com dados de usuário pendem. |
+| Armazenamento e segurança | Parcial; SQLite nativo | SQLite transacional criptografado via ponte WebView2 é ativo para registros nativos; `StorageSmoke` passou em Windows, incluindo rollback, backup/restauração, adulteração e bloqueio de schema futuro. Vínculo legado de identidade exige confirmação e backup. Migração real das fontes IndexedDB/LocalStorage e homologação com perfil existente pendem. |
 | Atualizações e manutenção | Parcial | Atualizador existe; atualização Alpha sobre Alpha preservando dados não foi testada. |
 | Temas claro/escuro | Portadas correções recentes; homologação pendente | Regras Web de confirmação de avaliação escura e contraste foram integradas e passaram teste automatizado. Falta auditoria visual de todas as janelas/telas WebView2. |
 | Privacidade/LGPD | Parcial | Criptografia e minimização de prompt estão previstas; revisar logs, consentimento, backup e compartilhamento. |

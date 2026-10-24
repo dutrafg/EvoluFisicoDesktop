@@ -6,8 +6,8 @@ using System.Text.Json;
 
 namespace EvoluFisico.Desktop;
 
-/// <summary>Versioned authenticated encryption for future transactional data-store migration.
-/// This component is not yet wired into WebView2/IndexedDB persistence.</summary>
+/// <summary>Versioned authenticated encryption used by the native SQLite record store.
+/// Legacy browser-storage migration is handled separately and remains non-destructive.</summary>
 internal static class ProtectedVault
 {
     private const int Iterations = 600_000;

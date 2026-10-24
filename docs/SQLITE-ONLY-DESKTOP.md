@@ -1,21 +1,31 @@
-# SQLite-only Desktop (pré-homologação)
+# Armazenamento SQLite-only — pré-homologação
 
-A pedido do responsável pelo projeto, o aplicativo desktop ainda não utilizado em produção passa a usar SQLite criptografado como armazenamento principal para **avaliações e cobranças**. Os dados antigos de IndexedDB/localStorage não são importados automaticamente.
+Atualizado em 24/10/2026.
 
-## Implementado
-- Avaliações: leitura, inclusão, alteração e exclusão via `EFNativeStorage` com IDs `ef-eval-<id>`.
-- Cobranças: leitura e gravação via `EFNativeStorage`, registro `ef-billing-main`.
-- O SQLite criptografa cada registro com AES-GCM e DPAPI no Windows.
-- Scripts de migração do IndexedDB removidos da página carregada.
-- Backup nativo SQLite com verificação de integridade.
+O Desktop usa SQLite criptografado como armazenamento nativo para avaliações e cobranças. A Alpha mantém diretório de dados separado da versão estável. A ponte WebView2 aceita chamadas somente da origem local empacotada e limita os tipos e tamanhos de operação.
 
-## Restrições antes da versão estável
-- **Não remover arquivos legados do repositório** antes de revisar rotinas internas de senha mestre, restauração, importação, fotos e preferências que ainda podem chamar IndexedDB/localStorage.
-- A interface legada da senha mestre e os caminhos de troca de chave ainda exigem integração com SQLite; não declarar esse fluxo pronto.
-- Excluir uma avaliação altera registros relacionados em gravações separadas; falta uma operação transacional de conjunto.
-- O módulo de cobranças pode possuir outros caminhos de leitura/gravação além de `loadBilling`/`writeBilling`; todos precisam ser auditados.
-- O aplicativo precisa passar por testes funcionais reais: cadastro, edição, exclusão, histórico, fotos, cobranças, PDF, backup, reinício e reinstalação.
-- O backup DPAPI não é portátil entre contas Windows sem mecanismo adicional.
-- Não usar o resultado verde do CI como homologação funcional.
+## Implementado e validado
 
-**Status: beta, ainda não estável.**
+- Avaliações: leitura, inclusão, alteração e exclusão via `EFNativeStorage`, com IDs `ef-eval-<id>`.
+- Cobranças: leitura e gravação nativas no registro `ef-billing-main`.
+- SQLite v1: registros cifrados por AES-GCM; chave aleatória protegida por DPAPI CurrentUser no modo automático. O modo senha mestre existe na camada de armazenamento; a integração completa da interface ainda está pendente.
+- Exclusão de avaliação e atualizações vinculadas em transação única.
+- Backup nativo verificado e restauração que substitui apenas avaliações, mantendo cobranças.
+- `tests/StorageSmoke` executado no Windows Actions run [40130819687](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40130819687). Cobriu round-trip de cofre, transações, conflitos, rollback, integrity check, rejeição de schema futuro, backup/restauração, exclusão atômica e adulteração autenticada.
+
+## Migração legada e limites atuais
+
+A migração não faz corte automático do armazenamento antigo. O helper `29-legacy-migration.js` copia itens do `localStorage` para SQLite, compara os bytes e deixa a origem intacta; IndexedDB e perfis existentes ainda precisam de migração e homologação específicas. Não remover os dados legados antes de verificar uma cópia de backup e uma restauração real.
+
+O teste SQLite usa bancos temporários e dados fictícios. Ele não prova atualização sobre uma instalação com dados reais, migração de IndexedDB/LocalStorage em todas as versões, interrupção/retomada em perfil do usuário nem portabilidade DPAPI para outra conta Windows.
+
+## Pendências antes da versão RC
+
+- Integrar e homologar senha mestre e troca/recuperação de chave com o armazenamento nativo e backups.
+- Migrar cada fonte legada com cópias de bancos de versões suportadas, conferência de contagem e conteúdo, retentativa após interrupção e origem preservada.
+- Testar atualização in-place e desinstalação sem perda indevida de avaliações, perfil, cobranças e chave.
+- Homologar no app instalado cadastro, edição, exclusão, histórico, fotos, cobrança, PDF, backup, restauração e reinício.
+- Verificar backup/restauração entre pastas e, conforme a política DPAPI, entre contas Windows.
+- Auditar preferências e caminhos não clínicos ainda atendidos por armazenamento de navegador antes de retirar a infraestrutura legada.
+
+**Status: pré-homologação; não declarar estável.**
