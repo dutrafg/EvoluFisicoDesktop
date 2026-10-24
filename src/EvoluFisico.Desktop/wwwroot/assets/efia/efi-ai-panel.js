@@ -1,48 +1,45 @@
-/* EFI Intelligence Alpha — presentation only; computations remain with EFIA. */
+/* EFI Intelligence Alpha — user-controlled local model catalog.
+ * EFIA owns all computations; Qwen may only rephrase validated observations. */
 (() => {
   'use strict';
   const pending = new Map();
   let seq = 0;
-  const native = window.chrome && window.chrome.webview;
+  const native = window.chrome?.webview;
 
-  if (native) {
-    native.addEventListener('message', e => {
-      const m = e.data;
-      if (!m || m.type !== 'efi-ai-result') return;
-      const request = pending.get(m.requestId);
-      if (!request) return;
-      pending.delete(m.requestId);
-      if (m.ok) request.resolve(m.data);
-      else request.reject(new Error(m.error || 'Operação EFI não concluída.'));
-    });
-  }
+  if (native) native.addEventListener('message', event => {
+    const m = event.data;
+    if (!m || m.type !== 'efi-ai-result') return;
+    const request = pending.get(m.requestId);
+    if (!request) return;
+    pending.delete(m.requestId);
+    if (m.ok) request.resolve(m.data);
+    else request.reject(new Error(m.error || 'Operação EFI não concluída.'));
+  });
 
   function request(action, extra = {}) {
-    if (!native) return Promise.reject(new Error('Disponível apenas no EvoluFísico Desktop.'));
+    if (!native) return Promise.reject(new Error('Recurso exclusivo do EvoluFísico Desktop.'));
     const requestId = 'efi_' + (++seq);
     return new Promise((resolve, reject) => {
       pending.set(requestId, {resolve, reject});
-      try {
-        native.postMessage({type: 'efi-ai', requestId, action, ...extra});
-      } catch (e) {
-        pending.delete(requestId);
-        reject(e);
-      }
+      try { native.postMessage({type:'efi-ai', requestId, action, ...extra}); }
+      catch (error) { pending.delete(requestId); reject(error); }
     });
   }
 
-  const finite = x => typeof x === 'number' && Number.isFinite(x);
+  const finite = v => typeof v === 'number' && Number.isFinite(v);
   function validatedFacts(result) {
-    if (!result || result.eligible !== true || result.original?.safety?.canTrend !== true)
-      throw new Error('Análise bloqueada pela auditoria EFIA.');
-    const findings = ['Resumo auditado dos motores EFIA; valores são descritivos, não diagnósticos.'];
-    findings.push(String(result.summary || '').slice(0, 400));
+    if (!result?.eligible || result.original?.safety?.canTrend !== true)
+      throw new Error('A auditoria EFIA bloqueou esta análise.');
+    const facts = [
+      'Resumo dos cálculos e da auditoria EFIA; não fornece diagnóstico.',
+      String(result.summary || '').slice(0, 400)
+    ];
     for (const [key, title, unit] of [
-      ['peso','Peso corporal','kg'], ['cintura','Cintura','cm'],
+      ['peso','Peso corporal','kg'],['cintura','Cintura','cm'],
       ['gordura','Gordura corporal estimada','p.p.'],
       ['massaMagra','Massa livre de gordura estimada','kg']
     ]) {
-      const v = result.engines?.EF79?.results?.[key];
+      const metric = result.engines?.EF79?.results?.[key];
       const comparable = result.records?.length >= 3
         && window.EFIALocal?.comparable?.(result.records, key) === true;
       const composition = ['gordura','massaMagra'].includes(key);
@@ -50,85 +47,134 @@
         (result.engines?.EF80?.issues || []).length === 0 &&
         !(result.engines?.EF80?.massBalance || []).some(x => x.status === 'incompatible')
       );
-      if (comparable && coherent && finite(v?.change))
-        findings.push(title + ': variação ' + v.change.toFixed(2) + ' ' + unit + '.');
-      else
-        findings.push(title + ': comparação não liberada.');
+      facts.push(comparable && coherent && finite(metric?.change)
+        ? title + ': variação ' + metric.change.toFixed(2) + ' ' + unit + '.'
+        : title + ': comparação não liberada.');
     }
     const alerts = (result.warnings || []).filter(x => typeof x === 'string')
       .slice(0, 12).map(x => x.slice(0, 240));
-    findings.push('Alertas da auditoria: ' + (alerts.length ? alerts.join('; ') : 'nenhum informado.'));
-    findings.push('Não atribua causalidade, eficácia de intervenção ou diagnóstico.');
-    return findings.join('\n').slice(0, 5900);
+    facts.push('Ressalvas: ' + (alerts.length ? alerts.join('; ') : 'nenhuma adicional informada.'));
+    facts.push('Não inferir causalidade, eficácia de intervenção, tratamento ou diagnóstico.');
+    return facts.join('\n').slice(0, 5900);
   }
 
   function mount(container, result) {
-    const summary = container.querySelector('#efia-panel-summary');
+    const summary = container?.querySelector('#efia-panel-summary');
     if (!summary || summary.querySelector('.efi-intelligence-alpha')) return;
     const section = document.createElement('section');
     section.className = 'efia-card efi-intelligence-alpha';
-    section.innerHTML = '<h3>EFI Intelligence <small>Alpha</small></h3>' +
-      '<p class="efi-ai-help">Interpretação local a partir da análise EFIA validada. ' +
-      'A revisão profissional é obrigatória.</p>' +
-      '<div class="efi-ai-actions">' +
-      '<button type="button" data-efi-status>Verificar pacote de IA</button>' +
-      '<button type="button" data-efi-install hidden>Instalar Qwen3.5-2B (~1,3 GB)</button>' +
-      '<button type="button" data-efi-explain hidden>Gerar interpretação</button>' +
-      '</div><p class="efi-ai-state" role="status" aria-live="polite"></p>' +
-      '<pre class="efi-ai-answer" hidden></pre>';
+    section.innerHTML = `<h3>EFI Intelligence <small>Alpha</small></h3>
+<p class="efi-ai-help">Interpretação local baseada nos motores EFIA. A revisão profissional é obrigatória.</p>
+<label for="efi-ai-model-choice">Modelo de inteligência</label>
+<select id="efi-ai-model-choice" aria-label="Escolher modelo de IA"></select>
+<div class="efi-ai-actions">
+<button type="button" data-efi-status>Verificar</button>
+<button type="button" data-efi-install hidden>Baixar modelo</button>
+<button type="button" data-efi-select hidden>Ativar modelo</button>
+<button type="button" data-efi-remove hidden>Remover modelo</button>
+<button type="button" data-efi-explain hidden>Gerar interpretação</button>
+</div>
+<p class="efi-ai-state" role="status" aria-live="polite"></p>
+<pre class="efi-ai-answer" hidden></pre>`;
     summary.append(section);
-    const state = section.querySelector('.efi-ai-state');
-    const install = section.querySelector('[data-efi-install]');
-    const explain = section.querySelector('[data-efi-explain]');
-    const status = section.querySelector('[data-efi-status]');
-    const output = section.querySelector('.efi-ai-answer');
-    function message(text) { state.textContent = text; }
-    function busy(value) {
-      install.disabled = value;
-      explain.disabled = value;
-      status.disabled = value;
+    const el = selector => section.querySelector(selector);
+    const choice = el('#efi-ai-model-choice');
+    const status = el('[data-efi-status]');
+    const install = el('[data-efi-install]');
+    const select = el('[data-efi-select]');
+    const remove = el('[data-efi-remove]');
+    const explain = el('[data-efi-explain]');
+    const output = el('.efi-ai-answer');
+    const state = el('.efi-ai-state');
+    const controls = [choice,status,install,select,remove,explain];
+    let catalog = null;
+    let busy = false;
+    const message = value => { state.textContent = value; };
+    function setBusy(value) {
+      busy = value;
+      controls.forEach(control => { control.disabled = value; });
+    }
+    function updateButtons() {
+      const picked = catalog?.models?.find(model => model.id === choice.value);
+      if (!picked) return;
+      install.hidden = !!picked.installed;
+      select.hidden = !picked.installed || picked.id === catalog.selectedId;
+      remove.hidden = !picked.installed;
+      explain.hidden = !picked.installed || picked.id !== catalog.selectedId || !catalog.runtimeReady;
+      const warning = picked.recommendedRamGB > 16
+        ? ' Esse modelo exige mais RAM para desempenho confortável neste computador de referência.'
+        : '';
+      message((picked.installed ? 'Modelo instalado.' : 'Modelo disponível para download.')
+        + (picked.id === catalog.selectedId ? ' Selecionado atualmente.' : '')
+        + (catalog.runtimeReady ? '' : ' Runtime nativo ainda não incluído neste build Alpha.')
+        + warning);
     }
     async function inspect() {
-      busy(true);
+      if (busy) return;
+      setBusy(true);
       try {
-        const r = await request('status');
-        install.hidden = !!r.installed;
-        explain.hidden = !r.installed || !r.runtimeReady;
-        message(!r.installed ? 'Pacote de IA não instalado. A análise EFIA permanece disponível.'
-          : !r.runtimeReady ? 'Modelo instalado. Runtime nativo pendente deste build Alpha.'
-          : 'Qwen instalado e pronto para processamento offline.');
-      } catch (e) {
-        message(e.message);
-      } finally { busy(false); }
+        const before = choice.value;
+        catalog = await request('status');
+        choice.replaceChildren();
+        for (const model of catalog.models) {
+          const option = document.createElement('option');
+          option.value = model.id;
+          option.textContent = `${model.label} · ${model.sizeGB.toLocaleString('pt-BR')} GB${model.installed ? ' · Instalado' : ''}`;
+          choice.append(option);
+        }
+        const available = catalog.models.some(m => m.id === before) ? before : catalog.selectedId;
+        choice.value = available;
+        updateButtons();
+      } catch (error) { message(error.message); }
+      finally { setBusy(false); }
     }
+    choice.addEventListener('change', updateButtons);
     status.addEventListener('click', inspect);
     install.addEventListener('click', async () => {
-      if (!window.confirm('Baixar aproximadamente 1,3 GB do modelo Qwen3.5-2B e instalar localmente?')) return;
-      busy(true);
-      message('Baixando e verificando o pacote. Não feche o aplicativo.');
+      const picked = catalog.models.find(m => m.id === choice.value);
+      if (!picked || !window.confirm(`Baixar ${picked.label} (~${picked.sizeGB} GB) para este computador?`)) return;
+      setBusy(true);
+      message('Baixando o pacote e verificando sua integridade. Não feche o aplicativo.');
+      try { await request('install', {modelId:picked.id, consent:true}); message('Modelo instalado.'); }
+      catch (error) { message(error.message); }
+      finally { setBusy(false); await inspect(); }
+    });
+    select.addEventListener('click', async () => {
+      setBusy(true);
       try {
-        await request('install', {consent:true});
-        message('Pacote verificado e instalado.');
-      } catch (e) { message(e.message); }
-      finally { busy(false); await inspect(); }
+        await request('select', {modelId:choice.value});
+        message('Modelo ativo alterado.');
+      } catch (error) { message(error.message); }
+      finally { setBusy(false); await inspect(); }
+    });
+    remove.addEventListener('click', async () => {
+      const picked = catalog.models.find(m => m.id === choice.value);
+      if (!picked || !window.confirm(`Remover ${picked.label} deste computador? Os dados dos alunos serão preservados.`)) return;
+      setBusy(true);
+      try { await request('remove', {modelId:picked.id, consent:true}); message('Modelo removido.'); }
+      catch (error) { message(error.message); }
+      finally { setBusy(false); await inspect(); }
     });
     explain.addEventListener('click', async () => {
-      // Re-read the live EFIA selection, never reuse old snapshots after edits.
-      const latest = window.EFIAView?.getCurrent?.();
       try {
-        if (!latest || JSON.stringify(latest.selectedIds) !== JSON.stringify(
-          window.EFIAView?.getCurrent?.()?.selectedIds))
-          throw new Error('Reabra a análise para atualizar a seleção.');
-        const facts = validatedFacts(latest.result);
-        busy(true);
+        const snapshot = window.EFIAView?.getCurrent?.();
+        if (!snapshot) throw new Error('Selecione as avaliações novamente.');
+        const refreshed = window.EFIAHost?.analyze?.({
+          host:window, profileKey:snapshot.profileKey, selectedIds:snapshot.selectedIds
+        });
+        if (!refreshed?.eligible ||
+            JSON.stringify(refreshed.recordsRaw) !== JSON.stringify(snapshot.result.recordsRaw))
+          throw new Error('O histórico mudou. Reabra Análises para revalidar os dados.');
+        const facts = validatedFacts(refreshed);
+        setBusy(true);
         output.hidden = true;
-        message('Interpretando os resultados localmente...');
-        const r = await request('analyze', {summary:facts});
-        output.textContent = r.text || 'Resposta vazia.';
+        message('Gerando interpretação local...');
+        const reply = await request('analyze', {summary:facts});
+        output.textContent = reply.text || 'Resposta vazia.';
         output.hidden = false;
-        message('Rascunho gerado. Revise antes de utilizar.');
-      } catch (e) { message(e.message); }
-      finally { busy(false); }
+        message('Rascunho concluído; revise antes de compartilhar.');
+      } catch (error) { message(error.message); }
+      finally { setBusy(false); }
     });
     inspect();
   }
