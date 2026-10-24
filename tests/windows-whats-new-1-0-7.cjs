@@ -13,12 +13,12 @@ check('Novidades script/style are loaded and precached offline',()=>{
   assert.ok(html.includes(path),'HTML missing '+path);
   assert.ok(sw.includes(path),'cache missing '+path);
  }
- assert.ok(sw.includes('evolufisico-desktop-1-0-11-pdf-names-new-evaluation'));
+ assert.ok(sw.includes('evolufisico-desktop-1-0-12-pdf-names-new-evaluation'));
  new Function(js);
 });
 check('Single card carries accessible SVG, version and accurate offline changelog',()=>{
  for(const term of ['ef-desktop-whatsnew-card','ef-desktop-whatsnew-title',
- 'aria-labelledby','aria-hidden','O que há de novidade','v','1.0.11',
+ 'aria-labelledby','aria-hidden','O que há de novidade','v','1.0.12',
  'recarga acidental','cobranças','tarefas e metas','avaliações','15 cores'])
   assert.ok(js.includes(term),term);
  assert.ok(js.includes("summary.textContent=SUMMARY"));
@@ -50,7 +50,7 @@ check('Card mounts immediately after native update checker and is idempotent',()
  assert.equal(updateCard.inserted.node.id,'ef-desktop-whatsnew-card');
  assert.equal(updateCard.inserted.node.attributes['aria-labelledby'],'ef-desktop-whatsnew-title');
  assert.equal(updateCard.inserted.node.children.length,2);
- assert.equal(window.EFDesktopWhatsNew.version,'1.0.11');
+ assert.equal(window.EFDesktopWhatsNew.version,'1.0.12');
 });
 check('Fallback goes to Manutenção when no update checker exists',()=>{
  const make=tag=>({tag,children:[],attributes:{},append(...n){this.children.push(...n)},setAttribute(k,v){this.attributes[k]=v}});
@@ -78,11 +78,11 @@ check('Windows install id, encrypted SQLite and stable patch version retained',(
  const iss=read('installer/EvoluFisico.iss');
  const native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
  const ui=read(root+'assets/js/26-simple-interface.js');
- assert.match(iss,/#define MyAppVersion "1\.0\.11"/);
+ assert.match(iss,/#define MyAppVersion "1\.0\.12"/);
  assert.match(iss,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
- assert.ok(native.includes('CurrentVersion = "1.0.11"'));
- assert.ok(ui.includes("version:'1.0.11'"));
- assert.ok(html.includes('v1.0.11 estável'));
+ assert.ok(native.includes('CurrentVersion = "1.0.12"'));
+ assert.ok(ui.includes("version:'1.0.12'"));
+ assert.ok(html.includes('<title>EvoluFísico Desktop</title>')&&!html.includes('brand-version'));
  assert.ok(read(root+'assets/js/24-billing.js').includes('EF_NATIVE_BILLING_KEY'));
 });
-console.log('TOTAL',count,'EvoluFisico Desktop 1.0.11 whats-new checks passed');
+console.log('TOTAL',count,'EvoluFisico Desktop 1.0.12 whats-new checks passed');

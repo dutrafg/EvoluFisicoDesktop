@@ -116,3 +116,6 @@ html.ef-dark-mode #tab-painel .efh-btn:hover,body.dark-mode #tab-painel .efh-btn
 html.ef-dark-mode #tab-painel .efh-hero .efh-btn,body.dark-mode #tab-painel .efh-hero .efh-btn{background:#eefbf2;color:#165237;border-color:transparent}
 html.ef-dark-mode #tab-painel .efh-hero .efh-btn.efh-btn-ghost,body.dark-mode #tab-painel .efh-hero .efh-btn.efh-btn-ghost{background:#ffffff16;color:#eafcf1;border:1px solid #a6d7bf}
 
+
+/* Versões antigas não integram o conteúdo operacional do Início. */
+#tab-painel .efh-test{display:none!important}

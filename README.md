@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0.11 estável
+# EvoluFísico Desktop 1.0.12 estável
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -123,8 +123,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0.11 estável
-- **Versão técnica:** `1.0.11`
+- **Produto:** EvoluFísico Desktop 1.0.12 estável
+- **Versão técnica:** `1.0.12`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026
@@ -159,3 +159,13 @@ Em 24/10/2026, o EvoluFisico2 passou a **2.0.28 Pré-Beta**. Esta versão Deskto
 Origem: `Evolufisico2@b0eca6ba1094`, correção Web de rolagem dos miniaplicativos em tablet. Os miniaplicativos `.efw-tile-body` da web **não estão presentes no Desktop 1.0.10**; portanto, não foram copiados para o Windows. Adaptação seletiva: as áreas roláveis já existentes do Início/Análises e da Organização passam a usar `overscroll-behavior-y:auto` e `touch-action:pan-y`, com rolagem natural em telas sensíveis ao toque. O banco criptografado SQLite, as avaliações, a navegação, a impressão PDF e os backups permanecem inalterados.
 
 QA de regressão automatizado em `tests/windows-touch-scroll-1-0-11.cjs`. Testes em notebook/tablet Windows com toque e gesto real ainda são recomendados. O Perfil Unificado e os miniaplicativos web da versão 2.0.28 continuam fora do escopo deste instalador.
+
+
+## EvoluFísico Desktop 1.0.12 — organização do Início (24/10/2026)
+
+- **Início → Editar:** permite mover cards pelo comando acessível `⠿ Mover` (mouse, caneta ou toque), usar setas para reordenar e escolher largura Pequena, Média, Grande ou Total quando disponível.
+- **Auto-organizar:** recompõe os tamanhos para encaixar os cards nas linhas, mantendo a ordem definida pelo usuário; **Restaurar layout** volta à ordem e aos tamanhos originais sem excluir nenhum dado.
+- Abrange indicadores de hoje, indicadores de alunos/financeiro e todos os cards operacionais do painel; mantém botões e minitabelas clicáveis fora da alça de edição.
+- Preferências de ordem/tamanho armazenadas no perfil local do WebView2, separadas dos registros clínicos do SQLite protegido; migra preferências compatíveis do editor antigo, quando disponíveis.
+- Eliminado o rótulo obsoleto `EvoluFísico2 1.0.4 estável` e as etiquetas redundantes de versão da tela de abertura/cabeçalho. A versão técnica atual permanece disponível em Configurações → Manutenção e no instalador.
+- AppId, proteção do banco SQLite, funcionalidades EFIA, backup e geração de PDFs preservados. Testes em telas Windows com toque físico ainda recomendados após CI.
