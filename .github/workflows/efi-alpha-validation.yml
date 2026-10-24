@@ -26,15 +26,25 @@ jobs:
       - name: Build complete Windows Desktop with EFI modules
         shell: pwsh
         run: |
-          dotnet restore src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj -r win-x64
-          if ($LASTEXITCODE -ne 0) { throw 'Restore failed' }
-          dotnet build src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj -c Release -r win-x64 --no-restore
-          if ($LASTEXITCODE -ne 0) { throw 'Desktop compile failed' }
+          ./scripts/build-windows.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Desktop build failed' }
       - name: Verify EFI integration and unchanged version
         shell: pwsh
         run: |
           node tests/efi-ai-alpha.cjs
           if ($LASTEXITCODE -ne 0) { throw 'EFI alpha integration failed' }
+      - name: Bundle verified native CPU inference engine
+        shell: pwsh
+        run: |
+          ./scripts/bundle-efi-runtime.ps1
+          if (!(Test-Path 'publish/win-x64/ai-runtime/llama-server.exe')) { throw 'Missing llama-server.exe' }
+      - name: Upload experimental Windows application files
+        uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-1.0.12-EFI-Alpha-Windows-files
+          path: publish/win-x64/
+          if-no-files-found: error
+          retention-days: 7
       - name: Avoid publishing experimental build
         shell: pwsh
         run: |
