@@ -14,7 +14,7 @@ public partial class MainWindow : Window
 {
     private const string AppUrl = "https://evolufisico.local/index.html";
     private bool _ready;
-    private const string CurrentVersion = "1.0.11";
+    private const string CurrentVersion = "1.0.13";
     private static string InstalledTag()
     {
         try
@@ -51,6 +51,17 @@ public partial class MainWindow : Window
         {
             var profile = EfiAppPaths.WebViewProfile;
             Directory.CreateDirectory(profile);
+            if (EfiAppPaths.IsAlpha)
+            {
+                try { EfiDemoSeed.Ensure(); }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Falha na carga das avaliações sintéticas: " + ex.GetType().Name);
+                    MessageBox.Show(
+                        "Não foi possível carregar os alunos de demonstração. O banco existente foi preservado. Detalhes: " + ex.Message,
+                        "EFI Alpha — dados fictícios", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
 
             var web = Path.Combine(AppContext.BaseDirectory, "wwwroot");
             var index = Path.Combine(web, "index.html");
