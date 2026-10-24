@@ -62,8 +62,8 @@
     return facts.join('\n').slice(0, 5900);
   }
 
-  function mount(container, result) {
-    const summary = container?.querySelector('#efia-panel-intelligence');
+  function mount(container, result, settingsOnly = false) {
+    const summary = settingsOnly ? container : container?.querySelector('#efia-panel-intelligence');
     if (!summary || summary.querySelector('.efi-intelligence-alpha')) return;
     const section = document.createElement('section');
     section.className = 'efia-card efi-intelligence-alpha';
@@ -106,7 +106,7 @@
       install.hidden = !!picked.installed;
       select.hidden = !picked.installed || picked.id === catalog.selectedId;
       remove.hidden = !picked.installed;
-      explain.hidden = !picked.installed || picked.id !== catalog.selectedId || !catalog.runtimeReady;
+      explain.hidden = settingsOnly || !picked.installed || picked.id !== catalog.selectedId || !catalog.runtimeReady;
       const warning = catalog.installedRamGB > 0 && picked.recommendedRamGB > catalog.installedRamGB
         ? ' Esse modelo exige mais RAM para desempenho confortável na configuração atual de hardware.'
         : '';
@@ -194,5 +194,5 @@
     });
     inspect();
   }
-  window.EFIAIntelligence = Object.freeze({mount});
+  window.EFIAIntelligence = Object.freeze({mount, mountSettings: container => mount(container, null, true)});
 })();
