@@ -49,9 +49,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            var profile = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "EvoluFisicoDesktop", "WebView2");
+            var profile = EfiAppPaths.WebViewProfile;
             Directory.CreateDirectory(profile);
 
             var web = Path.Combine(AppContext.BaseDirectory, "wwwroot");
