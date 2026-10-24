@@ -26,6 +26,15 @@ jobs:
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/efia/efi-ai-panel.js
           if ($LASTEXITCODE -ne 0) { throw 'Invalid EFI JavaScript' }
+      - name: Test unified student profile and theme regression
+        shell: pwsh
+        run: |
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/68-unified-students-core.js
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid student profile core JavaScript' }
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/68-unified-students.js
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid student profile JavaScript' }
+          node tests/unified-students-profile.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Unified student profile tests failed' }
       - name: Validate four fictional student histories and EFIA eligibility
         shell: pwsh
         run: |

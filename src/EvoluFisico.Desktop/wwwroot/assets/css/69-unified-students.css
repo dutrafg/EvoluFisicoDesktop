@@ -1,0 +1,49 @@
+@media screen{
+#tab-alunos.efsu-page{padding:clamp(1rem,2vw,2rem);color:var(--text-main,#182b25)}
+#tab-alunos .efsu-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin:0 auto 1.2rem;max-width:1500px}
+#tab-alunos .efsu-overline{font-size:.72rem;letter-spacing:.12em;font-weight:800;color:var(--ef-accent,#16834a)}
+#tab-alunos .efsu-heading h1{margin:.3rem 0;font-size:clamp(1.7rem,3vw,2.35rem);color:var(--text-main,#182b25)}
+#tab-alunos .efsu-heading p{margin:0;color:var(--text-muted,#66756f)}
+#tab-alunos .efsu-heading-tag,.efsu-id{display:inline-flex;align-items:center;border:1px solid var(--border-color,#d8e1dc);background:var(--surface-secondary,#f5f8f6);color:var(--text-main,#182b25);padding:.45rem .7rem;font-size:.78rem;font-weight:700}
+#tab-alunos .efsu-toolbar{display:flex;align-items:end;gap:.8rem;flex-wrap:wrap;max-width:1500px;margin:0 auto 1rem}
+#tab-alunos .efsu-search{flex:1 1 260px;display:grid;gap:.3rem;font-weight:700;font-size:.83rem}
+#tab-alunos .efsu-search input,#tab-alunos .efsu-sort select{min-height:42px;border:1px solid var(--border-color,#d8e1dc);background:var(--surface-color,#fff);color:var(--text-main,#182b25);padding:.55rem .7rem}
+#tab-alunos .efsu-sort{display:grid;gap:.3rem;font-weight:700;font-size:.83rem}
+#tab-alunos .efsu-count{font-size:.82rem;color:var(--text-muted,#66756f);padding-bottom:.65rem}
+#tab-alunos .efsu-grid{display:grid;grid-template-columns:minmax(230px,310px) minmax(0,1fr);gap:1rem;max-width:1500px;margin:auto;align-items:start}
+#tab-alunos .efsu-list,#tab-alunos .efsu-detail{min-width:0;border:1px solid var(--border-color,#d8e1dc);background:var(--surface-color,#fff);color:var(--text-main,#182b25)}
+#tab-alunos .efsu-list{padding:.45rem;max-height:70vh;overflow:auto}
+#tab-alunos .efsu-person{display:grid;width:100%;gap:.3rem;text-align:left;border:0;border-bottom:1px solid var(--border-color,#e5ece8);background:transparent;color:inherit;padding:.8rem .7rem;cursor:pointer}
+#tab-alunos .efsu-person[aria-pressed="true"]{background:var(--surface-secondary,#f0f5f2);box-shadow:inset 3px 0 var(--ef-accent,#16834a)}
+#tab-alunos .efsu-person-name{font-size:.95rem}
+#tab-alunos .efsu-person-meta{font-size:.78rem;color:var(--text-muted,#66756f)}
+#tab-alunos .efsu-detail{padding:clamp(.8rem,1.5vw,1.4rem)}
+#tab-alunos .efsu-profile-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+#tab-alunos .efsu-profile-title h2{margin:0 0 .55rem;font-size:1.35rem}
+#tab-alunos .efsu-profile-actions{display:flex;gap:.45rem;flex-wrap:wrap}
+#tab-alunos .efsu-action,#tab-alunos .efsu-link-button{min-height:40px;border:1px solid var(--border-color,#d8e1dc);background:var(--surface-secondary,#f5f8f6);color:var(--text-main,#182b25);padding:.5rem .8rem;font-weight:700;cursor:pointer}
+#tab-alunos .efsu-action{background:var(--ef-accent,#16834a);border-color:var(--ef-accent,#16834a);color:#fff}
+#tab-alunos .efsu-action-secondary{background:var(--surface-secondary,#f5f8f6);color:var(--text-main,#182b25)}
+#tab-alunos .efsu-profile-tabs{display:flex;gap:.25rem;overflow:auto;border-bottom:1px solid var(--border-color,#d8e1dc);margin:1.2rem 0 .8rem}
+#tab-alunos .efsu-tab{white-space:nowrap;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--text-muted,#66756f);padding:.65rem .75rem;font-weight:700;cursor:pointer}
+#tab-alunos .efsu-tab[aria-selected="true"]{border-color:var(--ef-accent,#16834a);color:var(--text-main,#182b25)}
+#tab-alunos .efsu-profile-content{min-height:240px}
+#tab-alunos .efsu-section h2{margin:.2rem 0 .8rem;font-size:1.05rem}
+#tab-alunos .efsu-subheading{margin:1rem 0 .55rem;font-size:.9rem}
+#tab-alunos .efsu-facts{display:grid;grid-template-columns:minmax(120px,.35fr) minmax(0,1fr);gap:.55rem .8rem;margin:0}
+#tab-alunos .efsu-facts dt{color:var(--text-muted,#66756f);font-weight:700}
+#tab-alunos .efsu-facts dd{margin:0;overflow-wrap:anywhere}
+#tab-alunos .efsu-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem}
+#tab-alunos .efsu-metric{display:grid;gap:.3rem;border:1px solid var(--border-color,#d8e1dc);background:var(--surface-secondary,#f5f8f6);padding:.7rem}
+#tab-alunos .efsu-metric-label{font-size:.75rem;color:var(--text-muted,#66756f)}
+#tab-alunos .efsu-metric-value{font-size:1.02rem;overflow-wrap:anywhere}
+#tab-alunos .efsu-history{list-style:none;padding:0;margin:0;display:grid;gap:.4rem}
+#tab-alunos .efsu-history-item{display:flex;justify-content:space-between;align-items:center;gap:.7rem;padding:.65rem;border-bottom:1px solid var(--border-color,#e5ece8)}
+#tab-alunos .efsu-history-meta{display:grid;gap:.2rem}.efsu-history-meta span{font-size:.78rem;color:var(--text-muted,#66756f)}
+#tab-alunos .efsu-empty{padding:1rem;color:var(--text-muted,#66756f)}
+html.ef-dark-mode #tab-alunos .efsu-list,html.ef-dark-mode #tab-alunos .efsu-detail,body.dark-mode #tab-alunos .efsu-list,body.dark-mode #tab-alunos .efsu-detail{background:var(--surface-color,#18221f);color:var(--text-main,#f2f5f3);border-color:var(--border-color,#394541)}
+html.ef-dark-mode #tab-alunos :is(.efsu-person[aria-pressed="true"],.efsu-metric,.efsu-action-secondary,.efsu-link-button,.efsu-heading-tag,.efsu-id),body.dark-mode #tab-alunos :is(.efsu-person[aria-pressed="true"],.efsu-metric,.efsu-action-secondary,.efsu-link-button,.efsu-heading-tag,.efsu-id){background:var(--surface-secondary,#222e29);color:var(--text-main,#f2f5f3);border-color:var(--border-color,#394541)}
+html.ef-dark-mode #tab-alunos :is(.efsu-search input,.efsu-sort select),body.dark-mode #tab-alunos :is(.efsu-search input,.efsu-sort select){background:var(--surface-color,#18221f);color:var(--text-main,#f2f5f3);border-color:var(--border-color,#394541)}
+@media(max-width:800px){#tab-alunos .efsu-grid{grid-template-columns:1fr}#tab-alunos .efsu-list{max-height:34vh}#tab-alunos .efsu-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#tab-alunos .efsu-heading{flex-direction:column}}
+@media(max-width:430px){#tab-alunos .efsu-metrics{grid-template-columns:1fr 1fr}#tab-alunos .efsu-history-item{align-items:flex-start;flex-direction:column}}
+}
