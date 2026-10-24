@@ -26,6 +26,13 @@ jobs:
         run: |
           node --check src/EvoluFisico.Desktop/wwwroot/assets/efia/efi-ai-panel.js
           if ($LASTEXITCODE -ne 0) { throw 'Invalid EFI JavaScript' }
+      - name: Validate four fictional student histories and EFIA eligibility
+        shell: pwsh
+        run: |
+          node tests/efi-demo-fixtures.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Demo series validation failed' }
+          node tests/windows-home-editor-1-0-12.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Stable Desktop 1.0.12 Home editor integration failed' }
       - name: Build complete Windows Desktop with EFI modules
         shell: pwsh
         run: |
