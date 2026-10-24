@@ -1,3 +1,4 @@
+param([switch]$EfiAlpha)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $project = Join-Path $root 'src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj'
@@ -65,12 +66,14 @@ if ((Get-Item $iconPath).Length -lt 1024) { throw 'Windows icon generation faile
 Write-Host "Windows icon generated: $iconPath"
 # Identify each release build so the updater can distinguish installed and published releases.
 $revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0,7).ToLowerInvariant() } else { 'local' }
-$tag = "desktop-v1.0-$revision"
-$versionInfo = @{ tag = $tag; version = '1.0.11'; revision = $revision; built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
+$tag = if ($EfiAlpha) { "efi-alpha-$revision" } else { "desktop-v1.0-$revision" }
+$version = if ($EfiAlpha) { '1.0.12-alpha' } else { '1.0.11' }
+$versionInfo = @{ tag = $tag; version = $version; revision = $revision; channel = $(if($EfiAlpha){'efi-alpha'}else{'stable'}); built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
 [System.IO.File]::WriteAllText((Join-Path $web 'desktop-version.json'), $versionInfo, [System.Text.UTF8Encoding]::new($false))
-dotnet restore $project
+$flags = if ($EfiAlpha) { @('-p:EfiAlpha=true') } else { @() }
+dotnet restore $project -r win-x64 @flags
 if ($LASTEXITCODE -ne 0) { throw 'Falha no restore' }
-dotnet publish $project -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o (Join-Path $root 'publish/win-x64')
+dotnet publish $project -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false @flags -o (Join-Path $root 'publish/win-x64')
 if ($LASTEXITCODE -ne 0) { throw 'Falha no publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/EvoluFisico.Desktop.exe'))) { throw 'Executavel nao encontrado apos publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/wwwroot/desktop-version.json'))) { throw 'Version manifest not included in Windows publish' }
