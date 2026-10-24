@@ -13,10 +13,12 @@ Data: 24/10/2026. Os resultados abaixo distinguem verificações automatizadas d
 | Run [40125997101](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40125997101), commit `af0584fff5819c3cd09c42e77efa66d600cedf7f` | Sucesso completo: primeira suíte integrada de 10.000 cenários EFIA, build Windows, bundle CPU, instalador, smoke install/uninstall e artefato enviado. |
 | Run [40126487526](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40126487526), commit `cbda289cbd590c9a256cea086a42cc8a79c9c679` | Sucesso completo: bloqueios e supressão de tendências por tipo de cenário confirmados, build Windows, instalador, smoke install/uninstall e artefato enviado. |
 | Run [40126910352](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40126910352), commit `2767f8817ee6c9f07556945b330381edfb68c2ef` | Sucesso completo: smoke iniciou o executável e verificou processo ativo, além da campanha EFIA, build, instalação/desinstalação e upload do EXE. |
+| Run [40128372330](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40128372330), commit `08eee52b8d3c889b01d1a11491d04337563be5fb` | Sucesso completo: teste de bloqueio de PDF com rascunho desatualizado, build Windows e smoke de inicialização/instalação/desinstalação. |
 
 ## Testes executados
 
 - Sintaxe EFI JavaScript: passou nos runs acima.
+- Rascunhos do relatório: passou `tests/analysis-report-staleness.cjs`; quando a versão do estado muda, o editor preserva o texto, bloqueia a emissão do PDF e orienta reabrir o relatório para revisar os dados atuais.
 - Perfil Unificado e regressão de tema: passou em `tests/unified-students-profile.cjs`; cobre separação de homônimos, agrupamento por ID persistente, cronologia, métricas e leitura conservadora de registros sem ID.
 - Avaliação em seis etapas: passou em `tests/evaluation-objectives.cjs`; confirma Objetivos na etapa 2, persistência de seleções múltiplas, edição e recuperação de rascunhos.
 - Identidade legada: passou em `tests/client-identity-migration.cjs`; comprova leitura sem mutação, separação de homônimos e contato compartilhado, vínculo explícito e exigência de backup antes da gravação.
@@ -42,4 +44,4 @@ A campanha versionada executa o host EFIA com os oito componentes deterministica
 
 ## Resultado
 
-A branch possui build Windows e smoke automatizado de instalação/desinstalação aprovados no run `40126910352`; a suíte integrada reforçada de 10.000 cenários e o smoke de processo inicializado passaram. A implementação do Perfil e o novo fluxo de objetivos têm testes automatizados, mas a homologação manual do aplicativo instalado, migração de dados e atualização in-place continuam pendentes; a campanha integrada passou; a validação externa das fórmulas e a invalidação persistida seguem pendentes. A migração individual exige backup e foi coberta por teste estático/CI; a interação manual do diálogo de backup e consolidação de históricos reais ainda não foram homologadas. A versão não é candidata a estável.
+A branch possui build Windows e smoke automatizado de instalação/desinstalação aprovados no run `40128372330`; passaram a suíte integrada reforçada, a detecção de rascunho desatualizado e o smoke de processo inicializado. A implementação do Perfil e o novo fluxo de objetivos têm testes automatizados, mas a homologação manual do aplicativo instalado, migração de dados e atualização in-place continuam pendentes; a campanha integrada passou; a validação externa das fórmulas e a invalidação persistida seguem pendentes. A migração individual exige backup e foi coberta por teste estático/CI; a interação manual do diálogo de backup e consolidação de históricos reais ainda não foram homologadas. A versão não é candidata a estável.
