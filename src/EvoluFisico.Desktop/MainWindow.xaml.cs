@@ -331,6 +331,17 @@ public partial class MainWindow : Window
 
     private async Task CheckUpdatesAsync()
     {
+        if (EfiAppPaths.IsAlpha)
+        {
+            if (_ready && Browser.CoreWebView2 is not null)
+                Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
+                {
+                    type = "desktop-update",
+                    message = "Você está no canal EFI Alpha, separado da versão estável. As atualizações experimentais são distribuídas em instaladores de teste.",
+                    downloadUrl = (string?)null
+                }));
+            return;
+        }
         if (_checkingUpdates) return;
         _checkingUpdates = true;
         string message;
