@@ -152,3 +152,10 @@ Origem web `dutrafg/Evolufisico2@225184a684b5`. Cinco componentes EFIA incorpora
 Em 24/10/2026, o EvoluFisico2 passou a **2.0.28 Pré-Beta**. Esta versão Desktop adota a correção de layout do botão **Imprimir Comparativo PDF** no módulo Evolução (4/2/1 colunas), ajuste dos filtros e do seletor **Nível do questionário** nos Formulários, e a atualização da identificação no rodapé do relatório EFIA. As regras de negócio, a seleção de alunos/datas, a impressão em iframe e o SQLite cifrado existentes permanecem inalterados.
 
 **Não incorporados nesta versão estável:** o novo Perfil Unificado de Alunos, a Avaliação em seis etapas e os widgets experimentais do Web 2.0.28. Essas funcionalidades ainda não passaram por integração com o banco nativo e homologação em Windows. Não substituir o frontend Windows pelo HTML de pré-beta. Validar os fluxos nativos e os relatórios em ambiente Windows real antes de utilizar dados reais.
+
+
+## Atualização Desktop 1.0.11 — Correção de rolagem com toque (24/10/2026)
+
+Origem: `Evolufisico2@b0eca6ba1094`, correção Web de rolagem dos miniaplicativos em tablet. Os miniaplicativos `.efw-tile-body` da web **não estão presentes no Desktop 1.0.10**; portanto, não foram copiados para o Windows. Adaptação seletiva: as áreas roláveis já existentes do Início/Análises e da Organização passam a usar `overscroll-behavior-y:auto` e `touch-action:pan-y`, com rolagem natural em telas sensíveis ao toque. O banco criptografado SQLite, as avaliações, a navegação, a impressão PDF e os backups permanecem inalterados.
+
+QA de regressão automatizado em `tests/windows-touch-scroll-1-0-11.cjs`. Testes em notebook/tablet Windows com toque e gesto real ainda são recomendados. O Perfil Unificado e os miniaplicativos web da versão 2.0.28 continuam fora do escopo deste instalador.

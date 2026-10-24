@@ -63,3 +63,14 @@
     flex:1 1 100%;
   }
 }
+
+/* 24/10/2026: adaptação para WebView2 Windows da correção de rolagem Web 2.0.28.
+   Ao alcançar a borda do conteúdo, o gesto continua na página em vez de ficar retido. */
+@media screen {
+  body.ef-simple-ui #ef-home-analysis .ef-home-compact > .ef-simple-fold-content,
+  body.ef-simple-ui #tab-organizacao #eforg-form {
+    overscroll-behavior-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+}

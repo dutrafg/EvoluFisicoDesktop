@@ -81,3 +81,6 @@ require('./windows-sync-efia-2-0-1.cjs');
 
 // Validate scoped EvoluFisico2 2.0.28 UI backports.
 require('./windows-sync-web-2-0-28.cjs');
+
+// Regressão da rolagem do Início/Organização com toque no Windows.
+require('./windows-touch-scroll-1-0-11.cjs');
