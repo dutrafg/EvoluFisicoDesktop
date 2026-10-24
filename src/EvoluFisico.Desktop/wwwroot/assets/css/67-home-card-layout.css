@@ -1,0 +1,93 @@
+/* Desktop: Editor dos cards do Início, compatível com WebView2 e telas de toque. */
+@media screen {
+ #tab-painel #efh-dashboard .efhc-toolbar{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:12px;padding:13px 16px;margin:14px 0 4px;border-radius:12px;
+  border:1px solid var(--efh-line,var(--ef-line,#dce9e2));
+  background:var(--efh-surface,var(--ef-surface,#fff));
+  color:var(--ef-ink,#19352a);
+ }
+ #tab-painel #efh-dashboard .efhc-intro{display:flex;flex-direction:column;gap:2px;min-width:180px;flex:1}
+ #tab-painel #efh-dashboard .efhc-intro strong{font-size:14px;font-weight:720}
+ #tab-painel #efh-dashboard .efhc-intro span{font-size:12px;color:var(--efh-muted,var(--ef-muted,#61746b))}
+ #tab-painel #efh-dashboard .efhc-actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+ #tab-painel #efh-dashboard .efhc-actions button{
+  min-height:36px;padding:7px 12px;border:1px solid var(--efh-line,var(--ef-line,#cfded4));
+  border-radius:8px;background:var(--ef-soft,#edf5f0);color:var(--ef-ink,#19352a);
+  font-size:12px;font-weight:600;line-height:1.2;font-family:inherit;cursor:pointer;white-space:normal
+ }
+ #tab-painel #efh-dashboard .efhc-actions #efhc-edit{background:var(--ef-accent,#2d785b);color:white;border-color:transparent}
+ #tab-painel #efh-dashboard .efhc-actions #efhc-edit[aria-pressed="true"]{background:var(--ef-ink,#183f31);color:white}
+ #tab-painel #efh-dashboard .efhc-actions button:hover{filter:brightness(.95)}
+ #tab-painel #efh-dashboard .efhc-actions button:focus-visible,
+ #tab-painel #efh-dashboard .efhc-card-tools :is(button,select):focus-visible{
+  outline:3px solid var(--ef-accent,#28835f);outline-offset:2px
+ }
+ #tab-painel #efh-dashboard .efhc-status{
+  min-height:18px;margin:3px 0 10px;padding-left:3px;font-size:11px;
+  color:var(--efh-muted,var(--ef-muted,#647970))
+ }
+ #tab-painel #efh-dashboard .efh-stat-grid,
+ #tab-painel #efh-dashboard .efh-strategy-kpis,
+ #tab-painel #efh-dashboard .efh-grid{
+  display:grid!important;grid-template-columns:repeat(12,minmax(0,1fr))!important;
+  gap:13px;align-items:start;min-width:0;max-width:100%
+ }
+ #tab-painel #efh-dashboard .efhc-cell{
+  grid-column:span var(--efhc-span,6);min-width:0;
+  display:flex;flex-direction:column;position:relative;max-width:100%;
+ }
+ #tab-painel #efh-dashboard .efhc-cell>.efh-stat,
+ #tab-painel #efh-dashboard .efhc-cell>.efh-strategy-kpi,
+ #tab-painel #efh-dashboard .efhc-cell>.efh-card{
+  width:100%!important;max-width:none!important;margin:0!important;
+  min-width:0;box-sizing:border-box;
+ }
+ #tab-painel #efh-dashboard .efhc-cell>.efh-card{height:100%}
+ #tab-painel #efh-dashboard .efhc-cell.efhc-editing>.efh-card,
+ #tab-painel #efh-dashboard .efhc-cell.efhc-editing>.efh-stat,
+ #tab-painel #efh-dashboard .efhc-cell.efhc-editing>.efh-strategy-kpi{
+  outline:1px dashed var(--ef-accent,#28835f);outline-offset:-1px;
+ }
+ #tab-painel #efh-dashboard .efhc-card-tools{
+  display:none;align-items:center;flex-wrap:wrap;gap:6px;
+  border:1px dashed var(--efh-line,var(--ef-line,#c3d5cb));
+  border-radius:9px 9px 0 0;
+  padding:6px;background:var(--ef-soft,#f0f6f2);
+  color:var(--ef-ink,#15382a);min-width:0;
+ }
+ #tab-painel #efh-dashboard .efhc-edit-mode .efhc-card-tools{display:flex}
+ #tab-painel #efh-dashboard .efhc-card-tools button,
+ #tab-painel #efh-dashboard .efhc-card-tools select{
+  height:30px;min-width:30px;max-width:100%;box-sizing:border-box;
+  background:var(--efh-surface,var(--ef-surface,#fff));
+  color:var(--ef-ink,#19352a);border:1px solid var(--efh-line,#c5d7cb);
+  border-radius:6px;padding:4px 7px;font-size:12px;font-weight:600;line-height:1.2;font-family:inherit;
+ }
+ #tab-painel #efh-dashboard .efhc-card-tools button{cursor:pointer}
+ #tab-painel #efh-dashboard .efhc-card-tools button:disabled{opacity:.38;cursor:not-allowed}
+ #tab-painel #efh-dashboard .efhc-card-tools .efhc-handle{
+  touch-action:none;user-select:none;cursor:grab;min-width:84px;
+  color:var(--ef-accent,#246c4f);
+ }
+ #tab-painel #efh-dashboard .efhc-card-tools .efhc-handle:active{cursor:grabbing}
+ #tab-painel #efh-dashboard .efhc-card-tools select{flex:1 1 100px;min-width:0}
+ #tab-painel #efh-dashboard .efhc-dragging{opacity:.65;z-index:3}
+ #tab-painel #efh-dashboard .efhc-drop-hint{outline:3px solid var(--ef-accent,#287c5b);outline-offset:-2px;border-radius:10px}
+}
+@media screen and (max-width:1040px){
+ #tab-painel #efh-dashboard .efh-grid>.efhc-cell,
+ #tab-painel #efh-dashboard .efh-strategy-kpis>.efhc-cell{grid-column:span 12!important}
+ #tab-painel #efh-dashboard .efh-stat-grid>.efhc-cell{grid-column:span 6!important}
+}
+@media screen and (max-width:580px){
+ #tab-painel #efh-dashboard .efh-stat-grid>.efhc-cell{grid-column:span 12!important}
+ #tab-painel #efh-dashboard .efhc-actions{width:100%}
+ #tab-painel #efh-dashboard .efhc-actions button{flex:1 1 auto}
+ #tab-painel #efh-dashboard .efhc-toolbar{padding:12px}
+}
+@media print{
+ #tab-painel #efh-dashboard .efhc-toolbar,
+ #tab-painel #efh-dashboard .efhc-status,
+ #tab-painel #efh-dashboard .efhc-card-tools{display:none!important}
+}

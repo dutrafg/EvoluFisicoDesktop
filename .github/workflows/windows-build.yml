@@ -219,7 +219,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Publish stable 1.0.11 Windows release
+      - name: Publish stable 1.0.12 Windows release
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -227,7 +227,7 @@ jobs:
           $tag = 'desktop-v1.0-' + '${{ github.sha }}'.Substring(0,7)
           gh release view $tag --repo ${{ github.repository }} *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 1.0.11 estável (Windows)' --notes 'Windows x64; EFIA EF68-EF82, correcoes responsivas de PDF comparativo e nivel de questionario do web 2.0.28; rolagem por toque do Inicio/Organizacao aprimorada. Banco SQLite cifrado preservado. Recomendado backup antes de atualizar.' --latest
+            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFisico Desktop 1.0.12 estável (Windows)' --notes 'Windows x64; EFIA EF68-EF82, correcoes responsivas de PDF comparativo e nivel de questionario do web 2.0.28; rolagem por toque do Inicio/Organizacao aprimorada; editor e auto-organizacao dos cards do Inicio com persistencia local. Banco SQLite cifrado preservado. Recomendado backup antes de atualizar.' --latest
             if ($LASTEXITCODE -ne 0) { throw 'Could not create GitHub release' }
           }
           $installer = Get-ChildItem installer-output -Filter '*.exe' -File | Select-Object -First 1

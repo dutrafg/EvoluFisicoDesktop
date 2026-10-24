@@ -1,8 +1,8 @@
-/* EvoluFísico Desktop 1.0.11 — novidades do sistema, sem consultar dados dos alunos. */
+/* EvoluFísico Desktop 1.0.12 — novidades do sistema, sem consultar dados dos alunos. */
 (function(){
 'use strict';
-const VERSION='1.0.11';
-const SUMMARY='Correção de rolagem por toque nas áreas de Início e Organização do Windows; Ajustes do EvoluFísico Web 2.0.28: controles responsivos do PDF comparativo e filtros de nível de questionário; revisão EFIA; EFIA com oito motores, análise profissional e relatório para o aluno; visualização e impressão local adaptadas ao Windows; editores antigos de cards removidos; Nova avaliação dentro da tela Avaliações e nomes padronizados para PDF; proteção contra recarga acidental; mais segurança ao salvar e confirmar cobranças; melhorias em notas, tarefas e metas; validação de avaliações; 15 cores profissionais e ajustes no layout desktop.';
+const VERSION='1.0.12';
+const SUMMARY='Novo Início com Editar, Auto-organizar e Restaurar layout; cards móveis, largura ajustável e organização salva automaticamente; cabeçalhos sem rótulos antigos de versão; Correção de rolagem por toque nas áreas de Início e Organização do Windows; Ajustes do EvoluFísico Web 2.0.28: controles responsivos do PDF comparativo e filtros de nível de questionário; revisão EFIA; EFIA com oito motores, análise profissional e relatório para o aluno; visualização e impressão local adaptadas ao Windows; editores antigos de cards removidos; Nova avaliação dentro da tela Avaliações e nomes padronizados para PDF; proteção contra recarga acidental; mais segurança ao salvar e confirmar cobranças; melhorias em notas, tarefas e metas; validação de avaliações; 15 cores profissionais e ajustes no layout desktop.';
 function make(){
  const card=document.createElement('article');
  card.id='ef-desktop-whatsnew-card';
