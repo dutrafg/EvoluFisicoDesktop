@@ -1,0 +1,985 @@
+{
+  "version": 1,
+  "notice": "DADOS TOTALMENTE FICTÍCIOS. Instalação exclusiva do canal EFI Alpha; nunca importar em bases reais.",
+  "students": 4,
+  "assessmentsPerStudent": 4,
+  "intervalDays": 30,
+  "records": [
+    {
+      "id": "efi-demo-01-1",
+      "cliente_id": "efi-demo-client-01",
+      "nome": "Ana Clara — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 32,
+      "altura": 165,
+      "peso": 76.4,
+      "data_avaliacao": "2026-06-20",
+      "data_proxima_avaliacao": "2026-07-20",
+      "checkin_semana": "Avaliação demonstrativa 1/4",
+      "fase": "Redução de gordura",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar redução gradual de gordura estimada",
+      "perimetria": {
+        "pescoco": 33,
+        "ombros": 101,
+        "torax": 92,
+        "abdomen": 92.5,
+        "cintura": 89,
+        "quadril": 108,
+        "braco_esq": 29,
+        "braco_dir": 29.5,
+        "coxa_esq": 54,
+        "coxa_dir": 54.5,
+        "panturrilha": 35
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 34,
+        "massaMagra": 50.42,
+        "massaGorda": 25.98
+      },
+      "dobras": {
+        "peitoral": 19,
+        "axilar": 17,
+        "triceps": 21,
+        "subescapular": 21,
+        "suprailiaca": 23,
+        "abdominal": 26,
+        "coxa": 26
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada alta",
+        "adherenceDiet": "Aderência informada alta"
+      },
+      "aderencia_treino": "Aderência informada alta",
+      "aderencia_dieta": "Aderência informada alta",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-01-2",
+      "cliente_id": "efi-demo-client-01",
+      "nome": "Ana Clara — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 32,
+      "altura": 165,
+      "peso": 74.9,
+      "data_avaliacao": "2026-07-20",
+      "data_proxima_avaliacao": "2026-08-19",
+      "checkin_semana": "Avaliação demonstrativa 2/4",
+      "fase": "Redução de gordura",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar redução gradual de gordura estimada",
+      "perimetria": {
+        "pescoco": 32.9,
+        "ombros": 100.8,
+        "torax": 91.85,
+        "abdomen": 91,
+        "cintura": 87.5,
+        "quadril": 107.1,
+        "braco_esq": 28.9,
+        "braco_dir": 29.4,
+        "coxa_esq": 53.9,
+        "coxa_dir": 54.4,
+        "panturrilha": 34.9
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 32.8,
+        "massaMagra": 50.33,
+        "massaGorda": 24.57
+      },
+      "dobras": {
+        "peitoral": 18.8,
+        "axilar": 16.7,
+        "triceps": 20.7,
+        "subescapular": 20.8,
+        "suprailiaca": 22.7,
+        "abdominal": 25.7,
+        "coxa": 25.8
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada alta",
+        "adherenceDiet": "Aderência informada alta"
+      },
+      "aderencia_treino": "Aderência informada alta",
+      "aderencia_dieta": "Aderência informada alta",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-01-3",
+      "cliente_id": "efi-demo-client-01",
+      "nome": "Ana Clara — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 32,
+      "altura": 165,
+      "peso": 73.2,
+      "data_avaliacao": "2026-08-19",
+      "data_proxima_avaliacao": "2026-09-18",
+      "checkin_semana": "Avaliação demonstrativa 3/4",
+      "fase": "Redução de gordura",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar redução gradual de gordura estimada",
+      "perimetria": {
+        "pescoco": 32.8,
+        "ombros": 100.6,
+        "torax": 91.7,
+        "abdomen": 89.6,
+        "cintura": 86.1,
+        "quadril": 106.3,
+        "braco_esq": 28.8,
+        "braco_dir": 29.3,
+        "coxa_esq": 53.8,
+        "coxa_dir": 54.3,
+        "panturrilha": 34.8
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 31.7,
+        "massaMagra": 50,
+        "massaGorda": 23.2
+      },
+      "dobras": {
+        "peitoral": 18.6,
+        "axilar": 16.4,
+        "triceps": 20.4,
+        "subescapular": 20.6,
+        "suprailiaca": 22.4,
+        "abdominal": 25.4,
+        "coxa": 25.6
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada alta",
+        "adherenceDiet": "Aderência informada alta"
+      },
+      "aderencia_treino": "Aderência informada alta",
+      "aderencia_dieta": "Aderência informada alta",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-01-4",
+      "cliente_id": "efi-demo-client-01",
+      "nome": "Ana Clara — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 32,
+      "altura": 165,
+      "peso": 71.6,
+      "data_avaliacao": "2026-09-18",
+      "data_proxima_avaliacao": "2026-10-18",
+      "checkin_semana": "Avaliação demonstrativa 4/4",
+      "fase": "Redução de gordura",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar redução gradual de gordura estimada",
+      "perimetria": {
+        "pescoco": 32.7,
+        "ombros": 100.4,
+        "torax": 91.55,
+        "abdomen": 87.8,
+        "cintura": 84.3,
+        "quadril": 105.1,
+        "braco_esq": 28.7,
+        "braco_dir": 29.2,
+        "coxa_esq": 53.7,
+        "coxa_dir": 54.2,
+        "panturrilha": 34.7
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 30.4,
+        "massaMagra": 49.83,
+        "massaGorda": 21.77
+      },
+      "dobras": {
+        "peitoral": 18.4,
+        "axilar": 16.1,
+        "triceps": 20.1,
+        "subescapular": 20.4,
+        "suprailiaca": 22.1,
+        "abdominal": 25.1,
+        "coxa": 25.4
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada alta",
+        "adherenceDiet": "Aderência informada alta"
+      },
+      "aderencia_treino": "Aderência informada alta",
+      "aderencia_dieta": "Aderência informada alta",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-02-1",
+      "cliente_id": "efi-demo-client-02",
+      "nome": "Bruno Lima — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 29,
+      "altura": 179,
+      "peso": 82,
+      "data_avaliacao": "2026-06-20",
+      "data_proxima_avaliacao": "2026-07-20",
+      "checkin_semana": "Avaliação demonstrativa 1/4",
+      "fase": "Recomposição corporal",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar composição corporal e medidas",
+      "perimetria": {
+        "pescoco": 39,
+        "ombros": 117,
+        "torax": 103,
+        "abdomen": 87.5,
+        "cintura": 84,
+        "quadril": 99,
+        "braco_esq": 34,
+        "braco_dir": 34.5,
+        "coxa_esq": 57,
+        "coxa_dir": 57.5,
+        "panturrilha": 37
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 18.5,
+        "massaMagra": 66.83,
+        "massaGorda": 15.17
+      },
+      "dobras": {
+        "peitoral": 15,
+        "axilar": 17,
+        "triceps": 21,
+        "subescapular": 21,
+        "suprailiaca": 23,
+        "abdominal": 26,
+        "coxa": 26
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-02-2",
+      "cliente_id": "efi-demo-client-02",
+      "nome": "Bruno Lima — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 29,
+      "altura": 179,
+      "peso": 82.4,
+      "data_avaliacao": "2026-07-20",
+      "data_proxima_avaliacao": "2026-08-19",
+      "checkin_semana": "Avaliação demonstrativa 2/4",
+      "fase": "Recomposição corporal",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar composição corporal e medidas",
+      "perimetria": {
+        "pescoco": 38.8,
+        "ombros": 117.2,
+        "torax": 103.1,
+        "abdomen": 87.2,
+        "cintura": 83.7,
+        "quadril": 99.2,
+        "braco_esq": 34.2,
+        "braco_dir": 34.7,
+        "coxa_esq": 57.1,
+        "coxa_dir": 57.6,
+        "panturrilha": 37.05
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 17.9,
+        "massaMagra": 67.65,
+        "massaGorda": 14.75
+      },
+      "dobras": {
+        "peitoral": 14.8,
+        "axilar": 16.7,
+        "triceps": 20.7,
+        "subescapular": 20.8,
+        "suprailiaca": 22.7,
+        "abdominal": 25.7,
+        "coxa": 25.8
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-02-3",
+      "cliente_id": "efi-demo-client-02",
+      "nome": "Bruno Lima — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 29,
+      "altura": 179,
+      "peso": 82.9,
+      "data_avaliacao": "2026-08-19",
+      "data_proxima_avaliacao": "2026-09-18",
+      "checkin_semana": "Avaliação demonstrativa 3/4",
+      "fase": "Recomposição corporal",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar composição corporal e medidas",
+      "perimetria": {
+        "pescoco": 38.6,
+        "ombros": 117.4,
+        "torax": 103.2,
+        "abdomen": 86.5,
+        "cintura": 83,
+        "quadril": 99.3,
+        "braco_esq": 34.4,
+        "braco_dir": 34.9,
+        "coxa_esq": 57.2,
+        "coxa_dir": 57.7,
+        "panturrilha": 37.1
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 17.4,
+        "massaMagra": 68.48,
+        "massaGorda": 14.42
+      },
+      "dobras": {
+        "peitoral": 14.6,
+        "axilar": 16.4,
+        "triceps": 20.4,
+        "subescapular": 20.6,
+        "suprailiaca": 22.4,
+        "abdominal": 25.4,
+        "coxa": 25.6
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-02-4",
+      "cliente_id": "efi-demo-client-02",
+      "nome": "Bruno Lima — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 29,
+      "altura": 179,
+      "peso": 83.3,
+      "data_avaliacao": "2026-09-18",
+      "data_proxima_avaliacao": "2026-10-18",
+      "checkin_semana": "Avaliação demonstrativa 4/4",
+      "fase": "Recomposição corporal",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Acompanhar composição corporal e medidas",
+      "perimetria": {
+        "pescoco": 38.4,
+        "ombros": 117.6,
+        "torax": 103.3,
+        "abdomen": 85.6,
+        "cintura": 82.1,
+        "quadril": 99.4,
+        "braco_esq": 34.6,
+        "braco_dir": 35.1,
+        "coxa_esq": 57.3,
+        "coxa_dir": 57.8,
+        "panturrilha": 37.15
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 16.7,
+        "massaMagra": 69.39,
+        "massaGorda": 13.91
+      },
+      "dobras": {
+        "peitoral": 14.4,
+        "axilar": 16.1,
+        "triceps": 20.1,
+        "subescapular": 20.4,
+        "suprailiaca": 22.1,
+        "abdominal": 25.1,
+        "coxa": 25.4
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-03-1",
+      "cliente_id": "efi-demo-client-03",
+      "nome": "Carla Rocha — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 37,
+      "altura": 171,
+      "peso": 64,
+      "data_avaliacao": "2026-06-20",
+      "data_proxima_avaliacao": "2026-07-20",
+      "checkin_semana": "Avaliação demonstrativa 1/4",
+      "fase": "Manutenção",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Observar estabilidade de peso e composição",
+      "perimetria": {
+        "pescoco": 33,
+        "ombros": 101,
+        "torax": 92,
+        "abdomen": 79.5,
+        "cintura": 76,
+        "quadril": 98,
+        "braco_esq": 29,
+        "braco_dir": 29.5,
+        "coxa_esq": 54,
+        "coxa_dir": 54.5,
+        "panturrilha": 35
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 27.5,
+        "massaMagra": 46.4,
+        "massaGorda": 17.6
+      },
+      "dobras": {
+        "peitoral": 19,
+        "axilar": 17,
+        "triceps": 21,
+        "subescapular": 21,
+        "suprailiaca": 23,
+        "abdominal": 26,
+        "coxa": 26
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-03-2",
+      "cliente_id": "efi-demo-client-03",
+      "nome": "Carla Rocha — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 37,
+      "altura": 171,
+      "peso": 64.2,
+      "data_avaliacao": "2026-07-20",
+      "data_proxima_avaliacao": "2026-08-19",
+      "checkin_semana": "Avaliação demonstrativa 2/4",
+      "fase": "Manutenção",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Observar estabilidade de peso e composição",
+      "perimetria": {
+        "pescoco": 32.9,
+        "ombros": 100.8,
+        "torax": 91.85,
+        "abdomen": 79.7,
+        "cintura": 76.2,
+        "quadril": 98,
+        "braco_esq": 28.9,
+        "braco_dir": 29.4,
+        "coxa_esq": 53.9,
+        "coxa_dir": 54.4,
+        "panturrilha": 34.9
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 27.3,
+        "massaMagra": 46.67,
+        "massaGorda": 17.53
+      },
+      "dobras": {
+        "peitoral": 18.8,
+        "axilar": 16.7,
+        "triceps": 20.7,
+        "subescapular": 20.8,
+        "suprailiaca": 22.7,
+        "abdominal": 25.7,
+        "coxa": 25.8
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-03-3",
+      "cliente_id": "efi-demo-client-03",
+      "nome": "Carla Rocha — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 37,
+      "altura": 171,
+      "peso": 63.9,
+      "data_avaliacao": "2026-08-19",
+      "data_proxima_avaliacao": "2026-09-18",
+      "checkin_semana": "Avaliação demonstrativa 3/4",
+      "fase": "Manutenção",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Observar estabilidade de peso e composição",
+      "perimetria": {
+        "pescoco": 32.8,
+        "ombros": 100.6,
+        "torax": 91.7,
+        "abdomen": 79.6,
+        "cintura": 76.1,
+        "quadril": 98.1,
+        "braco_esq": 28.8,
+        "braco_dir": 29.3,
+        "coxa_esq": 53.8,
+        "coxa_dir": 54.3,
+        "panturrilha": 34.8
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 27.4,
+        "massaMagra": 46.39,
+        "massaGorda": 17.51
+      },
+      "dobras": {
+        "peitoral": 18.6,
+        "axilar": 16.4,
+        "triceps": 20.4,
+        "subescapular": 20.6,
+        "suprailiaca": 22.4,
+        "abdominal": 25.4,
+        "coxa": 25.6
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-03-4",
+      "cliente_id": "efi-demo-client-03",
+      "nome": "Carla Rocha — DEMONSTRAÇÃO",
+      "sexo": "F",
+      "idade": 37,
+      "altura": 171,
+      "peso": 64.1,
+      "data_avaliacao": "2026-09-18",
+      "data_proxima_avaliacao": "2026-10-18",
+      "checkin_semana": "Avaliação demonstrativa 4/4",
+      "fase": "Manutenção",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Observar estabilidade de peso e composição",
+      "perimetria": {
+        "pescoco": 32.7,
+        "ombros": 100.4,
+        "torax": 91.55,
+        "abdomen": 79.5,
+        "cintura": 76,
+        "quadril": 98,
+        "braco_esq": 28.7,
+        "braco_dir": 29.2,
+        "coxa_esq": 53.7,
+        "coxa_dir": 54.2,
+        "panturrilha": 34.7
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 27.2,
+        "massaMagra": 46.66,
+        "massaGorda": 17.44
+      },
+      "dobras": {
+        "peitoral": 18.4,
+        "axilar": 16.1,
+        "triceps": 20.1,
+        "subescapular": 20.4,
+        "suprailiaca": 22.1,
+        "abdominal": 25.1,
+        "coxa": 25.4
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada regular",
+        "adherenceDiet": "Aderência informada regular"
+      },
+      "aderencia_treino": "Aderência informada regular",
+      "aderencia_dieta": "Aderência informada regular",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-04-1",
+      "cliente_id": "efi-demo-client-04",
+      "nome": "Daniel Santos — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 41,
+      "altura": 175,
+      "peso": 91.3,
+      "data_avaliacao": "2026-06-20",
+      "data_proxima_avaliacao": "2026-07-20",
+      "checkin_semana": "Avaliação demonstrativa 1/4",
+      "fase": "Revisão de hábitos",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Revisar aumento progressivo das medidas",
+      "perimetria": {
+        "pescoco": 39,
+        "ombros": 117,
+        "torax": 103,
+        "abdomen": 104.5,
+        "cintura": 101,
+        "quadril": 106,
+        "braco_esq": 34,
+        "braco_dir": 34.5,
+        "coxa_esq": 57,
+        "coxa_dir": 57.5,
+        "panturrilha": 37
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 26,
+        "massaMagra": 67.56,
+        "massaGorda": 23.74
+      },
+      "dobras": {
+        "peitoral": 15,
+        "axilar": 17,
+        "triceps": 21,
+        "subescapular": 21,
+        "suprailiaca": 23,
+        "abdominal": 26,
+        "coxa": 26
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada variável",
+        "adherenceDiet": "Aderência informada variável"
+      },
+      "aderencia_treino": "Aderência informada variável",
+      "aderencia_dieta": "Aderência informada variável",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-04-2",
+      "cliente_id": "efi-demo-client-04",
+      "nome": "Daniel Santos — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 41,
+      "altura": 175,
+      "peso": 92.1,
+      "data_avaliacao": "2026-07-20",
+      "data_proxima_avaliacao": "2026-08-19",
+      "checkin_semana": "Avaliação demonstrativa 2/4",
+      "fase": "Revisão de hábitos",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Revisar aumento progressivo das medidas",
+      "perimetria": {
+        "pescoco": 38.8,
+        "ombros": 117.2,
+        "torax": 103.1,
+        "abdomen": 105.5,
+        "cintura": 102,
+        "quadril": 106.4,
+        "braco_esq": 34.2,
+        "braco_dir": 34.7,
+        "coxa_esq": 57.1,
+        "coxa_dir": 57.6,
+        "panturrilha": 37.05
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 26.4,
+        "massaMagra": 67.79,
+        "massaGorda": 24.31
+      },
+      "dobras": {
+        "peitoral": 14.8,
+        "axilar": 16.7,
+        "triceps": 20.7,
+        "subescapular": 20.8,
+        "suprailiaca": 22.7,
+        "abdominal": 25.7,
+        "coxa": 25.8
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada variável",
+        "adherenceDiet": "Aderência informada variável"
+      },
+      "aderencia_treino": "Aderência informada variável",
+      "aderencia_dieta": "Aderência informada variável",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-04-3",
+      "cliente_id": "efi-demo-client-04",
+      "nome": "Daniel Santos — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 41,
+      "altura": 175,
+      "peso": 92.7,
+      "data_avaliacao": "2026-08-19",
+      "data_proxima_avaliacao": "2026-09-18",
+      "checkin_semana": "Avaliação demonstrativa 3/4",
+      "fase": "Revisão de hábitos",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Revisar aumento progressivo das medidas",
+      "perimetria": {
+        "pescoco": 38.6,
+        "ombros": 117.4,
+        "torax": 103.2,
+        "abdomen": 106.5,
+        "cintura": 103,
+        "quadril": 106.8,
+        "braco_esq": 34.4,
+        "braco_dir": 34.9,
+        "coxa_esq": 57.2,
+        "coxa_dir": 57.7,
+        "panturrilha": 37.1
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 26.8,
+        "massaMagra": 67.86,
+        "massaGorda": 24.84
+      },
+      "dobras": {
+        "peitoral": 14.6,
+        "axilar": 16.4,
+        "triceps": 20.4,
+        "subescapular": 20.6,
+        "suprailiaca": 22.4,
+        "abdominal": 25.4,
+        "coxa": 25.6
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada variável",
+        "adherenceDiet": "Aderência informada variável"
+      },
+      "aderencia_treino": "Aderência informada variável",
+      "aderencia_dieta": "Aderência informada variável",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    },
+    {
+      "id": "efi-demo-04-4",
+      "cliente_id": "efi-demo-client-04",
+      "nome": "Daniel Santos — DEMONSTRAÇÃO",
+      "sexo": "M",
+      "idade": 41,
+      "altura": 175,
+      "peso": 93.2,
+      "data_avaliacao": "2026-09-18",
+      "data_proxima_avaliacao": "2026-10-18",
+      "checkin_semana": "Avaliação demonstrativa 4/4",
+      "fase": "Revisão de hábitos",
+      "observacoes": "DADOS 100% FICTÍCIOS — para testes da EFI. Não usar em prontuários clínicos.",
+      "objetivo": "Revisar aumento progressivo das medidas",
+      "perimetria": {
+        "pescoco": 38.4,
+        "ombros": 117.6,
+        "torax": 103.3,
+        "abdomen": 107.3,
+        "cintura": 103.8,
+        "quadril": 107.2,
+        "braco_esq": 34.6,
+        "braco_dir": 35.1,
+        "coxa_esq": 57.3,
+        "coxa_dir": 57.8,
+        "panturrilha": 37.15
+      },
+      "dobras_resultado": {
+        "protocolo": "Pollock 7",
+        "percGordura": 27.2,
+        "massaMagra": 67.85,
+        "massaGorda": 25.35
+      },
+      "dobras": {
+        "peitoral": 14.4,
+        "axilar": 16.1,
+        "triceps": 20.1,
+        "subescapular": 20.4,
+        "suprailiaca": 22.1,
+        "abdominal": 25.1,
+        "coxa": 25.4
+      },
+      "bioimpedancia": {},
+      "efia_protocol": {
+        "equation": "Pollock 7",
+        "version": "1.0",
+        "compositionRelation": "same-estimate",
+        "standardized": true
+      },
+      "efia_context": {
+        "adherenceTraining": "Aderência informada variável",
+        "adherenceDiet": "Aderência informada variável"
+      },
+      "aderencia_treino": "Aderência informada variável",
+      "aderencia_dieta": "Aderência informada variável",
+      "fotos": {},
+      "parecer_profissional": "Exemplo sintético para demonstração. Interpretar conforme os motores EFIA; não possui validade clínica.",
+      "avaliador_nome": "Profissional de demonstração",
+      "avaliador_registro": "",
+      "avaliador_clinica": "Ambiente EFI Alpha"
+    }
+  ]
+}
