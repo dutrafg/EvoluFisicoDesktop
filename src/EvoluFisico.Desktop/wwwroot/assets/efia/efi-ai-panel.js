@@ -59,7 +59,7 @@
   }
 
   function mount(container, result) {
-    const summary = container?.querySelector('#efia-panel-summary');
+    const summary = container?.querySelector('#efia-panel-intelligence');
     if (!summary || summary.querySelector('.efi-intelligence-alpha')) return;
     const section = document.createElement('section');
     section.className = 'efia-card efi-intelligence-alpha';
