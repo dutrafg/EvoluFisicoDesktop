@@ -88,7 +88,9 @@ public partial class MainWindow
             {
                 "status" => await EfiCatalogStatusAsync(),
                 "install" when consent => new {
-                    installed = await EfiAiModelManager.InstallAsync(modelId!),
+                    installed = await EfiAiModelManager.InstallAsync(modelId!,
+                        new Progress<EfiAiModelManager.DownloadProgress>(p =>
+                            SendEfiAiDownloadProgress(requestId!, modelId!, p))),
                     modelId
                 },
                 "install" => throw new InvalidOperationException(
@@ -126,6 +128,20 @@ public partial class MainWindow
     {
         await EfiAiModelManager.RemoveAsync(id);
         return new { removedId = id, selectedId = EfiAiModelManager.SelectedId };
+    }
+
+    private void SendEfiAiDownloadProgress(string requestId, string modelId,
+        EfiAiModelManager.DownloadProgress progress)
+    {
+        if (!_ready || Browser.CoreWebView2 is null) return;
+        Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
+        {
+            type = "efi-ai-progress",
+            requestId,
+            modelId,
+            downloadedBytes = progress.BytesReceived,
+            totalBytes = progress.TotalBytes
+        }));
     }
 
     private void SendEfiAiResponse(string requestId, bool ok, object? data, string? error)
