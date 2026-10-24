@@ -35,3 +35,6 @@
 @media(max-width:380px){.efi-metric-grid{grid-template-columns:1fr;}}
 
 .efi-ai-progress {width:100%;height:12px;accent-color:var(--accent-color,#2563eb);display:block;margin:8px 0;}
+
+#tab-settings [data-efw-panel="efi"] .efi-intelligence-alpha {grid-column:1/-1;max-width:100%;width:100%;box-sizing:border-box;}
+#tab-settings [data-efw-panel="efi"] .efi-ai-answer {display:none;}
