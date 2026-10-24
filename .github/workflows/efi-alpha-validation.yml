@@ -74,7 +74,7 @@ jobs:
       - name: Smoke-test Alpha installer isolation
         shell: pwsh
         run: |
-          $setup = (Get-ChildItem installer-output -Filter '*EFI-Alpha-Setup.exe' -File | Select-Object -First 1).FullName
+          $setup = (Get-ChildItem installer-output -Filter 'EvoluFisico_EFI_Alpha_Setup.exe' -File | Select-Object -First 1).FullName
           $target = Join-Path $env:RUNNER_TEMP 'EvoluFisicoEFIAlphaSmoke'
           $result = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/DIR=$target") -Wait -PassThru
           if ($result.ExitCode -ne 0) { throw "Alpha install failed: $($result.ExitCode)" }

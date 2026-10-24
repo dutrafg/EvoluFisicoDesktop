@@ -5731,6 +5731,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 autoSaveTimeout = setTimeout(() => {
                     const formData = new FormData(form);
                     const rascunho = Object.fromEntries(formData.entries());
+                    rascunho.objetivos = formData.getAll('objetivos');
                     delete rascunho.foto_frente;
                     delete rascunho.foto_perfil_direito;
                     delete rascunho.foto_perfil_esquerdo;
@@ -5777,6 +5778,11 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 const obj = raw?.__efEncrypted ? await EF_Security.decryptObject(raw.payload) : raw;
                 const form = document.getElementById('checkin-form');
                 Object.keys(obj).forEach(key => {
+                    if (key === 'objetivos') {
+                        const selecionados = Array.isArray(obj[key]) ? obj[key] : (obj[key] ? [obj[key]] : []);
+                        form.querySelectorAll('input[name="objetivos"]').forEach(el => { el.checked = selecionados.includes(el.value); });
+                        return;
+                    }
                     const el = form.elements[key];
                     if (el && el.type !== 'file') {
                         el.value = obj[key];

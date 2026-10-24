@@ -24,5 +24,10 @@ assert.ok(runtime.includes("objetivos: formData.getAll('objetivos').map(v => Str
 assert.ok(runtime.includes("objetivo_detalhes: (formData.get('objetivo_detalhes') || '').trim()"), 'objective notes persist with the assessment');
 assert.ok(runtime.includes("document.querySelectorAll('input[name=\"objetivos\"]')"), 'editing an assessment restores its objective selections');
 assert.ok(runtime.includes("document.getElementById('objetivo_detalhes').value = aval.objetivo_detalhes || ''"), 'editing an assessment restores objective notes');
+assert.ok(runtime.includes("rascunho.objetivos = formData.getAll('objetivos')"), 'draft autosave preserves every selected objective');
+assert.ok(runtime.includes("form.querySelectorAll('input[name=\"objetivos\"]')"), 'draft recovery restores all selected objectives');
+const workflow = fs.readFileSync(path.join(__dirname, '../.github/workflows/efi-alpha-validation.yml'), 'utf8');
+assert.equal((workflow.match(/-Filter 'EvoluFisico_EFI_Alpha_Setup.exe'/g) || []).length, 2, 'build and smoke test target the exact installer filename');
+assert.ok(!workflow.includes('*EFI-Alpha-Setup.exe'), 'smoke test does not search for the retired installer name');
 assert.ok(runtime.includes('const formData = new FormData(form)'), 'wizard submits using native form data');
 console.log('PASS six-stage evaluation order, objective choices, persistence and edit restoration.');
