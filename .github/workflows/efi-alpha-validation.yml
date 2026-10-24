@@ -4,6 +4,9 @@ on:
     branches:
       - feature/efi-qwen35-2b-alpha
   workflow_dispatch:
+concurrency:
+  group: efi-alpha-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
