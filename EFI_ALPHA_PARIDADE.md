@@ -1,6 +1,6 @@
 # Matriz de paridade — EvoluFísico2 × Desktop EFI Alpha
 
-Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@cbda289`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
+Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@2767f88`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
 
 | Módulo/área | Estado na Alpha | Diferença e trabalho restante |
 |---|---|---|
@@ -11,7 +11,7 @@ Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop e
 | Calculadora / Laboratório | Parcial/implementado | EF77 e laboratório estão conectados; verificar paridade atual de entradas, protocolos e limites com o Web. |
 | Formulários / Anamnese | Parcial | Há fluxos existentes; testar edição, persistência SQLite e vínculo com perfil/relatório. |
 | Análises / motores EFIA | Parcial | Oito componentes EF68/70/77/78–82 existem. Regras temporais básicas, fixtures e campanha integrada reforçada de 10.000 casos passaram: 1.000 séries com oito motores; 5.000 bloqueios por identidade/datas/série curta; avisos de dados faltantes e supressão de tendência corporal incompatível; 0 exceções e 0 valores não finitos. Invalidação longitudinal persistida e validação científica externa pendem. |
-| EFI Intelligence / Qwen | Parcial; inferência real em CI | Runtime CPU e gerenciador existem; inferência sintética real Q4_K_M foi executada em workflow separado. Falta validação dos estados de instalação/erro/cancelamento pelo produto. |
+| EFI Intelligence / Qwen | Parcial; inferência real em CI | Runtime CPU e gerenciador existem; inferência sintética real Q4_K_M foi executada em workflow separado; processo desktop iniciado no smoke de Windows, fluxo EFI/Qwen ainda precisa homologação interativa. Falta validação dos estados de instalação/erro/cancelamento pelo produto. |
 | Cobranças | Parcial | Histórico financeiro existente; vínculo com perfil e paridade recente precisam de testes. |
 | Organização | Parcial | Agenda/tarefas/metas existem; notas/metas ainda usam perfil WebView2 em partes, não SQLite. |
 | Configurações | Parcial | Temas, paleta, segurança, manutenção e atualização nativa existem; falta confirmar paridade integral e opções EFI/Qwen em interface instalada. |
