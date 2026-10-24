@@ -101,8 +101,8 @@
       select.hidden = !picked.installed || picked.id === catalog.selectedId;
       remove.hidden = !picked.installed;
       explain.hidden = !picked.installed || picked.id !== catalog.selectedId || !catalog.runtimeReady;
-      const warning = picked.recommendedRamGB > 16
-        ? ' Esse modelo exige mais RAM para desempenho confortável neste computador de referência.'
+      const warning = catalog.installedRamGB > 0 && picked.recommendedRamGB > catalog.installedRamGB
+        ? ' Esse modelo exige mais RAM para desempenho confortável na configuração atual de hardware.'
         : '';
       message((picked.installed ? 'Modelo instalado.' : 'Modelo disponível para download.')
         + (picked.id === catalog.selectedId ? ' Selecionado atualmente.' : '')
