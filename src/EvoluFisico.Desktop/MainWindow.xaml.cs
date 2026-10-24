@@ -110,7 +110,7 @@ public partial class MainWindow : Window
                 catch (ArgumentException) { /* Structured JSON message, handled below. */ }
                 if (command is "check-updates" or "check-updates-auto")
                     await CheckUpdatesAsync();
-                else if (command is null)
+                else if (command is null && !await TryHandleEfiAiMessageAsync(args))
                     HandleStorageMessage(args);
             };
             _ready = true;
