@@ -180,11 +180,12 @@
       ${progress.changes.length?`<div class="efh-followup-list">${progress.changes.map(x=>`<button type="button" class="efh-followup-row" data-efh-module="tab-comparison"><span><strong>${safe(x.name)}</strong><small>Diferença de peso entre as duas últimas avaliações · ${safe(strDate(x.date,{day:'2-digit',month:'long',year:'numeric'}))}</small></span><b>${x.delta>=0?'+':''}${safe(x.delta.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}))} kg</b>${icon('arrow',15)}</button>`).join('')}</div>`:'<p class="efh-empty">Sem pares de avaliações com datas distintas e peso registrado nos dois momentos. Cadastre uma reavaliação para comparar.</p>'}
       <p class="efh-note">A mudança isolada no peso não determina sucesso ou insucesso. Consulte medidas, composição corporal e objetivos na Evolução.</p></section>
     <section class="efh-card efh-finance-panel" aria-label="Visão financeira"><div class="efh-section-top"><div><span class="efh-eyebrow">GESTÃO FINANCEIRA · COBRANÇAS</span><h2>${icon('flag')} Recebimentos e pendências</h2><p id="efh-finance-status">Consultando registros locais</p></div><button type="button" class="efh-btn" data-efh-module="tab-cobranca">Abrir Cobranças ${icon('arrow')}</button></div><div id="efh-finance-content" aria-live="polite"><p class="efh-empty">Carregando informações financeiras…</p></div><p class="efh-note">Valores pagos são os lançamentos marcados como pagos, conforme a data do registro. Não representam conciliação bancária nem projeção de receita.</p></section>
-    </div></div><div class="efh-last"><span>Indicadores calculados a partir dos registros locais. Os insights não substituem análise profissional.</span><span class="efh-test">EvoluFísico2 1.0.4 estável</span></div>
+    </div></div><div class="efh-last"><span>Indicadores calculados a partir dos registros locais. Os insights não substituem análise profissional.</span></div>
   </div>`;
   home.__efh_events=next;
   showFinance(home);
   rendered=true;
+  window.EFHomeCardLayout?.mount?.();
  }
  function navigate(id){if(id==='evaluation'){window.switchTab?.('tab-novo-checkin');return;}organization()?.go(id||'agenda');}
  document.addEventListener('click',ev=>{const item=ev.target.closest('[data-efh-event]');if(item){const home=$('#tab-painel');const record=home?.__efh_events?.[Number(item.dataset.efhEvent)];if(record)openEvent(record);return}const btn=ev.target.closest('[data-efh-module],[data-efh-go],[data-efh-action]');if(btn){if(btn.dataset.efhModule){window.switchTab?.(btn.dataset.efhModule);return;}navigate(btn.dataset.efhGo||btn.dataset.efhAction);}});
