@@ -5,7 +5,7 @@
   const root=$('tab-settings');if(!root||$('efw-settings-tabs'))return;
   const grid=root.querySelector(':scope > .ef-settings-grid');if(!grid)return;
   const tabs=document.createElement('nav');tabs.id='efw-settings-tabs';tabs.className='efw-settings-tabs';tabs.setAttribute('aria-label','Seções de configurações');
-  const labels=[['geral','Geral'],['dados','Dados e privacidade'],['manutencao','Manutenção']];
+  const labels=[['geral','Geral'],['dados','Dados e privacidade'],['manutencao','Manutenção'],['efi','Inteligência Artificial']];
   const container=document.createElement('div');container.className='efw-settings-areas';
   const panels={},grids={};
   for(const [id,label] of labels){
@@ -28,6 +28,7 @@
   const diag=$('tab-diagnostics'),diagButton=$('tab-btn-diagnostics');
   if(diagButton)diagButton.remove();
   if(diag){diag.classList.remove('tab-panel');diag.classList.add('efw-diagnostic-inside-settings');grids.manutencao.prepend(diag)}
+  window.EFIAIntelligence?.mountSettings(grids.efi);
   tabs.addEventListener('click',event=>{
    const b=event.target.closest('[data-efw-show]');if(!b)return;
    const target=b.dataset.efwShow;
