@@ -56,6 +56,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Invalid integrated EFIA test JavaScript' }
           node tests/efia-integration-10000.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Integrated EFIA synthetic scenarios failed' }
+      - name: Run 30000 official-source EFIA campaign
+        shell: pwsh
+        run: |
+          node --check tests/efia-campaign-30000.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid 30000 EFIA campaign test JavaScript' }
+          node tests/efia-campaign-30000.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Official-source 30000 EFIA campaign failed' }
       - name: Test encrypted SQLite transactions, migration and recovery
         shell: pwsh
         run: |
