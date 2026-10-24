@@ -47,3 +47,8 @@ html.ef-dark-mode #tab-alunos :is(.efsu-search input,.efsu-sort select),body.dar
 @media(max-width:800px){#tab-alunos .efsu-grid{grid-template-columns:1fr}#tab-alunos .efsu-list{max-height:34vh}#tab-alunos .efsu-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#tab-alunos .efsu-heading{flex-direction:column}}
 @media(max-width:430px){#tab-alunos .efsu-metrics{grid-template-columns:1fr 1fr}#tab-alunos .efsu-history-item{align-items:flex-start;flex-direction:column}}
 }
+#tab-alunos .efsu-identity-migration{margin:1rem 0;padding:1rem;border:1px solid var(--border-color,#d9e0dc);background:var(--surface-secondary,#f7f9f8);color:var(--text-main,#18211d)}
+#tab-alunos .efsu-identity-migration h3{margin:.1rem 0 .45rem;font-size:1rem}
+#tab-alunos .efsu-identity-migration p{margin:.4rem 0 .8rem;color:var(--text-muted,#66756f);line-height:1.5}
+#tab-alunos .efsu-link-select{display:block;width:100%;max-width:34rem;margin:.4rem 0 .75rem;padding:.55rem;border:1px solid var(--border-color,#cbd5d1);background:var(--surface-color,#fff);color:var(--text-main,#18211d)}
+html.ef-dark-mode #tab-alunos .efsu-identity-migration,body.dark-mode #tab-alunos .efsu-identity-migration{background:var(--surface-secondary,#222e29);color:var(--text-main,#f2f5f3);border-color:var(--border-color,#394541)}

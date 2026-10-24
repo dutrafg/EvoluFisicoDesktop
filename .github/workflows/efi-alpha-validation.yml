@@ -40,6 +40,15 @@ jobs:
         run: |
           node tests/evaluation-objectives.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Evaluation objective flow tests failed' }
+      - name: Test explicit safe legacy identity migration
+        shell: pwsh
+        run: |
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/04-data-integrity.js
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid identity JavaScript' }
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid application runtime JavaScript' }
+          node tests/client-identity-migration.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Legacy identity migration tests failed' }
       - name: Validate four fictional student histories and EFIA eligibility
         shell: pwsh
         run: |

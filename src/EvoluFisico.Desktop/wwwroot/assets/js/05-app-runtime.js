@@ -1215,7 +1215,7 @@
                     throw new Error('Avaliação SQLite não pôde ser recuperada ou descriptografada.');
                 out.push(item);
             }
-            out.forEach(a=>EFIdentity.ensure(a,out));out.sort(cmpAval);
+            out.sort(cmpAval);
             avaliacoes=out;window.avaliacoes=out;
             if(window.__EF63_STATE__)window.__EF63_STATE__.touch();
             atualizarContadorHistorico();preencherSeletoresComparacao();renderizarHistorico();
@@ -1250,6 +1250,28 @@
             agendarRenderHistorico();
             return registro.id;
         }
+
+        window.efMigrateLegacyAssessmentIdentity = async function(assessmentId, targetClientId) {
+            const registro = avaliacoes.find(item => String(item.id) === String(assessmentId));
+            if (!registro) throw new Error('A avaliação selecionada não foi encontrada.');
+            if (registro.cliente_id) throw new Error('Esta avaliação já possui uma identidade persistente.');
+            let clienteId;
+            if (targetClientId === 'new') {
+                clienteId = 'client_' + (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+                    ? crypto.randomUUID()
+                    : Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8));
+            } else {
+                const available = new Set(avaliacoes.map(item => String(item.cliente_id || '')).filter(Boolean));
+                if (typeof targetClientId !== 'string' || !available.has(targetClientId))
+                    throw new Error('Escolha um perfil persistente existente ou crie um novo.');
+                clienteId = targetClientId;
+            }
+            const backupResult = await efNativeEvalStore().backup();
+            if (backupResult !== 'saved')
+                throw new Error('Migração cancelada. Salve o backup para continuar.');
+            await salvarAvaliacaoNoDB({...registro, cliente_id:clienteId});
+            return clienteId;
+        };
 
         async function deletarAvaliacaoDoDB(id) {
             // Never begin a multi-record mutation while the frontend vault is locked.
@@ -2501,7 +2523,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                     if (el && valor !== null && valor !== undefined) el.value = String(valor);
                 });
                 const seletor = document.getElementById('ef-client-identity');
-                const clienteId = origem.cliente_id || EFIdentity.ensure(origem, avaliacoes);
+                const clienteId = origem.cliente_id || '';
                 if (seletor && clienteId) {
                     if (![...seletor.options].some(o => o.value === clienteId)) {
                         seletor.add(new Option(origem.nome || 'Aluno existente', clienteId));

@@ -137,13 +137,38 @@ function renderDetail(){
  if(!profile){host.append(elem('p','efsu-empty','Selecione um aluno para abrir o perfil.'));return}
  const header=elem('header','efsu-profile-head');
  const h=elem('div','efsu-profile-title');h.append(elem('h2','',profile.name));
- const badge=elem('span','efsu-id',profile.persistentId?'ID persistente: '+profile.persistentId:'Vínculo legado; confirme a identidade ao salvar');
+ const badge=elem('span','efsu-id',profile.persistentId?'ID persistente: '+profile.persistentId:'ID ausente; revise o vínculo antes de continuar');
  h.append(badge);
  header.append(h);
  const actions=elem('div','efsu-profile-actions');
- actions.append(action('Nova avaliação',()=>{if(typeof window.novaAvaliacaoParaAluno==='function')window.novaAvaliacaoParaAluno(profile.latest.id);else window.switchTab?.('tab-novo-checkin')}));
+ actions.append(action('Nova avaliação',()=>{if(!profile.persistentId){window.alert('Antes, confirme ou crie a identidade persistente deste histórico na seção de migração segura abaixo.');return}if(typeof window.novaAvaliacaoParaAluno==='function')window.novaAvaliacaoParaAluno(profile.latest.id);else window.switchTab?.('tab-novo-checkin')}));
  actions.append(action('Análises',()=>openAnalysis(profile),'efsu-action efsu-action-secondary'));
  header.append(actions);host.append(header);
+ if(!profile.persistentId){
+  const box=elem('section','efsu-identity-migration');
+  box.append(elem('h3','','Revisar vínculo legado'));
+  box.append(elem('p','','Este registro ainda não tem ID persistente. Escolha um perfil existente somente após confirmar que pertence à mesma pessoa, ou crie um perfil independente. Um backup SQLite será solicitado antes de gravar a alteração.'));
+  const label=elem('label','','Vincular esta avaliação a');
+  const select=elem('select','efsu-link-select');
+  select.setAttribute('aria-label','Perfil de destino para a avaliação legada');
+  const create=new Option('Criar novo perfil para este registro','new');select.add(create);
+  profiles.filter(candidate=>candidate.persistentId).forEach(candidate=>{
+   const option=new Option(candidate.name+' · '+candidate.history.length+' avaliação(ões)',candidate.persistentId);
+   select.add(option);
+  });
+  label.append(select);
+  const migrate=action('Salvar vínculo com backup',async()=>{
+   const target=select.value;
+   const targetProfile=profiles.find(candidate=>candidate.persistentId===target);
+   const destination=targetProfile?targetProfile.name:'um novo perfil independente';
+   if(!window.confirm('Confirme que a avaliação de '+profile.name+' pertence a '+destination+'. Será solicitado um arquivo de backup antes de salvar.'))return;
+   migrate.disabled=true;
+   try{await window.efMigrateLegacyAssessmentIdentity(profile.latest.id,target);window.alert('ID persistente salvo. Para consolidar outras avaliações antigas, repita o processo e selecione este perfil.')}
+   catch(error){window.alert(error&&error.message?error.message:'Não foi possível salvar o vínculo.')}
+   finally{migrate.disabled=false}
+  });
+  box.append(label,migrate);host.append(box);
+ }
  const tabs=elem('div','efsu-profile-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Seções do perfil');
  const body=elem('div','efsu-profile-content');
  const sections=[['resumo','Resumo'],['historico','Histórico'],['formularios','Anamnese'],['analises','Análises'],['relatorios','Relatórios'],['financeiro','Financeiro']];
