@@ -61,6 +61,15 @@ jobs:
         run: |
           dotnet run --project tests/StorageSmoke/StorageSmoke.csproj --configuration Release
           if ($LASTEXITCODE -ne 0) { throw 'Encrypted SQLite smoke tests failed' }
+      - name: Run forms, native storage and assessment regressions
+        shell: pwsh
+        run: |
+          node tests/forms-windows-integration.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Windows forms integration tests failed' }
+          node tests/native-storage-client.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Native storage client tests failed' }
+          node tests/windows-assessment-billing-regression.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Windows assessment/billing regressions failed' }
       - name: Test stale analysis report invalidation
         shell: pwsh
         run: |
