@@ -20,3 +20,16 @@
   background: transparent; color: inherit;
 }
 .efi-intelligence-alpha [hidden] { display: none !important; }
+
+/* Dedicated EFI tab — colors derive from the active application theme. */
+.efi-intelligence-heading {margin: 2px 0 16px;}
+.efi-intelligence-heading h3 {font-size: 1.15rem; margin: 0 0 6px;}
+.efi-intelligence-heading p,.efi-intelligence-disclaimer {opacity: .8; line-height: 1.5; font-size: .9rem;}
+.efi-metric-grid {display: grid;grid-template-columns: repeat(3,minmax(0,1fr));gap: 10px;margin: 12px 0 16px;}
+.efi-metric-card {min-width: 0;border: 1px solid var(--border-color,rgba(120,130,145,.30));background:var(--card-bg,transparent);border-radius: 10px;padding: 14px;display: flex;flex-direction: column;gap: 6px;}
+.efi-metric-card strong {font-size: clamp(1rem,2.1vw,1.35rem);font-weight: 700;overflow-wrap: anywhere;}
+.efi-metric-card span {font-size:.83rem;opacity:.8;}
+#efia-panel-intelligence {max-width: 100%;min-width:0;}
+#efia-panel-intelligence #efi-ai-model-choice {max-width: 100%;min-height: 38px;padding: 7px 10px;border: 1px solid var(--border-color,#9aabba);border-radius: 8px;background: var(--card-bg,transparent);color: inherit;}
+@media(max-width:720px){.efi-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:380px){.efi-metric-grid{grid-template-columns:1fr;}}
