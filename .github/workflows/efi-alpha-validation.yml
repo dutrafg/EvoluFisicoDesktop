@@ -56,6 +56,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Invalid integrated EFIA test JavaScript' }
           node tests/efia-integration-10000.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Integrated EFIA synthetic scenarios failed' }
+      - name: Test stale analysis report invalidation
+        shell: pwsh
+        run: |
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/42-analysis-reports.js
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid analysis report editor JavaScript' }
+          node tests/analysis-report-staleness.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Stale analysis report test failed' }
       - name: Validate four fictional student histories and EFIA eligibility
         shell: pwsh
         run: |

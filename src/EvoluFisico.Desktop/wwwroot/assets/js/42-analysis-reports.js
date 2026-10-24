@@ -34,7 +34,12 @@
   return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(window.EF2PdfBaseName(profile.name))}</title><style>
   @page{size:A4;margin:16mm 15mm}*{box-sizing:border-box}body{margin:0;background:white;color:#263646;font:12px/1.6 Arial,Helvetica,sans-serif}header{border-top:6px solid #225f88;border-bottom:1px solid #c5d5df;padding:15px 0 17px;margin-bottom:20px}header small{font-size:10px;color:#3d708f;text-transform:uppercase;font-weight:700;letter-spacing:2px}h1{font-size:22px;color:#143b56;margin:5px 0 8px}header p{font-size:12px;color:#415366;margin:0}.r-section{page-break-inside:avoid;break-inside:avoid;margin:0 0 16px;border-bottom:1px solid #dee6eb;padding-bottom:12px}.r-section h2{color:#25536c;font-size:13px;margin:0 0 6px}.r-body{white-space:pre-wrap;word-break:break-word}footer{border-top:1px solid #c6d5df;padding-top:12px;font-size:9px;color:#66778a;margin-top:20px}</style></head><body><header><small>EvoluFísico • Relatório de acompanhamento</small><h1>${esc(d.title)}</h1><p><strong>Aluno:</strong> ${esc(profile.name||'')} &nbsp; • &nbsp; <strong>Avaliações:</strong> ${esc(profile.count)} &nbsp; • &nbsp; <strong>Última:</strong> ${esc(date(profile.last?.data))}</p></header>${sections}<footer>Dados provenientes do histórico do aluno. Projeções e estimativas não substituem avaliação profissional, não representam diagnóstico clínico. Relatório editado pelo profissional.</footer></body></html>`;
  }
- function printReport(){if(!modal||!eligible(modal.__profile)){window.alert?.('Não é possível emitir o relatório: exigem-se 3 datas distintas e intervalo total de pelo menos 21 dias.');close();return;}updateDraft();const d=drafts.get(activeKey);if(!d||!modal)return;let profile=modal.__profile;
+ function isDraftCurrent(draft){
+  const current=String(window.__EF63_STATE__?.version??0);
+  const sourceVersion=String(draft?.dataVersion??'').split('|',1)[0];
+  return sourceVersion!==''&&sourceVersion===current;
+ }
+ function printReport(){if(!modal||!eligible(modal.__profile)){window.alert?.('Não é possível emitir o relatório: exigem-se 3 datas distintas e intervalo total de pelo menos 21 dias.');close();return;}updateDraft();const d=drafts.get(activeKey);if(!d||!modal)return;if(!isDraftCurrent(d)){window.alert?.('O histórico mudou depois que este relatório foi aberto. O rascunho foi preservado, mas nenhum PDF foi emitido. Reabra o relatório para revisar os dados atualizados.');close();return;}let profile=modal.__profile;
   const frame=document.createElement('iframe');frame.title='Impressão do relatório';frame.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-100px;top:0';
   const html=renderPrint(d,profile);frame.srcdoc=html;document.body.append(frame);
   const remove=()=>setTimeout(()=>frame.remove(),1500);
@@ -66,5 +71,5 @@
   modal.addEventListener('keydown',ev=>{if(ev.key==='Escape'){ev.preventDefault();close()}});
   modal.querySelector('[data-action="close"]').focus();
  }
- window.EFUnifiedReport=Object.freeze({open,getDraft:key=>drafts.get(String(key)),close});
+ window.EFUnifiedReport=Object.freeze({open,getDraft:key=>drafts.get(String(key)),isDraftCurrent,close});
 })();
