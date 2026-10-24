@@ -54,8 +54,6 @@ function ensurePanel(){
   button.addEventListener('click',()=>window.switchTab(PAGE));
   const form=$('tab-btn-form');if(form?.parentNode===nav)form.after(button);else nav.append(button);
  }
- $('efsu-search')?.addEventListener('input',renderList,{once:true});
- $('efsu-sort')?.addEventListener('change',renderList,{once:true});
  if(!panel.dataset.efsuEvents){
   $('efsu-search')?.addEventListener('input',renderList);
   $('efsu-sort')?.addEventListener('change',renderList);

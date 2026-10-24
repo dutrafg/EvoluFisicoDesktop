@@ -26,6 +26,8 @@ assert.equal(profiles.find(p=>p.key==='student-002').history.length,1,'homonyms 
 const legacy=core.build([{id:'old-1',nome:'Sem ID',data_avaliacao:'2026-01-01'},{id:'old-2',nome:'Sem ID',data_avaliacao:'2026-02-01'}]);
 assert.equal(legacy.length,2,'missing IDs never merge by name');
 assert.equal(core.identityOf({id:'x',nome:'Same'},null),'assessment:x');
+const unpersisted=core.build([{id:'legacy-x',nome:'Mesmo nome'}]);
+assert.equal(unpersisted[0].persistentId,null,'generated in-memory identity is not claimed as persisted SQLite ID');
 assert.equal(core.number(''),null);
 assert.equal(core.number('12,5'),12.5);
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
@@ -41,5 +43,6 @@ assert.ok(ui.includes('openAnalysis(profile)'));
 assert.ok(theme.includes('#tab-novo-checkin #success-screen #success-title'));
 assert.ok(theme.includes('#tab-novo-checkin #success-screen #success-db-info'));
 assert.ok(theme.includes('.success-message{background:var(--surface-color,#fff)!important}'));
-assert.ok(!ui.includes('innerHTML=')&&!ui.includes('.innerHTML ='),'dynamic profile content must use textContent/DOM nodes');
+assert.ok(ui.includes('if(label!==undefined)n.textContent=label;'),'dynamic profile labels are written as text, not HTML');
+assert.equal((ui.match(/innerHTML/g)||[]).length,1,'only the static, non-user template uses innerHTML');
 console.log('PASS unified profile identity, homonym separation, chronological history, latest metrics, form presence, contextual assessment, offline assets, theme regression.');

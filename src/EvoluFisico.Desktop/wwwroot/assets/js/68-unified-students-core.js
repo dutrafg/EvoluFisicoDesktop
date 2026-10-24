@@ -36,9 +36,10 @@ function build(records,identity){
  const groups=new Map();
  (Array.isArray(records)?records:[]).forEach((record,index)=>{
   if(!record||typeof record!=='object')return;
+  const explicitId=!!text(record.cliente_id);
   const key=identityOf(record,identity);if(!key)return;
   if(!groups.has(key))groups.set(key,{key,records:[]});
-  groups.get(key).records.push({...record,__profileIndex:index});
+  groups.get(key).records.push({...record,__profileIndex:index,__profileHadPersistentId:explicitId});
  });
  return Array.from(groups.values()).map(group=>{
   const history=group.records.sort((a,b)=>{
@@ -55,7 +56,7 @@ function build(records,identity){
   const goals=firstValue(newest,['objetivos','objetivo','objetivos_avaliacao','meta','metas']);
   return {
    key:group.key,
-   persistentId:history.every(r=>text(r.cliente_id)===group.key)?group.key:null,
+   persistentId:history.every(r=>r.__profileHadPersistentId===true&&text(r.cliente_id)===group.key)?group.key:null,
    name:named,
    email:firstValue(newest,['email']),
    phone:firstValue(newest,['whatsapp','telefone','celular']),
