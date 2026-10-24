@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0.10 estável
+# EvoluFísico Desktop 1.0.11 estável
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -123,8 +123,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0.10 estável
-- **Versão técnica:** `1.0.10`
+- **Produto:** EvoluFísico Desktop 1.0.11 estável
+- **Versão técnica:** `1.0.11`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026
