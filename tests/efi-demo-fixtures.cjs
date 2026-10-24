@@ -57,7 +57,7 @@ assert.ok(cs.includes('!known.Contains(key)'),'preserve previously edited assess
 assert.ok(props.includes('EvoluFisicoDesktopEFIAlpha'),'separate from stable Desktop data');
 assert.ok(app.includes('EfiDemoSeed.Ensure()'),'seeding happens before frontend navigation');
 const installer=fs.readFileSync(path.resolve(__dirname,'../installer/EvoluFisico-EFI-Alpha.iss'),'utf8');
-assert.ok(installer.includes('1.0.13.0'),'alpha bumped beyond stable Desktop 1.0.12');
+assert.ok(installer.includes('1.0.14.0'),'alpha bumped beyond stable Desktop 1.0.12');
 assert.ok(installer.includes('52CBAC3A-3D68-4A93-B0D2-0432BA821C35'),'alpha installer identity preserved');
 const html=fs.readFileSync(path.join(root,'wwwroot/index.html'),'utf8');
 for(const asset of ['67-home-card-layout.js','67-home-card-layout.css'])assert.ok(html.includes(asset),'latest stable Home update included');
