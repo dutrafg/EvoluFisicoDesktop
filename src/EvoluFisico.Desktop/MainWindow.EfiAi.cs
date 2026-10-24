@@ -28,6 +28,7 @@ public partial class MainWindow
         return new {
             models,
             selectedId = EfiAiModelManager.SelectedId,
+            installedRamGB = EfiAiHardware.InstalledRamGB(),
             runtimeReady = File.Exists(EfiAiModelManager.RuntimePath)
         };
     }
