@@ -1,20 +1,20 @@
 # Matriz de paridade — EvoluFísico2 × Desktop EFI Alpha
 
-Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@760fb46`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
+Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@d53963e`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
 
 | Módulo/área | Estado na Alpha | Diferença e trabalho restante |
 |---|---|---|
-| Início | Parcial | Cards e organização existentes; falta homologar widgets e gestos atuais em WebView2. |
+| Início | Parcial | Cards e organização existentes; regressões de layout, empacotamento e redimensionamento passaram no Node. Ainda falta homologar visualmente widgets e gestos em WebView2. |
 | Alunos / Perfil Unificado | Parcial; primeira tela integrada | Busca, ordenação, histórico e métricas agrupam pelo `cliente_id`. Registros sem ID não são agrupados ou alterados ao ler. Migração assistida por avaliação permite criar ou selecionar um ID após confirmação e backup obrigatório. Falta migração em lote, homologação manual e centralização persistente completa de outros dados. |
 | Avaliações | Parcial; seis etapas presentes | Objetivos está na etapa 2 e persiste/recupera seleção e observações. Falta homologação integral de protocolos, validação, cálculos, fotos, relatórios e invalidação de análises derivadas. |
 | Evolução | Parcial | Histórico e comparações existem; cronologia, invalidação de análises dependentes e PDF precisam de homologação Windows. |
 | Calculadora / Laboratório | Parcial/implementado | EF77 e laboratório estão conectados; verificar paridade atual de entradas, protocolos e limites com o Web. |
-| Formulários / Anamnese | Parcial | Há fluxos existentes; testar edição, persistência SQLite e vínculo com perfil/relatório. |
+| Formulários / Anamnese | Parcial | Há fluxos existentes; testes de formulário/anamnese, SQLite e vínculo com cliente passaram; persistência completa e PDF do formulário ainda precisam de homologação no app instalado. |
 | Análises / motores EFIA | Parcial | Oito componentes EF68/70/77/78–82 existem. Regras temporais básicas, fixtures e campanha integrada reforçada de 10.000 casos passaram: 1.000 séries com oito motores; 5.000 bloqueios por identidade/datas/série curta; avisos de dados faltantes e supressão de tendência corporal incompatível; 0 exceções e 0 valores não finitos. Invalidação longitudinal persistida e validação científica externa pendem. |
 | EFI Intelligence / Qwen | Parcial; inferência real em CI | Runtime CPU e gerenciador existem; inferência sintética real Q4_K_M foi executada em workflow separado; processo desktop iniciado no smoke de Windows, fluxo EFI/Qwen ainda precisa homologação interativa. Falta validação dos estados de instalação/erro/cancelamento pelo produto. |
 | Cobranças | Parcial | Histórico financeiro existente; vínculo com perfil e paridade recente precisam de testes. |
-| Organização | Parcial | Agenda/tarefas/metas existem; notas/metas ainda usam perfil WebView2 em partes, não SQLite. |
-| Configurações | Parcial | Temas, paleta, segurança, manutenção e atualização nativa existem; falta confirmar paridade integral e opções EFI/Qwen em interface instalada. |
+| Organização | Parcial | Agenda/tarefas/metas existem; resumo e recorrências passaram em testes automatizados. Persistência completa e uso interativo em WebView2 ainda precisam de homologação. |
+| Configurações | Parcial | Temas, paleta, segurança, manutenção e atualização nativa existem; regressão da paleta passou, mas faltam auditoria visual integral e opções EFI/Qwen em interface instalada. |
 | Backup e restauração | Presente, homologação incompleta | Implementações nativas existem; restauração, compatibilidade de formatos antigos e preservação em atualização pendem. |
 | Navegação e personalização | Parcial | Sidebar, cores e cards existem; ainda falta validação de layouts/miniapps atuais no Windows. |
 | Relatórios e PDF | Parcial | Relatórios nativos existem; rascunho obsoleto após alteração de estado agora bloqueia PDF e preserva as edições, com teste automatizado. Faltam verificação A4, separação privado/compartilhável e impressão manual. |

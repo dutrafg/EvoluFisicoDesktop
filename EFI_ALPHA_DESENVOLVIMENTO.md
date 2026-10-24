@@ -8,7 +8,7 @@ Data da revisão: 24/10/2026.
 |---|---|---|
 | EvoluFísico2 | `main` | `b45a1f74ac5fd6053c598a9843ac62156e4ebf2a` |
 | EvoluFísicoDesktop estável | `main` | `242649d248d766b8d3dfeeb498ce3472cedf0699` |
-| EvoluFísicoDesktop Alpha | `feature/efi-qwen35-2b-alpha` | `760fb46a7319c1c57493f6fde1b49e4516901396` |
+| EvoluFísicoDesktop Alpha | `feature/efi-qwen35-2b-alpha` | `d53963eab7afdf071f294b6a4f2d7db23cc2c552` |
 
 A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b45a1f7`. As correções recentes de tema portadas nesta rodada correspondem aos commits `98a8d38` e `abadbef`.
 
@@ -24,6 +24,7 @@ A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b
 - Smoke Windows ampliado para iniciar o executável instalado, confirmar processo ativo por 8 segundos e depois realizar a desinstalação.
 - Editor de relatórios bloqueia a emissão de PDF quando a versão do estado muda depois da abertura; mantém o rascunho e solicita reabrir para revisar dados atuais.
 - Integrado `tests/StorageSmoke` à CI Windows e corrigida a referência a `EfiAppPaths.cs` no projeto de teste; transações, rollback, criptografia, backup/restauração, tampering e schema futuro passaram.
+- Ampliada a CI a regressões de formulário, armazenamento, avaliação/cobrança, resumo e recorrência da agenda, organização do Início, redimensionamento de cards, rolagem por toque, privacidade e paleta.
 - Renomeada a saída do Inno Setup para `EvoluFisico_EFI_Alpha_Setup.exe`; o smoke test procura o nome exato do pacote.
 
 ## Commits criados nesta rodada
@@ -39,6 +40,8 @@ A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b
 | `2767f8817ee6c9f07556945b330381edfb68c2ef` | Smoke Windows de inicialização do aplicativo instalado |
 | `08eee52b8d3c889b01d1a11491d04337563be5fb` | Bloqueio de emissão de PDF por rascunho desatualizado e teste dedicado |
 | `760fb46a7319c1c57493f6fde1b49e4516901396` | Smoke SQLite transacional e recuperação integrado à CI Windows |
+| `e53de673f6f6c044a9800fb4a94f6898479941d4` | Testes de formulário, storage nativo e avaliação/cobrança na CI |
+| `d53963eab7afdf071f294b6a4f2d7db23cc2c552` | Testes de Início, agenda, toque, privacidade e paleta na CI |
 
 ## Estado e pendências
 
