@@ -86,7 +86,7 @@ require('./windows-sync-web-2-0-28.cjs');
 require('./windows-touch-scroll-1-0-11.cjs');
 
 // Início: editor, compactação, restauração e persistência sem afetar dados clínicos.
-require('./windows-home-editor-1-1-0.cjs');
+require('./windows-home-editor-1-0-12.cjs');
 
 // Regressoes da integracao pre-beta 1.1.0.
 require('./windows-beta-1-1-0.cjs');
