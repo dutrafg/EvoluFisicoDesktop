@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DefineConstants>EFI_ALPHA</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../src/EvoluFisico.Desktop/EfiAiRuntime.cs" Link="EfiAiRuntime.cs" />
+    <Compile Include="../../src/EvoluFisico.Desktop/EfiAiModelManager.cs" Link="EfiAiModelManager.cs" />
+    <Compile Include="../../src/EvoluFisico.Desktop/EfiAppPaths.cs" Link="EfiAppPaths.cs" />
+    <Content Include="../../publish/win-x64/ai-runtime/llama-server.exe"
+             Link="ai-runtime/llama-server.exe"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

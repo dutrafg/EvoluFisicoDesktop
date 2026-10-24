@@ -5,13 +5,17 @@ on:
     paths:
       - .github/workflows/efi-real-inference.yml
       - scripts/efi-runtime-smoke.ps1
+      - src/EvoluFisico.Desktop/EfiAiRuntime.cs
+      - src/EvoluFisico.Desktop/EfiAiModelManager.cs
+      - src/EvoluFisico.Desktop/EfiAppPaths.cs
+      - tests/EfiChatSmoke/**
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   qwen-smoke:
     runs-on: windows-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -23,6 +27,6 @@ jobs:
       - name: Include verified Windows CPU runtime
         shell: pwsh
         run: ./scripts/bundle-efi-runtime.ps1
-      - name: Real local inference with checksum-pinned 2B GGUF
+      - name: Real EFI chat inference with checksum-pinned 2B GGUF
         shell: pwsh
-        run: ./scripts/efi-runtime-smoke.ps1
+        run: dotnet run --project tests/EfiChatSmoke/EfiChatSmoke.csproj --configuration Release
