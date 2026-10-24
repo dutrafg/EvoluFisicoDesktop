@@ -1,0 +1,154 @@
+/* EvoluFísico Desktop 1.0.12 — contraste no fluxo de avaliação (modo escuro).
+   Correção isolada em tela: evita superfícies claras com tipografia herdada do tema
+   escuro. Não altera fórmulas, dados, resultados ou estilos de impressão/PDF.
+   Mantém as variáveis da paleta ativa do profissional. */
+@media screen {
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin {
+    --ef-eval-surface: var(--ef-surface, #172720);
+    --ef-eval-inner: var(--ef-page, #0c1914);
+    --ef-eval-line: var(--ef-line, #30473b);
+    --ef-eval-ink: var(--ef-ink, #edf7f1);
+    --ef-eval-muted: var(--ef-muted, #b3c4bb);
+  }
+
+  /* 1. Edição: aviso e ação precisam permanecer visíveis, sem fundo creme. */
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #edit-mode-alert {
+    background: #382c1d !important;
+    border: 1px solid #8a6735 !important;
+    color: #ffebbd !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #edit-mode-alert :is(strong, span, div) {
+    color: inherit !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #edit-mode-alert .btn {
+    background: #594126 !important;
+    border: 1px solid #b18a4c !important;
+    color: #fff5df !important;
+    opacity: 1 !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #edit-mode-alert .btn:hover {
+    background: #70512f !important;
+  }
+
+  /* 2. Somas na medição e no protocolo de Pollock: sem branco sobre branco. */
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin [style*="background:#f0fdf4"],
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .step[data-step="3"] > [style*="background:#f8fafc"] {
+    background: var(--ef-eval-surface) !important;
+    border: 1px solid var(--ef-eval-line) !important;
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin [style*="background:#f0fdf4"] :is(span, strong, div),
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .step[data-step="3"] > [style*="background:#f8fafc"] :is(div, span) {
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #preview-soma-perimetria,
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #preview-faixa-peso-ideal {
+    color: #7fe5aa !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #preview-gordura-dobras {
+    color: #93c5fd !important;
+  }
+
+  /* 3. Check-in e parecer: os cartões antes eram brancos com rótulos claros. */
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-sec,
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-resumo {
+    background: var(--ef-eval-surface) !important;
+    background-image: none !important;
+    color: var(--ef-eval-ink) !important;
+    border: 1px solid var(--ef-eval-line) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin :is(.ef6-sec > h3, .ef6-resumo-h > b) {
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-kv {
+    background: var(--ef-eval-inner) !important;
+    border: 1px solid var(--ef-eval-line) !important;
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-kv b,
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-meta b {
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin :is(.ef6-kv small, .ef6-d, .ef6-sub, .ef6-meta) {
+    color: var(--ef-eval-muted) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-d.ok {
+    color: #6ee7a0 !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-d.bad {
+    color: #ff9eaa !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-bar {
+    background: var(--ef-eval-line) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-chip {
+    background: var(--ef-eval-inner) !important;
+    color: var(--ef-eval-ink) !important;
+    border-color: var(--ef-eval-line) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-chip.on {
+    background: var(--ef-accent, #2563eb) !important;
+    border-color: var(--ef-accent, #2563eb) !important;
+    color: #fff !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .ef6-chip.frase {
+    background: #392e1c !important;
+    border-color: #806335 !important;
+    color: #ffdf91 !important;
+  }
+
+  /* 4. Caixa destacada do parecer e cartões fotográficos com inline light. */
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .input-group[style*="background:#fefce8"] {
+    background: #30291a !important;
+    border: 1px solid #69572e !important;
+    color: #fff1cb !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .input-group[style*="background:#fefce8"] > label {
+    color: #ffdea0 !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .input-group[style*="background:#fefce8"] .help-text {
+    color: #e9d8ae !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .photo-upload-card[style*="background:#ffffff"] {
+    background: var(--ef-eval-surface) !important;
+    color: var(--ef-eval-ink) !important;
+    border-color: var(--ef-eval-line) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .photo-upload-card > label {
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin .photo-thumb[style*="background:#f8fafc"] {
+    background: var(--ef-eval-inner) !important;
+    border-color: var(--ef-eval-line) !important;
+  }
+
+  /* 5. Confirmação: texto, aviso do SQLite e botões no mesmo tema. */
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #success-screen {
+    background: var(--ef-eval-surface) !important;
+    border: 1px solid var(--ef-eval-line) !important;
+    border-top: 4px solid #34c759 !important;
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #success-title {
+    color: var(--ef-eval-ink) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #success-db-info {
+    color: var(--ef-eval-muted) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #success-screen .btn-secondary {
+    background: var(--ef-eval-inner) !important;
+    color: var(--ef-eval-ink) !important;
+    border: 1px solid var(--ef-eval-line) !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #success-screen .btn:disabled {
+    opacity: .64 !important;
+    cursor: not-allowed !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #draft-alert {
+    background: #172638 !important;
+    border-color: #406083 !important;
+  }
+  :is(html.ef-dark-mode body, body.dark-mode) #tab-novo-checkin #draft-alert > div {
+    color: #d7eaff !important;
+  }
+}
