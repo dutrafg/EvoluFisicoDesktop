@@ -2343,6 +2343,8 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         data_proxima_avaliacao: formData.get('data_proxima_avaliacao') || '',
                         checkin_semana: formData.get('checkin_semana'),
                         fase: formData.get('fase'),
+                        objetivos: formData.getAll('objetivos').map(v => String(v).trim()).filter(Boolean),
+                        objetivo_detalhes: (formData.get('objetivo_detalhes') || '').trim(),
                         avaliador_clinica: (formData.get('avaliador_clinica') || '').trim(),
                         avaliador_nome: (formData.get('avaliador_nome') || '').trim(),
                         avaliador_registro: (formData.get('avaliador_registro') || '').trim(),
@@ -2549,6 +2551,9 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 document.getElementById('data_proxima_avaliacao').value = aval.data_proxima_avaliacao || '';
                 document.getElementById('checkin_semana').value = aval.checkin_semana || 'Semana 1';
                 document.getElementById('fase').value = aval.fase || 'Cutting';
+                const objetivosAvaliacao = Array.isArray(aval.objetivos) ? aval.objetivos : (aval.objetivos ? [aval.objetivos] : []);
+                document.querySelectorAll('input[name="objetivos"]').forEach(el => { el.checked = objetivosAvaliacao.includes(el.value); });
+                document.getElementById('objetivo_detalhes').value = aval.objetivo_detalhes || '';
                 if (document.getElementById('avaliador_clinica')) document.getElementById('avaliador_clinica').value = aval.avaliador_clinica || '';
                 document.getElementById('avaliador_nome').value = aval.avaliador_nome || '';
                 document.getElementById('avaliador_registro').value = aval.avaliador_registro || '';

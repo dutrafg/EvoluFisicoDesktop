@@ -35,6 +35,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Invalid student profile JavaScript' }
           node tests/unified-students-profile.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Unified student profile tests failed' }
+      - name: Test six-step evaluation and objective persistence
+        shell: pwsh
+        run: |
+          node tests/evaluation-objectives.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Evaluation objective flow tests failed' }
       - name: Validate four fictional student histories and EFIA eligibility
         shell: pwsh
         run: |
@@ -64,7 +69,7 @@ jobs:
           if (!(Test-Path $iscc)) { throw "Inno Setup not found: $iscc" }
           & $iscc installer/EvoluFisico-EFI-Alpha.iss
           if ($LASTEXITCODE -ne 0) { throw 'Alpha setup creation failed' }
-          $setup = Get-ChildItem installer-output -Filter '*EFI-Alpha-Setup.exe' -File | Select-Object -First 1
+          $setup = Get-ChildItem installer-output -Filter 'EvoluFisico_EFI_Alpha_Setup.exe' -File | Select-Object -First 1
           if (!$setup -or $setup.Length -lt 20MB) { throw 'Alpha installer missing or too small' }
       - name: Smoke-test Alpha installer isolation
         shell: pwsh
@@ -85,8 +90,8 @@ jobs:
       - name: Upload experimental Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-1.0.13-EFI-Alpha-Setup
-          path: installer-output/*EFI-Alpha-Setup.exe
+          name: EvoluFisico_EFI_Alpha_Setup
+          path: installer-output/EvoluFisico_EFI_Alpha_Setup.exe
           if-no-files-found: error
           retention-days: 14
       - name: Avoid publishing experimental build

@@ -151,18 +151,22 @@
 </div>
 <div class="step-indicator" data-step-target="2" onclick="irParaEtapa(1)">
 <div class="step-dot" id="step-dot-2">2</div>
-<div class="step-label">Medidas</div>
+<div class="step-label">Objetivos</div>
 </div>
 <div class="step-indicator" data-step-target="3" onclick="irParaEtapa(2)">
 <div class="step-dot" id="step-dot-3">3</div>
-<div class="step-label">Dobras/BIA</div>
+<div class="step-label">Medidas</div>
 </div>
 <div class="step-indicator" data-step-target="4" onclick="irParaEtapa(3)">
 <div class="step-dot" id="step-dot-4">4</div>
-<div class="step-label">Fotos</div>
+<div class="step-label">Dobras/BIA</div>
 </div>
 <div class="step-indicator" data-step-target="5" onclick="irParaEtapa(4)">
 <div class="step-dot" id="step-dot-5">5</div>
+<div class="step-label">Fotos</div>
+</div>
+<div class="step-indicator" data-step-target="6" onclick="irParaEtapa(5)">
+<div class="step-dot" id="step-dot-6">6</div>
 <div class="step-label">Parecer</div>
 </div>
 </div>
@@ -283,8 +287,25 @@
 </div>
 </div>
 </div>
-<!-- ETAPA 2: Perimetria Completa -->
-<div class="step" data-name="Perimetria (Circunferências)" data-step="2">
+<!-- ETAPA 2: Objetivos do Aluno -->
+<div class="step" data-name="Objetivos" data-step="2">
+<h2 class="step-title">Objetivos do aluno</h2>
+<span class="help-text">Registre os objetivos que orientarão o acompanhamento desta avaliação. Os dados de avaliações anteriores não são copiados.</span>
+<div class="section-subhead">Quais objetivos foram definidos?</div>
+<div class="input-row">
+<label style="display:flex;align-items:center;gap:.55rem;"><input name="objetivos" type="checkbox" value="redução de gordura" style="accent-color:#0071e3;"/> Redução de gordura corporal</label>
+<label style="display:flex;align-items:center;gap:.55rem;"><input name="objetivos" type="checkbox" value="ganho de massa muscular" style="accent-color:#0071e3;"/> Ganho de massa muscular</label>
+<label style="display:flex;align-items:center;gap:.55rem;"><input name="objetivos" type="checkbox" value="força" style="accent-color:#0071e3;"/> Força e desempenho</label>
+<label style="display:flex;align-items:center;gap:.55rem;"><input name="objetivos" type="checkbox" value="condicionamento" style="accent-color:#0071e3;"/> Condicionamento físico</label>
+<label style="display:flex;align-items:center;gap:.55rem;"><input name="objetivos" type="checkbox" value="saúde e bem-estar" style="accent-color:#0071e3;"/> Saúde e bem-estar</label>
+</div>
+<div class="input-group">
+<label for="objetivo_detalhes">Observações sobre os objetivos</label>
+<textarea id="objetivo_detalhes" name="objetivo_detalhes" placeholder="Contexto, prioridade, prazo ou meta combinada com o aluno" rows="3"></textarea>
+</div>
+</div>
+<!-- ETAPA 3: Perimetria Completa -->
+<div class="step" data-name="Perimetria (Circunferências)" data-step="3">
 <h2 class="step-title">Medidas corporais</h2>
 <span class="help-text">Medidas de fita com soma perimétrica automática em tempo real.</span>
 <div class="input-group">
@@ -347,7 +368,7 @@
 </div>
 </div>
 <!-- ETAPA 3: Antropometria (Pollock 7 Dobras) & Bioimpedância v3.0 -->
-<div class="step" data-name="Antropometria (Pollock 7) &amp; BIA" data-step="3">
+<div class="step" data-name="Antropometria (Pollock 7) &amp; BIA" data-step="4">
 <h2 class="step-title">Composição corporal</h2>
 <div class="section-subhead">1️⃣ Antropometria (Pollock, 1984 – 7 Dobras em mm)</div>
 <div class="input-row-3 input-row">
@@ -451,7 +472,7 @@
 </div>
 </div>
 <!-- ETAPA 4: Fotos -->
-<div class="step" data-name="Registro Fotográfico (5 Fotos)" data-step="4">
+<div class="step" data-name="Registro Fotográfico (5 Fotos)" data-step="5">
 <h2 class="step-title">Fotos de acompanhamento</h2>
 <div class="info-box">
 <strong>Padronização:</strong> Adicione até 5 fotos padronizadas do aluno para análise postural, acompanhamento estético e emissão do laudo oficial em PDF (sem distorções e sem quebras de página).
@@ -535,7 +556,7 @@
 </div>
 </div>
 <!-- ETAPA 5: Aderência & Parecer do Avaliador -->
-<div class="step" data-name="Aderência &amp; Parecer Técnico" data-step="5">
+<div class="step" data-name="Aderência &amp; Parecer Técnico" data-step="6">
 <h2 class="step-title">Acompanhamento e parecer</h2>
 <div class="ef6-resumo" id="ef6-resumo"></div>
 <div class="input-group">
