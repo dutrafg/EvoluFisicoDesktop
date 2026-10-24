@@ -64,4 +64,10 @@ assert.ok(ui.includes('efi-ai-progress') && ui.includes('onProgress'), 'Download
 assert.ok(bridge.includes('efi-ai-progress'), 'C# bridge sends progress without exposing student data');
 assert.ok(catalog.includes('DownloadProgress') && catalog.includes('SHA256.HashDataAsync'), 'Download integrity and progress');
 assert.ok(main.includes('if (EfiAppPaths.IsAlpha)'), 'Stable updates disabled in isolated Alpha');
+const settingsTabs = read('wwwroot/assets/js/33-settings-navigation.js');
+assert.ok(settingsTabs.includes("['efi','Inteligência Artificial']"), 'AI management accessible in Settings without existing assessments');
+assert.ok(settingsTabs.includes('EFIAIntelligence?.mountSettings(grids.efi)'), 'Settings AI manager mounted');
+assert.ok(ui.includes('mountSettings: container => mount(container, null, true)'), 'Single shared manager and two contexts');
+assert.ok(ui.includes("settingsOnly ||"), 'Settings hides analysis-specific inference action');
+assert.ok(ui.includes('data-efi-choice'), 'Accessible model selection without duplicated id');
 console.log('PASS EFI Alpha: model catalog, security guards, UI, build isolation and installer compatibility');
