@@ -49,6 +49,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Invalid application runtime JavaScript' }
           node tests/client-identity-migration.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Legacy identity migration tests failed' }
+      - name: Run 10000 integrated EFIA synthetic scenarios
+        shell: pwsh
+        run: |
+          node --check tests/efia-integration-10000.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid integrated EFIA test JavaScript' }
+          node tests/efia-integration-10000.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Integrated EFIA synthetic scenarios failed' }
       - name: Validate four fictional student histories and EFIA eligibility
         shell: pwsh
         run: |
