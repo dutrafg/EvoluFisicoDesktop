@@ -46,9 +46,7 @@ internal static class EfiAiModelManager
 
     internal const string DefaultModelId = "qwen35-2b-q4";
     internal static IReadOnlyList<ModelSpec> Models => Catalog;
-    internal static readonly string ModelDirectory = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "EvoluFisicoDesktop", "EFI", "models");
+    internal static readonly string ModelDirectory = EfiAppPaths.ModelDirectory;
     internal static string RuntimePath => Path.Combine(
         AppContext.BaseDirectory, "ai-runtime", "llama-server.exe");
     private static string PreferencePath => Path.Combine(ModelDirectory, "selected-model.txt");
