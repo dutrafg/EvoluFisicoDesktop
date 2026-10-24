@@ -1,5 +1,5 @@
 #define MyAppName "EvoluFisico Desktop"
-#define MyAppVersion "1.0.10"
+#define MyAppVersion "1.0.11"
 #define MyAppExeName "EvoluFisico.Desktop.exe"
 [Setup]
 AppId={{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B}
@@ -10,7 +10,7 @@ UninstallDisplayIcon={app}\EvoluFisico.ico
 DefaultDirName={autopf}\EvoluFisico Desktop
 DefaultGroupName={#MyAppName}
 OutputDir=..\installer-output
-OutputBaseFilename=EvoluFisicoDesktop-1.0.10-estavel-Setup
+OutputBaseFilename=EvoluFisicoDesktop-1.0.11-estavel-Setup
 Compression=lzma
 SolidCompression=yes
 ArchitecturesAllowed=x64compatible

@@ -56,8 +56,8 @@ check('Stable 1.0 version is consistent in UI, native exe, installer and build m
   'src/EvoluFisico.Desktop/MainWindow.xaml',
   'src/EvoluFisico.Desktop/MainWindow.xaml.cs',
   'src/EvoluFisico.Desktop/wwwroot/assets/js/26-simple-interface.js'
- ])assert.ok(fs.readFileSync(file,'utf8').includes(file.endsWith('MainWindow.xaml')?'1.0.10 estável':'1.0.10'),file);
- assert.ok(html.includes('v1.0.10 estável'));
+ ])assert.ok(fs.readFileSync(file,'utf8').includes(file.endsWith('MainWindow.xaml')?'1.0.11 estável':'1.0.11'),file);
+ assert.ok(html.includes('v1.0.11 estável'));
 });
 check('Intense colors meet WCAG AA with white foreground',()=>{
  const start=js.indexOf('const COLORS='),end=js.indexOf(';',start);

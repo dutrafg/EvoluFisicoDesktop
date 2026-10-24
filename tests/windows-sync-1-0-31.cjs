@@ -16,7 +16,7 @@ test('Geral displays accessible persisted reload safeguard and assets are offlin
   assert.ok(html.includes(a),a);assert.ok(sw.includes(a),a);
  }
  for(const a of ['efw-settings-panel[data-efw-panel="geral"]','efw-reload-toggle','Proteger contra recarregamento acidental','ef_general_reload_guard_v1','aria-describedby','aria-live'])assert.ok(reload.includes(a),a);
- assert.ok(sw.includes('evolufisico-desktop-1-0-10-pdf-names-new-evaluation'));
+ assert.ok(sw.includes('evolufisico-desktop-1-0-11-pdf-names-new-evaluation'));
 });
 test('Actual key and beforeunload handling works, option can disable and persist',()=>{
  let docReady,controlListener;
@@ -103,10 +103,10 @@ test('Sidebar buttons and phone Organisation tabs remain well positioned',()=>{
 });
 test('Version remains 1.0.x and native data/installer identity are preserved',()=>{
  const install=read('installer/EvoluFisico.iss'),native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
- assert.match(install,/#define MyAppVersion "1\.0\.10"/);
+ assert.match(install,/#define MyAppVersion "1\.0\.11"/);
  assert.match(install,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
- assert.ok(native.includes('CurrentVersion = "1.0.10"'));
- assert.ok(nav.includes("version:'1.0.10'"));
- assert.ok(html.includes('v1.0.10 estável'));
+ assert.ok(native.includes('CurrentVersion = "1.0.11"'));
+ assert.ok(nav.includes("version:'1.0.11'"));
+ assert.ok(html.includes('v1.0.11 estável'));
 });
-console.log('TOTAL',pass,'regressions 1.0.31 Desktop 1.0.10');
+console.log('TOTAL',pass,'regressions 1.0.31 Desktop 1.0.11');
