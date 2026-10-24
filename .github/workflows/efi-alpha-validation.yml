@@ -118,6 +118,15 @@ jobs:
         run: |
           node tests/efi-ai-alpha.cjs
           if ($LASTEXITCODE -ne 0) { throw 'EFI alpha integration failed' }
+      - name: Test EFI student chat and encrypted history
+        shell: pwsh
+        run: |
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/efia/efi-ai-panel.js
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid EFI chat UI JavaScript' }
+          node --check tests/efi-ai-chat.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid EFI chat test JavaScript' }
+          node tests/efi-ai-chat.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'EFI chat and history checks failed' }
       - name: Bundle verified native CPU inference engine
         shell: pwsh
         run: |
@@ -143,7 +152,7 @@ jobs:
             if (!(Test-Path (Join-Path $target $part))) { throw "Missing installation file: $part" }
           }
           $manifest = Get-Content (Join-Path $target 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
-          if ($manifest.channel -ne 'efi-alpha' -or $manifest.version -ne '1.0.13-alpha') { throw 'Installer shipped stable channel instead of isolated Alpha' }
+          if ($manifest.channel -ne 'efi-alpha' -or $manifest.version -ne '1.0.14-alpha') { throw 'Installer shipped stable channel instead of isolated Alpha' }
           $appExe = Join-Path $target 'EvoluFisico.Desktop.exe'
           $app = Start-Process -FilePath $appExe -PassThru
           Start-Sleep -Seconds 8

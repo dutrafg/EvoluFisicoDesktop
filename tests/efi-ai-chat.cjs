@@ -1,0 +1,44 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const read = p => fs.readFileSync(p, 'utf8');
+const root = 'src/EvoluFisico.Desktop/';
+const panel = read(root + 'wwwroot/assets/efia/efi-ai-panel.js');
+const bridge = read(root + 'MainWindow.EfiAi.cs');
+const runtime = read(root + 'EfiAiRuntime.cs');
+const storage = read(root + 'wwwroot/assets/js/28-native-storage.js');
+const css = read(root + 'wwwroot/assets/efia/efi-ai-panel.css');
+
+assert.ok(panel.includes('Chat sobre o aluno selecionado'), 'Student chat UI is present');
+assert.ok(panel.includes('currentChatContext()'), 'Every question builds a fresh analysis context');
+assert.ok(panel.includes('EFIAHost?.analyze?.'), 'Context is recalculated by deterministic EFIA engines');
+assert.ok(panel.includes('JSON.stringify(refreshed.recordsRaw) !== JSON.stringify(snapshot.result.recordsRaw)'), 'Stale analysis blocks chat');
+assert.ok(panel.includes('String(row.cliente_id) !== String(snapshot.profileKey)'), 'Cross-student records block chat');
+assert.ok(panel.includes('efi-chat-v1-') && panel.includes("crypto.subtle.digest('SHA-256'"), 'History key is opaque and student-scoped');
+assert.ok(panel.includes('EFNativeStorage.readJSON') && panel.includes('EFNativeStorage.writeJSON'), 'Chat history is persisted via native encrypted store');
+assert.ok(panel.includes('EFNativeStorage.delete(chatRecordId)'), 'User can clear chat history separately');
+assert.ok(panel.includes('.slice(-12).map(turn => ({'), 'Recent history is sent to provide conversational memory');
+assert.ok(panel.includes("text.textContent = turn.content"), 'Conversation is rendered as text, not HTML');
+assert.ok(panel.includes("request('chat', {context, question, history:prior})"), 'Only facts, question and bounded history go to model');
+assert.ok(panel.includes('selected'), 'Student context is tied to the current selection');
+assert.ok(!panel.includes("request('chat', {profileKey"), 'Persistent student identity is not sent to the model');
+assert.ok(bridge.includes('action == "chat"'), 'Native bridge handles chat action');
+assert.ok(bridge.includes('role is not ("user" or "assistant")'), 'System prompts cannot be injected by the client');
+assert.ok(bridge.includes('EfiAiRuntime.ChatAsync('), 'Chat enters the bounded inference API');
+const chatAction = bridge.slice(bridge.indexOf('"chat" =>'), bridge.indexOf('_ => throw new InvalidOperationException("Comando EFI não autorizado.")'));
+assert.ok(chatAction.includes('EfiAiRuntime.ChatAsync(') &&
+  !chatAction.includes('EncryptedSqliteStore') && !chatAction.includes('store.Save') && !chatAction.includes('store.Load') && !chatAction.includes('store.Delete') && !chatAction.includes('EfiAiModelManager'),
+  'Chat action receives text only and has no access to student storage or model catalog');
+assert.ok(runtime.includes('internal static Task<string> ChatAsync'), 'Runtime exposes separate chat interface');
+assert.ok(runtime.includes('new("system", SafetyPrompt'), 'Model receives safety instructions');
+assert.ok(runtime.includes('messages.Add(new ChatMessage("user", question))'), 'Question is passed as the final user turn');
+assert.ok(runtime.includes('messages.Select(m => new { role = m.Role, content = m.Content }).ToArray()'), 'No function tools are provided');
+assert.ok(runtime.includes('Contexto EFIA validado'), 'Model is constrained to validated context');
+assert.ok(runtime.includes('"127.0.0.1"'), 'Inference remains loopback-only');
+assert.ok(storage.includes('writeJSON:(id,value)') && storage.includes('EFNativeStorage.write(id,encoder.encode(JSON.stringify(value)))'), 'History writes through the local storage bridge');
+const nativeMain = read(root + 'MainWindow.xaml.cs');
+const encryptedStore = read(root + 'EncryptedSqliteStore.cs');
+assert.ok(nativeMain.includes('store.Save(key, Convert.FromBase64String(base64))'), 'Native bridge stores bounded history records');
+assert.ok(encryptedStore.includes('ProtectedVault.Encrypt(plaintext, masterPassword)'), 'SQLite encrypts chat history records');
+assert.ok(css.includes('.efi-chat-log') && css.includes('.efi-chat textarea'), 'Chat styling is included');
+console.log('PASS EFI student chat: read-only EFIA context, scoped encrypted history, bounded model turns');

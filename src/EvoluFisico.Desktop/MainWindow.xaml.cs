@@ -14,7 +14,11 @@ public partial class MainWindow : Window
 {
     private const string AppUrl = "https://evolufisico.local/index.html";
     private bool _ready;
+#if EFI_ALPHA
+    private const string CurrentVersion = "1.0.14-alpha";
+#else
     private const string CurrentVersion = "1.0.13";
+#endif
     private static string InstalledTag()
     {
         try

@@ -67,7 +67,7 @@ Write-Host "Windows icon generated: $iconPath"
 # Identify each release build so the updater can distinguish installed and published releases.
 $revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0,7).ToLowerInvariant() } else { 'local' }
 $tag = if ($EfiAlpha) { "efi-alpha-$revision" } else { "desktop-v1.0-$revision" }
-$version = if ($EfiAlpha) { '1.0.13-alpha' } else { '1.0.11' }
+$version = if ($EfiAlpha) { '1.0.14-alpha' } else { '1.0.11' }
 $versionInfo = @{ tag = $tag; version = $version; revision = $revision; channel = $(if($EfiAlpha){'efi-alpha'}else{'stable'}); built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
 [System.IO.File]::WriteAllText((Join-Path $web 'desktop-version.json'), $versionInfo, [System.Text.UTF8Encoding]::new($false))
 $flags = @()

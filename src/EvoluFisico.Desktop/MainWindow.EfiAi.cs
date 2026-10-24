@@ -45,6 +45,9 @@ public partial class MainWindow
         string? requestId = null;
         string? action = null;
         string? summary = null;
+        string? context = null;
+        string? question = null;
+        List<EfiAiRuntime.ChatMessage>? history = null;
         string? modelId = null;
         bool consent = false;
         try
@@ -56,7 +59,7 @@ public partial class MainWindow
                 || type.GetString() != "efi-ai")
                 return false;
 
-            if (args.WebMessageAsJson.Length > 10_000
+            if (args.WebMessageAsJson.Length > 30_000
                 || !root.TryGetProperty("requestId", out var id))
                 return true;
             requestId = id.GetString();
@@ -77,6 +80,37 @@ public partial class MainWindow
                     || payload.ValueKind != JsonValueKind.String)
                     return true;
                 summary = payload.GetString();
+            }
+            if (action == "chat")
+            {
+                if (!root.TryGetProperty("context", out var contextPayload)
+                    || contextPayload.ValueKind != JsonValueKind.String
+                    || !root.TryGetProperty("question", out var questionPayload)
+                    || questionPayload.ValueKind != JsonValueKind.String
+                    || !root.TryGetProperty("history", out var historyPayload)
+                    || historyPayload.ValueKind != JsonValueKind.Array
+                    || historyPayload.GetArrayLength() > 12)
+                    return true;
+                context = contextPayload.GetString();
+                question = questionPayload.GetString();
+                history = new List<EfiAiRuntime.ChatMessage>();
+                var totalHistoryChars = 0;
+                foreach (var turn in historyPayload.EnumerateArray())
+                {
+                    if (turn.ValueKind != JsonValueKind.Object
+                        || !turn.TryGetProperty("role", out var rolePayload)
+                        || rolePayload.ValueKind != JsonValueKind.String
+                        || !turn.TryGetProperty("content", out var contentPayload)
+                        || contentPayload.ValueKind != JsonValueKind.String)
+                        return true;
+                    var role = rolePayload.GetString() ?? "";
+                    var content = contentPayload.GetString() ?? "";
+                    if (role is not ("user" or "assistant") || content.Length is 0 or > 1_200)
+                        return true;
+                    totalHistoryChars += content.Length;
+                    if (totalHistoryChars > 10_000) return true;
+                    history.Add(new EfiAiRuntime.ChatMessage(role, content));
+                }
             }
         }
         catch (JsonException) { return false; }
@@ -100,6 +134,9 @@ public partial class MainWindow
                 "remove" => throw new InvalidOperationException(
                     "Confirme a exclusão do modelo na interface."),
                 "analyze" => new { text = await EfiAiRuntime.ExplainAsync(summary ?? "") },
+                "chat" => new { text = await EfiAiRuntime.ChatAsync(
+                    context ?? "", history ?? new List<EfiAiRuntime.ChatMessage>(),
+                    question ?? "") },
                 _ => throw new InvalidOperationException("Comando EFI não autorizado.")
             };
             SendEfiAiResponse(requestId!, true, answer, null);
