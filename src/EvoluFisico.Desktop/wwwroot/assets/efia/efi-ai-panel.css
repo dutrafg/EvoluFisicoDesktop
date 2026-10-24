@@ -30,7 +30,7 @@
 .efi-metric-card strong {font-size: clamp(1rem,2.1vw,1.35rem);font-weight: 700;overflow-wrap: anywhere;}
 .efi-metric-card span {font-size:.83rem;opacity:.8;}
 #efia-panel-intelligence {max-width: 100%;min-width:0;}
-#efia-panel-intelligence #efi-ai-model-choice {max-width: 100%;min-height: 38px;padding: 7px 10px;border: 1px solid var(--border-color,#9aabba);border-radius: 8px;background: var(--card-bg,transparent);color: inherit;}
+ .efi-intelligence-alpha [data-efi-choice] {max-width: 100%;min-height: 38px;padding: 7px 10px;border: 1px solid var(--border-color,#9aabba);border-radius: 8px;background: var(--card-bg,transparent);color: inherit;}
 @media(max-width:720px){.efi-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:380px){.efi-metric-grid{grid-template-columns:1fr;}}
 
