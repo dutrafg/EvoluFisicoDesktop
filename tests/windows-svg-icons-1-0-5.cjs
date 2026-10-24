@@ -19,7 +19,7 @@ check('Icons loaded after existing Desktop modules and available offline',()=>{
  assert.ok(html.includes('61-accessible-icons.css'));
  assert.ok(sw.includes('./assets/js/61-accessible-icons.js'));
  assert.ok(sw.includes('./assets/css/61-accessible-icons.css'));
- assert.ok(sw.includes('evolufisico-desktop-1-0-9-pdf-names-new-evaluation'));
+ assert.ok(sw.includes('evolufisico-desktop-1-0-10-pdf-names-new-evaluation'));
  assert.doesNotThrow(()=>new Function(source));
 });
 check('SVG glyphs carry accessible descriptions, protected paths and source palette',()=>{
@@ -36,7 +36,7 @@ check('No changes to navigation icons, editable fields or private assessment dat
  for(const key of ['.top-navbar','.nav-tabs','textarea','input','[contenteditable="true"]','[data-ef-user-content]','[data-sensitive]','.ef-student-identity','.efi'])assert.ok(skip.includes(key),key);
  assert.ok(sidebar.includes('#tab-btn-analises::before{display:none!important;content:none!important}'));
 });
-check('1.0.9 keeps 20 percent stronger effects and essential/reduced-motion gates',()=>{
+check('1.0.10 keeps 20 percent stronger effects and essential/reduced-motion gates',()=>{
  assert.ok(strong.includes('--efx-blur:19.2px'));
  assert.ok(strong.includes('translate3d(0,-4.8px,8.4px) rotateX(.576deg)'));
  assert.ok(strong.includes('data-efx-visual="essential"'));
@@ -84,15 +84,15 @@ check('SVG replacement works for UI text and ignores navigation and sensitive na
  assert.equal(nav.output,undefined);
  assert.equal(student.output,undefined);
 });
-check('Version 1.0.9 and Windows upgrade identity match',()=>{
+check('Version 1.0.10 and Windows upgrade identity match',()=>{
  const installer=read('installer/EvoluFisico.iss');
  const native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs');
  const nav=read(root+'assets/js/26-simple-interface.js');
- assert.match(installer,/#define MyAppVersion "1\.0\.9"/);
+ assert.match(installer,/#define MyAppVersion "1\.0\.10"/);
  assert.match(installer,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
- assert.ok(native.includes('CurrentVersion = "1.0.9"'));
- assert.ok(html.includes('v1.0.9 estável'));
- assert.ok(nav.includes("version:'1.0.9'"));
+ assert.ok(native.includes('CurrentVersion = "1.0.10"'));
+ assert.ok(html.includes('v1.0.10 estável'));
+ assert.ok(nav.includes("version:'1.0.10'"));
  assert.ok(read(root+'assets/js/24-billing.js').includes('EF_NATIVE_BILLING_KEY'));
 });
 console.log('TOTAL',n,'desktop SVG icon integration checks passed');

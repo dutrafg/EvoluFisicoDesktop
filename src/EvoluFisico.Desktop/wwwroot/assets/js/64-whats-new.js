@@ -1,7 +1,7 @@
-/* EvoluFísico Desktop 1.0.9 — novidades do sistema, sem consultar dados dos alunos. */
+/* EvoluFísico Desktop 1.0.10 — novidades do sistema, sem consultar dados dos alunos. */
 (function(){
 'use strict';
-const VERSION='1.0.9';
+const VERSION='1.0.10';
 const SUMMARY='Ajustes do EvoluFísico Web 2.0.28: controles responsivos do PDF comparativo e filtros de nível de questionário; revisão EFIA; EFIA com oito motores, análise profissional e relatório para o aluno; visualização e impressão local adaptadas ao Windows; editores antigos de cards removidos; Nova avaliação dentro da tela Avaliações e nomes padronizados para PDF; proteção contra recarga acidental; mais segurança ao salvar e confirmar cobranças; melhorias em notas, tarefas e metas; validação de avaliações; 15 cores profissionais e ajustes no layout desktop.';
 function make(){
  const card=document.createElement('article');
