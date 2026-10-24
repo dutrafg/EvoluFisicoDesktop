@@ -70,6 +70,23 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Native storage client tests failed' }
           node tests/windows-assessment-billing-regression.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Windows assessment/billing regressions failed' }
+      - name: Run Home, agenda, touch, privacy and palette regressions
+        shell: pwsh
+        run: |
+          node tests/windows-agenda-home-summary.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Agenda/home summary tests failed' }
+          node tests/windows-agenda-recorrencia.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Agenda recurrence tests failed' }
+          node tests/windows-home-layout.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Home layout tests failed' }
+          node tests/windows-card-resize.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Home card resize tests failed' }
+          node tests/windows-touch-scroll-1-0-11.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Touch scroll tests failed' }
+          node tests/windows-privacy-layout.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Privacy layout tests failed' }
+          node tests/sidebar-palette.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Sidebar palette tests failed' }
       - name: Test stale analysis report invalidation
         shell: pwsh
         run: |
