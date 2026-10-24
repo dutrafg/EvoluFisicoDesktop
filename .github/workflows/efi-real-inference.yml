@@ -1,0 +1,28 @@
+name: EFI Real Qwen3.5 2B Inference
+on:
+  push:
+    branches: [feature/efi-qwen35-2b-alpha]
+    paths:
+      - .github/workflows/efi-real-inference.yml
+      - scripts/efi-runtime-smoke.ps1
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qwen-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build isolated EFI Alpha package
+        shell: pwsh
+        run: ./scripts/build-windows.ps1 -EfiAlpha
+      - name: Include verified Windows CPU runtime
+        shell: pwsh
+        run: ./scripts/bundle-efi-runtime.ps1
+      - name: Real local inference with checksum-pinned 2B GGUF
+        shell: pwsh
+        run: ./scripts/efi-runtime-smoke.ps1
