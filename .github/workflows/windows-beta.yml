@@ -5,7 +5,7 @@ on:
       - beta/desktop-1-1-0-integracao-5-etapas
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   beta-windows:
     runs-on: windows-latest
@@ -60,3 +60,19 @@ jobs:
           path: installer-output/EvoluFisicoDesktop-1.1.0-prebeta.1-Setup.exe
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish opt-in Windows PreBeta release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = 'desktop-v1.1.0-prebeta.1'
+          $release = 'EvoluFísico Desktop 1.1.0 Pré-Beta 1 (Windows)'
+          gh release view $tag --repo ${{ github.repository }} *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title $release --notes 'Canal PreBeta de testes: Perfil Unificado, objetivo na segunda etapa, EF220 descritivo, Dock, miniaplicativos e correção da auto-organização do Início. NÃO é versão estável. Faça backup e teste em instalação separada antes de utilizar dados reais. A main 1.0.12 permanece estável.' --prerelease
+            if ($LASTEXITCODE -ne 0) { throw 'Não foi possível publicar a PreBeta.' }
+          }
+          $setup=(Get-ChildItem installer-output -Filter 'EvoluFisicoDesktop-1.1.0-prebeta.1-Setup.exe' -File | Select-Object -First 1).FullName
+          gh release upload $tag $setup --repo ${{ github.repository }} --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Não foi possível anexar o EXE da PreBeta.' }
