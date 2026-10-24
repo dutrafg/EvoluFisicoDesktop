@@ -1,4 +1,4 @@
-# EvoluFísico Desktop 1.0.12 estável
+# EvoluFísico Desktop 1.1.0 Pré-Beta 1
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 
@@ -123,8 +123,8 @@ O build automatizado executa testes de frontend, formulários, navegação, layo
 
 ## Versionamento
 
-- **Produto:** EvoluFísico Desktop 1.0.12 estável
-- **Versão técnica:** `1.0.12`
+- **Produto:** EvoluFísico Desktop 1.1.0 Pré-Beta 1
+- **Versão técnica:** `1.1.0`
 - **Tags Windows:** `desktop-v1.0-<hash>`
 - **Release:** estável (não prerelease)
 - **Origem funcional:** Evolufisico2 1.0, 21/10/2026
@@ -169,3 +169,8 @@ QA de regressão automatizado em `tests/windows-touch-scroll-1-0-11.cjs`. Testes
 - Preferências de ordem/tamanho armazenadas no perfil local do WebView2, separadas dos registros clínicos do SQLite protegido; migra preferências compatíveis do editor antigo, quando disponíveis.
 - Eliminado o rótulo obsoleto `EvoluFísico2 1.0.4 estável` e as etiquetas redundantes de versão da tela de abertura/cabeçalho. A versão técnica atual permanece disponível em Configurações → Manutenção e no instalador.
 - AppId, proteção do banco SQLite, funcionalidades EFIA, backup e geração de PDFs preservados. Testes em telas Windows com toque físico ainda recomendados após CI.
+
+
+## 1.1.0 Pré-Beta 1 — Integração da Web em cinco etapas
+
+Em branch isolada. Perfil Unificado, estágio 2 Objetivos, EF220 descritivo, Dock e layouts alternativos, miniaplicativos, reparo da auto-organização do Início e espelhamento cifrado de Organização. Ver [relatório técnico e pendências](docs/qa/DESKTOP_1_1_0_PREBETA.md). A versão 1.0.12 continua como estável; não usar em dados reais sem cópia de segurança e homologação.

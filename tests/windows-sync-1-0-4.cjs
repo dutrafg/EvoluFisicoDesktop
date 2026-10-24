@@ -6,10 +6,10 @@ const html=read(root+'index.html'),sw=read(root+'sw.js'),ui=read(root+'assets/js
 let passed=0;const check=(title,fn)=>{fn();passed++;console.log('PASS',title)};
 const js={50:'billing-monthly',51:'organization',52:'home-dashboard',54:'professional-profile',55:'visual-effects',56:'global-search',57:'global-search-controls',58:'shortcuts',59:'mobile-navigation'};
 const css={50:'billing-monthly',51:'organization',52:'home-dashboard',54:'professional-profile',55:'visual-effects',56:'global-search',57:'visual-polish',58:'decision-center',59:'mobile-navigation',60:'desktop-effects-120'};
-check('All stable EvoluFisico2 1.0.12 modules are loaded and offline',()=>{
+check('All stable EvoluFisico2 1.1.0 modules are loaded and offline',()=>{
  for(const [n,name] of Object.entries(js)){const asset='./assets/js/'+n+'-'+name+'.js';assert.ok(html.includes(asset),'HTML '+asset);assert.ok(sw.includes(asset),'cache '+asset);assert.doesNotThrow(()=>new Function(read(root+'assets/js/'+n+'-'+name+'.js')),asset)}
  for(const [n,name] of Object.entries(css)){const asset='./assets/css/'+n+'-'+name+'.css';assert.ok(html.includes(asset),'HTML '+asset);assert.ok(sw.includes(asset),'cache '+asset)}
- assert.ok(sw.includes('evolufisico-desktop-1-0-12-pdf-names-new-evaluation'));
+ assert.ok(sw.includes('evolufisico-desktop-1-1-0-pdf-names-new-evaluation'));
 });
 check('Desktop navigation includes Organisation, Home starts without redundant version text',()=>{
  assert.ok(ui.includes("'tab-organizacao':['tab-btn-organizacao','Organização']"));
@@ -66,16 +66,16 @@ check('Desktop Advanced visual intensity is exactly 1.2x over the web baseline',
  assert.ok(effects.includes('data-efx-visual="essential"'));
  assert.ok(effects.includes('@media print'));
 });
-check('All modules still use native storage and stable 1.0.12 Windows version',()=>{
+check('All modules still use native storage and stable 1.1.0 Windows version',()=>{
  const native=read('src/EvoluFisico.Desktop/MainWindow.xaml.cs'),bill=read(root+'assets/js/24-billing.js');
  const installer=read('installer/EvoluFisico.iss');
  assert.ok(bill.includes('EF_NATIVE_BILLING_KEY'));
  assert.ok(bill.includes('window.EFNativeStorage'));
- assert.ok(native.includes('CurrentVersion = "1.0.12"'));
- assert.ok(installer.includes('#define MyAppVersion "1.0.12"'));
+ assert.ok(native.includes('CurrentVersion = "1.1.0"'));
+ assert.ok(installer.includes('#define MyAppVersion "1.1.0"'));
  assert.match(installer,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
 });
-console.log('TOTAL',passed,'EvoluFisico Desktop 1.0.12 checks passed');
+console.log('TOTAL',passed,'EvoluFisico Desktop 1.1.0 checks passed');
 // Execute the EFIA 2.0.1 smoke checks as part of the existing Windows CI gate.
 require('./windows-sync-efia-2-0-1.cjs');
 
@@ -87,3 +87,6 @@ require('./windows-touch-scroll-1-0-11.cjs');
 
 // Início: editor, compactação, restauração e persistência sem afetar dados clínicos.
 require('./windows-home-editor-1-0-12.cjs');
+
+// Regressoes da integracao pre-beta 1.1.0.
+require('./windows-beta-1-1-0.cjs');

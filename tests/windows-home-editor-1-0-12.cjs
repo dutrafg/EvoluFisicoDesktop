@@ -19,7 +19,7 @@ assert.ok(code.includes('EFHomeCardLayout?.mount?.()')===false,'editor should no
 assert.ok(read('assets/js/52-home-dashboard.js').includes('window.EFHomeCardLayout?.mount?.()'));
 assert.ok(!read('assets/js/52-home-dashboard.js').includes('EvoluFísico2 1.0.4 estável'),'obsolete footer removed');
 assert.ok(!html.includes('ef-splash-version-pill')&&!html.includes('brand-version'),'no redundant version pills');
-assert.ok(html.includes('<title>EvoluFísico Desktop</title>'));
+assert.ok(html.includes('<title>EvoluFísico Desktop 1.1.0 Pré-Beta</title>'));
 assert.ok(!html.includes('assets/js/53-custom-cards.js'),'old editor remains disabled');
 assert.ok(css.includes('grid-template-columns:repeat(12,minmax(0,1fr))'),'dense 12-column grid');
 assert.ok(css.includes('max-width:1040px')&&css.includes('max-width:580px'),'tablet and smartphone responsive');
@@ -44,6 +44,7 @@ const saved=JSON.parse(store.get('ef_desktop_inicio_layout_v2'));
 assert.equal(saved.stats.sizes.eventos,'p');
 assert.equal(saved.strategy.sizes.alunos,'p');
 assert.equal(saved.cards.sizes.insights,'m');
-assert.deepEqual(saved.cards.order,['insights','avisos'],'auto-organize retains custom ordering');
+assert.equal(saved.cards.order[0],'avisos','auto-organize restores practical priority order');
+assert.equal(saved.cards.order.length,8,'auto-organize includes all operational cards');
 assert.ok(!code.includes('indexedDB.open'),'layout preferences do not create another database');
 console.log('PASS Desktop Home editor: assets, old badge cleanup, pointer movement, all 3 card groups, responsive layout, legacy settings and auto-organize storage');

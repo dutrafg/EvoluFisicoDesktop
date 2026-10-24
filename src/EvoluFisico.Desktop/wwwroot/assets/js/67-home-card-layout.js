@@ -37,7 +37,7 @@ function save(){
  try{localStorage.setItem(KEY,JSON.stringify(state));return true;}
  catch(error){console.warn('Não foi possível guardar o layout do Início',error);message('Não foi possível salvar o layout neste dispositivo.');return false;}
 }
-function message(t){const live=$('#efhc-status',root);if(live)live.textContent=t;}
+function message(t){if(!root)return;const live=$('#efhc-status',root);if(live)live.textContent=t;}
 function cells(group){return $$('.efhc-cell[data-efhc-group="'+group+'"]',root);}
 function sort(group,items){
  const prior=state[group].order;
@@ -88,6 +88,7 @@ function bindDrag(handle,shell){
  const cleanup=()=>{shell.classList.remove('efhc-dragging');if(hover)hover.classList.remove('efhc-drop-hint');hover=null;start=null;};
  handle.addEventListener('pointerdown',e=>{
   if(!editing||e.button!==0)return;
+  e.preventDefault();
   start={id:e.pointerId,x:e.clientX,y:e.clientY};
   handle.setPointerCapture?.(e.pointerId);
  });
@@ -95,7 +96,8 @@ function bindDrag(handle,shell){
   if(!start||e.pointerId!==start.id)return;
   if(Math.hypot(e.clientX-start.x,e.clientY-start.y)<7&&!shell.classList.contains('efhc-dragging'))return;
   shell.classList.add('efhc-dragging');
-  const hit=document.elementFromPoint?.(e.clientX,e.clientY)?.closest?.('.efhc-cell');
+  const hits=document.elementsFromPoint?.(e.clientX,e.clientY)||[];
+  const hit=hits.map(n=>n.closest?.('.efhc-cell')).find(n=>n&&n!==shell&&n.dataset.efhcGroup===shell.dataset.efhcGroup)||null;
   if(hover&&hover!==hit)hover.classList.remove('efhc-drop-hint');
   hover=hit?.dataset.efhcGroup===shell.dataset.efhcGroup&&hit!==shell?hit:null;
   if(hover)hover.classList.add('efhc-drop-hint');
@@ -135,6 +137,18 @@ function wrap(group){
  });
  if(group==='cards')$$('.efh-stack',grid).forEach(el=>el.remove());
 }
+function autoArrange(){
+  for(const group of Object.keys(GROUPS)){
+   const conf=GROUPS[group];
+   const original=conf.keys.slice();
+   const ids=root?cells(group).map(x=>x.dataset.efhcKey):original;
+   // Reposição estável, guiada por prioridade operacional para evitar espaços em branco.
+   const weights=Object.fromEntries(ids.map(k=>[k,group==='cards'&&k==='financeiro'?8:(group==='cards'?6:4)]));
+   state[group].order=original.filter(k=>ids.includes(k));
+   state[group].sizes=Object.fromEntries(original.map(k=>[k,group==='cards'?(weights[k]===8?'g':'m'):'p']));
+  }
+  save();applyAll();message('Cards compactados e distribuídos pela prioridade do painel.');
+}
 function toolbar(){
  const bar=document.createElement('div');bar.className='efhc-toolbar no-print';bar.id='efhc-toolbar';
  const hint=document.createElement('div');hint.className='efhc-intro';
@@ -145,8 +159,7 @@ function toolbar(){
  const edit=document.createElement('button');edit.id='efhc-edit';edit.type='button';edit.textContent='Editar';
  edit.setAttribute('aria-pressed','false');edit.addEventListener('click',()=>{editing=!editing;applyAll();message(editing?'Arraste pela alça Mover ou use as setas.':'Layout salvo.');});
  const auto=document.createElement('button');auto.id='efhc-auto';auto.type='button';auto.textContent='Auto-organizar';auto.addEventListener('click',()=>{
-  for(const group of ['stats','strategy','cards']){state[group].sizes=defaultSizes(group);}
-  save();applyAll();message('Cards distribuídos automaticamente, sem espaços vazios.');
+  autoArrange();
  });
  const reset=document.createElement('button');reset.id='efhc-reset';reset.type='button';reset.textContent='Restaurar layout';reset.addEventListener('click',()=>{
   if(!window.confirm('Restaurar o layout padrão do Início? Nenhum registro será excluído.'))return;
@@ -162,9 +175,6 @@ function mount(){
  root=next;root.dataset.efhcMounted='1';
  toolbar();wrap('stats');wrap('strategy');wrap('cards');applyAll();return true;
 }
-window.EFHomeCardLayout=Object.freeze({mount,refresh:mount,autoOrganize:()=>{
-  for(const group of ['stats','strategy','cards'])state[group].sizes=defaultSizes(group);
-  save();applyAll();
- },getState:()=>JSON.parse(JSON.stringify(state))});
+window.EFHomeCardLayout=Object.freeze({mount,refresh:mount,autoOrganize:autoArrange,getState:()=>JSON.parse(JSON.stringify(state))});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

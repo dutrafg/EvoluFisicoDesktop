@@ -186,6 +186,7 @@
   showFinance(home);
   rendered=true;
   window.EFHomeCardLayout?.mount?.();
+  window.EFDesktopMiniApps?.mount?.();
  }
  function navigate(id){if(id==='evaluation'){window.switchTab?.('tab-novo-checkin');return;}organization()?.go(id||'agenda');}
  document.addEventListener('click',ev=>{const item=ev.target.closest('[data-efh-event]');if(item){const home=$('#tab-painel');const record=home?.__efh_events?.[Number(item.dataset.efhEvent)];if(record)openEvent(record);return}const btn=ev.target.closest('[data-efh-module],[data-efh-go],[data-efh-action]');if(btn){if(btn.dataset.efhModule){window.switchTab?.(btn.dataset.efhModule);return;}navigate(btn.dataset.efhGo||btn.dataset.efhAction);}});
