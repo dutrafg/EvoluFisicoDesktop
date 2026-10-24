@@ -80,7 +80,7 @@ function scenario(kind,index){
   rows[2].efia_protocol={method:'bia',device:'BIA-synthetic',compositionRelation:'independent',standardized:true};
  }
  if(kind==='protocol-switch')rows[2].efia_protocol.equation='Pollock alternate protocol';
- if(kind==='short-interval')rows[3].data_avaliacao=new Date(Date.parse(rows[2].data_avaliacao+'T12:00:00Z')+2*86400000).toISOString().slice(0,10);
+ if(kind==='short-interval')rows.forEach((r,j)=>r.data_avaliacao=new Date(Date.UTC(2026,0,[1,5,11,19][j],12)).toISOString().slice(0,10));
  return rows;
 }
 function checkFinite(root){
@@ -94,6 +94,7 @@ function checkFinite(root){
  }
 }
 let ran=0,exceptions=0,nonFinite=0,fullEngineRuns=0,blocked=0;
+const outcomes=Object.fromEntries(cases.map(kind=>[kind,{eligible:0,blocked:0}]));
 for(const kind of cases){
  for(let i=0;i<1000;i++){
   const rows=scenario(kind,i);
@@ -105,12 +106,23 @@ for(const kind of cases){
   assert.ok(result&&typeof result.ok==='boolean','host must return a structured result');
   assert.ok(!result.error,'engine exception: '+result.error);
   try{checkFinite(result)}catch(error){nonFinite++;throw error}
+  outcomes[kind][result.eligible?'eligible':'blocked']++;
   if(kind==='valid'){
    const expected=['EF68','EF70','EF77','EF78','EF79','EF80','EF81','EF82'];
    assert.ok(result.eligible,'valid synthetic series rejected: '+result.reason+' '+result.summary);
    for(const engine of expected)assert.ok(result.engines?.[engine],'missing executed engine '+engine);
    fullEngineRuns++;
   }else if(!result.eligible)blocked++;
+  if(['duplicate-date','invalid-date','mixed-students','missing-identity','short-interval'].includes(kind))
+   assert.equal(result.eligible,false,kind+' must be blocked');
+  if(kind==='missing-values')
+   assert.ok(result.warnings?.length||result.engines?.EF78?.issues?.length,'missing values must be disclosed');
+  if(kind==='physiological-extreme')
+   assert.equal(result.engines?.EF79?.results?.gordura?.change,null,'inconsistent body composition must suppress fat trend');
+  if(['method-switch','protocol-switch'].includes(kind)){
+   assert.equal(result.engines?.EF79?.results?.gordura?.change,null,kind+' must suppress fat trend');
+   assert.equal(result.engines?.EF82?.metrics?.gordura?.status,'insuficiente',kind+' must mark longitudinal comparison insufficient');
+  }
   ran++;
  }
 }
@@ -119,4 +131,4 @@ assert.equal(exceptions,0);
 assert.equal(nonFinite,0);
 assert.equal(fullEngineRuns,1000);
 assert.equal(blocked>0,true,'invalid and non-comparable scenarios must exercise safety blocks');
-console.log('PASS 10,000 integrated synthetic EFIA scenarios; 1,000 complete eight-engine executions; exceptions=0; non-finite=0; blocked cases='+blocked+'.');
+console.log('PASS 10,000 integrated synthetic EFIA scenarios; 1,000 complete eight-engine executions; exceptions=0; non-finite=0; blocked cases='+blocked+'; per-case='+JSON.stringify(outcomes));
