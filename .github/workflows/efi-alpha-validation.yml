@@ -1,0 +1,41 @@
+name: EFI AI Alpha Build Validation
+on:
+  push:
+    branches:
+      - feature/efi-qwen35-2b-alpha
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate EFI javascript syntax
+        shell: pwsh
+        run: |
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/efia/efi-ai-panel.js
+          if ($LASTEXITCODE -ne 0) { throw 'Invalid EFI JavaScript' }
+      - name: Build complete Windows Desktop with EFI modules
+        shell: pwsh
+        run: |
+          dotnet restore src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj
+          if ($LASTEXITCODE -ne 0) { throw 'Restore failed' }
+          dotnet build src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj -c Release -r win-x64 --no-restore
+          if ($LASTEXITCODE -ne 0) { throw 'Desktop compile failed' }
+      - name: Verify EFI integration and unchanged version
+        shell: pwsh
+        run: |
+          node tests/efi-ai-alpha.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'EFI alpha integration failed' }
+      - name: Avoid publishing experimental build
+        shell: pwsh
+        run: |
+          Write-Host 'Validation only: no release, no main push, no production deployment.'
