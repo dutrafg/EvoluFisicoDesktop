@@ -8,19 +8,23 @@
 
   if (native) native.addEventListener('message', event => {
     const m = event.data;
-    if (!m || m.type !== 'efi-ai-result') return;
+    if (!m || (m.type !== 'efi-ai-result' && m.type !== 'efi-ai-progress')) return;
     const request = pending.get(m.requestId);
     if (!request) return;
+    if (m.type === 'efi-ai-progress') {
+      request.onProgress?.(m);
+      return;
+    }
     pending.delete(m.requestId);
     if (m.ok) request.resolve(m.data);
     else request.reject(new Error(m.error || 'Operação EFI não concluída.'));
   });
 
-  function request(action, extra = {}) {
+  function request(action, extra = {}, onProgress = null) {
     if (!native) return Promise.reject(new Error('Recurso exclusivo do EvoluFísico Desktop.'));
     const requestId = 'efi_' + (++seq);
     return new Promise((resolve, reject) => {
-      pending.set(requestId, {resolve, reject});
+      pending.set(requestId, {resolve, reject, onProgress});
       try { native.postMessage({type:'efi-ai', requestId, action, ...extra}); }
       catch (error) { pending.delete(requestId); reject(error); }
     });
@@ -75,6 +79,7 @@
 <button type="button" data-efi-explain hidden>Gerar interpretação</button>
 </div>
 <p class="efi-ai-state" role="status" aria-live="polite"></p>
+<progress class="efi-ai-progress" value="0" max="100" hidden aria-label="Progresso do download do modelo"></progress>
 <pre class="efi-ai-answer" hidden></pre>`;
     summary.append(section);
     const el = selector => section.querySelector(selector);
@@ -86,6 +91,7 @@
     const explain = el('[data-efi-explain]');
     const output = el('.efi-ai-answer');
     const state = el('.efi-ai-state');
+    const progressBar = el('.efi-ai-progress');
     const controls = [choice,status,install,select,remove,explain];
     let catalog = null;
     let busy = false;
@@ -135,9 +141,19 @@
       if (!picked || !window.confirm(`Baixar ${picked.label} (~${picked.sizeGB} GB) para este computador?`)) return;
       setBusy(true);
       message('Baixando o pacote e verificando sua integridade. Não feche o aplicativo.');
-      try { await request('install', {modelId:picked.id, consent:true}); message('Modelo instalado.'); }
-      catch (error) { message(error.message); }
-      finally { setBusy(false); await inspect(); }
+      progressBar.hidden = false;
+      progressBar.value = 0;
+      try {
+        await request('install', {modelId:picked.id, consent:true}, info => {
+          const received = Number(info.downloadedBytes) || 0;
+          const total = Number(info.totalBytes) || 0;
+          const percent = total > 0 ? Math.min(100, Math.floor(received / total * 100)) : 0;
+          progressBar.value = percent;
+          message(`Baixando modelo: ${percent}% (${(received / 1e9).toFixed(2)} GB).`);
+        });
+        message('Modelo instalado e verificado.');
+      } catch (error) { message(error.message); }
+      finally { progressBar.hidden = true; setBusy(false); await inspect(); }
     });
     select.addEventListener('click', async () => {
       setBusy(true);
