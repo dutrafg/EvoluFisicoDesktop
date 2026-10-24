@@ -16,6 +16,8 @@ namespace EvoluFisico.Desktop;
 /// </summary>
 internal static class EfiAiModelManager
 {
+    internal readonly record struct DownloadProgress(long BytesReceived, long TotalBytes);
+
     internal sealed record ModelSpec(
         string Id, string Label, string Filename, string Sha256, long SizeBytes,
         string DownloadUrl, int RecommendedRamGb);
@@ -114,7 +116,7 @@ internal static class EfiAiModelManager
     }
 
     internal static async Task<bool> InstallAsync(string id,
-        CancellationToken cancellationToken = default)
+        IProgress<DownloadProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         var model = Get(id);
         await InstallationLock.WaitAsync(cancellationToken);
@@ -130,9 +132,12 @@ internal static class EfiAiModelManager
             try
             {
                 if (File.Exists(partial)) File.Delete(partial);
+                using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                deadline.CancelAfter(TimeSpan.FromMinutes(30));
+                var token = deadline.Token;
                 using var request = new HttpRequestMessage(HttpMethod.Get, model.DownloadUrl);
                 using var response = await Client.SendAsync(request,
-                    HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+                    HttpCompletionOption.ResponseHeadersRead, token);
                 response.EnsureSuccessStatusCode();
                 if (response.Content.Headers.ContentLength is long expected
                     && (expected < model.SizeBytes * 9 / 10 ||
@@ -141,26 +146,35 @@ internal static class EfiAiModelManager
                 await using (var output = new FileStream(partial, FileMode.CreateNew,
                     FileAccess.Write, FileShare.None, 1024 * 1024,
                     FileOptions.Asynchronous | FileOptions.SequentialScan))
-                await using (var input = await response.Content.ReadAsStreamAsync(cancellationToken))
+                await using (var input = await response.Content.ReadAsStreamAsync(token))
                 {
                     var buffer = new byte[1024 * 1024];
                     long total = 0;
                     int bytes;
-                    while ((bytes = await input.ReadAsync(buffer, cancellationToken)) != 0)
+                    long lastReported = 0;
+                    long expectedLength = response.Content.Headers.ContentLength ?? model.SizeBytes;
+                    progress?.Report(new DownloadProgress(0, expectedLength));
+                    while ((bytes = await input.ReadAsync(buffer, token)) != 0)
                     {
                         total += bytes;
                         if (total > model.SizeBytes * 11 / 10)
                             throw new InvalidDataException("O arquivo excede o tamanho esperado.");
-                        await output.WriteAsync(buffer.AsMemory(0, bytes), cancellationToken);
+                        await output.WriteAsync(buffer.AsMemory(0, bytes), token);
+                        if (total - lastReported >= 16_777_216)
+                        {
+                            lastReported = total;
+                            progress?.Report(new DownloadProgress(total, expectedLength));
+                        }
                     }
+                    progress?.Report(new DownloadProgress(total, expectedLength));
                     if (total < model.SizeBytes * 9 / 10)
                         throw new InvalidDataException("Download incompleto.");
-                    await output.FlushAsync(cancellationToken);
+                    await output.FlushAsync(token);
                 }
                 await using (var downloaded = new FileStream(partial, FileMode.Open,
                     FileAccess.Read, FileShare.Read, 1024 * 1024, FileOptions.Asynchronous))
                 {
-                    var hash = await SHA256.HashDataAsync(downloaded, cancellationToken);
+                    var hash = await SHA256.HashDataAsync(downloaded, token);
                     if (!string.Equals(Convert.ToHexString(hash), model.Sha256,
                         StringComparison.OrdinalIgnoreCase))
                         throw new InvalidDataException("O download falhou na verificação SHA-256.");
