@@ -27,7 +27,8 @@ internal static class EfiAiRuntime
     {
         if (string.IsNullOrWhiteSpace(validatedSummary) || validatedSummary.Length > 6000)
             throw new ArgumentException("Resumo EFIA ausente ou excede os limites.");
-        if (!await EfiAiModelManager.IsValidAsync(cancellationToken))
+        var selected = EfiAiModelManager.Get(EfiAiModelManager.SelectedId);
+        if (!await EfiAiModelManager.IsValidAsync(selected.Id, cancellationToken))
             throw new InvalidOperationException("Instale o pacote Qwen antes de solicitar a interpretação.");
         if (!File.Exists(EfiAiModelManager.RuntimePath))
             throw new InvalidOperationException("Motor de inferência ainda não foi incluído neste build Alpha.");
@@ -51,7 +52,7 @@ internal static class EfiAiRuntime
             };
             foreach (var arg in new[]
             {
-                "-m", EfiAiModelManager.ModelPath, "--host", "127.0.0.1",
+                "-m", EfiAiModelManager.ModelPath(selected), "--host", "127.0.0.1",
                 "--port", port.ToString(), "-c", "4096", "-t", "4", "-ngl", "0",
                 "--api-key", secret
             }) start.ArgumentList.Add(arg);
@@ -95,7 +96,8 @@ internal static class EfiAiRuntime
                     },
                     stream = false,
                     max_tokens = 700,
-                    temperature = 0.2
+                    temperature = 0.2,
+                    chat_template_kwargs = new { enable_thinking = false }
                 });
                 using var response = await http.PostAsync(new Uri(address, "v1/chat/completions"),
                     new StringContent(body, Encoding.UTF8, "application/json"), cancellationToken);
