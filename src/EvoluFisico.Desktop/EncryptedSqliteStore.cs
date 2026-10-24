@@ -14,9 +14,7 @@ internal sealed class EncryptedSqliteStore
 
     internal EncryptedSqliteStore(string? path = null)
     {
-        _path = path ?? Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "EvoluFisicoDesktop", "Data", "records.sqlite");
+        _path = path ?? EfiAppPaths.Database;
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(_path))!);
     }
 
