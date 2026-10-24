@@ -1,0 +1,22 @@
+.efi-intelligence-alpha {
+  border: 1px solid var(--border-color, #9aabba);
+  border-radius: 10px;
+  margin-top: 18px;
+}
+.efi-intelligence-alpha h3 small { font-size: .72em; font-weight: 500; opacity: .7; }
+.efi-ai-help { font-size: .9rem; line-height: 1.5; }
+.efi-ai-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.efi-ai-actions button {
+  border: 1px solid currentColor; color: inherit;
+  border-radius: 8px; background: transparent;
+  min-height: 38px; padding: 6px 12px; cursor: pointer;
+}
+.efi-ai-actions button:disabled { opacity: .55; cursor: progress; }
+.efi-ai-state { font-size: .9rem; margin: 10px 0; }
+.efi-ai-answer {
+  white-space: pre-wrap; overflow-wrap: anywhere; max-height: 450px;
+  overflow: auto; font: inherit; line-height: 1.6;
+  padding: 12px; border: 1px solid currentColor; border-radius: 8px;
+  background: transparent; color: inherit;
+}
+.efi-intelligence-alpha [hidden] { display: none !important; }
