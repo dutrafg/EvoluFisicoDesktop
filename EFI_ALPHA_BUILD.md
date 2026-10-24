@@ -1,26 +1,24 @@
 # Build Windows — EvoluFísico EFI Alpha
 
-## Artefato entregue
+## Artefato
 
 - Nome: `EvoluFisico_EFI_Alpha_Setup.exe`
-- Build original: workflow **EFI AI Alpha Build Validation**, run [40122126889](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40122126889)
-- Commit compilado: `39eac5834abd4e9208df5a4bbb43c00dc403684b`
+- Workflow: [EFI AI Alpha Build Validation — run 40124552552](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40124552552)
+- Commit de código compilado: `6de5dd77587a04a3bda0d572c492effb80316a79`
 - Branch: `feature/efi-qwen35-2b-alpha`
-- Ambiente: GitHub Actions, `windows-latest`, .NET SDK 8.x, Inno Setup 6.
+- Ambiente: GitHub Actions `windows-latest`, .NET SDK 8.0.x, Inno Setup 6.
 - Alvo: Windows x64.
-- Tamanho do instalador: 62.877.615 bytes (aprox. 59,96 MiB).
-- SHA-256 do EXE: `ad2a48ae67f7df985adb5c39d0122d22f71e23195a00a63f4d744b70f781fe45`.
-- Artefato original do Actions: ZIP com o EXE; SHA-256 do ZIP informado pelo GitHub: `ce7b8fa6b634dff706bde7b81c97af8157e23b320c0f77a8af66de32e0366e72`.
-- Runtime: llama.cpp CPU x64 incorporado no instalador. Pesos Qwen não estão no Setup e são baixados pelo gerenciador.
+- Tamanho do EXE: 62.881.116 bytes.
+- SHA-256 do EXE: `0bee3caa751860e9c8402a5376cabeaf702b342e8a254704827df74501e2fd6b`.
+- Artefato Actions: [EvoluFisico_EFI_Alpha_Setup](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40124552552/artifacts/12572383875), ZIP SHA-256 `e1bc59d191d872ce7a3493d54b1189d25136bd79f893109d180f408456acb148`.
+- Runtime llama.cpp CPU x64 incluído; pesos Qwen são baixados pelo gerenciador e não estão no instalador.
 
-## Validação de build e instalação
+## Resultado de validação
 
-O job Windows passou na compilação .NET, empacotamento do runtime e criação do Inno Setup. O smoke automatizado instalou silenciosamente numa pasta temporária, verificou executável e recursos Alpha (frontend, manifesto, runtime, painel EFI e fixtures) e executou a desinstalação silenciosa.
+O workflow passou nos testes de JavaScript, perfil, avaliação e fixtures; compilou o Desktop Windows, verificou a integração EFI e empacotou o runtime. O Inno Setup criou o EXE com o nome esperado. O smoke instalou em diretório temporário, verificou o executável, frontend, manifesto Alpha, runtime, painel EFI e fixtures e executou a desinstalação.
 
-Isso comprova build e smoke de instalação/desinstalação no runner. Não comprova instalação in-place sobre Alpha anterior, abertura manual da interface, inicialização do banco com perfil real, atualização preservando dados, ou execução do Qwen pela janela instalada. Esses pontos permanecem no relatório de QA.
+A validação ocorreu em runner Windows. Não comprova abertura manual do aplicativo, atualização sobre instalação Alpha anterior com dados, nem preservação de um banco real após desinstalação.
 
-A execução de inferência real Qwen é evidenciada separadamente pelo workflow [40119653945](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40119653945), com download do GGUF e checagem de integridade antes da inferência CPU.
+O run anterior `40124398686` compilou o instalador mas falhou porque o smoke ainda procurava o nome antigo. A busca foi corrigida e o run `40124552552` passou integralmente.
 
-## Obter
-
-O EXE foi extraído do artefato Actions da branch experimental; o arquivo entregue nesta conversa é cópia byte a byte do setup listado acima. Consulte a aba Actions da branch para o ZIP original e sua retenção. Não há publicação ou merge na `main`.
+Não houve merge para `main`, release estável ou publicação de produção.

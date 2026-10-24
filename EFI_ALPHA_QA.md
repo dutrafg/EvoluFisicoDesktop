@@ -1,44 +1,39 @@
 # QA — EvoluFísico Desktop EFI Alpha
 
-Data: 24/10/2026 (America/Sao_Paulo). Este documento separa evidência automatizada de homologação prática.
+Data: 24/10/2026. Os resultados abaixo distinguem verificações automatizadas de homologação prática.
 
-## Referências de execução
+## Execuções Windows desta rodada
 
 | Verificação | Resultado observado |
 |---|---|
-| Workflow **EFI AI Alpha Build Validation**, run [40122126889](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40122126889), commit `39eac5834abd4e9208df5a4bbb43c00dc403684b` | Concluído com sucesso em runner Windows. |
-| Sintaxe EFI JS e fixtures | Passaram no workflow. |
-| Quatro históricos fictícios e elegibilidade EFIA | Passaram em `tests/efi-demo-fixtures.cjs`. São 16 avaliações sintéticas, não 10.000 casos. |
-| Build Windows x64 com `-EfiAlpha` | Passou no runner Windows com .NET 8. |
-| Integração EFI | `tests/efi-ai-alpha.cjs` passou. |
-| Empacotamento do runtime CPU | Passou; runtime llama.cpp com versão/digest pinados foi incluído. |
-| Compilação Inno Setup | Passou; artefato Setup criado. |
-| Smoke de instalação e desinstalação | Passou em instalação silenciosa. Conferiu EXE, frontend, manifesto Alpha, runtime, painel EFI e fixtures; executou o desinstalador. |
-| Inferência real Qwen3.5-2B | Workflow **EFI Real Qwen3.5 2B Inference**, run [40119653945](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40119653945), concluído com sucesso em Windows CPU com GGUF Q4_K_M e checksum validado. Foi uma execução automatizada de prompt sintético, não homologação clínica ou teste do fluxo completo dentro da janela instalada. |
+| Run [40124088830](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40124088830), commit `e78d7bc0eaa0248a84cddf3416b96f806523523a` | Sucesso: teste de Perfil/tema, fixtures, build Windows, runtime EFI, instalador, smoke de instalação/desinstalação e upload do artefato. |
+| Run [40124398686](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40124398686), commit `0cbd82fbb6ecf186861161f544a6abdcbd4a482a` | Falhou somente no smoke: a busca ainda usava o nome antigo do instalador e não encontrou o EXE. O setup havia compilado; nenhum artefato foi publicado. |
+| Run [40124552552](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40124552552), commit `6de5dd77587a04a3bda0d572c492effb80316a79` | Sucesso completo. Busca por nome corrigida; os testes novos de etapa 2 e rascunhos passaram; instalador instalado/desinstalado no runner e artefato enviado. |
 
-## Testes solicitados que ainda não foram executados
+## Testes executados
 
-- Campanha integrada de 10.000 cenários cobrindo os oito motores (EF68/EF70/EF77 + EF78–EF82) e invalidação de parecer.
-- Testes de migração com bases antigas e novas, interrupção, rollback e preservação de registros reais.
-- Teste de atualização sobre Alpha anterior contendo dados e desinstalação com verificação de preservação do banco.
-- Abertura manual da interface instalada, gravação/leitura SQLite por cada módulo, Perfil Unificado, navegação completa e EFI a partir do aplicativo.
-- Homologação de impressão/PDF, backup/restauração e modo claro/escuro em Windows/WebView2.
-- Matriz de resoluções e escala Windows 100%, 125%, 150% e 200%; teclado, toque, acessibilidade e múltiplas paletas.
-- Cancelamento real de inferência, runtime/modelo ausente ou corrompido, falta de RAM, modo offline após download e download interrompido/retomado.
+- Sintaxe EFI JavaScript: passou nos runs acima.
+- Perfil Unificado e regressão de tema: passou em `tests/unified-students-profile.cjs`; cobre separação de homônimos, agrupamento por ID persistente, cronologia, métricas e leitura conservadora de registros sem ID.
+- Avaliação em seis etapas: passou em `tests/evaluation-objectives.cjs`; confirma Objetivos na etapa 2, persistência de seleções múltiplas, edição e recuperação de rascunhos.
+- Quatro alunos demonstrativos e 16 avaliações: fixtures/elegibilidade passaram nos runs Windows.
+- Build completo Windows x64 com .NET 8, integração EFI e bundle CPU: passou.
+- Inno Setup e smoke de instalação/desinstalação isolada Alpha: passaram no run `40124552552`.
+- Inferência real Qwen3.5-2B Q4_K_M: o run independente [40119653945](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40119653945) concluiu inferência sintética em CPU e verificou o checksum do modelo. Isso não é homologação clínica nem teste do fluxo dentro do aplicativo instalado.
 
-## Campanha sintética local adicional
+## Campanha sintética anterior
 
-Executada nesta rodada diretamente contra `EFIALocal@0.5.0-rc.2` da branch (motores EF78–EF82), com 10.000 entradas determinísticas em 11 classes:
+Em execução local anterior desta sessão foram exercitadas 10.000 entradas determinísticas contra EF78–EF82: 0 exceções e 0 valores não finitos. A campanha não está incorporada ao repositório e não cobre ponta a ponta os oito motores (EF68/EF70/EF77/EF78–EF82), migração SQLite ou invalidação persistida de pareceres.
 
-- 910 séries válidas e 909 séries com três datas ao longo de 21 dias: elegíveis.
-- 909 casos em cada classe de duas avaliações, datas duplicadas, mistura de alunos, datas inválidas, valores ausentes, valores extremos, métodos diferentes, protocolos diferentes e intervalo total inferior a 21 dias.
-- **0 exceções** e **0 valores não finitos** na árvore de resultados.
-- As asserções de séries válidas, bloqueios temporais e identificação de mistura entre alunos passaram.
+## Testes ainda não executados
 
-Esse harness foi executado em memória nesta sessão e ainda não está incorporado à suíte do repositório. A campanha exercita EF78–EF82; não cobre os oito motores integrados de ponta a ponta, nem testa a invalidação persistida de pareceres.
-
-A auditoria Web de 24/10 relata 84 checagens de tema e testes de Perimetria, Impressão e Cobrança na web. Esses resultados não foram contados como QA do Desktop.
+- Migração transacional de bancos legados, backup prévio, interrupção, rollback e preservação de dados reais.
+- Atualização in-place sobre Alpha anterior com banco contendo dados e validação de preservação na desinstalação.
+- Inicialização manual do aplicativo instalado e fluxo real de gravação/leitura por módulo.
+- Homologação visual do Perfil em Windows/WebView2, avaliação em diferentes resoluções/escalas, navegação por teclado/toque e contraste completo.
+- Validação visual e impressão dos PDFs A4, backup/restauração e separação de relatório privado e compartilhável.
+- Estados EFI/Qwen: runtime ausente, modelo ausente/corrompido, retomada, cancelamento, timeout, falta de RAM e uso offline dentro do aplicativo.
+- Campanha de 10.000 cenários integrada aos oito motores científicos.
 
 ## Resultado
 
-A Alpha tem build Windows, instalador e smoke de instalar/desinstalar aprovados em CI. A inferência real do Qwen também foi exercitada numa execução independente de CI. Não há evidência suficiente para declarar aprovados o funcionamento integral do aplicativo instalado, a atualização in-place, as migrações de dados, a interface de Perfil Unificado, ou os 10.000 cenários pedidos. Portanto, a versão permanece **Alpha para testes**, sem homologação estável.
+A branch possui build Windows e smoke automatizado de instalação/desinstalação aprovados no run `40124552552`. A implementação do Perfil e o novo fluxo de objetivos têm testes automatizados, mas a homologação manual do aplicativo instalado, migração de dados, atualização in-place e a cobertura científica integrada continuam pendentes. A versão não é candidata a estável.
