@@ -71,7 +71,7 @@ test('Exercise dynamic PDF cancellation before invoking Windows spooler',()=>{
  assert.ok(print);print.handlers.click();assert.equal(prints,1);
 });
 test('Cache refreshed, native data and stable installer maintained',()=>{
- assert.match(sw,/const CACHE_NAME = 'evolufisico-desktop-1-0-[^']+'/);
+ assert.match(sw,/const CACHE_NAME = 'evolufisico-desktop-1-1-[^']+'/);
  assert.match(read('installer/EvoluFisico.iss'),/#define MyAppVersion "1\.1\.0"/);
  assert.ok(js.includes('EFNativeStorage'));
 });
