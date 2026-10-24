@@ -69,8 +69,8 @@
     section.className = 'efia-card efi-intelligence-alpha';
     section.innerHTML = `<h3>EFI Intelligence <small>Alpha</small></h3>
 <p class="efi-ai-help">Interpretação local baseada nos motores EFIA. A revisão profissional é obrigatória.</p>
-<label for="efi-ai-model-choice">Modelo de inteligência</label>
-<select id="efi-ai-model-choice" aria-label="Escolher modelo de IA"></select>
+<label>Modelo de inteligência
+<select data-efi-choice aria-label="Escolher modelo de IA"></select></label>
 <div class="efi-ai-actions">
 <button type="button" data-efi-status>Verificar</button>
 <button type="button" data-efi-install hidden>Baixar modelo</button>
@@ -83,7 +83,7 @@
 <pre class="efi-ai-answer" hidden></pre>`;
     summary.append(section);
     const el = selector => section.querySelector(selector);
-    const choice = el('#efi-ai-model-choice');
+    const choice = el('[data-efi-choice]');
     const status = el('[data-efi-status]');
     const install = el('[data-efi-install]');
     const select = el('[data-efi-select]');
