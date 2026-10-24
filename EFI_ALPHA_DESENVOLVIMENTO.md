@@ -8,7 +8,7 @@ Data da revisão: 24/10/2026.
 |---|---|---|
 | EvoluFísico2 | `main` | `b45a1f74ac5fd6053c598a9843ac62156e4ebf2a` |
 | EvoluFísicoDesktop estável | `main` | `242649d248d766b8d3dfeeb498ce3472cedf0699` |
-| EvoluFísicoDesktop Alpha | `feature/efi-qwen35-2b-alpha` | `af0584fff5819c3cd09c42e77efa66d600cedf7f` |
+| EvoluFísicoDesktop Alpha | `feature/efi-qwen35-2b-alpha` | `cbda289cbd590c9a256cea086a42cc8a79c9c679` |
 
 A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b45a1f7`. As correções recentes de tema portadas nesta rodada correspondem aos commits `98a8d38` e `abadbef`.
 
@@ -17,7 +17,7 @@ A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b
 - Incluída uma tela inicial de Alunos/Perfil Unificado que agrupa avaliações pelo `cliente_id` existente, com busca, ordenação, histórico cronológico, métricas recentes e atalhos para avaliação, análise e áreas relacionadas.
 - Leitura de identidade não altera registros legados. Nome e contato compartilhado não agrupam nem recebem ID durante a leitura.
 - Adicionada migração assistida por avaliação legada: profissional escolhe criar perfil independente ou vincular explicitamente a um perfil existente. O app exige salvar um backup SQLite antes da gravação; cancelamento do backup cancela a migração. É possível migrar outros registros antigos um por vez.
-- Adicionada campanha reproduzível com 10.000 cenários sintéticos via host integrado EFIA; 1.000 executam EF68/70/77/78–82 e 5.000 cenários negativos foram bloqueados, sem exceções nem valores não finitos. A suíte roda na workflow Windows.
+- Adicionada campanha reproduzível com 10.000 cenários sintéticos via host integrado EFIA; 1.000 executam EF68/70/77/78–82. As assertions confirmam 5.000 bloqueios por identidade/datas/série curta, avisos para dados faltantes e supressão de tendências corporais inconsistentes ou não comparáveis, sem exceções nem valores não finitos. A suíte roda na workflow Windows.
 - O atalho “Nova avaliação” usa o fluxo cadastral existente e não copia automaticamente medidas, fotos, pareceres ou conclusões anteriores.
 - O fluxo de Avaliações agora apresenta seis etapas. “Objetivos” ocupa a etapa 2; objetivos múltiplos e observações são persistidos com a avaliação, carregados ao editar e preservados no autosave e na restauração de rascunhos.
 - Portadas regras recentes de contraste claro/escuro e confirmação de salvamento da avaliação.
@@ -32,9 +32,10 @@ A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b
 | `6de5dd77587a04a3bda0d572c492effb80316a79` | Rascunhos com objetivos múltiplos e correção do smoke test |
 | `a6c0d9afc4e9a06bd307a923f0c57d4110fc2422` | Vínculo legado explícito, backup obrigatório e leitura de identidade sem mutação |
 | `af0584fff5819c3cd09c42e77efa66d600cedf7f` | Campanha integrada EFIA de 10.000 cenários e workflow Windows |
+| `cbda289cbd590c9a256cea086a42cc8a79c9c679` | Asserções por cenário, intervalo de 18 dias e supressão de tendências incomparáveis |
 
 ## Estado e pendências
 
-O Perfil Unificado permite consolidar registros antigos com confirmação humana e backup antes de cada gravação. A migração é por avaliação e ainda não faz uma reconciliação em lote. A campanha integrada de 10.000 cenários foi aprovada no run Windows `40125997101`. Objetivos foram adicionados sem alterar fórmulas científicas. As demais validações e limitações permanecem descritas em `EFI_ALPHA_PARIDADE.md` e `EFI_ALPHA_QA.md`.
+O Perfil Unificado permite consolidar registros antigos com confirmação humana e backup antes de cada gravação. A migração é por avaliação e ainda não faz uma reconciliação em lote. A campanha integrada reforçada de 10.000 cenários foi aprovada no run Windows `40126487526`. Objetivos foram adicionados sem alterar fórmulas científicas. As demais validações e limitações permanecem descritas em `EFI_ALPHA_PARIDADE.md` e `EFI_ALPHA_QA.md`.
 
 A versão permanece Alpha para testes. O build compilou no Windows Actions; o smoke test automatizado instalou e desinstalou o pacote. Não houve homologação manual da interface instalada, nem atualização in-place com dados reais.
