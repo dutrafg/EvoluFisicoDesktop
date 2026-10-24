@@ -20,7 +20,7 @@ O run passou as verificações de JavaScript, perfil, avaliação em seis etapas
 
 A compilação Windows x64 e o empacotamento do runtime passaram. O smoke instalou o EXE em diretório temporário, conferiu arquivos e manifesto Alpha, iniciou `EvoluFisico.Desktop.exe`, confirmou o processo ativo por 8 segundos, fechou o processo e concluiu desinstalação. Isso valida o build e ciclo automatizado básico no runner; não comprova interface visual interativa nem atualização sobre Alpha anterior com dados reais.
 
-O log da campanha registrou mensagem isolada `EF77: ponto de montagem não encontrado`; o passo terminou com sucesso e todas as assertions passaram. A mensagem permanece para investigação.
+O log da campanha registrou mensagem isolada `EF77: ponto de montagem não encontrado`; o passo terminou com sucesso e todas as assertions passaram. A mensagem é esperada no harness headless: o `EF77.mount()` procura `.nav-tabs` e `#tab-comparison`, ausentes no Node VM. A montagem visual interativa no WebView2 continua sem homologação.
 
 Inferência real sintética Qwen3.5-2B Q4_K_M em CPU e checksum passaram no workflow separado [40119653945](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40119653945). Isso não é homologação clínica ou validação do fluxo EFI/Qwen dentro do aplicativo instalado.
 

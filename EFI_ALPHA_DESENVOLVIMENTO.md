@@ -26,7 +26,7 @@ A consulta nesta rodada confirmou EvoluFísico2 em `b45a1f74ac5fd6053c598a9843ac
 - Integrado `tests/StorageSmoke` à CI Windows e corrigida a referência a `EfiAppPaths.cs` no projeto de teste; transações, rollback, criptografia, backup/restauração, tampering e schema futuro passaram.
 - Ampliada a CI a regressões de formulário, armazenamento, avaliação/cobrança, resumo e recorrência da agenda, organização do Início, redimensionamento de cards, rolagem por toque, privacidade e paleta.
 - Renomeada a saída do Inno Setup para `EvoluFisico_EFI_Alpha_Setup.exe`; o smoke test procura o nome exato do pacote.
-- Portada a campanha oficial `tests/efia-campaign.cjs` do EvoluFísico2 para `tests/efia-campaign-30000.cjs`, mantendo a campanha Desktop de 10 mil e adicionando execução na CI Windows.
+- Portada a campanha oficial `tests/efia-campaign.cjs` do EvoluFísico2 para `tests/efia-campaign-30000.cjs`, mantendo a campanha Desktop de 10 mil e adicionando execução na CI Windows. O aviso `EF77: ponto de montagem não encontrado` vem da montagem visual sem DOM no harness Node; a interface WebView2 ainda requer homologação.
 
 ## Commits criados nesta rodada
 
