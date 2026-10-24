@@ -56,6 +56,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Invalid integrated EFIA test JavaScript' }
           node tests/efia-integration-10000.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Integrated EFIA synthetic scenarios failed' }
+      - name: Test encrypted SQLite transactions, migration and recovery
+        shell: pwsh
+        run: |
+          dotnet run --project tests/StorageSmoke/StorageSmoke.csproj --configuration Release
+          if ($LASTEXITCODE -ne 0) { throw 'Encrypted SQLite smoke tests failed' }
       - name: Test stale analysis report invalidation
         shell: pwsh
         run: |
