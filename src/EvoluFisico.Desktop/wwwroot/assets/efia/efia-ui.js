@@ -50,7 +50,7 @@ function render(container,{profileKey,selectedIds,name}){
  container.querySelector('#efia-private').oninput=e=>current.draft.private=e.target.value;
  container.querySelector('#efia-public').oninput=e=>{current.draft.public=e.target.value;current.draft.reviewed=false;container.querySelector('#efia-reviewed').checked=false;container.querySelector('[data-efia-print=student]').disabled=true};
  container.querySelector('#efia-reviewed').onchange=e=>{current.draft.reviewed=e.target.checked;container.querySelector('[data-efia-print=student]').disabled=!e.target.checked};
- container.querySelectorAll('[data-efia-print]').forEach(b=>b.onclick=()=>print(b.dataset.efiaPrint));return result;
+ container.querySelectorAll('[data-efia-print]').forEach(b=>b.onclick=()=>print(b.dataset.efiaPrint));window.EFIAIntelligence?.mount(container,result);return result;
 }
 function documentFor(type){
  if(!current||!['student','technical'].includes(type))throw Error('Seleção indisponível');
