@@ -1,0 +1,62 @@
+name: EvoluFisico Desktop 1.1 PreBeta Windows
+on:
+  push:
+    branches:
+      - beta/desktop-1-1-0-integracao-5-etapas
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  beta-windows:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JavaScript and bundled resources
+        shell: pwsh
+        run: |
+          python scripts/verify_frontend.py
+          node tests/windows-beta-1-1-0.cjs
+          node tests/windows-sync-1-0-4.cjs
+      - name: Compile Windows app
+        shell: pwsh
+        run: ./scripts/build-windows.ps1
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+      - name: Build and inspect PreBeta installer
+        shell: pwsh
+        run: |
+          $iscc='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          if (!(Test-Path $iscc)) { throw "Inno Setup not installed" }
+          & $iscc installer/EvoluFisico.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup error" }
+          $file=Get-ChildItem installer-output -Filter 'EvoluFisicoDesktop-1.1.0-prebeta.1-Setup.exe' -File | Select-Object -First 1
+          if (-not $file -or $file.Length -lt 100KB) { throw "Installer absent or invalid" }
+          Get-FileHash $file.FullName -Algorithm SHA256 | Format-List
+      - name: Smoke-test clean installation and removal
+        shell: pwsh
+        run: |
+          $setup=(Get-ChildItem installer-output -Filter 'EvoluFisicoDesktop-1.1.0-prebeta.1-Setup.exe' -File | Select-Object -First 1).FullName
+          $target=Join-Path $env:RUNNER_TEMP 'EvoluFisicoPreBeta'
+          $p=Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/DIR=$target") -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Install failed" }
+          foreach($path in @('EvoluFisico.Desktop.exe','wwwroot/index.html','wwwroot/assets/js/69-student-hub.js','wwwroot/assets/js/67-home-card-layout.js')) {
+            if (!(Test-Path (Join-Path $target $path))) { throw "Missing installed file $path" }
+          }
+          $uninstall=Join-Path $target 'unins000.exe'
+          $p=Start-Process -FilePath $uninstall -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Uninstall failed" }
+      - name: Upload PreBeta EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-1.1.0-PreBeta1-Windows-Setup
+          path: installer-output/EvoluFisicoDesktop-1.1.0-prebeta.1-Setup.exe
+          if-no-files-found: error
+          retention-days: 14

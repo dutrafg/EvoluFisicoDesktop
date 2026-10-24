@@ -27,15 +27,13 @@
   function mount(){
     if(!document.body)return;
     document.body.dataset.efxVisual=get();
-    document.title='EvoluFísico Desktop 1.0.4 estável';
-    const badge=document.querySelector('.brand-version');
-    if(badge){badge.textContent='1.0.4 estável';badge.title='Versão 1.0.4 estável';}
+    // O título do aplicativo e a versão técnica pertencem ao Windows e à Manutenção.
     const host=document.getElementById('ef-setting-appearance')?.closest('.ef-settings-card');
     if(!host||getControls())return Boolean(getControls());
     const section=document.createElement('div');section.id='efx-appearance-controls';
     section.setAttribute('aria-label','Personalização dos efeitos visuais');
     section.innerHTML=`
-      <div class="efx-label">Efeitos visuais <span class="efx-prebeta-tag">1.0.4 estável</span></div>
+      <div class="efx-label">Efeitos visuais </div>
       <p class="efx-description">Escolha o estilo visual do aplicativo. O tema claro ou escuro e a paleta continuam configuráveis acima.</p>
       <div class="efx-options" role="group" aria-label="Efeitos visuais">
        <button type="button" class="efx-option" data-efx-mode="advanced" aria-pressed="false"><strong>Avançada</strong><small>Blur moderado, profundidade 3D sutil, contornos e sombras.</small></button>
