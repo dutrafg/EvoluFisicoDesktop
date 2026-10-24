@@ -1,0 +1,28 @@
+name: Desktop Dark Assessment QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/EvoluFisico.Desktop/wwwroot/index.html'
+      - 'src/EvoluFisico.Desktop/wwwroot/sw.js'
+      - 'src/EvoluFisico.Desktop/wwwroot/assets/css/68-desktop-dark-assessment-contrast.css'
+      - 'tests/windows-dark-assessment-contrast-1-0-12.cjs'
+      - '.github/workflows/desktop-dark-assessment-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  assessment-theme:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate assessment theme contrast and offline cache
+        run: node tests/windows-dark-assessment-contrast-1-0-12.cjs
+      - name: Validate frontend asset references
+        run: python scripts/verify_frontend.py

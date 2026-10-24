@@ -32,6 +32,9 @@ jobs:
         shell: pwsh
         run: node tests/desktop-integration.cjs
 
+      - name: Validate dark assessment contrast in WebView2
+        run: node tests/windows-dark-assessment-contrast-1-0-12.cjs
+
       - name: Validate notification settings without vibration
         run: node tests/notifications-no-vibration.cjs
 
