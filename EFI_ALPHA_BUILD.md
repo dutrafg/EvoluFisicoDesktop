@@ -3,22 +3,25 @@
 ## Artefato
 
 - Nome: `EvoluFisico_EFI_Alpha_Setup.exe`
-- Workflow: [EFI AI Alpha Build Validation — run 40131660142](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40131660142)
-- Commit de código compilado: `d53963eab7afdf071f294b6a4f2d7db23cc2c552`
+- Workflow: [EFI AI Alpha Build Validation — run 40132081529](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40132081529)
+- Commit compilado: `cdae50309127f652ae7ef1cf72dadfd74b3ec04b`
 - Branch: `feature/efi-qwen35-2b-alpha`
-- Ambiente: GitHub Actions `windows-latest`, .NET SDK 8.0.x, Inno Setup 6.
+- Ambiente: GitHub Actions, Windows Server 2025 / `windows-latest`, .NET SDK 8.0.x, Node 22 e Inno Setup 6.
 - Alvo: Windows x64.
-- Tamanho do EXE: 62.875.894 bytes.
-- SHA-256 do EXE: `c2b19475de0216bba8860ae3e75b11f682973f63318a4d3e326bf87d327e5e60`.
-- Artefato Actions: [EvoluFisico_EFI_Alpha_Setup](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40131660142/artifacts/12575121766), ZIP SHA-256 `6cc9390d7206539b6db7c5a9f5f16914ba6a925cb586761a12d18f15b40c5d3c`.
-- Runtime llama.cpp CPU x64 incluído; pesos Qwen são baixados pelo gerenciador e não estão no instalador.
+- Tamanho do EXE: 62.879.269 bytes.
+- SHA-256 do EXE: `be48837a570ee8678fe39e40643a8ee94f7abb08054f2cf4f5f08666a1f4e5eb`.
+- Artefato Actions: [EvoluFisico_EFI_Alpha_Setup](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40132081529/artifacts/12575352445), ZIP 62.391.516 bytes, SHA-256 `ce98162c165c29b72beb27ec3c686ac43cdfe34fe6016fd29c87a9275ba03e40`.
+- Runtime llama.cpp CPU x64 incluído; pesos Qwen baixados pelo gerenciador, não incluídos. Artefato retido até 07/11/2026.
+- [Baixar o instalador no GitHub Actions](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40132081529/artifacts/12575352445).
 
 ## Resultado de validação
 
-O workflow passou nos testes de JavaScript, perfil, avaliação, identidade legada, formulários, armazenamento nativo, regressões de agenda/Início/paleta, teste de relatório obsoleto, smoke SQLite transacional, fixtures e campanha integrada de 10.000 cenários (1.000 execuções completas dos oito motores; 5.000 bloqueios para identidade/datas/série curta; 3.000 sinalizações ou supressões específicas; 0 exceções e 0 valores não finitos). Compilou o Desktop Windows, verificou a integração EFI e empacotou o runtime. O Inno Setup criou o EXE com o nome esperado. O smoke instalou em diretório temporário, verificou o executável, frontend, manifesto Alpha, runtime, painel EFI e fixtures; iniciou o aplicativo, confirmou o processo ativo por 8 segundos, encerrou-o e concluiu a desinstalação.
+O run passou as verificações de JavaScript, perfil, avaliação em seis etapas, migração legada, formulários/storage/cobrança, regressões de Home/agenda/toque/privacidade/paleta, rascunho de relatório, smoke SQLite, fixtures e campanhas EFIA de 10.000 e 30.000 cenários. A campanha de 30.000 executou 60.000 pipelines e 166.500 assertions: 18.000 históricos elegíveis, 12.000 bloqueados e 21.000 execuções com os oito motores; 0 falhas, mutações de entrada, saídas não finitas ou divergências de determinismo.
 
-A validação ocorreu em runner Windows. O smoke confirma a inicialização do processo; não comprova abertura visual interativa, atualização sobre instalação Alpha anterior com dados, nem preservação de um banco real após desinstalação.
+A compilação Windows x64 e o empacotamento do runtime passaram. O smoke instalou o EXE em diretório temporário, conferiu arquivos e manifesto Alpha, iniciou `EvoluFisico.Desktop.exe`, confirmou o processo ativo por 8 segundos, fechou o processo e concluiu desinstalação. Isso valida o build e ciclo automatizado básico no runner; não comprova interface visual interativa nem atualização sobre Alpha anterior com dados reais.
 
-O smoke SQLite também cobriu rollback, backup/restauração, adulteração e recusa de bancos com schema futuro. O Node aprovou os testes de formulário/anamnese, avaliação/cobrança, agenda, layout do Início, rolagem por toque, privacidade e paleta. O run anterior `40124398686` compilou o instalador mas falhou porque o smoke ainda procurava o nome antigo. A busca foi corrigida; o run `40124552552` passou. O pacote mais recente foi verificado no run `40131660142`.
+O log da campanha registrou mensagem isolada `EF77: ponto de montagem não encontrado`; o passo terminou com sucesso e todas as assertions passaram. A mensagem permanece para investigação.
 
-Não houve merge para `main`, release estável ou publicação de produção.
+Inferência real sintética Qwen3.5-2B Q4_K_M em CPU e checksum passaram no workflow separado [40119653945](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40119653945). Isso não é homologação clínica ou validação do fluxo EFI/Qwen dentro do aplicativo instalado.
+
+Não houve merge para `main`, release estável ou publicação de produção. A Alpha ainda não satisfaz os critérios para RC-1 documentados em QA/paridade.

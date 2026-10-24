@@ -8,9 +8,9 @@ Data da revisão: 24/10/2026.
 |---|---|---|
 | EvoluFísico2 | `main` | `b45a1f74ac5fd6053c598a9843ac62156e4ebf2a` |
 | EvoluFísicoDesktop estável | `main` | `242649d248d766b8d3dfeeb498ce3472cedf0699` |
-| EvoluFísicoDesktop Alpha | `feature/efi-qwen35-2b-alpha` | `d53963eab7afdf071f294b6a4f2d7db23cc2c552` |
+| EvoluFísicoDesktop Alpha | `feature/efi-qwen35-2b-alpha` | `cdae50309127f652ae7ef1cf72dadfd74b3ec04b` |
 
-A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b45a1f7`. As correções recentes de tema portadas nesta rodada correspondem aos commits `98a8d38` e `abadbef`.
+A consulta nesta rodada confirmou EvoluFísico2 em `b45a1f74ac5fd6053c598a9843ac62156e4ebf2a`. O commit Alpha `cdae50309127f652ae7ef1cf72dadfd74b3ec04b` porta a campanha Web de 30 mil cenários para os motores Desktop. As correções recentes de tema portadas nesta rodada correspondem aos commits `98a8d38` e `abadbef`.
 
 ## Trabalho desta rodada
 
@@ -26,6 +26,7 @@ A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b
 - Integrado `tests/StorageSmoke` à CI Windows e corrigida a referência a `EfiAppPaths.cs` no projeto de teste; transações, rollback, criptografia, backup/restauração, tampering e schema futuro passaram.
 - Ampliada a CI a regressões de formulário, armazenamento, avaliação/cobrança, resumo e recorrência da agenda, organização do Início, redimensionamento de cards, rolagem por toque, privacidade e paleta.
 - Renomeada a saída do Inno Setup para `EvoluFisico_EFI_Alpha_Setup.exe`; o smoke test procura o nome exato do pacote.
+- Portada a campanha oficial `tests/efia-campaign.cjs` do EvoluFísico2 para `tests/efia-campaign-30000.cjs`, mantendo a campanha Desktop de 10 mil e adicionando execução na CI Windows.
 
 ## Commits criados nesta rodada
 
@@ -42,9 +43,10 @@ A consulta feita nesta rodada confirmou que o EvoluFísico2 ainda aponta para `b
 | `760fb46a7319c1c57493f6fde1b49e4516901396` | Smoke SQLite transacional e recuperação integrado à CI Windows |
 | `e53de673f6f6c044a9800fb4a94f6898479941d4` | Testes de formulário, storage nativo e avaliação/cobrança na CI |
 | `d53963eab7afdf071f294b6a4f2d7db23cc2c552` | Testes de Início, agenda, toque, privacidade e paleta na CI |
+| `cdae50309127f652ae7ef1cf72dadfd74b3ec04b` | Campanha EFIA Web de 30 mil cenários portada e workflow integrado |
 
 ## Estado e pendências
 
-O Perfil Unificado permite consolidar registros antigos com confirmação humana e backup antes de cada gravação. A migração é por avaliação e ainda não faz uma reconciliação em lote. O armazenamento SQLite é exercitado por `StorageSmoke`; a migração de dados legados no perfil de usuário ainda não foi homologada. A campanha integrada reforçada de 10.000 cenários foi aprovada no run Windows `40128372330`; smoke confirmou processo do aplicativo ativo por 8 segundos e passou o teste de bloqueio do relatório obsoleto. Objetivos foram adicionados sem alterar fórmulas científicas. As demais validações e limitações permanecem descritas em `EFI_ALPHA_PARIDADE.md` e `EFI_ALPHA_QA.md`.
+O Perfil Unificado permite consolidar registros antigos com confirmação humana e backup antes de cada gravação. A migração é por avaliação e ainda não faz uma reconciliação em lote. O armazenamento SQLite é exercitado por `StorageSmoke`; a migração de dados legados no perfil de usuário ainda não foi homologada. As campanhas integradas de 10.000 e 30.000 cenários passaram no run Windows `40132081529` (30 mil históricos, 60 mil pipelines e 166.500 verificações, sem falhas). smoke confirmou processo do aplicativo ativo por 8 segundos e passou o teste de bloqueio do relatório obsoleto. Objetivos foram adicionados sem alterar fórmulas científicas. As demais validações e limitações permanecem descritas em `EFI_ALPHA_PARIDADE.md` e `EFI_ALPHA_QA.md`.
 
-A versão permanece Alpha para testes. O build compilou no Windows Actions; o smoke test automatizado instalou e desinstalou o pacote. Não houve homologação visual interativa da interface instalada, nem atualização in-place com dados reais. O runner só validou que o processo permaneceu ativo por 8 segundos.
+A versão permanece Alpha para testes; não satisfaz critérios RC-1 porque migração com dados reais, homologação visual/interativa e fluxos Qwen no aplicativo seguem pendentes. O build compilou no Windows Actions; o smoke test automatizado instalou e desinstalou o pacote. Não houve homologação visual interativa da interface instalada, nem atualização in-place com dados reais. O runner só validou que o processo permaneceu ativo por 8 segundos.
