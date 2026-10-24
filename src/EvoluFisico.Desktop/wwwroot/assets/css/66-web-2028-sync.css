@@ -1,0 +1,65 @@
+/* Desktop 1.0.10: backport das correções visuais web 2.0.28.
+ * Sem alterações em scripts clínicos, persistência ou conteúdo impresso. */
+@media screen {
+  #tab-comparison .comparison-selector-grid {
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    align-items:end!important;
+    gap:12px!important;
+    width:100%;max-width:100%;min-width:0;
+    box-sizing:border-box;
+  }
+  #tab-comparison .comparison-selector-grid > * {
+    min-width:0;max-width:100%;
+    box-sizing:border-box;
+  }
+  #tab-comparison .comparison-selector-grid > :last-child {
+    display:flex!important;
+    align-items:flex-end!important;
+    min-width:0;
+  }
+  #tab-comparison .comparison-selector-grid :is(input,select) {
+    min-width:0;max-width:100%;width:100%;box-sizing:border-box;
+  }
+  #tab-comparison .comparison-selector-grid button[onclick*="imprimirComparativoPDF"] {
+    display:flex;align-items:center;justify-content:center;
+    min-width:0;width:100%;max-width:100%;
+    white-space:normal;overflow-wrap:anywhere;
+    box-sizing:border-box;
+  }
+  #tab-ef-forms .ef2f-level-filters {
+    display:flex!important;flex-wrap:wrap!important;
+    gap:8px;min-width:0;max-width:100%;
+  }
+  #tab-ef-forms .ef2f-level-filters > button {
+    flex:0 1 auto;min-width:0;max-width:100%;
+    white-space:normal;overflow-wrap:anywhere;box-sizing:border-box;
+  }
+  #tab-ef-forms .ef2f-level-filters > button span {
+    max-width:100%;overflow-wrap:anywhere;
+  }
+  #tab-ef-forms .ef2f-build-meta {
+    flex-wrap:wrap!important;min-width:0;max-width:100%;
+  }
+  #tab-ef-forms #ef2x-t-level,
+  #tab-ef-forms .ef2f-build-meta > select {
+    flex:1 1 180px;min-width:0;max-width:100%;
+    box-sizing:border-box;
+  }
+}
+@media screen and (max-width:1100px) {
+  #tab-comparison .comparison-selector-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media screen and (max-width:680px) {
+  #tab-comparison .comparison-selector-grid {
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  #tab-ef-forms .ef2f-level-filters > button {
+    flex:1 1 135px;
+  }
+  #tab-ef-forms .ef2f-build-meta > select {
+    flex:1 1 100%;
+  }
+}

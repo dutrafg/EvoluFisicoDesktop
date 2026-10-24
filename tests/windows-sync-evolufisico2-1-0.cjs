@@ -64,7 +64,7 @@ check('Perimetry sum is already numeric, null-safe and never serialized with toF
  assert.equal(fn([]),null);assert.equal(fn([50.2,70.1]),120.3);assert.equal(typeof fn([50]),'number');
 });
 check('Version, backup and encrypted native storage remain untouched',()=>{
- assert.match(read('installer/EvoluFisico.iss'),/#define MyAppVersion "1\.0\.9"/);
+ assert.match(read('installer/EvoluFisico.iss'),/#define MyAppVersion "1\.0\.10"/);
  assert.match(read('installer/EvoluFisico.iss'),/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(runtime.includes('EFNativeStorage'));
  assert.match(sw,/const CACHE_NAME = 'evolufisico-desktop-1-0-[^']+'/);;
