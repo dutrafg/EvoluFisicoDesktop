@@ -26,7 +26,7 @@ jobs:
       - name: Build complete Windows Desktop with EFI modules
         shell: pwsh
         run: |
-          dotnet restore src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj
+          dotnet restore src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj -r win-x64
           if ($LASTEXITCODE -ne 0) { throw 'Restore failed' }
           dotnet build src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj -c Release -r win-x64 --no-restore
           if ($LASTEXITCODE -ne 0) { throw 'Desktop compile failed' }
