@@ -70,7 +70,8 @@ $tag = if ($EfiAlpha) { "efi-alpha-$revision" } else { "desktop-v1.0-$revision" 
 $version = if ($EfiAlpha) { '1.0.12-alpha' } else { '1.0.11' }
 $versionInfo = @{ tag = $tag; version = $version; revision = $revision; channel = $(if($EfiAlpha){'efi-alpha'}else{'stable'}); built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
 [System.IO.File]::WriteAllText((Join-Path $web 'desktop-version.json'), $versionInfo, [System.Text.UTF8Encoding]::new($false))
-$flags = if ($EfiAlpha) { @('-p:EfiAlpha=true') } else { @() }
+$flags = @()
+if ($EfiAlpha) { $flags += '-p:EfiAlpha=true' }
 dotnet restore $project -r win-x64 @flags
 if ($LASTEXITCODE -ne 0) { throw 'Falha no restore' }
 dotnet publish $project -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false @flags -o (Join-Path $root 'publish/win-x64')
