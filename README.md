@@ -145,3 +145,10 @@ Origem web `dutrafg/Evolufisico2@225184a684b5`. Cinco componentes EFIA incorpora
 - AppId e atualizador Windows preservados; executável e instalador gerados em CI.
 - Escopo não migrado: Dock Padrão/Moderna e redesenho integral do Início da versão web.
 - A aprovação dos testes automatizados não substitui homologação dos PDFs e do armazenamento no Windows real com dados existentes.
+
+
+## Sincronização seletiva do Web 2.0.28 — Desktop 1.0.10
+
+Em 24/10/2026, o EvoluFisico2 passou a **2.0.28 Pré-Beta**. Esta versão Desktop adota a correção de layout do botão **Imprimir Comparativo PDF** no módulo Evolução (4/2/1 colunas), ajuste dos filtros e do seletor **Nível do questionário** nos Formulários, e a atualização da identificação no rodapé do relatório EFIA. As regras de negócio, a seleção de alunos/datas, a impressão em iframe e o SQLite cifrado existentes permanecem inalterados.
+
+**Não incorporados nesta versão estável:** o novo Perfil Unificado de Alunos, a Avaliação em seis etapas e os widgets experimentais do Web 2.0.28. Essas funcionalidades ainda não passaram por integração com o banco nativo e homologação em Windows. Não substituir o frontend Windows pelo HTML de pré-beta. Validar os fluxos nativos e os relatórios em ambiente Windows real antes de utilizar dados reais.

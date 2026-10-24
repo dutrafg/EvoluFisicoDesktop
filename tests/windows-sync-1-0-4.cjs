@@ -78,3 +78,6 @@ check('All modules still use native storage and stable 1.0.9 Windows version',()
 console.log('TOTAL',passed,'EvoluFisico Desktop 1.0.9 checks passed');
 // Execute the EFIA 2.0.1 smoke checks as part of the existing Windows CI gate.
 require('./windows-sync-efia-2-0-1.cjs');
+
+// Validate scoped EvoluFisico2 2.0.28 UI backports.
+require('./windows-sync-web-2-0-28.cjs');
