@@ -1,11 +1,11 @@
 # Matriz de paridade — EvoluFísico2 × Desktop EFI Alpha
 
-Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@6de5dd7`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
+Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop estável `main@242649d` e Alpha `feature/efi-qwen35-2b-alpha@a6c0d9a`. O `main` Web não avançou além de `b45a1f7` nesta rodada.
 
 | Módulo/área | Estado na Alpha | Diferença e trabalho restante |
 |---|---|---|
 | Início | Parcial | Cards e organização existentes; falta homologar widgets e gestos atuais em WebView2. |
-| Alunos / Perfil Unificado | Parcial; primeira tela integrada | Busca, ordenação, histórico e métricas agrupam pelo `cliente_id`. Registros antigos sem ID aparecem individualmente. Falta migração segura e centralização persistente de dados pessoais, formulários, evolução, análises, relatórios e finanças. |
+| Alunos / Perfil Unificado | Parcial; primeira tela integrada | Busca, ordenação, histórico e métricas agrupam pelo `cliente_id`. Registros sem ID não são agrupados ou alterados ao ler. Migração assistida por avaliação permite criar ou selecionar um ID após confirmação e backup obrigatório. Falta migração em lote, homologação manual e centralização persistente completa de outros dados. |
 | Avaliações | Parcial; seis etapas presentes | Objetivos está na etapa 2 e persiste/recupera seleção e observações. Falta homologação integral de protocolos, validação, cálculos, fotos, relatórios e invalidação de análises derivadas. |
 | Evolução | Parcial | Histórico e comparações existem; cronologia, invalidação de análises dependentes e PDF precisam de homologação Windows. |
 | Calculadora / Laboratório | Parcial/implementado | EF77 e laboratório estão conectados; verificar paridade atual de entradas, protocolos e limites com o Web. |
@@ -18,7 +18,7 @@ Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop e
 | Backup e restauração | Presente, homologação incompleta | Implementações nativas existem; restauração, compatibilidade de formatos antigos e preservação em atualização pendem. |
 | Navegação e personalização | Parcial | Sidebar, cores e cards existem; ainda falta validação de layouts/miniapps atuais no Windows. |
 | Relatórios e PDF | Parcial | Relatórios nativos existem; faltam verificação A4, separação privado/compartilhável e impressão manual. |
-| Armazenamento e segurança | Parcial; SQLite nativo | Banco criptografado e IDs persistentes são a base Windows. Registros legados sem ID ainda não foram migrados para perfil unificado; testar migrações e rollback. |
+| Armazenamento e segurança | Parcial; SQLite nativo | Banco criptografado e IDs persistentes são a base Windows. Registros legados podem ser vinculados um a um com confirmação e backup; migração em lote, interrupção/rollback e homologação com dados de usuário pendem. |
 | Atualizações e manutenção | Parcial | Atualizador existe; atualização Alpha sobre Alpha preservando dados não foi testada. |
 | Temas claro/escuro | Portadas correções recentes; homologação pendente | Regras Web de confirmação de avaliação escura e contraste foram integradas e passaram teste automatizado. Falta auditoria visual de todas as janelas/telas WebView2. |
 | Privacidade/LGPD | Parcial | Criptografia e minimização de prompt estão previstas; revisar logs, consentimento, backup e compartilhamento. |
