@@ -11,13 +11,11 @@ const number=v=>{
  const n=typeof v==='number'?v:Number(String(v).trim().replace(',','.'));
  return Number.isFinite(n)?n:null;
 };
-function identityOf(record,identity){
+function identityOf(record){
  if(!record||typeof record!=='object')return null;
+ // Never infer a permanent identity from a name or shared contact, and keep this read-only.
  const id=text(record.cliente_id);
  if(id)return id;
- if(identity&&typeof identity.key==='function'){
-  try{const key=text(identity.key(record));if(key&&!key.startsWith('unresolved:'))return key;}catch(_){}
- }
  const assessmentId=text(record.id);
  return assessmentId?'assessment:'+assessmentId:null;
 }
@@ -32,12 +30,12 @@ function firstValue(rows,keys){
  for(const row of rows)for(const key of keys){const value=row[key];if(nonEmpty(value))return value;}
  return null;
 }
-function build(records,identity){
+function build(records){
  const groups=new Map();
  (Array.isArray(records)?records:[]).forEach((record,index)=>{
   if(!record||typeof record!=='object')return;
   const explicitId=!!text(record.cliente_id);
-  const key=identityOf(record,identity);if(!key)return;
+  const key=identityOf(record);if(!key)return;
   if(!groups.has(key))groups.set(key,{key,records:[]});
   groups.get(key).records.push({...record,__profileIndex:index,__profileHadPersistentId:explicitId});
  });

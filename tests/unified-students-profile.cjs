@@ -25,9 +25,9 @@ assert.deepEqual(ana.history.map(x=>x.id),['eval-a1','eval-a2'],'history is chro
 assert.equal(profiles.find(p=>p.key==='student-002').history.length,1,'homonyms never merge');
 const legacy=core.build([{id:'old-1',nome:'Sem ID',data_avaliacao:'2026-01-01'},{id:'old-2',nome:'Sem ID',data_avaliacao:'2026-02-01'}]);
 assert.equal(legacy.length,2,'missing IDs never merge by name');
-assert.equal(core.identityOf({id:'x',nome:'Same'},null),'assessment:x');
+assert.equal(core.identityOf({id:'x',nome:'Same'}),'assessment:x');
 const unpersisted=core.build([{id:'legacy-x',nome:'Mesmo nome'}]);
-assert.equal(unpersisted[0].persistentId,null,'generated in-memory identity is not claimed as persisted SQLite ID');
+assert.equal(unpersisted[0].persistentId,null,'legacy assessment is not claimed as persisted SQLite ID');
 assert.equal(core.number(''),null);
 assert.equal(core.number('12,5'),12.5);
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
@@ -38,7 +38,7 @@ assert.ok(html.includes('68-unified-students-core.js')&&html.includes('68-unifie
 assert.ok(html.includes('68-theme-contrast.css')&&html.includes('69-unified-students.css'));
 for(const asset of ['assets/js/68-unified-students-core.js','assets/js/68-unified-students.js','assets/css/68-theme-contrast.css','assets/css/69-unified-students.css'])assert.ok(worker.includes('./'+asset),'offline cache missing '+asset);
 assert.ok(ui.includes('window.novaAvaliacaoParaAluno(profile.latest.id)'),'new evaluation uses the safe cadastral-only flow');
-assert.ok(ui.includes('window.EFIdentity'),'profile grouping uses persistent identity');
+assert.ok(ui.includes('profiles=core.build(source());'),'profile reads the existing assessment list without mutating it');
 assert.ok(ui.includes('openAnalysis(profile)'));
 assert.ok(theme.includes('#tab-novo-checkin #success-screen #success-title'));
 assert.ok(theme.includes('#tab-novo-checkin #success-screen #success-db-info'));

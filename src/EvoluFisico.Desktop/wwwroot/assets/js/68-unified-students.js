@@ -152,7 +152,7 @@ function renderDetail(){
 }
 function render(){
  if(!ensurePanel())return;
- profiles=core.build(source(),window.EFIdentity);
+ profiles=core.build(source());
  if(!profiles.some(p=>p.key===selectedKey))selectedKey=profiles[0]?.key||'';
  renderList();
 }
