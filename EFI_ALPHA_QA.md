@@ -18,13 +18,24 @@ Data: 24/10/2026 (America/Sao_Paulo). Este documento separa evidência automatiz
 
 ## Testes solicitados que ainda não foram executados
 
-- Campanha adicional de 10.000 cenários científicos no código Desktop, cobrindo erros matemáticos, dados extremos, datas, identidade cruzada, protocolo e invalidação de parecer.
+- Campanha integrada de 10.000 cenários cobrindo os oito motores (EF68/EF70/EF77 + EF78–EF82) e invalidação de parecer.
 - Testes de migração com bases antigas e novas, interrupção, rollback e preservação de registros reais.
 - Teste de atualização sobre Alpha anterior contendo dados e desinstalação com verificação de preservação do banco.
 - Abertura manual da interface instalada, gravação/leitura SQLite por cada módulo, Perfil Unificado, navegação completa e EFI a partir do aplicativo.
 - Homologação de impressão/PDF, backup/restauração e modo claro/escuro em Windows/WebView2.
 - Matriz de resoluções e escala Windows 100%, 125%, 150% e 200%; teclado, toque, acessibilidade e múltiplas paletas.
 - Cancelamento real de inferência, runtime/modelo ausente ou corrompido, falta de RAM, modo offline após download e download interrompido/retomado.
+
+## Campanha sintética local adicional
+
+Executada nesta rodada diretamente contra `EFIALocal@0.5.0-rc.2` da branch (motores EF78–EF82), com 10.000 entradas determinísticas em 11 classes:
+
+- 910 séries válidas e 909 séries com três datas ao longo de 21 dias: elegíveis.
+- 909 casos em cada classe de duas avaliações, datas duplicadas, mistura de alunos, datas inválidas, valores ausentes, valores extremos, métodos diferentes, protocolos diferentes e intervalo total inferior a 21 dias.
+- **0 exceções** e **0 valores não finitos** na árvore de resultados.
+- As asserções de séries válidas, bloqueios temporais e identificação de mistura entre alunos passaram.
+
+Esse harness foi executado em memória nesta sessão e ainda não está incorporado à suíte do repositório. A campanha exercita EF78–EF82; não cobre os oito motores integrados de ponta a ponta, nem testa a invalidação persistida de pareceres.
 
 A auditoria Web de 24/10 relata 84 checagens de tema e testes de Perimetria, Impressão e Cobrança na web. Esses resultados não foram contados como QA do Desktop.
 
