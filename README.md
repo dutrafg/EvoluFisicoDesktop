@@ -1,4 +1,6 @@
-# EvoluFísico Desktop 1.0.11 estável
+# EvoluFísico Desktop EFI Alpha 3.0
+
+> Canal experimental para validação da paridade EvoluFísico2 3.0. Esta compilação não é estável; usa instalador e armazenamento separados da instalação estável.
 
 Aplicativo Windows x64 criado em **C#/.NET 8, WPF e WebView2**, com interface HTML/CSS/JavaScript. Esta versão integra as novidades do [Evolufisico2 1.0 estável](https://github.com/dutrafg/Evolufisico2), mantendo o armazenamento SQLite nativo criptografado e o fluxo de atualização do Windows.
 

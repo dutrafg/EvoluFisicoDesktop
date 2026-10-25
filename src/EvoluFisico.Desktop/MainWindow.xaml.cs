@@ -15,7 +15,7 @@ public partial class MainWindow : Window
     private const string AppUrl = "https://evolufisico.local/index.html";
     private bool _ready;
 #if EFI_ALPHA
-    private const string CurrentVersion = "1.0.14-alpha";
+    private const string CurrentVersion = "3.0.0 Alpha";
 #else
     private const string CurrentVersion = "1.0.13";
 #endif
@@ -46,6 +46,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+#if EFI_ALPHA
+        Title = "EvoluFísico Desktop 3.0 — EFI Alpha";
+#endif
         Loaded += OnLoaded;
     }
 

@@ -1,7 +1,15 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),root='src/EvoluFisico.Desktop/wwwroot/';
+const installer=fs.readFileSync('installer/EvoluFisico-EFI-Alpha.iss','utf8');
+const shell=fs.readFileSync('src/EvoluFisico.Desktop/MainWindow.xaml.cs','utf8');
 const js=fs.readFileSync(root+'assets/js/52-home-dashboard.js','utf8'),css=fs.readFileSync(root+'assets/css/52-home-dashboard.css','utf8'),index=fs.readFileSync(root+'index.html','utf8'),profile=fs.readFileSync(root+'assets/js/68-unified-students.js','utf8');
 let passed=0;function check(name,fn){fn();passed++;console.log('PASS:',name)}
+check('Windows installer and app shell identify this as EFI Alpha 3.0',()=>{
+ assert.ok(installer.includes('#define MyAppVersion "3.0.0.0"'));
+ assert.ok(installer.includes('#define MyAppName "EvoluFisico Desktop - EFI Alpha 3.0"'));
+ assert.ok(shell.includes('Title = "EvoluFísico Desktop 3.0 — EFI Alpha";'));
+ assert.ok(shell.includes('private const string CurrentVersion = "3.0.0 Alpha";'));
+});
 check('Dashboard 3.0 builds its operational layout from saved modules',()=>{assert.match(js,/function remodelInicio\(home, context\)/);for(const token of ['Resumo operacional','O que tenho hoje?','O que está atrasado?','Qual é minha próxima ação?','Visão complementar','Dados locais disponíveis'])assert.ok(js.includes(token),token);assert.match(js,/home\.replaceChildren\(shell\)/)});
 check('Nova avaliação is removed from the home hero and remains in the student profile',()=>{assert.match(js,/quickEvaluation=hero\.querySelector\('\[data-efh-action="evaluation"\]'\)/);assert.match(js,/quickEvaluation\.remove\(\)/);assert.match(profile,/Nova avaliação/)});
 check('Dashboard routes agenda, students, evolution, and finance using existing records',()=>{for(const route of ['data-efh-go="agenda"','data-efh-module="tab-alunos"','data-efh-module="tab-cobranca"','data-efh-module="tab-comparison"'])assert.ok(js.includes(route),route);assert.match(js,/A ausência de uma data de retorno/);assert.match(js,/Valores pagos são os lançamentos marcados como pagos/)});
