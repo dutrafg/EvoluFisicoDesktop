@@ -50,3 +50,14 @@ A consulta nesta rodada confirmou EvoluFísico2 em `b45a1f74ac5fd6053c598a9843ac
 O Perfil Unificado permite consolidar registros antigos com confirmação humana e backup antes de cada gravação. A migração é por avaliação e ainda não faz uma reconciliação em lote. O armazenamento SQLite é exercitado por `StorageSmoke`; a migração de dados legados no perfil de usuário ainda não foi homologada. As campanhas integradas de 10.000 e 30.000 cenários passaram no run Windows `40132081529` (30 mil históricos, 60 mil pipelines e 166.500 verificações, sem falhas). smoke confirmou processo do aplicativo ativo por 8 segundos e passou o teste de bloqueio do relatório obsoleto. Objetivos foram adicionados sem alterar fórmulas científicas. As demais validações e limitações permanecem descritas em `EFI_ALPHA_PARIDADE.md` e `EFI_ALPHA_QA.md`.
 
 A versão permanece Alpha para testes; não satisfaz critérios RC-1 porque migração com dados reais, homologação visual/interativa e fluxos Qwen no aplicativo seguem pendentes. O build compilou no Windows Actions; o smoke test automatizado instalou e desinstalou o pacote. Não houve homologação visual interativa da interface instalada, nem atualização in-place com dados reais. O runner só validou que o processo permaneceu ativo por 8 segundos.
+
+
+## Adendo — dashboard EvoluFísico2 3.0 para Windows (25/10/2026)
+
+Referência Web sincronizada: `dutrafg/Evolufisico2`, commit funcional 3.0 `a2877ae189c5f3953396ea4cf196aed3f9eb1cc5` (dashboard e Perfil Unificado); a ponta consultada do repositório principal era `80bca6d7d3eba916ca02d5c3ac28604cb1e65ce2`.
+
+Na branch `feature/efi-qwen35-2b-alpha`, foi portada a organização da Dashboard Secretária 3.0 para a tela inicial Windows, usando dados existentes de agenda, alunos, avaliações/evolução e financeiro. A ação “Nova avaliação” saiu do cabeçalho da Home e continua acessível no perfil do aluno; retornos e reavaliações passaram a abrir Alunos/Perfil Unificado. Foram acrescentados estilos responsivos, foco de teclado e regressões automatizadas. O shell e o instalador identificam o canal como EFI Alpha 3.0, preservando o AppId Alpha.
+
+Commits desta rodada: `827e83c` dashboard; `6337f14` estilos e testes; `eb9832f` navegação pelo perfil; `469e8a0` identificação Alpha 3.0; `5727343` correção de asserção antiga da fixture para a versão 3.0. A stable `main` não foi alterada.
+
+A validação final e o artefato correspondem ao commit `5727343fef7b97bdc5d34c18d77508a5cc9d8669`. O instalador está em [EFI Alpha Build](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40162151708/artifacts/12587065590). A execução aprovou as suítes automatizadas e o smoke test de isolamento; validação manual interativa em computadores Windows de usuários segue pendente.

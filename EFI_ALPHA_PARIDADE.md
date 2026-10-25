@@ -26,3 +26,16 @@ Referências consultadas em 24/10/2026: EvoluFísico2 `main@b45a1f74`, Desktop e
 ## Classificação
 
 “Implementado” significa que o código existe ou um teste específico passou. “Parcial” indica função presente com equivalência, integração ou homologação ainda incompleta. Build e testes estáticos não contam como homologação visual.
+
+
+## Adendo de paridade EvoluFísico2 3.0 — rodada 25/10/2026
+
+| Módulo / mudança da Web 3.0 | Estado Desktop EFI Alpha 3.0 | Evidência / limite |
+|---|---|---|
+| Dashboard Secretária (agenda, pendências, retornos, próxima ação, resumo financeiro) | **Portado e validado por regressão** | Usa registros e rotas Desktop existentes; CI Windows #136 passou. |
+| Perfil Unificado como destino de retornos e reavaliações | **Integrado à navegação existente** | Links do painel direcionam para Alunos/Perfil Unificado. |
+| Ação Nova avaliação no cabeçalho da Home | **Alinhado à Web 3.0** | Removida do cabeçalho; continua disponível no perfil do aluno. |
+| Tema, layout responsivo e teclado | **Regressões automatizadas aprovadas** | Testes cobrem tema escuro, telas compactas e foco por teclado; não substituem inspeção manual por DPI. |
+| Agenda, cobranças, evolução e dados de alunos existentes | **Reutilizados** | Sem substituição por dados simulados; fixtures de demonstração seguem identificadas e isoladas. |
+
+Referência Web: commit 3.0 `a2877ae189c5f3953396ea4cf196aed3f9eb1cc5`; ponta consultada `80bca6d7d3eba916ca02d5c3ac28604cb1e65ce2`. Branch Windows: `feature/efi-qwen35-2b-alpha`, commit final de código/build `5727343fef7b97bdc5d34c18d77508a5cc9d8669`. Este adendo cobre a rodada de dashboard; os demais estados e pendências por módulo descritos nesta matriz permanecem válidos.

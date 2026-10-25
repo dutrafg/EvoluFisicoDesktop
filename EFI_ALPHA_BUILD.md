@@ -25,3 +25,17 @@ O log da campanha registrou mensagem isolada `EF77: ponto de montagem não encon
 Inferência real sintética Qwen3.5-2B Q4_K_M em CPU e checksum passaram no workflow separado [40119653945](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40119653945). Isso não é homologação clínica ou validação do fluxo EFI/Qwen dentro do aplicativo instalado.
 
 Não houve merge para `main`, release estável ou publicação de produção. A Alpha ainda não satisfaz os critérios para RC-1 documentados em QA/paridade.
+
+
+## Build Windows EFI Alpha 3.0 — resultado final (25/10/2026)
+
+- **Commit compilado:** `5727343fef7b97bdc5d34c18d77508a5cc9d8669` (`feature/efi-qwen35-2b-alpha`).
+- **Referência Web 3.0:** `a2877ae189c5f3953396ea4cf196aed3f9eb1cc5`; ponta do repositório consultada: `80bca6d7d3eba916ca02d5c3ac28604cb1e65ce2`.
+- **Workflow:** [EFI AI Alpha Build Validation #136](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40162151708), Windows Server 2025 x64, conclusão **success**.
+- **Toolchain observada:** .NET SDK `8.0.426`; Node `22.23.4`.
+- **Artefato Actions:** [EvoluFisico_EFI_Alpha_Setup](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40162151708/artifacts/12587065590), ZIP de 62.399.533 bytes, digest do ZIP SHA-256 `3258d78e44a0de58ff9e65eb42f0a478c1b48427897c38f54604097a9b8daf0a`. O artefato expira em 08/11/2026.
+- **Instalador dentro do ZIP:** `EvoluFisico_EFI_Alpha_Setup.exe`, 62.887.283 bytes; SHA-256 `3e64c3c702f360e13a01237a964a0002d7084bcc93c92798fc0acf8f9e768c69`.
+- **Resultado:** build Windows, empacotamento e smoke test automatizado de isolamento do instalador passaram. Isso não equivale a homologação manual da instalação/atualização e navegação em um computador físico.
+- **Execução interativa/instalação física:** não realizada nesta rodada. Testes de resolução/DPI com usuário, instalação sobre Alpha anterior e desinstalação em máquina real continuam pendentes.
+
+A primeira CI após rotular o Alpha como 3.0 parou numa asserção obsoleta que esperava `1.0.14.0`; a fixture foi atualizada e a execução #136 acima passou. Não houve publicação em `main` nem release estável.

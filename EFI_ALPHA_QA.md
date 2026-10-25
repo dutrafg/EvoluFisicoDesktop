@@ -52,3 +52,12 @@ A campanha Desktop de 10.000 cenários executa o host EFIA com os oito motores; 
 ## Resultado
 
 A branch possui build Windows, startup/instalação/desinstalação e regressões de módulos aprovados no run `40132081529`; passaram o smoke SQLite, as campanhas de 10.000 e 30.000 cenários, a detecção de rascunho desatualizado e o smoke de processo inicializado. A implementação do Perfil e o novo fluxo de objetivos têm testes automatizados, mas a homologação manual do aplicativo instalado, migração de dados e atualização in-place continuam pendentes; a campanha integrada passou; a validação externa das fórmulas e a invalidação persistida seguem pendentes. A migração individual de identidade exige backup e foi coberta por teste estático/CI; a interação manual do diálogo de backup e consolidação de históricos reais ainda não foram homologadas. A versão não é candidata a estável.
+
+
+## Execução final Windows 3.0 — 25/10/2026
+
+Workflow [EFI AI Alpha Build Validation #136](https://github.com/dutrafg/EvoluFisicoDesktop/actions/runs/40162151708), commit `5727343fef7b97bdc5d34c18d77508a5cc9d8669`, em Windows Server 2025, concluiu com **success**. O primeiro run do commit anterior falhou porque a fixture ainda exigia o AppVersion antigo `1.0.14.0`; a expectativa foi atualizada para o nome e versão reais do instalador 3.0, e o run seguinte concluiu integralmente.
+
+Aprovados: sintaxe EFI; Perfil Unificado/tema; fluxo de seis etapas e persistência de objetivos; migração de identidade legada segura; 10.000 cenários sintéticos integrados (1.000 execuções completas dos oito motores, zero exceções/valores não finitos); campanha EFIA de 30.000 históricos (60.000 execuções da pipeline e 166.500 verificações, zero falhas registradas); SQLite criptografado, transações, recuperação e backups; formulários, armazenamento nativo, avaliações/cobranças; Home/agenda/toque/privacidade/paleta; invalidação de análise desatualizada; quatro séries demonstrativas com 16 avaliações e elegibilidade EFIA; build .NET; chat EFI; runtime nativo CPU; instalador Alpha e smoke test de isolamento.
+
+O instalador foi empacotado e disponibilizado como artefato Actions. Os testes automáticos de isolamento passaram. Não foi realizada instalação manual assistida em uma máquina física de usuário nem homologação visual nas quatro escalas Windows de DPI; essa limitação não é coberta por CI. O run anterior `40161961820` foi reprovado pela asserção de versão desatualizada, corrigida antes do run final, portanto não é contabilizado como teste aprovado.
