@@ -148,15 +148,15 @@
    const overdueItems=[
      {value:s.lateTasks.length,label:'Tarefas',go:'tasks',ico:'check'},
      {value:s.lateGoals.length,label:'Metas',go:'goals',ico:'target'},
-     {value:ev.overdue.length,label:'Reavaliações',module:'tab-historico',ico:'users'}
+     {value:ev.overdue.length,label:'Reavaliações',module:'tab-alunos',ico:'users'}
    ];
    const action=ev.overdue.length?
-    {title:'Revisar reavaliações vencidas',detail:`${ev.overdue.length} aluno(s) com data de retorno vencida.`,module:'tab-historico',ico:'users'}:
+    {title:'Revisar reavaliações vencidas',detail:`${ev.overdue.length} aluno(s) com data de retorno vencida.`,module:'tab-alunos',ico:'users'}:
     s.lateTasks.length?{title:'Resolver tarefas atrasadas',detail:`${s.lateTasks.length} tarefa(s) fora do prazo.`,go:'tasks',ico:'check'}:
     s.lateGoals.length?{title:'Atualizar metas com prazo vencido',detail:`${s.lateGoals.length} meta(s) precisa(m) de revisão.`,go:'goals',ico:'target'}:
     s.urgents.length?{title:'Ver tarefas prioritárias',detail:`${s.urgents.length} tarefa(s) marcada(s) como prioridade alta ou urgente.`,go:'tasks',ico:'flag'}:
     todaySorted.length?{title:'Conferir agenda de hoje',detail:'Confira os próximos atendimentos e lembretes do dia.',go:'agenda',ico:'calendar'}:
-    ev.upcoming.length?{title:'Planejar reavaliações próximas',detail:`${ev.upcoming.length} retorno(s) registrado(s) para os próximos 14 dias.`,module:'tab-historico',ico:'users'}:
+    ev.upcoming.length?{title:'Planejar reavaliações próximas',detail:`${ev.upcoming.length} retorno(s) registrado(s) para os próximos 14 dias.`,module:'tab-alunos',ico:'users'}:
     next.length?{title:'Preparar o próximo compromisso',detail:`Próximo registro: ${eventTitle(next[0])} — ${strDate(next[0].date,{day:'2-digit',month:'long'})}.`,go:'agenda',ico:'calendar'}:
     {title:'Organizar os próximos atendimentos',detail:'Não há eventos ou tarefas urgentes nos registros locais consultados.',go:'agenda',ico:'calendar'};
    const actionAttrs=x=>x.module?`data-efh-module="${x.module}"`:`data-efh-go="${x.go||'agenda'}"`;
@@ -171,7 +171,7 @@
     <div class="efb-summary" aria-label="Resumo operacional">
        <button type="button" class="efb-summary-item" data-efh-go="agenda"><span class="efb-summary-icon">${icon('calendar')}</span><span><small>Compromissos de hoje</small><strong>${s.todays.length}</strong></span></button>
        <button type="button" class="efb-summary-item ${totalLate?'is-alert':''}" data-efh-go="tasks"><span class="efb-summary-icon">${icon('alert')}</span><span><small>Prazos e retornos vencidos</small><strong>${totalLate}</strong></span></button>
-       <button type="button" class="efb-summary-item" data-efh-module="tab-historico"><span class="efb-summary-icon">${icon('users')}</span><span><small>Reavaliações em 14 dias</small><strong>${ev.upcoming.length}</strong></span></button>
+       <button type="button" class="efb-summary-item" data-efh-module="tab-alunos"><span class="efb-summary-icon">${icon('users')}</span><span><small>Reavaliações em 14 dias</small><strong>${ev.upcoming.length}</strong></span></button>
        <button type="button" class="efb-summary-item" data-efh-module="tab-cobranca"><span class="efb-summary-icon">${icon('flag')}</span><span><small>Valores a receber</small><strong id="efh-finance-kpi">—</strong><span id="efh-finance-kpi-sub" class="efb-finance-small">Consulte os registros em Cobranças</span></span></button>
     </div>
     <div class="efb-focus-grid" aria-label="O que tenho hoje e o que está atrasado">
