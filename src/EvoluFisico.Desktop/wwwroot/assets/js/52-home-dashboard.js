@@ -124,6 +124,71 @@
  const eventTitle=x=>x.name||x.student||x.title||'Compromisso';
  const openEvent=x=>{if(String(x.source||'').startsWith('orga-'))organization()?.openFromCalendar(x.source,x.id);else if(validISO(x.date))organization()?.openDate(x.date);else organization()?.go('agenda')};
  let rendered=false;
+ /* Início v6.7: síntese operacional sem widgets/edição.
+    Reutiliza os dados e os componentes originais de avaliações, evolução e cobrança. */
+ function remodelInicio(home, context){
+   const {s,ev,overdue,pending,activeGoals,prioritized,next,week,mx,professionalName}=context;
+   const oldRoot=home.querySelector('#efh-dashboard');if(!oldRoot)return;
+   const hero=oldRoot.querySelector('.efh-hero');
+   const evaluationsCard=oldRoot.querySelector('.efh-evaluation-panel');
+   const evolutionCard=oldRoot.querySelector('.efh-evolution-panel');
+   const financeCard=oldRoot.querySelector('.efh-finance-panel');
+   const weekCard=oldRoot.querySelector('[aria-label="Próximos sete dias"]');
+   if(!hero||!evaluationsCard||!evolutionCard||!financeCard||!weekCard)return;
+   const quickEvaluation=hero.querySelector('[data-efh-action="evaluation"]');if(quickEvaluation)quickEvaluation.remove();
+   const heading=hero.querySelector('h1');
+   if(heading){ const greeting=String(heading.textContent||'').split(',')[0].split('!')[0];
+     heading.textContent=greeting+(professionalName?', '+professionalName:'')+'! Seu dia em foco.';
+   }
+   const heroDescription=hero.querySelector('.efh-hero-copy p');
+   if(heroDescription)heroDescription.textContent='Compromissos, pendências e a próxima ação, com informações dos módulos já existentes.';
+   const todaySorted=s.todays.slice().sort((a,b)=>String(a.time||'99:99').localeCompare(String(b.time||'99:99')));
+   const eventRefs=todaySorted.concat(next.filter(x=>!todaySorted.includes(x)));
+   const totalLate=overdue+ev.overdue.length;
+   const overdueItems=[
+     {value:s.lateTasks.length,label:'Tarefas',go:'tasks',ico:'check'},
+     {value:s.lateGoals.length,label:'Metas',go:'goals',ico:'target'},
+     {value:ev.overdue.length,label:'Reavaliações',module:'tab-historico',ico:'users'}
+   ];
+   const action=ev.overdue.length?
+    {title:'Revisar reavaliações vencidas',detail:`${ev.overdue.length} aluno(s) com data de retorno vencida.`,module:'tab-historico',ico:'users'}:
+    s.lateTasks.length?{title:'Resolver tarefas atrasadas',detail:`${s.lateTasks.length} tarefa(s) fora do prazo.`,go:'tasks',ico:'check'}:
+    s.lateGoals.length?{title:'Atualizar metas com prazo vencido',detail:`${s.lateGoals.length} meta(s) precisa(m) de revisão.`,go:'goals',ico:'target'}:
+    s.urgents.length?{title:'Ver tarefas prioritárias',detail:`${s.urgents.length} tarefa(s) marcada(s) como prioridade alta ou urgente.`,go:'tasks',ico:'flag'}:
+    todaySorted.length?{title:'Conferir agenda de hoje',detail:'Confira os próximos atendimentos e lembretes do dia.',go:'agenda',ico:'calendar'}:
+    ev.upcoming.length?{title:'Planejar reavaliações próximas',detail:`${ev.upcoming.length} retorno(s) registrado(s) para os próximos 14 dias.`,module:'tab-historico',ico:'users'}:
+    next.length?{title:'Preparar o próximo compromisso',detail:`Próximo registro: ${eventTitle(next[0])} — ${strDate(next[0].date,{day:'2-digit',month:'long'})}.`,go:'agenda',ico:'calendar'}:
+    {title:'Organizar os próximos atendimentos',detail:'Não há eventos ou tarefas urgentes nos registros locais consultados.',go:'agenda',ico:'calendar'};
+   const actionAttrs=x=>x.module?`data-efh-module="${x.module}"`:`data-efh-go="${x.go||'agenda'}"`;
+   const todayList=todaySorted.length?todaySorted.slice(0,4).map((x,i)=>`<button type="button" class="efb-event" data-efh-event="${i}" aria-label="Abrir ${safe(eventTitle(x))}"><span class="efb-event-time">${safe(x.time||'Hoje')}</span><span class="efb-event-copy"><strong>${safe(eventTitle(x))}</strong><small>${safe(labelFor(x))}${x.note?' · '+safe(String(x.note).slice(0,80)):''}</small></span>${icon('arrow',15)}</button>`).join(''):
+     `<div class="efb-empty"><strong>Nenhum compromisso previsto para hoje.</strong><span>Os registros cadastrados na Organização aparecerão aqui.</span></div>`;
+   const lateList=overdueItems.map(x=>`<button type="button" class="efb-late-item ${x.value?'has-late':''}" ${actionAttrs(x)}><span class="efb-late-icon">${icon(x.ico,18)}</span><span class="efb-late-copy"><strong>${safe(x.label)}</strong><small>${x.value?`${x.value} registro(s) vencido(s)`:'Nenhum vencimento encontrado'}</small></span><b>${x.value}</b></button>`).join('');
+   const weekData=week.map(x=>`<span class="efb-day ${x.date===s.t?'is-today':''}"><small>${safe(strDate(x.date,{weekday:'short'}).replace('.',''))}</small><strong>${x.count}</strong><i style="height:${Math.max(4,Math.round(x.count/mx*100))}%"></i></span>`).join('');
+   const shell=document.createElement('div');shell.className='efh-page efb-home';shell.id='efh-dashboard';
+   shell.setAttribute('aria-label','Início — central de trabalho');
+   shell.innerHTML=`
+    <div class="efb-hero-slot"></div>
+    <div class="efb-summary" aria-label="Resumo operacional">
+       <button type="button" class="efb-summary-item" data-efh-go="agenda"><span class="efb-summary-icon">${icon('calendar')}</span><span><small>Compromissos de hoje</small><strong>${s.todays.length}</strong></span></button>
+       <button type="button" class="efb-summary-item ${totalLate?'is-alert':''}" data-efh-go="tasks"><span class="efb-summary-icon">${icon('alert')}</span><span><small>Prazos e retornos vencidos</small><strong>${totalLate}</strong></span></button>
+       <button type="button" class="efb-summary-item" data-efh-module="tab-historico"><span class="efb-summary-icon">${icon('users')}</span><span><small>Reavaliações em 14 dias</small><strong>${ev.upcoming.length}</strong></span></button>
+       <button type="button" class="efb-summary-item" data-efh-module="tab-cobranca"><span class="efb-summary-icon">${icon('flag')}</span><span><small>Valores a receber</small><strong id="efh-finance-kpi">—</strong><span id="efh-finance-kpi-sub" class="efb-finance-small">Consulte os registros em Cobranças</span></span></button>
+    </div>
+    <div class="efb-focus-grid" aria-label="O que tenho hoje e o que está atrasado">
+      <section class="efb-panel efb-today"><div class="efb-panel-top"><div><span class="efb-section-label">01 · MINHA ROTINA</span><h2>O que tenho hoje?</h2><p>${s.todays.length?`${s.todays.length} item(ns) na agenda de hoje`:'Dia livre nos registros cadastrados'}</p></div><button type="button" class="efb-text-action" data-efh-go="agenda">Abrir agenda ${icon('arrow',15)}</button></div><div class="efb-today-list">${todayList}</div></section>
+      <section class="efb-panel efb-late"><div class="efb-panel-top"><div><span class="efb-section-label">02 · PENDÊNCIAS</span><h2>O que está atrasado?</h2><p>${totalLate?`${totalLate} registro(s) que merecem atenção`:'Sem prazos vencidos encontrados'}</p></div></div><div class="efb-late-list">${lateList}</div></section>
+    </div>
+    <section class="efb-next" aria-label="Próxima ação recomendada"><span class="efb-next-symbol">${icon(action.ico,21)}</span><div><span class="efb-section-label">03 · PRÓXIMA AÇÃO</span><h2>Qual é minha próxima ação?</h2><strong>${safe(action.title)}</strong><p>${safe(action.detail)}</p></div><button type="button" class="efb-next-button" ${actionAttrs(action)}>Abrir ${icon('arrow',15)}</button></section>
+    <div class="efb-section-heading"><div><span class="efb-section-label">ACOMPANHAMENTO</span><h2>Visão complementar</h2><p>Alunos, evolução e financeiro — resumos vinculados aos registros existentes.</p></div></div>
+    <div class="efb-followup-grid"><div class="efb-followup-left"></div><div class="efb-followup-right"></div></div>
+    <footer class="efb-disclaimer">Dados locais disponíveis no dispositivo. Nenhuma pendência ou diagnóstico é presumido quando o registro não possui informações suficientes.</footer>`;
+   shell.querySelector('.efb-hero-slot').append(hero);
+   shell.querySelector('.efb-followup-left').append(evaluationsCard,evolutionCard);
+   shell.querySelector('.efb-followup-right').append(financeCard,weekCard);
+   home.replaceChildren(shell);
+   home.__efh_events=eventRefs;
+   home.dataset.efHomeMode='operational';
+ }
  function render(){
   const home=$('#tab-painel');if(!home||!organization())return;
   const s=state();const ev=evaluations();const progress=evolutionSummary();const date=new Date();const hour=date.getHours();
@@ -182,7 +247,7 @@
     <section class="efh-card efh-finance-panel" aria-label="Visão financeira"><div class="efh-section-top"><div><span class="efh-eyebrow">GESTÃO FINANCEIRA · COBRANÇAS</span><h2>${icon('flag')} Recebimentos e pendências</h2><p id="efh-finance-status">Consultando registros locais</p></div><button type="button" class="efh-btn" data-efh-module="tab-cobranca">Abrir Cobranças ${icon('arrow')}</button></div><div id="efh-finance-content" aria-live="polite"><p class="efh-empty">Carregando informações financeiras…</p></div><p class="efh-note">Valores pagos são os lançamentos marcados como pagos, conforme a data do registro. Não representam conciliação bancária nem projeção de receita.</p></section>
     </div></div><div class="efh-last"><span>Indicadores calculados a partir dos registros locais. Os insights não substituem análise profissional.</span></div>
   </div>`;
-  home.__efh_events=next;
+  remodelInicio(home,{s,ev,overdue,pending,activeGoals,prioritized,next,week,mx,professionalName});
   showFinance(home);
   rendered=true;
   window.EFHomeCardLayout?.mount?.();
