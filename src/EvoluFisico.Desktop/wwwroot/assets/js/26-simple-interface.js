@@ -43,7 +43,7 @@ function arrangeNavigation(){
   if(form.parentNode!==toolbar)toolbar.append(form);
  }
  for(const [route,[id,label]] of Object.entries(routes)){
-  const b=$(id);if(!b)continue;b.type='button';b.setAttribute('aria-controls',route);
+  const b=$(id);if(!b)continue;b.type='button';b.setAttribute('aria-controls',route);b.setAttribute('aria-label',label);b.title=label;
   // Keep the form icon/label and history count IDs used by existing code.
   if(id==='tab-btn-history'){
    if(!b.dataset.simpleLabel){const count=$('history-counter');b.replaceChildren(document.createTextNode('Avaliações '));if(count){count.classList.add('ef-nav-count');b.append(count)}b.dataset.simpleLabel='1';}

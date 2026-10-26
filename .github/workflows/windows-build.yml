@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-nav-icons-3-1-19-rc4]
+    branches: [main, windows-sidebar-compact-3-1-19-rc5]
   workflow_dispatch:
 
 concurrency:
@@ -49,6 +49,9 @@ jobs:
 
       - name: Check single sidebar icon for all themes and prevent splash regression
         run: node tests/windows-nav-single-icon-rc4.cjs
+
+      - name: Validate compact Windows sidebar layout and navigation labels
+        run: node tests/windows-compact-sidebar-rc5.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -165,7 +168,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC4-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.19-RC5-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -226,7 +229,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC4-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.19-RC5-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14

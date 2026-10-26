@@ -1,0 +1,60 @@
+/* EvoluFísico Desktop RC-5: faixa lateral compacta. Sem alterações em dados ou PDF. */
+@media screen and (min-width: 1200px) {
+ body.ef-simple-ui.ef-sidebar-hidden {--ef-sidebar:80px!important;}
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar {
+  width:var(--ef-sidebar)!important;min-width:var(--ef-sidebar)!important;
+  padding:18px 8px!important;gap:12px!important;overflow-x:hidden!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .brand-wrapper {
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  padding:0 0 14px!important;gap:0!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .brand-wrapper .brand-title-group {display:none!important;}
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .brand-wrapper .brand-icon-box {
+  flex:0 0 38px!important;display:grid!important;place-items:center!important;margin:0!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs {
+  width:100%!important;align-items:center!important;gap:6px!important;overflow:visible!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs::before {
+  content:none!important;display:none!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn {
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  position:relative!important;box-sizing:border-box!important;
+  width:54px!important;max-width:100%!important;
+  height:50px!important;min-height:50px!important;
+  padding:0!important;margin:0 auto!important;gap:0!important;
+  font-size:0!important; /* oculta também os rótulos que são nós de texto, sem envolver SVG */
+  overflow:visible!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn > :not(.ef-local-nav-icon) {
+  display:none!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn > .ef-local-nav-icon {
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  position:relative!important;flex:0 0 26px!important;
+  width:26px!important;min-width:26px!important;height:26px!important;min-height:26px!important;
+  margin:0!important;padding:0!important;opacity:1!important;
+  visibility:visible!important;overflow:visible!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn > .ef-local-nav-icon svg {
+  display:block!important;flex:none!important;width:26px!important;height:26px!important;
+  opacity:1!important;visibility:visible!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn:focus-visible {
+  outline:2px solid var(--ef-selected-color,var(--ef-accent,#168476))!important;
+  outline-offset:2px!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden #ef-tools {
+  min-width:0!important;width:100%!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden #ef-workspace-heading {left:var(--ef-sidebar)!important;}
+ body.ef-simple-ui.ef-sidebar-hidden .app-container {
+  margin-left:var(--ef-sidebar)!important;
+  width:calc(100% - var(--ef-sidebar))!important;max-width:none!important;
+ }
+}
+@media print {
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar {display:none!important;}
+}
