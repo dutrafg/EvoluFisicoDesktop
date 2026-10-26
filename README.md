@@ -169,3 +169,8 @@ QA de regressão automatizado em `tests/windows-touch-scroll-1-0-11.cjs`. Testes
 - Preferências de ordem/tamanho armazenadas no perfil local do WebView2, separadas dos registros clínicos do SQLite protegido; migra preferências compatíveis do editor antigo, quando disponíveis.
 - Eliminado o rótulo obsoleto `EvoluFísico2 1.0.4 estável` e as etiquetas redundantes de versão da tela de abertura/cabeçalho. A versão técnica atual permanece disponível em Configurações → Manutenção e no instalador.
 - AppId, proteção do banco SQLite, funcionalidades EFIA, backup e geração de PDFs preservados. Testes em telas Windows com toque físico ainda recomendados após CI.
+
+
+## Migração web 3.1.19 — etapa RC-1 (em desenvolvimento)
+
+Implementação seletiva de papéis de parede, transparência em espaços vazios, painel lateral minimizado e Insights recolhidos, com integração offline e testes no Windows. **Não é uma versão 3.1.19 do Desktop**, nem substitui a 1.0.12 estável. Detalhes e pendências: [docs/WINDOWS_WEB_3_1_19_RC1.md](docs/WINDOWS_WEB_3_1_19_RC1.md).

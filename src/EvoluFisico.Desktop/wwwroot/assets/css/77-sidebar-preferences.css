@@ -1,0 +1,40 @@
+/* Preferências do trilho lateral de navegação; Desktop continua responsivo. */
+@media screen {
+ #ef-sidebar-preferences{
+   margin-top:16px;
+   padding:15px 16px;
+   border-radius:12px;
+   border:1px solid var(--ef-line,#d8e3e1);
+   background:var(--ef-soft,#f5f8f7);
+   color:var(--ef-ink,#263c35);
+ }
+ #ef-sidebar-preferences strong{display:block;font-size:13px;font-weight:750}
+ #ef-sidebar-preferences p{
+   font-size:12px;line-height:1.55;color:var(--ef-muted,#677780);margin:5px 0 12px
+ }
+ #ef-sidebar-preferences>div{
+   display:flex;flex-wrap:wrap;align-items:center;gap:8px
+ }
+ #ef-sidebar-preferences button{
+   min-height:40px;min-width:128px;flex:1 1 128px;
+   color:var(--ef-ink,#263c35);background:var(--ef-surface,#fff);
+   border:1px solid var(--ef-line,#cddbd7);
+   border-radius:9px;padding:9px 13px;cursor:pointer;
+   font:inherit;font-size:12px;font-weight:700
+ }
+ #ef-sidebar-preferences button[aria-pressed="true"]{
+   color:var(--ef-accent,#136c58);
+   background:color-mix(in srgb,var(--ef-accent,#168168) 12%,var(--ef-surface,#fff));
+   border-color:var(--ef-accent,#168168)
+ }
+ #ef-sidebar-preferences button:focus-visible{
+   outline:2px solid var(--ef-accent,#168168);outline-offset:3px
+ }
+ html.ef-dark-mode #ef-sidebar-preferences,
+ body.dark-mode #ef-sidebar-preferences{
+   background:var(--ef-soft,#202b35);
+   border-color:var(--ef-line,#465662);
+   color:var(--ef-ink,#f5f8fb)
+ }
+}
+@media print{#ef-sidebar-preferences{display:none!important}}
