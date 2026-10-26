@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-sync-3-1-19-rc1]
+    branches: [main, windows-sync-3-1-19-rc2]
   workflow_dispatch:
 
 concurrency:
@@ -40,6 +40,9 @@ jobs:
 
       - name: Verify Windows/web 3.1.19 RC-1 compatibility integration
         run: node tests/windows-web-3-1-19-rc1.cjs
+
+      - name: Validate Windows 3.1.19 RC-2 themed navigation
+        run: node tests/windows-web-3-1-19-rc2.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -156,7 +159,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-1.0-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.19-RC2-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -217,7 +220,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-1.0-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.19-RC2-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14
