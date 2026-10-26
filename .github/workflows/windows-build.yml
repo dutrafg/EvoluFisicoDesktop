@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-sync-3-1-19-rc2]
+    branches: [main, windows-splash-fix-3-1-19-rc3]
   workflow_dispatch:
 
 concurrency:
@@ -43,6 +43,9 @@ jobs:
 
       - name: Validate Windows 3.1.19 RC-2 themed navigation
         run: node tests/windows-web-3-1-19-rc2.cjs
+
+      - name: Check for splash deadlocks caused by SVG theme navigation observers
+        run: node tests/windows-splash-deadlock-rc3.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -159,7 +162,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC2-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.19-RC3-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -220,7 +223,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC2-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.19-RC3-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14

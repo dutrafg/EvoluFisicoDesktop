@@ -57,8 +57,13 @@
     // A navegação mantém todos os nós de texto e indicadores originais.
     let holder=button.querySelector(':scope > .ef-local-nav-icon');
     if(!holder){holder=document.createElement('span');holder.className='ef-local-nav-icon';button.prepend(holder);}
-    const icon=svg(theme.icons[index]);
-    if(holder.innerHTML!==icon)holder.innerHTML=icon;
+    // O navegador serializa <path/> como <path></path>: comparar innerHTML
+    // causava um ciclo infinito no MutationObserver e bloqueava o splash.
+    const desiredIcon=theme.icons[index];
+    if(holder.dataset.efThemeIcon!==desiredIcon || !holder.querySelector('svg')){
+      holder.dataset.efThemeIcon=desiredIcon;
+      holder.innerHTML=svg(desiredIcon);
+    }
    });
   }
   document.querySelectorAll('[data-ef-desktop-theme]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.efDesktopTheme===theme.id)));
