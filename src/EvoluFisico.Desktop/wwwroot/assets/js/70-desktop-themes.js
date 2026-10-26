@@ -30,9 +30,10 @@
   cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4m8-4v4M8 14h3M8 17h3"/>',
   weight:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
   apple:'<path d="M12 7c-5-3-9 1-9 6s4 9 9 9 9-4 9-9-4-9-9-6Z"/><path d="M12 7c0-3 1.5-4 4-4-.2 3-1.6 4-4 4Z"/>',
+  folder:'<path d="M3 5h7l2 3h9v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Z"/><path d="M3 9h18"/>',
   scale:'<path d="M12 3v18M5 7h14M6 21h12M5 7l-3 7a3 3 0 0 0 6 0zm14 0-3 7a3 3 0 0 0 6 0z"/>'
  });
- const ROUTES=['tab-btn-painel','tab-btn-history','tab-btn-compare','tab-btn-lab77','tab-btn-ef-forms','tab-btn-diagnostics','tab-btn-cobranca','tab-btn-settings'];
+ const ROUTES=[['tab-btn-painel',0],['tab-btn-organizacao','folder'],['tab-btn-history',1],['tab-btn-compare',2],['tab-btn-lab77',3],['tab-btn-ef-forms',4],['tab-btn-diagnostics',5],['tab-btn-cobranca',6],['tab-btn-settings',7]];
  const svg=kind=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(PATHS[kind]||PATHS.pulse)+'</svg>';
  let current=null;
  function read(){
@@ -51,7 +52,7 @@
   for(const [property,value] of Object.entries(colors))html.style.setProperty(property,value,'important');
   const nav=document.querySelector('.top-navbar .nav-tabs');
   if(nav){
-   ROUTES.forEach((key,index)=>{
+   ROUTES.forEach(([key,iconChoice])=>{
     const button=document.getElementById(key);
     if(!button||!nav.contains(button))return;
     // A navegação mantém todos os nós de texto e indicadores originais.
@@ -59,11 +60,13 @@
     if(!holder){holder=document.createElement('span');holder.className='ef-local-nav-icon';button.prepend(holder);}
     // O navegador serializa <path/> como <path></path>: comparar innerHTML
     // causava um ciclo infinito no MutationObserver e bloqueava o splash.
-    const desiredIcon=theme.icons[index];
+    const desiredIcon=typeof iconChoice==='number'?theme.icons[iconChoice]:iconChoice;
     if(holder.dataset.efThemeIcon!==desiredIcon || !holder.querySelector('svg')){
       holder.dataset.efThemeIcon=desiredIcon;
       holder.innerHTML=svg(desiredIcon);
     }
+    // Desativa a máscara antiga somente quando o botão já tem o ícone SVG temático.
+    if(button.dataset)button.dataset.efThemeIconVisible='1';
    });
   }
   document.querySelectorAll('[data-ef-desktop-theme]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.efDesktopTheme===theme.id)));

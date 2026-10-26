@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-splash-fix-3-1-19-rc3]
+    branches: [main, windows-nav-icons-3-1-19-rc4]
   workflow_dispatch:
 
 concurrency:
@@ -46,6 +46,9 @@ jobs:
 
       - name: Check for splash deadlocks caused by SVG theme navigation observers
         run: node tests/windows-splash-deadlock-rc3.cjs
+
+      - name: Check single sidebar icon for all themes and prevent splash regression
+        run: node tests/windows-nav-single-icon-rc4.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -162,7 +165,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC3-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.19-RC4-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -223,7 +226,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC3-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.19-RC4-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14

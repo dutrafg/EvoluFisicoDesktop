@@ -12,6 +12,8 @@
  .ef-desktop-theme-preview svg{width:24px;height:24px}
  #ef-desktop-themes #efwp-appearance-open{width:100%;margin:5px 0 0;min-height:42px}
  html[data-ef-design-theme] #ef-setting-appearance>.ef-colors-field{display:none}
+ /* Corrige duplicidade entre a máscara CSS legada (::before) e o SVG do tema. */
+ html[data-ef-design-theme] body.ef-simple-ui .top-navbar > .nav-tabs > :is(#tab-btn-painel,#tab-btn-organizacao,.nav-tab-btn)[data-ef-theme-icon-visible="1"]::before{content:none!important;display:none!important;-webkit-mask:none!important;mask:none!important}
  html[data-ef-design-theme] .ef-local-nav-icon svg{color:var(--ef-selected-color);stroke:currentColor}
  html.ef-dark-mode[data-ef-design-theme] .ef-local-nav-icon svg{color:var(--ef-selected-darkmode-accent)}
  @media(max-width:900px){.ef-desktop-themes-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
