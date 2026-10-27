@@ -16,6 +16,14 @@ assert.match(css,/\.nav-tab-btn > :not\(\.ef-local-nav-icon\)/);
 assert.match(css,/\.nav-tab-btn > \.ef-local-nav-icon svg\s*\{[\s\S]*?display:block!important;[\s\S]*?width:26px!important;/);
 assert.match(css,/font-size:0!important/);
 assert.match(css,/\.app-container\s*\{[\s\S]*?margin-left:var\(--ef-sidebar\)!important/);
+// RC-8 hotfix: a faixa compacta precisa de fundo próprio, contraste e estado ativo.
+assert.match(css,/body\\.ef-simple-ui\\.ef-sidebar-hidden \\.top-navbar\\s*\\{[\\s\\S]*?background:#20283b!important;/);
+assert.match(css,/html\\.ef-dark-mode body\\.ef-simple-ui\\.ef-sidebar-hidden \\.top-navbar/);
+assert.match(css,/background:#151d2e!important/);
+assert.match(css,/\\.nav-tab-btn > \\.ef-local-nav-icon svg\\s*\\{[\\s\\S]*?color:color-mix\\(/);
+assert.match(css,/\\.nav-tab-btn\\.active\\s*\\{[\\s\\S]*?box-shadow:inset 3px 0 #ffffff!important/);
+assert.match(js,/saved=value===null\\?true:value==='1'/,'Sidebar should default to collapsed');
+assert.match(js,/localStorage\\.setItem\\('ef_sidebar_hidden'/,'Sidebar preference must persist');
 assert.match(css,/@media print/);
 assert.match(js,/b\.setAttribute\('aria-label',label\);b\.title=label;/);
 assert.match(js,/classList\.toggle\('ef-sidebar-hidden',hidden\)/);
