@@ -54,7 +54,8 @@ check('Versão Windows alinhada à versão do instalador',()=>{
  const version=source.match(/^#define MyAppVersion "([^"\r\n]+)"$/m)?.[1];
  assert.equal(version,'1.0.12','Versão estável deve ser 1.0.12');
  assert.ok(nav.includes("version:'1.0.12'"),'UI deve indicar a versão estável');
- assert.ok(html.includes('<title>EvoluFísico Desktop</title>')&&!html.includes('ef-splash-version-pill'),'versão disponível apenas em Manutenção');
+ assert.ok(html.includes('<title>EvoluFísico Desktop RC-9 — Avaliação Física &amp; Composição Corporal</title>'),'Título identifica RC-9');
+ assert.ok(html.includes('Windows RC-9 · Base Web 3.1.37'),'Splash identifica RC-9 sem alterar versão interna 1.0.12');
 });
 check('Recursos da versão 9.1 e novo Início permanecem no cache offline',()=>{assert(sw.includes('./assets/js/32-forms-clean.js'));assert(sw.includes('./assets/js/06-dashboard.js'));assert(sw.includes('./assets/css/31-desktop-refinement.css'));assert.match(sw,/const CACHE_NAME = 'evolufisico-desktop-[^']+';/)});
 console.log('PASS '+count+' verificações da correção 9.1-beta de Cobranças e layout Windows.');
