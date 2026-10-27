@@ -3,12 +3,9 @@ $root = Split-Path -Parent $PSScriptRoot
 $project = Join-Path $root 'src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj'
 $web = Join-Path $root 'src/EvoluFisico.Desktop/wwwroot'
 if (!(Test-Path (Join-Path $web 'index.html'))) { throw 'Frontend ausente: wwwroot/index.html' }
-
-# Fonte única de versionamento: EvoluFísico2 Web.
-$manifestFile = Join-Path $web 'version.json'
-if (!(Test-Path $manifestFile)) { throw 'Manifesto version.json não encontrado' }
-$sourceManifest = Get-Content $manifestFile -Raw | ConvertFrom-Json
+$sourceManifest = Get-Content (Join-Path $web 'version.json') -Raw | ConvertFrom-Json
 $webVersion = [string]$sourceManifest.version
+$sourceCommit = [string]$sourceManifest.source_web_commit
 if ($webVersion -notmatch '^\d+\.\d+\.\d+
 foreach ($size in @('192','512')) {
   $encoded = Join-Path $root "installer/resources/icon-$size.png.base64"
@@ -82,8 +79,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Falha no publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/EvoluFisico.Desktop.exe'))) { throw 'Executavel nao encontrado apos publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/wwwroot/desktop-version.json'))) { throw 'Version manifest not included in Windows publish' }
 Write-Host 'Publicacao concluida em publish/win-x64'
-) { throw "Versao da Web invalida: $webVersion" }
-$sourceCommit = [string]$sourceManifest.source_web_commit
+) { throw 'Versao Web invalida' }
 if ($sourceCommit -notmatch '^[0-9a-f]{40}
 foreach ($size in @('192','512')) {
   $encoded = Join-Path $root "installer/resources/icon-$size.png.base64"
@@ -157,10 +153,9 @@ if ($LASTEXITCODE -ne 0) { throw 'Falha no publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/EvoluFisico.Desktop.exe'))) { throw 'Executavel nao encontrado apos publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/wwwroot/desktop-version.json'))) { throw 'Version manifest not included in Windows publish' }
 Write-Host 'Publicacao concluida em publish/win-x64'
-) { throw 'Commit de origem Web nao especificado' }
+) { throw 'Commit de origem invalido' }
 $html = [IO.File]::ReadAllText((Join-Path $web 'index.html'))
-if (!$html.Contains(('"version":"' + $webVersion + '"'))) { throw 'Frontend HTML nao corresponde a versao da Web' }
-
+if (!$html.Contains(('"version":"' + $webVersion + '"'))) { throw 'HTML e manifesto divergentes' }
 foreach ($size in @('192','512')) {
   $encoded = Join-Path $root "installer/resources/icon-$size.png.base64"
   $output = Join-Path $web "icon-$size.png"
