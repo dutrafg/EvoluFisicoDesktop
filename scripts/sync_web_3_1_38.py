@@ -6,6 +6,7 @@ import json
 import re
 import subprocess
 import tempfile
+from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 WWW = ROOT / "src/EvoluFisico.Desktop/wwwroot"
@@ -18,10 +19,16 @@ def run(*cmd, cwd=None, check=True):
     return subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=check)
 
 def git_web_sources(repo_dir):
-    run("git", "init", "-q", str(repo_dir))
+    # Fetch immutable source revisions directly; no cross-repository git credentials required.
+    result = []
     for sha in (BASE, HEAD):
-        run("git", "fetch", "-q", "--depth=1", REMOTE, sha, cwd=repo_dir)
-    return [run("git", "show", f"{sha}:index.html", cwd=repo_dir).stdout.decode("utf-8") for sha in (BASE, HEAD)]
+        url = f"https://raw.githubusercontent.com/dutrafg/Evolufisico2/{sha}/index.html"
+        with urlopen(Request(url, headers={"User-Agent": "EvoluFisicoDesktop-RC10"}), timeout=60) as response:
+            body = response.read().decode("utf-8")
+        if len(body) < 3_000_000:
+            raise RuntimeError(f"Web source is incomplete: {sha}")
+        result.append(body)
+    return result
 
 def patch_nonoverlapping(base, newest, windows):
     old_lines, new_lines = base.splitlines(keepends=True), newest.splitlines(keepends=True)
