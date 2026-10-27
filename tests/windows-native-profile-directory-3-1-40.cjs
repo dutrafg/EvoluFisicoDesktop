@@ -28,8 +28,21 @@ vm.runInContext(section('async function persistDirectory(item){','async function
  const profile=await vm.runInContext('readProfileFallback()',ctx);
  assert.equal(profile.name,'Profissional RC11');
  assert(records.has('ef-profile-professional'));
+ // Existing Web IndexedDB profile must migrate before prompting first-run again.
+ records.delete('ef-profile-professional');
+ ctx.window.indexedDB={databases:async()=>[{name:'EvoluFisico_Profissional'},{name:'EvoluFisico_Cadastro_Perfil'}]};
+ ctx.readProfileLegacyDb=async()=>({name:'Profissional Migrado'});
+ const migratedProfile=await vm.runInContext('readProfileFallback()',ctx);
+ assert.equal(migratedProfile.name,'Profissional Migrado');
+ assert.equal(records.get('ef-profile-professional').name,'Profissional Migrado');
+ // On conflict, newer IndexedDB directory rows win over stale local backup.
+ ctx.DIRECTORY_STORE='cadastros';
+ ctx.dbDirectory=async()=>({
+  transaction:()=>({objectStore:()=>({getAll:()=>{const req={};queueMicrotask(()=>{req.result=[{id:'legacy-1',nome:'Aluno IndexedDB Atualizado'}];req.onsuccess()});return req;}})}),
+  close:()=>{}
+ });
  await vm.runInContext('loadDirectoryNative()',ctx);
- assert.equal(ctx.directory.get('legacy-1').nome,'Aluno Migrado');
+ assert.equal(ctx.directory.get('legacy-1').nome,'Aluno IndexedDB Atualizado');
  assert(records.has('ef-profile-student-legacy-1'));
  await vm.runInContext("persistDirectory({id:'student-2',nome:'Aluno Novo'})",ctx);
  assert.equal(records.get('ef-profile-student-student-2').nome,'Aluno Novo');
