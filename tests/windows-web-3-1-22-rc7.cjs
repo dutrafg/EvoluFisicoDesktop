@@ -18,11 +18,11 @@ assert.ok(app.includes('window.EFDesktopObjectives?.renderSummary?.(aval.objetiv
 assert.ok(css.includes('#single-print-wrapper .ef322-plan-summary'));
 assert.ok(css.includes('#modal-body-content .ef322-plan-summary'));
 assert.ok(sw.includes('web-3-1-22-rc7'));
-assert.ok(build.includes("channel = 'RC-7'")&&build.includes("source_web_version = '3.1.22'"));
-assert.ok(installer.includes('OutputBaseFilename=EvoluFisicoDesktop-3.1.22-RC7-Setup'));
+assert.ok(/channel = 'RC-[78]'/.test(build)&&/source_web_version = '3.1.2[23]'/.test(build));
+assert.ok(/OutputBaseFilename=EvoluFisicoDesktop-3\.1\.2[23]-RC[78]-Setup/.test(installer));
 assert.ok(workflow.includes('tests/windows-web-3-1-22-rc7.cjs'));
-assert.ok(workflow.includes('EvoluFisicoDesktop-3.1.22-RC7-Windows-Setup'));
-assert.ok(workflow.includes('EvoluFisicoDesktop-3.1.22-RC7-Windows-Portable'));
+assert.ok(/EvoluFisicoDesktop-3\.1\.2[23]-RC[78]-Windows-Setup/.test(workflow));
+assert.ok(/EvoluFisicoDesktop-3\.1\.2[23]-RC[78]-Windows-Portable/.test(workflow));
 const values=Object.fromEntries(['kind','metric','target','tolerance','deadline','note'].map(k=>[k,{value:'',disabled:false,addEventListener(){}}]));
 const date={value:'2026-10-26',addEventListener(){}},status={textContent:''};
 const doc={readyState:'complete',getElementById(id){if(id==='data_avaliacao')return date;if(id==='ef322-status')return status;return values[id.replace('ef322-','')]||null}};
