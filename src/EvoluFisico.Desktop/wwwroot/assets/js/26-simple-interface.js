@@ -117,7 +117,7 @@ function setupForm(){
  const step3=document.querySelector('.step[data-step="3"]');if(step3){
   const titles=[...step3.querySelectorAll(':scope > .section-subhead')];
   const groups=titles.map((title,i)=>{const nodes=[];let n=title.nextElementSibling;while(n&&n!==titles[i+1]){nodes.push(n);n=n.nextElementSibling}return {title,nodes,i}});
-  groups.forEach(({title,nodes,i})=>{const d=fold('ef-method-'+i,i?'Bioimpedância':'Dobras cutâneas',i?'Resultados do aparelho, quando disponíveis':'Protocolo de 7 dobras e resultados',nodes,step3,title);if(!i)d.open=true;title.remove()});
+  groups.forEach(({title,nodes,i})=>{const d=fold('ef-method-'+i,i?'Bioimpedância':'Dobras cutâneas',i?'Resultados do aparelho, quando disponíveis':'Protocolo de 7 dobras e resultados',nodes,step3,title);d.open=true;title.remove()});
  }
  const stats=document.querySelector('#tab-historico > .dashboard-kpi-grid');if(stats)fold('ef-history-summary','Resumo das avaliações','Totais, médias e registros com fotos',[stats],stats.parentNode,stats);
  const bar=document.querySelector('#tab-historico .search-bar-container');
@@ -345,7 +345,7 @@ function mount(){
  window.switchTab('tab-painel');
  let printStates=[];window.addEventListener('beforeprint',()=>{printStates=[...document.querySelectorAll('details.ef-simple-fold')].map(d=>[d,d.open]);printStates.forEach(([d])=>d.open=true)});
  window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);printStates=[]});
- const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=[...bia.querySelectorAll('input,textarea')].some(x=>x.value.trim());return r};
+ const edit=window.editarAvaliacao;if(typeof edit==='function')window.editarAvaliacao=function(){const r=edit.apply(this,arguments);const bia=$('ef-method-1');if(bia)bia.open=true;return r};
  window.EFSimpleUI={version:'1.0.12',arrangeNavigation,arrangeDetails};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
