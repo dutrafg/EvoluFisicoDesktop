@@ -28,8 +28,17 @@ const server=http.createServer((req,res)=>{
   assert(await page.locator('#tab-painel').evaluate(e=>e.classList.contains('active')),'Dashboard não abriu');
   await page.evaluate(()=>window.switchTab('tab-alunos'));
   assert(await page.locator('#tab-alunos').evaluate(e=>e.classList.contains('active')),'Perfil Unificado não abriu');
-  assert(await page.evaluate(()=>document.documentElement.textContent.includes('EvoStore')),'EvoStore ausente');
-  console.log('PASS Chromium: Dashboard e Perfil Unificado instalados e navegação ativa; EvoStore presente');
+  await page.evaluate(()=>window.switchTab('tab-painel'));
+  await page.waitForSelector('#efw-open-picker',{state:'attached',timeout:15000});
+  await page.evaluate(()=>document.getElementById('efw-open-picker').click());
+  await page.waitForSelector('#efw-catalog-grid button[data-efw-add]',{state:'attached',timeout:15000});
+  const total=await page.locator('#efw-catalog-grid button[data-efw-add]').count();
+  assert(total>=50,'EvoStore deve disponibilizar pelo menos 50 miniapps: '+total);
+  await page.evaluate(()=>document.querySelector('#efw-catalog-grid button[data-efw-add]').click());
+  await page.waitForFunction(()=>document.querySelectorAll('#efw-card-grid .efw-card').length>0,{timeout:15000});
+  const content=await page.locator('#efw-card-grid').innerText();
+  assert(!content.includes('Este mini app não conseguiu carregar'),'Miniapp instalado mas não iniciou');
+  console.log('PASS Chromium: Dashboard, Perfil Unificado e EvoStore com '+total+' miniapps; primeiro miniapp instalado e renderizado');
   if(errors.length)console.log('Erros reportados por scripts do frontend: '+JSON.stringify(errors.slice(0,8)));
  }finally{if(browser)await browser.close();server.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;server.close()});
