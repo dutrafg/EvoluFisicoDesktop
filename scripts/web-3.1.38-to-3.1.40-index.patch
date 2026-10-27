@@ -1,0 +1,163 @@
+@@ -1,11 +1,11 @@
+ <!DOCTYPE html>
+-<!-- EvoluFisico2 3.1.38 Release — painel de resultados com expansão acessível. -->
++<!-- EvoluFisico2 3.1.40 Release — correção do salvamento do perfil profissional no primeiro acesso. -->
+ 
+ 
+ <html lang="pt-BR">
+ <head>
+ <script id="ef-release-information">
+-(()=>{'use strict';const info={"version":"3.1.38","channel":"Release","summary":"Rebranding visual da dashboard e dos módulos","changes":["Nova identidade visual aplicada aos módulos, com paleta, tipografia, contraste e cartões mais consistentes.","Dashboard responsiva em monitores grandes: cartões compactos conforme o conteúdo, sem cortes ou recursos ocultos."]};info.changes=Object.freeze(info.changes);
++(()=>{'use strict';const info={"version":"3.1.40","channel":"Release","summary":"Correção da identificação profissional no primeiro acesso","changes":["O perfil profissional é gravado com cópia de recuperação e pode ser restaurado ao reabrir o aplicativo.","O primeiro acesso usa IndexedDB como contingência e mantém o formulário aberto se não for possível confirmar o salvamento."]};info.changes=Object.freeze(info.changes);
+  function render(root=document){const card=root.querySelector('#ef-whatsnew-card');if(!card)return;card.querySelector('.efwhatsnew-version').textContent='v'+info.version+' '+info.channel;card.querySelector('.efwhatsnew-summary').textContent=info.summary;let details=card.querySelector('.ef-release-details');if(!details){details=document.createElement('details');details.className='ef-release-details';const summary=document.createElement('summary');summary.textContent='Ver todas as melhorias desta versão';details.append(summary);const list=document.createElement('ul');for(const text of info.changes){const item=document.createElement('li');item.textContent=text;list.append(item)}details.append(list);summary.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();details.open=!details.open;});card.append(details)}}
+  window.EFReleaseInfo=Object.freeze({...info,render});
+ })();
+@@ -151,7 +151,7 @@
+     })();
+ </script>
+ <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+-<title>EvoluFísico2 3.1.38 Release — Avaliação Física &amp; Composição Corporal</title>
++<title>EvoluFísico2 3.1.40 Release — Avaliação Física &amp; Composição Corporal</title>
+ <meta content="#eef1ec" name="theme-color"/>
+ <meta content="telephone=no" name="format-detection"/>
+ <meta content="EvoluFísico — avaliação física e composição corporal." name="description"/>
+@@ -631,7 +631,7 @@
+ <div class="ef-splash-titles">
+ <h1 class="ef-splash-title">EvoluFísico</h1>
+ <p class="ef-splash-subtitle">Avaliação Física &amp; Composição Corporal</p>
+-<div class="ef-splash-version-pill">Versão 3.1.38 Release</div>
++<div class="ef-splash-version-pill">Versão 3.1.40 Release</div>
+ </div>
+ <div class="ef-splash-loader-box">
+ <div class="ef-splash-bar">
+@@ -12518,12 +12518,12 @@ <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-main); margin-bo
+ 
+ <div class="efs-subpage" data-efs-panel="manutencao" hidden=""><div class="efs-section-title"><h3>Manutenção e diagnóstico</h3><p>Verifique a integridade dos módulos e execute autocorreções seguras.</p></div><div class="ef-settings-grid"><article class="ef-settings-card ef-settings-card-wide efup-card" id="efup-card" aria-labelledby="efup-title">
+ <div class="efup-heading"><span class="efup-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M6.2 9A7 7 0 0 1 18.6 7L20 12"/><path d="M4 12l1.4 5A7 7 0 0 0 17.8 15"/></svg></span><div class="efup-headlines"><span class="efup-eyebrow">SISTEMA · ATUALIZAÇÕES</span><h3 id="efup-title">Verificar Atualizações</h3><p>Acompanhe novas versões publicadas a partir do GitHub e disponibilizadas no site oficial.</p></div><span class="efup-state" id="efup-state" data-state="waiting">Aguardando</span></div>
+-<div class="efup-metrics"><div><span>VERSÃO INSTALADA</span><strong id="efup-installed">3.1.38 Release</strong><small>Canal de homologação</small></div><div><span>ÚLTIMA VERIFICAÇÃO</span><strong id="efup-last-check">Ainda não verificado</strong><small>Consulta automática com conexão</small></div></div>
++<div class="efup-metrics"><div><span>VERSÃO INSTALADA</span><strong id="efup-installed">3.1.40 Release</strong><small>Canal de homologação</small></div><div><span>ÚLTIMA VERIFICAÇÃO</span><strong id="efup-last-check">Ainda não verificado</strong><small>Consulta automática com conexão</small></div></div>
+ <div class="efup-actions"><button type="button" id="efup-check" class="efup-button"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 7v5h-5M4 17v-5h5M6 9a7 7 0 0 1 12-2l2 5M4 12l2 5a7 7 0 0 0 12-2"/></svg>Verificar agora</button><a id="efup-open" href="https://evolufisico2.vercel.app/" target="_blank" rel="noopener noreferrer" hidden>Abrir atualização ↗</a></div>
+ <p id="efup-message" class="efup-message" role="status" aria-live="polite">Verificação automática ao abrir o aplicativo e periodicamente durante o uso.</p>
+ </article><article class="ef-settings-card ef-settings-card-wide efwhatsnew-card" id="ef-whatsnew-card" aria-labelledby="ef-whatsnew-title">
+-<div class="efwhatsnew-header"><span class="efwhatsnew-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3Z"/><path d="M19 17v4M17 19h4"/></svg></span><div class="efwhatsnew-text"><span class="efwhatsnew-eyebrow">ÚLTIMAS MELHORIAS</span><h3 id="ef-whatsnew-title">O que há de novidade</h3></div><span class="efwhatsnew-version">v3.1.38 Release</span></div>
+-<p class="efwhatsnew-summary">Release: refatoração de CSS e otimização do sistema de temas, preservando a largura total das Análises Completas e os ícones exclusivos. Mantida a correção dos ícones temáticos exclusivos na dock e no painel.</p>
++<div class="efwhatsnew-header"><span class="efwhatsnew-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3Z"/><path d="M19 17v4M17 19h4"/></svg></span><div class="efwhatsnew-text"><span class="efwhatsnew-eyebrow">ÚLTIMAS MELHORIAS</span><h3 id="ef-whatsnew-title">O que há de novidade</h3></div><span class="efwhatsnew-version">v3.1.40 Release</span></div>
++<p class="efwhatsnew-summary">Correção do salvamento do nome profissional no primeiro acesso, com recuperação por IndexedDB quando o armazenamento principal está bloqueado.</p>
+ </article><article class="ef-settings-card ef-settings-card-wide efs-diagnostics-card"><div id="ef-setting-diagnostics"></div></article></div></div>
+  `
+  document.querySelector('.app-container').append(settings);
+@@ -14018,6 +14018,11 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+   const $=id=>document.getElementById(id);
+   const get=key=>{try{const value=String(localStorage.getItem(key)||'').trim();if(value)return value}catch(_){}const field=Object.keys(KEYS).find(k=>KEYS[k]===key);return String(volatileProfile?.[field]||'').trim()};
+   const set=(key,val)=>{try{localStorage.setItem(key,val);return localStorage.getItem(key)===val}catch(_){return false}};
++  const PROFILE_DB='EvoluFisico_Profissional',PROFILE_STORE='perfil',PROFILE_ID='principal';
++  let profileReady=Promise.resolve();
++  function openProfileDb(){return new Promise((resolve,reject)=>{try{if(!window.indexedDB)return reject(Error('IndexedDB indisponível'));const request=window.indexedDB.open(PROFILE_DB,1);request.onupgradeneeded=()=>{const db=request.result;if(!db.objectStoreNames.contains(PROFILE_STORE))db.createObjectStore(PROFILE_STORE,{keyPath:'id'})};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error||Error('Banco do perfil indisponível'));request.onblocked=()=>reject(Error('Banco do perfil bloqueado por outra aba'))}catch(error){reject(error)}})}
++  async function readProfileFallback(){const db=await openProfileDb();return new Promise((resolve,reject)=>{let done=false;const finish=(fn,value)=>{if(done)return;done=true;try{db.close()}catch(_){}fn(value)};try{const tx=db.transaction(PROFILE_STORE,'readonly'),request=tx.objectStore(PROFILE_STORE).get(PROFILE_ID);request.onsuccess=()=>finish(resolve,request.result||null);request.onerror=()=>finish(reject,request.error||Error('Falha ao ler perfil'));tx.onabort=()=>finish(reject,tx.error||Error('Leitura do perfil abortada'))}catch(error){finish(reject,error)}})}
++  async function writeProfileFallback(profile){const db=await openProfileDb();return new Promise((resolve,reject)=>{let done=false;const finish=(fn,value)=>{if(done)return;done=true;try{db.close()}catch(_){}fn(value)};try{const tx=db.transaction(PROFILE_STORE,'readwrite');tx.objectStore(PROFILE_STORE).put({id:PROFILE_ID,...profile,savedAt:new Date().toISOString()});tx.oncomplete=()=>finish(resolve,true);tx.onabort=()=>finish(reject,tx.error||Error('Gravação do perfil abortada'));tx.onerror=()=>finish(reject,tx.error||Error('Falha ao gravar perfil'))}catch(error){finish(reject,error)}})}
+   const meaningfulName=x=>typeof x==='string'&&x.trim().length>0;
+   const read=()=>({name:get(KEYS.name),nickname:get(KEYS.nickname),cref:get(KEYS.cref),workplace:get(KEYS.workplace)});
+   let shown=false;
+@@ -14040,31 +14045,35 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+       const input=$(id);if(input)input.value=val;
+     }
+   }
+-  function save(event){
++  async function restoreProfile(){if(meaningfulName(read().name))return;try{const profile=await readProfileFallback();if(!meaningfulName(profile?.name))return;volatileProfile=profile;for(const [field,key] of Object.entries(KEYS)){const value=String(profile[field]||'');if(value&&!get(key))set(key,value)}}catch(error){console.warn('Não foi possível recuperar a identificação profissional do armazenamento local',error)}}
++  function openWhenReady(force=false){return profileReady.then(()=>open(force))}
++  async function save(event){
+     event.preventDefault();
+     if(saving)return false;
+     const p={name:$('efprof-name').value.trim().replace(/\s+/g,' '),nickname:$('efprof-nickname').value.trim(),cref:$('efprof-cref').value.trim(),workplace:$('efprof-workplace').value.trim()};
+     if(!meaningfulName(p.name)){
+-      $('efprof-error').hidden=false;$('efprof-name').setAttribute('aria-invalid','true');$('efprof-name').focus();return false;
++      $('efprof-error').textContent='Informe seu nome completo para continuar.';$('efprof-error').hidden=false;$('efprof-name').setAttribute('aria-invalid','true');$('efprof-name').focus();return false;
+     }
+     $('efprof-name').removeAttribute('aria-invalid');$('efprof-error').hidden=true;
+     saving=true;
+     const submit=$('efprof-form')?.querySelector('button[type="submit"]');
+     const label=submit?.innerHTML;
+     if(submit){submit.disabled=true;submit.textContent='Salvando…';}
+     try{
+-      volatileProfile=p;
+       let persisted=true;
+-      for(const [key,val] of Object.entries(p))if(!set(KEYS[key],val))persisted=false;
++      for(const [field,key] of Object.entries(KEYS))if(!set(key,p[field]))persisted=false;
++      if(!persisted){try{await writeProfileFallback(p);persisted=true}catch(error){throw Error('O navegador bloqueou o armazenamento e não foi possível gravar o perfil. Seus dados continuam no formulário. '+(error?.message||''))}}
++      else{try{await writeProfileFallback(p)}catch(error){console.warn('Perfil principal salvo; a cópia de recuperação não foi atualizada',error)}}
++      volatileProfile=p;
+       syncEvaluationInputs(p);
+       close();
+-      if(typeof window.setTimeout==='function')window.setTimeout(()=>{try{window.EFHomeDashboard?.refresh?.();}catch(e){console.warn('Atualização do Início adiada',e)}},0);
+-      window.dispatchEvent(new CustomEvent('ef-professional-profile-saved',{detail:{nickname:p.nickname,name:p.name}}));
+-      if(!persisted)window.efToast?.('Perfil disponível nesta sessão. O navegador bloqueou o armazenamento local.','warning');
++      if(typeof window.setTimeout==='function')window.setTimeout(()=>{try{window.EFHomeDashboard?.refresh?.()}catch(e){console.warn('Atualização do Início adiada',e)}},0);
++      try{window.dispatchEvent(new CustomEvent('ef-professional-profile-saved',{detail:{nickname:p.nickname,name:p.name}}))}catch(error){console.warn('Não foi possível notificar os módulos do perfil profissional',error)}
++      if(!Object.values(KEYS).every(key=>{try{return localStorage.getItem(key)!=null}catch(_){return false}}))window.efToast?.('Identificação salva no armazenamento local de contingência.','success');
+       return true;
+     }catch(error){
+       console.error('Falha ao concluir a identificação profissional',error);
+-      $('efprof-error').textContent='Não foi possível concluir agora. Seus dados permanecem no formulário; tente novamente.';
++      $('efprof-error').textContent=error.message||'Não foi possível salvar. Seus dados permanecem no formulário; tente novamente.';
+       $('efprof-error').hidden=false;
+       return false;
+     }finally{
+@@ -14089,17 +14098,18 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+     $('efprof-name').addEventListener('input',()=>{if($('efprof-name').value.trim()){$('efprof-name').removeAttribute('aria-invalid');$('efprof-error').hidden=true;}});
+     document.addEventListener('keydown',handleKey,true);
+     // Exibida somente após o splash finalizar; o primeiro acesso é obrigatório quando falta o nome.
+-    window.addEventListener('ef-splash-finished',()=>open());
++    profileReady=restoreProfile();
++    window.addEventListener('ef-splash-finished',()=>openWhenReady());
+     const splash=$('ef-splash');
+-    if(!splash||splash.style.display==='none')open();
++    if(!splash||splash.style.display==='none')openWhenReady();
+     else if(splash.classList.contains('dismissed')){
+       // Segurança para um splash encerrado antes do registro do listener.
+-      const observer=new MutationObserver(()=>{if(splash.style.display==='none'){observer.disconnect();open();}});
++      const observer=new MutationObserver(()=>{if(splash.style.display==='none'){observer.disconnect();openWhenReady();}});
+       observer.observe(splash,{attributes:true,attributeFilter:['style']});
+     }
+   }
+   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+-  window.EFProfessionalProfile={read,open:()=>open(true)};
++  window.EFProfessionalProfile={read,open:()=>openWhenReady(true)};
+ })();
+ 
+ </script>
+@@ -14455,7 +14465,7 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+ <script id="ef-101-controls">
+ (function(){
+  'use strict';
+- const VERSION='3.1.38 Release';
++ const VERSION='3.1.40 Release';
+  const svg='<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>';
+  function mountSearch(){
+   const host=document.getElementById('ef-workspace-heading');
+@@ -15552,18 +15562,22 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+   if(local){const recovered=JSON.parse(local);if(!Array.isArray(recovered))throw Error('Backup local de cadastros inválido');for(const r of recovered){if(!rows.some(x=>x.id===r.id))rows.push(r);} }
+   directory.clear();for(const r of rows){let item=r;if(r.encrypted){if(!window.EF_Security?.decryptObject)throw Error('Motor de criptografia indisponível');item=await window.EF_Security.decryptObject(r.payload)}if(item&&plain(item.id)&&plain(item.nome))directory.set(item.id,item);}
+  }catch(e){
+-  if(directoryDb){directoryProblem='Falha ao abrir cadastros: '+e.message;directoryLoading=false;main();return;}
+-  directoryBackend='armazenamento de contingência';try{const rows=JSON.parse(localStorage.getItem(DIRECTORY_FALLBACK)||'[]');if(!Array.isArray(rows))throw Error('Dados armazenados inválidos');directory.clear();for(const r of rows){const item=r.encrypted?await window.EF_Security.decryptObject(r.payload):r;if(item?.id&&item?.nome)directory.set(item.id,item)}directoryProblem='IndexedDB indisponível; usando armazenamento local de contingência. Exporte seus cadastros.'}catch(e2){directoryProblem='Não foi possível ler os cadastros: '+e2.message;}
++  directoryBackend='armazenamento de contingência';directory.clear();try{const rows=JSON.parse(localStorage.getItem(DIRECTORY_FALLBACK)||'[]');if(!Array.isArray(rows))throw Error('Dados armazenados inválidos');for(const r of rows){const item=r.encrypted?await window.EF_Security.decryptObject(r.payload):r;if(item?.id&&item?.nome)directory.set(item.id,item)}directoryProblem='Falha no IndexedDB ('+e.message+'); usando armazenamento local de contingência. Exporte seus cadastros.'}catch(e2){directoryProblem='Não foi possível ler os cadastros: '+e2.message;}
+  }finally{directoryLoading=false;notifyRegistry();main()}
+ }
++function readDirectoryFallback(){const value=localStorage.getItem(DIRECTORY_FALLBACK);if(!value)return [];const rows=JSON.parse(value);if(!Array.isArray(rows))throw Error('Dados locais de cadastros inválidos');return rows;}
++function writeDirectoryFallback(row){const rows=readDirectoryFallback().filter(x=>x.id!==row.id);rows.push(row);const value=JSON.stringify(rows);localStorage.setItem(DIRECTORY_FALLBACK,value);const check=JSON.parse(localStorage.getItem(DIRECTORY_FALLBACK)||'[]');if(!Array.isArray(check)||!check.some(x=>x.id===row.id))throw Error('O navegador não confirmou a gravação local');}
+ async function persistDirectory(item){
+  if(locked())throw Error('Desbloqueie o cofre antes de salvar');
+  const security=window.EF_Security;
+  const secure=!!(security?.isConfigured?.()||security?.enabled);
+  let row=item;
+  if(secure){if(!security?.key||!security?.encryptObject)throw Error('Cofre indisponível para salvar com criptografia');row={id:item.id,encrypted:true,payload:await security.encryptObject(item)};}
+- if(directoryDb)await new Promise((resolve,reject)=>{const tx=directoryDb.transaction(DIRECTORY_STORE,'readwrite');tx.objectStore(DIRECTORY_STORE).put(row);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Gravação abortada'));tx.onerror=()=>reject(tx.error||Error('Falha de gravação'))});
+- else {let rows=JSON.parse(localStorage.getItem(DIRECTORY_FALLBACK)||'[]');rows=rows.filter(x=>x.id!==item.id);rows.push(row);localStorage.setItem(DIRECTORY_FALLBACK,JSON.stringify(rows));}
++ let indexedError=null;
++ if(directoryDb){try{await new Promise((resolve,reject)=>{let settled=false;const done=fn=>value=>{if(settled)return;settled=true;fn(value)};const tx=directoryDb.transaction(DIRECTORY_STORE,'readwrite');tx.objectStore(DIRECTORY_STORE).put(row);tx.oncomplete=done(resolve);tx.onabort=done(()=>reject(tx.error||Error('Gravação abortada')));tx.onerror=done(()=>reject(tx.error||Error('Falha de gravação')))});directoryBackend='IndexedDB';try{writeDirectoryFallback(row)}catch(_){/* IndexedDB confirmou a gravação; o espelho é apenas contingência. */}}
++  catch(e){indexedError=e;try{directoryDb.close()}catch(_){}directoryDb=null;}}
++ if(!directoryDb){try{writeDirectoryFallback(row);directoryBackend='armazenamento de contingência';directoryProblem=indexedError?'Falha no IndexedDB ('+indexedError.message+'); cadastro salvo no armazenamento local de contingência.':'IndexedDB indisponível; cadastro salvo no armazenamento local de contingência.'}
++  catch(e){throw Error(indexedError?'Falha no IndexedDB ('+indexedError.message+') e no armazenamento local ('+e.message+').':'Não foi possível gravar no armazenamento local: '+e.message)}}
+  directory.set(item.id,item);notifyRegistry();
+ }
+ async function directoryExport(){

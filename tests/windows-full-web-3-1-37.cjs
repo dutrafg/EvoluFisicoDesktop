@@ -13,11 +13,11 @@ const proj=fs.readFileSync('src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj',
 assert(html.length>3500000,'Full Web HTML source missing');
 for(const module of ['EvoStore','Perfil Unificado','Análises Completas','Resultados em tempo real','ef-splash-version-pill','Objetivos e planejamento'])
  assert(html.includes(module),'Missing Web module: '+module);
-assert.equal(manifest.version,'3.1.38');assert.equal(version.version,'3.1.38');
-assert(native.includes('CurrentVersion = "3.1.38"'));
+assert.equal(manifest.version,'3.1.40');assert.equal(version.version,'3.1.40');
+assert(native.includes('CurrentVersion = "3.1.40"'));
 assert(native.includes('StartsWith("desktop-v3.")'));
-assert(iss.includes('#define MyAppVersion "3.1.38"'));
-assert(proj.includes('<Version>3.1.38</Version>'));
+assert(iss.includes('#define MyAppVersion "3.1.40"'));
+assert(proj.includes('<Version>3.1.40</Version>'));
 assert(build.includes('desktop-v$webVersion-$revision')&&build.includes('version = $webVersion'));
 assert(html.includes('<script src="./assets/js/28-native-storage.js"></script>'));
 for(const needle of ['EF_NATIVE_EVAL_PREFIX','window.EFNativeStorage.readJSON(key)','window.EFNativeStorage.writeJSON(EF_NATIVE_EVAL_PREFIX+registro.id,registroPersistido)','window.EFNativeStorage.deleteEvaluation(EF_NATIVE_EVAL_PREFIX+target.id,updates)','await storage.replaceEvaluations(encoded)','window.EFNativeStorage.health()'])
@@ -33,7 +33,7 @@ const promise=vm.runInNewContext(code+'\ninitDB()',cx,{timeout:1000});
 Promise.resolve(promise).then(()=>{
  assert(cx.called,'Native evaluation loading not invoked');
  assert.equal(cx.db,null);
- console.log('PASS full Web 3.1.38, exact version metadata, native SQLite routing, module markers, no clinical IndexedDB fallback');
+ console.log('PASS full Web 3.1.40, exact version metadata, native SQLite routing, module markers, no clinical IndexedDB fallback');
 }).catch(error=>{console.error(error);process.exitCode=1});
 assert(sqlite.includes('ProtectedVault.Encrypt')&&sqlite.includes('BeginTransaction()'));
 assert(read('assets/js/28-native-storage.js').includes('replaceEvaluations'));
