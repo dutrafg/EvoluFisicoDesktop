@@ -64,7 +64,7 @@ check('Stable 1.0 version matches native binary, Windows installer and updater',
  assert.ok(native.includes('CurrentVersion = "1.0.12"'));
  assert.ok(native.includes('StartsWith("desktop-v1.0-")'));
  assert.ok(build.includes('desktop-v1.0-'));
- assert.ok(html.includes('<title>EvoluFísico Desktop</title>')&&!html.includes('brand-version'));
+ assert.ok(html.includes('<title>EvoluFísico Desktop RC-9 — Avaliação Física &amp; Composição Corporal</title>')&&!html.includes('brand-version'),'Stable 1.0.12 stays internal; RC-9 is labeled');
  assert.ok(ui.includes("version:'1.0.12'"));
 });
 check('Ten stable palettes migrate old dark choices without changing assessment data',()=>{
