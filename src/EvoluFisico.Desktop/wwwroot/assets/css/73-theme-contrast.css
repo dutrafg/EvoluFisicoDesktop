@@ -1,0 +1,91 @@
+/* EvoluFísico 2.0.29 — auditoria de contraste claro/escuro (24/10/2026).
+   Apenas UI; sem mudanças nos dados, avaliações, processamento, impressão ou motores EFIA. */
+@media screen {
+  /* Superfícies de resultado: usar contraste sem depender de fundo pastel fixo inline. */
+  body.ef-simple-ui #tab-novo-checkin :is(.ef229-perimetry-summary,.ef229-anthropometry-summary){
+    background:var(--ef227-raised,var(--ef-surface,#ffffff))!important;
+    border:1px solid var(--ef227-line,var(--ef-line,#d2dfd8))!important;
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+  }
+  body.ef-simple-ui #tab-novo-checkin :is(.ef229-perimetry-summary,.ef229-anthropometry-summary) :is(span,div,strong,b){
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+    -webkit-text-fill-color:currentColor!important;
+  }
+  body.ef-simple-ui #tab-novo-checkin #preview-soma-perimetria,
+  body.ef-simple-ui #tab-novo-checkin #preview-faixa-peso-ideal{
+    color:var(--ef227-accent,var(--ef-accent,#15803d))!important;
+    -webkit-text-fill-color:currentColor!important;
+    font-weight:800;
+  }
+  body.ef-simple-ui #tab-novo-checkin #preview-gordura-dobras{
+    color:var(--ef227-accent,var(--ef-accent,#15803d))!important;
+    -webkit-text-fill-color:currentColor!important;
+    font-weight:800;
+  }
+  /* A edição e o rascunho não podem continuar em amarelo/branco com texto da paleta escura. */
+  body.ef-simple-ui #tab-novo-checkin :is(#edit-mode-alert,#draft-alert){
+    background:var(--ef227-raised,var(--ef-surface,#fff))!important;
+    border:1px solid var(--ef227-line,var(--ef-line,#d2dfd8))!important;
+    border-left:3px solid var(--ef227-accent,var(--ef-accent,#15803d))!important;
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+  }
+  body.ef-simple-ui #tab-novo-checkin :is(#edit-mode-alert,#draft-alert) :is(div,strong,span,p){
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+    -webkit-text-fill-color:currentColor!important;
+  }
+  body.ef-simple-ui #tab-novo-checkin :is(#edit-mode-alert,#draft-alert) .btn{
+    background:var(--ef227-soft,var(--ef-soft,#edf4ef))!important;
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+    -webkit-text-fill-color:currentColor!important;
+    border:1px solid var(--ef227-line,var(--ef-line,#cfded6))!important;
+  }
+  /* Fotos mantêm prévias intactas; apenas os contêineres e legendas recebem o tema. */
+  body.ef-simple-ui #tab-novo-checkin .photo-upload-card{
+    background:var(--ef227-raised,var(--ef-surface,#fff))!important;
+    border:1px solid var(--ef227-line,var(--ef-line,#d2dfd8))!important;
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+  }
+  body.ef-simple-ui #tab-novo-checkin .photo-upload-card .photo-thumb{
+    background:var(--ef227-soft,var(--ef-soft,#eff5f1))!important;
+    border:1px dashed var(--ef227-line,var(--ef-line,#d2dfd8))!important;
+  }
+  body.ef-simple-ui #tab-novo-checkin .photo-upload-card :is(span,strong,small,p){
+    color:var(--ef227-muted,var(--ef-muted,#506760))!important;
+    -webkit-text-fill-color:currentColor!important;
+  }
+  /* Parecer: preservar aviso com contraste, sem modificar texto e PDF. */
+  body.ef-simple-ui #tab-novo-checkin .ef229-technical-notice{
+    background:var(--ef227-raised,var(--ef-surface,#fff))!important;
+    border:1px solid var(--ef227-line,var(--ef-line,#d2dfd8))!important;
+    border-left:3px solid var(--ef227-accent,var(--ef-accent,#15803d))!important;
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+  }
+  body.ef-simple-ui #tab-novo-checkin .ef229-technical-notice :is(div,p,strong,span,small,label){
+    color:var(--ef227-ink,var(--ef-ink,#172c26))!important;
+    -webkit-text-fill-color:currentColor!important;
+  }
+  /* A confirmação final deve permanecer legível em todos os esquemas de tema. */
+  body.ef-simple-ui #tab-novo-checkin #success-screen :is(#success-title,#success-db-info){
+    -webkit-text-fill-color:currentColor!important;
+  }
+  /* Painéis legados de comparação e cobrança com fundo fixo herdado. */
+  html.ef-dark-mode body.ef-simple-ui #tab-comparison #dobras-analise-box,
+  body.ef-simple-ui.dark-mode #tab-comparison #dobras-analise-box,
+  html.ef-dark-mode body.ef-simple-ui #tab-comparison #comp-contact-meta,
+  body.ef-simple-ui.dark-mode #tab-comparison #comp-contact-meta{
+    background:var(--ef-surface,var(--surface-color,#15251f))!important;
+    border-color:var(--ef-line,var(--border-color,#30423a))!important;
+    color:var(--ef-ink,var(--text-main,#f3f6fb))!important;
+  }
+  html.ef-dark-mode body.ef-simple-ui #tab-comparison #dobras-analise-texto,
+  body.ef-simple-ui.dark-mode #tab-comparison #dobras-analise-texto{
+    color:var(--ef-ink,var(--text-main,#f3f6fb))!important;
+    -webkit-text-fill-color:currentColor!important;
+  }
+  /* Legibilidade do botão de aplicar combo em Cobrança. */
+  body.ef-simple-ui #tab-cobranca button[style*="background:#fff"]{
+    background:var(--ef227-raised,var(--ef-surface,var(--surface-color,#fff)))!important;
+    color:var(--ef-ink,var(--text-main,#172c26))!important;
+    border-color:var(--ef-line,var(--border-color,#d2dfd8))!important;
+  }
+}

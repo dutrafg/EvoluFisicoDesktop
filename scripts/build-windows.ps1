@@ -66,7 +66,7 @@ Write-Host "Windows icon generated: $iconPath"
 # Identify each release build so the updater can distinguish installed and published releases.
 $revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0,7).ToLowerInvariant() } else { 'local' }
 $tag = "desktop-v1.0-$revision"
-$versionInfo = @{ tag = $tag; version = '1.0.12'; revision = $revision; built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
+$versionInfo = @{ tag = $tag; version = '1.0.12'; channel = 'RC-7'; source_web_version = '3.1.22'; source_web_commit = '04452c82d4d97b7f56323b9217ae3f38ea6add17'; revision = $revision; built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
 [System.IO.File]::WriteAllText((Join-Path $web 'desktop-version.json'), $versionInfo, [System.Text.UTF8Encoding]::new($false))
 dotnet restore $project
 if ($LASTEXITCODE -ne 0) { throw 'Falha no restore' }

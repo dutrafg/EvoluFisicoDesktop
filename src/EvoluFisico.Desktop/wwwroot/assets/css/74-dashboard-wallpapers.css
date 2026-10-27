@@ -1,0 +1,63 @@
+/* Papéis de parede: apenas Início; não alterar cartões, impressão ou outras páginas */
+@media screen {
+  #tab-painel #efi-dashboard.efwp-enabled {
+    isolation:isolate;position:relative;min-height:100%;background-color:transparent!important;background-image:none!important;
+  }
+  #tab-painel #efi-dashboard.efwp-enabled::before,
+  #tab-painel #efi-dashboard.efwp-enabled::after {
+    content:"";position:absolute;inset:0;pointer-events:none;
+  }
+  #tab-painel #efi-dashboard.efwp-enabled::before{
+    z-index:-2;background-image:var(--efwp-image);background-position:var(--efwp-position,center);
+    background-size:cover;background-repeat:no-repeat;filter:blur(var(--efwp-blur,0px));
+  }
+  #tab-painel #efi-dashboard.efwp-enabled::after{
+    z-index:-1;background:rgba(5,12,20,var(--efwp-dim,.10));
+  }
+  #tab-painel #efi-dashboard.efwp-enabled .welcome{
+    background:rgba(255,255,255,.81);border:1px solid rgba(255,255,255,.45);
+    padding:14px;border-radius:12px;backdrop-filter:blur(6px);
+  }
+  html.ef-dark-mode #tab-painel #efi-dashboard.efwp-enabled .welcome,
+  body.dark-mode #tab-painel #efi-dashboard.efwp-enabled .welcome{
+    background:rgba(13,21,32,.86);border-color:rgba(160,190,220,.17);color:#edf4fc;
+  }
+  body.efwp-lock{overflow:hidden!important}
+  .efwp-dialog[hidden]{display:none!important}
+  .efwp-dialog,.efwp-dialog *,.efwp-dialog *::before,.efwp-dialog *::after{box-sizing:border-box}
+  .efwp-dialog{position:fixed;inset:0;z-index:2147483400;display:grid;place-items:center;min-width:0;padding:12px;font-family:Inter,system-ui,Arial,sans-serif}
+  .efwp-shade{position:absolute;inset:0;background:rgba(5,11,20,.70);backdrop-filter:blur(5px)}
+  .efwp-panel{position:relative;width:min(890px,calc(100vw - 24px));max-width:100%;min-width:0;max-height:92dvh;overflow:auto;color:#182a34;background:#f8fbfd;
+    border:1px solid #d9e1e8;border-radius:17px;box-shadow:0 24px 80px rgba(0,0,0,.36);padding:clamp(15px,2vw,24px)}
+  .efwp-panel header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .efwp-panel h2{font-size:21px;line-height:1.2;margin:0 0 5px}
+  .efwp-panel header p{color:#586b78;font-size:12px;line-height:1.4;margin:0}
+  .efwp-panel button,.efwp-panel input,.efwp-panel select{font:inherit}
+  .efwp-close{width:38px;height:38px;flex:0 0 38px;background:transparent;border:1px solid #b8c8d3;color:inherit;border-radius:9px;font-size:24px;cursor:pointer}
+  .efwp-categories{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 18px}
+  .efwp-categories button{background:transparent;color:inherit;border:1px solid #c5d1dc;border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px;font-weight:650}
+  .efwp-categories button[aria-pressed="true"]{background:#e0f1eb;border-color:#458a7b;color:#155f50}
+  .efwp-gallery{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+  .efwp-item{min-width:0;border:2px solid transparent;border-radius:11px;padding:4px;background:transparent;color:inherit;display:grid;text-align:left;gap:4px;cursor:pointer;font-size:11px}
+  .efwp-item.selected{border-color:#1e9178}
+  .efwp-item>strong{font-size:11px}
+  .efwp-preview{display:block;width:100%;aspect-ratio:4/3;border-radius:8px;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px #0002}
+  .efwp-controls{display:grid;grid-template-columns:1fr 1fr 180px;gap:15px;margin:20px 0;padding:17px 0;border-top:1px solid #dbe2e7;border-bottom:1px solid #dbe2e7}
+  .efwp-controls label{display:flex;flex-wrap:wrap;align-content:start;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:630}
+  .efwp-controls input[type=range]{width:100%;accent-color:#218571}
+  .efwp-controls output{color:#36816d;font-variant-numeric:tabular-nums}
+  .efwp-controls select{min-height:38px;width:100%;color:inherit;background:transparent;border:1px solid #c5d1dc;border-radius:8px;padding:7px}
+  .efwp-panel footer{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .efwp-panel footer button,.efwp-upload{font-size:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:inherit;border:1px solid #b9cbd3;border-radius:9px;padding:10px 14px}
+  .efwp-upload{background:#1f7665;color:#fff;border-color:#1f7665}
+  .efwp-panel #efwp-status{font-size:11px;color:#536b70;flex:1}
+  .efwp-hint{font-size:11px;color:#637683;margin:13px 0 0;line-height:1.5}
+  .efwp-panel button:focus-visible,.efwp-panel input:focus-visible,.efwp-panel select:focus-visible,.efwp-upload:focus-within{outline:3px solid #4da69d;outline-offset:2px}
+  html.ef-dark-mode .efwp-panel,body.dark-mode .efwp-panel{background:#16212d;color:#e7f1f7;border-color:#384959}
+  html.ef-dark-mode .efwp-panel header p,html.ef-dark-mode .efwp-hint,body.dark-mode .efwp-panel header p,body.dark-mode .efwp-hint{color:#b7c4d0}
+  html.ef-dark-mode .efwp-categories button[aria-pressed="true"],body.dark-mode .efwp-categories button[aria-pressed="true"]{background:#194b45;color:#d6faf0;border-color:#39a08c}
+  html.ef-dark-mode .efwp-controls select,body.dark-mode .efwp-controls select{background:#1d2b37;border-color:#4a6071}
+  @media(max-width:680px){.efwp-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.efwp-controls{grid-template-columns:1fr 1fr}.efwp-controls label:last-child{grid-column:1/-1}.efwp-panel{max-height:96dvh}}
+  @media(max-width:390px){.efwp-controls{grid-template-columns:1fr}.efwp-controls label:last-child{grid-column:auto}}
+}
+@media print{.efwp-dialog{display:none!important}#tab-painel #efi-dashboard.efwp-enabled::before,#tab-painel #efi-dashboard.efwp-enabled::after{display:none!important}}

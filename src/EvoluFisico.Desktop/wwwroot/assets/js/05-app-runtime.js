@@ -2370,6 +2370,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         observacoes: formData.get('observacoes') || '',
                         parecer_profissional: formData.get('parecer_profissional') || '',
                         parecer_v6: window.EF6 ? EF6.coletar(formData) : undefined,
+                        objetivo_planejamento: window.EFDesktopObjectives?.collect?.() || null,
 
                         fotos: {
                             frente: (await blobToBase64(fotosTemporariasBlob.frente)) || fotosTemporarias.frente || '',
@@ -2448,6 +2449,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
 
             const resetFormulario = window.resetFormulario = function() {
                 form.reset();
+                window.EFDesktopObjectives?.restore?.(null);
                 ['bia_imc','bia_gordura_kg','bia_mme'].forEach(i => { const e = document.getElementById(i); if (e) delete e.dataset.manual; });
                 document.getElementById('avaliacao_id').value = '';
                 document.getElementById('edit-mode-alert').classList.add('hidden');
@@ -2617,6 +2619,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 document.getElementById('observacoes').value = aval.observacoes || '';
                 document.getElementById('parecer_profissional').value = aval.parecer_profissional || '';
                 if (window.EF6) EF6.carregar(aval);
+                window.EFDesktopObjectives?.restore?.(aval.objetivo_planejamento || null);
 
                 currentStepIndex = 0;
                 steps.forEach(step => step.classList.remove('hidden'));
@@ -3059,6 +3062,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             }
             const proClinica = (aval.avaliador_clinica || localStorage.getItem('evolufisico_pro_clinica') || '').trim();
 
+            const objetivoPDF = window.EFDesktopObjectives?.describe?.(aval.objetivo_planejamento) || '';
             wrapper.innerHTML = `
                 <!-- PÁGINA 1: LAUDO CLÍNICO, BIOIMPEDÂNCIA, DOBRAS & COMPOSIÇÃO -->
                 <div class="print-page print-page-1">
@@ -3084,6 +3088,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         <div>Peso: <strong>${aval.peso ? aval.peso.toFixed(1) : '-'} kg</strong></div>
                         <div>Check-in: <strong>${esc(aval.checkin_semana || 'Semana')}</strong></div>
                         ${aval.parq ? `<div>PAR-Q: <strong>${esc(parqStatus)}</strong></div>` : ''}
+                        ${objetivoPDF ? `<div class="ef-desktop-goal-pdf">Objetivo: <strong>${esc(objetivoPDF)}</strong></div>` : ''}
                     </div>
 
                     <div class="print-stats-row">
@@ -3658,9 +3663,11 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 console.warn('Erro ao renderizar síntese EF6:', eEf6);
             }
 
+            const objetivoDetalhes = window.EFDesktopObjectives?.describe?.(aval.objetivo_planejamento) || '';
             const container = document.getElementById('modal-body-content');
             if (container) {
                 container.innerHTML = `
+                    ${objetivoDetalhes ? `<section class="ef-desktop-goal-summary" aria-label="Objetivo e planejamento"><h3>Objetivo e planejamento</h3><p>${esc(objetivoDetalhes)}</p></section>` : ''}
                     <div class="stats-grid" style="margin-bottom:1.25rem;">
                         <div class="stat-card weight">
                             <span class="stat-label">Peso Corporal</span>

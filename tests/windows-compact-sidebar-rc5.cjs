@@ -1,0 +1,27 @@
+/* Desktop RC-5: icons remain visible when nav is minimized. */
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const root=path.join(__dirname,'../src/EvoluFisico.Desktop/wwwroot');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const css=read('assets/css/80-desktop-sidebar-compact.css');
+const html=read('index.html'),sw=read('sw.js');
+const js=read('assets/js/26-simple-interface.js');
+const theme=read('assets/js/70-desktop-themes.js');
+assert.ok(html.includes('href="./assets/css/80-desktop-sidebar-compact.css"'));
+assert.ok(sw.includes('"./assets/css/80-desktop-sidebar-compact.css"'),'Offline cache missing');
+assert.match(sw,/web-3-1-19-rc5/);
+assert.match(css,/@media screen and \(min-width: 1200px\)/);
+assert.match(css,/body\.ef-simple-ui\.ef-sidebar-hidden\s*\{--ef-sidebar:80px!important;/);
+assert.match(css,/\.nav-tab-btn > :not\(\.ef-local-nav-icon\)/);
+assert.match(css,/\.nav-tab-btn > \.ef-local-nav-icon svg\s*\{[\s\S]*?display:block!important;[\s\S]*?width:26px!important;/);
+assert.match(css,/font-size:0!important/);
+assert.match(css,/\.app-container\s*\{[\s\S]*?margin-left:var\(--ef-sidebar\)!important/);
+assert.match(css,/@media print/);
+assert.match(js,/b\.setAttribute\('aria-label',label\);b\.title=label;/);
+assert.match(js,/classList\.toggle\('ef-sidebar-hidden',hidden\)/);
+assert.match(theme,/efThemeIconVisible='1'/);
+assert.match(theme,/holder\.dataset\.efThemeIcon!==desiredIcon/);
+for(const source of ['assets/js/26-simple-interface.js','assets/js/70-desktop-themes.js']) new Function(read(source));
+const native=fs.readFileSync(path.join(root,'../MainWindow.xaml.cs'),'utf8');
+assert.match(native,/EncryptedSqliteStore/,'Native encrypted SQLite bridge must be preserved');
+console.log('PASS RC-5: offline CSS, collapsed icon visibility, accessibility, JS syntax, SQLite bridge.');

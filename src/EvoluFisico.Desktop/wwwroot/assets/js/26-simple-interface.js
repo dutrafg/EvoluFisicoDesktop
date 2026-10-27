@@ -43,7 +43,7 @@ function arrangeNavigation(){
   if(form.parentNode!==toolbar)toolbar.append(form);
  }
  for(const [route,[id,label]] of Object.entries(routes)){
-  const b=$(id);if(!b)continue;b.type='button';b.setAttribute('aria-controls',route);
+  const b=$(id);if(!b)continue;b.type='button';b.setAttribute('aria-controls',route);b.setAttribute('aria-label',label);b.title=label;
   // Keep the form icon/label and history count IDs used by existing code.
   if(id==='tab-btn-history'){
    if(!b.dataset.simpleLabel){const count=$('history-counter');b.replaceChildren(document.createTextNode('Avaliações '));if(count){count.classList.add('ef-nav-count');b.append(count)}b.dataset.simpleLabel='1';}
@@ -178,7 +178,7 @@ function mount(){
  const toggle=document.createElement('button');toggle.type='button';toggle.id='ef-sidebar-toggle';
  toggle.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>';
  function setSidebar(hidden,save){document.body.classList.toggle('ef-sidebar-hidden',hidden);toggle.setAttribute('aria-expanded',String(!hidden));const t=hidden?'Mostrar barra lateral (Ctrl+B)':'Esconder barra lateral (Ctrl+B)';toggle.title=t;toggle.setAttribute('aria-label',t);if(save){try{localStorage.setItem('ef_sidebar_hidden',hidden?'1':'0')}catch(e){}}}
- let saved=false;try{saved=localStorage.getItem('ef_sidebar_hidden')==='1'}catch(e){}
+ let saved=true;try{const value=localStorage.getItem('ef_sidebar_hidden');saved=value===null?true:value==='1'}catch(e){}
  setSidebar(saved,false);
  toggle.addEventListener('click',()=>setSidebar(!document.body.classList.contains('ef-sidebar-hidden'),true));
  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&!e.altKey&&e.key.toLowerCase()==='b'){const t=e.target;if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;e.preventDefault();toggle.click()}});
