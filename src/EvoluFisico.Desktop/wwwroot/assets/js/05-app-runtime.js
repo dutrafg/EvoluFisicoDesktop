@@ -2449,6 +2449,14 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
 
             const resetFormulario = window.resetFormulario = function() {
                 form.reset();
+                // O perfil cadastrado em Configurações preenche a nova avaliação sem bloquear edição.
+                for (const [id, key] of [['avaliador_nome','evolufisico_pro_nome'], ['avaliador_registro','evolufisico_pro_cref'], ['avaliador_clinica','evolufisico_pro_clinica']]) {
+                    const field = document.getElementById(id);
+                    if (!field) continue;
+                    try { const configured = localStorage.getItem(key); if (configured) field.value = configured; } catch (_) {}
+                }
+                const biaFold = document.getElementById('ef-method-1');
+                if (biaFold) biaFold.open = true;
                 window.EFDesktopObjectives?.restore?.(null);
                 ['bia_imc','bia_gordura_kg','bia_mme'].forEach(i => { const e = document.getElementById(i); if (e) delete e.dataset.manual; });
                 document.getElementById('avaliacao_id').value = '';
@@ -2685,6 +2693,8 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             </svg>`;
         }
 
+        // UI-only folder expansion state: never persisted in the clinical database.
+        const efHistoryOpenFolders = new Set();
         function renderizarHistorico(filtroTexto = '') {
             const elTotalAv = document.getElementById('kpi-total-avaliacoes');
             const elMediaGordura = document.getElementById('kpi-media-gordura');
@@ -2823,7 +2833,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             }
             window.EFHistoryView.apply();
 
-            const abertos = new Set(Array.from(grid.querySelectorAll('.ef-history-folder[open]'), p => p.dataset.efClientId));
+            const abertos = new Set([...efHistoryOpenFolders, ...Array.from(grid.querySelectorAll('.ef-history-folder[open]'), p => p.dataset.efClientId)]);
             const tinhaPastas = Boolean(grid.querySelector('.ef-history-folder'));
             grid.replaceChildren();
 
@@ -2865,6 +2875,11 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 pasta.className = 'ef-history-folder';
                 pasta.dataset.efClientId = grupo.chave;
                 pasta.open = Boolean(termo) || abertos.has(grupo.chave) || (!tinhaPastas && indice === 0 && window.EFHistoryView.get() === 'list');
+                pasta.addEventListener('toggle', () => {
+                    if (termo) return; // A busca não altera a escolha de pastas abertas.
+                    if (pasta.open) efHistoryOpenFolders.add(grupo.chave);
+                    else efHistoryOpenFolders.delete(grupo.chave);
+                });
                 const sumario = document.createElement('summary');
                 const sufixo = grupo.todos.length === 1 ? 'avaliação' : 'avaliações';
                 const contato = String(grupo.maisRecente.email || grupo.maisRecente.whatsapp || 'Histórico do aluno');
