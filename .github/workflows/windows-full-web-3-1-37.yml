@@ -1,0 +1,70 @@
+name: EvoluFisico Desktop Web Completa 3.1.37
+on:
+  push:
+    branches: [windows-full-web-3-1-37]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-and-build:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Testar frontend integral 3.1.37, versoes e ponte SQLite
+        run: node tests/windows-full-web-3-1-37.cjs
+      - name: Testar cliente de armazenamento nativo
+        run: node tests/native-storage-client.cjs
+      - name: Testar banco SQLite criptografado
+        shell: pwsh
+        run: |
+          dotnet run --project tests/StorageSmoke/StorageSmoke.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Falha no teste SQLite' }
+      - name: Compilar o executavel Windows 3.1.37
+        shell: pwsh
+        run: ./scripts/build-windows.ps1
+      - name: Conferir pacote e manifesto 3.1.37
+        shell: pwsh
+        run: |
+          $dir = 'publish/win-x64/wwwroot'
+          $version = Get-Content (Join-Path $dir 'desktop-version.json') -Raw | ConvertFrom-Json
+          if ($version.version -ne '3.1.37') { throw 'Versao Web e Windows divergentes' }
+          if ((Get-Item (Join-Path $dir 'index.html')).Length -lt 3500000) { throw 'HTML completo ausente' }
+          if (!(Test-Path (Join-Path $dir 'assets/js/28-native-storage.js'))) { throw 'Ponte SQLite ausente' }
+      - name: Enviar versao portatil
+        uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-3.1.37-FrontendCompleto-Portable
+          path: publish/win-x64/
+          retention-days: 14
+      - name: Instalar Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+      - name: Gerar instalador Windows
+        shell: pwsh
+        run: |
+          $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6/ISCC.exe'
+          & $iscc installer/EvoluFisico.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Falha na compilacao do instalador' }
+      - name: Testar instalacao e desinstalacao
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem installer-output -Filter '*.exe' -File | Select-Object -First 1).FullName
+          if (-not $setup) { throw 'Instalador nao gerado' }
+          $target = Join-Path $env:RUNNER_TEMP 'EF_337_Test'
+          $installed = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/DIR=$target") -Wait -PassThru
+          if ($installed.ExitCode -ne 0) { throw "Instalacao falhou: $($installed.ExitCode)" }
+          $version = Get-Content (Join-Path $target 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
+          if ($version.version -ne '3.1.37') { throw 'Versao instalada incorreta' }
+          if (!(Test-Path (Join-Path $target 'wwwroot/assets/js/28-native-storage.js'))) { throw 'Ponte SQLite nao instalada' }
+          $un = Start-Process -FilePath (Join-Path $target 'unins000.exe') -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
+          if ($un.ExitCode -ne 0) { throw 'Desinstalacao falhou' }
+      - name: Enviar instalador Windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-3.1.37-FrontendCompleto-Setup
+          path: installer-output/*.exe
+          retention-days: 14
