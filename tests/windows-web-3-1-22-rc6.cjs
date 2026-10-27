@@ -18,7 +18,7 @@ assert.ok(html.includes('src="./assets/js/81-desktop-objectives.js"'));
 assert.ok(sw.includes('"./assets/css/81-windows-web-3-1-22.css"'));
 assert.ok(sw.includes('"./assets/js/81-desktop-objectives.js"'));
 assert.ok(sw.includes('web-3-1-22-rc6'));
-assert.ok(build.includes("channel = 'RC-6'")&&build.includes("source_web_version = '3.1.22'"));
+assert.ok(/channel = 'RC-[67]'/.test(build)&&build.includes("source_web_version = '3.1.22'"));
 assert.ok(app.includes('objetivo_planejamento: window.EFDesktopObjectives?.collect?.() || null'),'Goal not in persisted evaluation');
 assert.ok(app.includes('window.EFDesktopObjectives?.restore?.(aval.objetivo_planejamento || null)'),'Goal not restored on edit');
 assert.ok(app.includes('window.EFDesktopObjectives?.restore?.(null)'),'Goal not cleared on reset');

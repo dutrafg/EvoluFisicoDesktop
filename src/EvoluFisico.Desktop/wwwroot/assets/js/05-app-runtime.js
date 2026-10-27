@@ -3089,6 +3089,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         ${aval.parq ? `<div>PAR-Q: <strong>${esc(parqStatus)}</strong></div>` : ''}
                     </div>
 
+                    ${window.EFDesktopObjectives?.renderSummary?.(aval.objetivo_planejamento, "print") || ""}
                     <div class="print-stats-row">
                         <div class="print-stat-box">
                             <span class="p-lbl">% GORDURA POLLOCK</span>
@@ -3664,6 +3665,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             const container = document.getElementById('modal-body-content');
             if (container) {
                 container.innerHTML = `
+                    ${window.EFDesktopObjectives?.renderSummary?.(aval.objetivo_planejamento, "screen") || ""}
                     <div class="stats-grid" style="margin-bottom:1.25rem;">
                         <div class="stat-card weight">
                             <span class="stat-label">Peso Corporal</span>

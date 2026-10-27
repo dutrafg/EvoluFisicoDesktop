@@ -14,6 +14,23 @@
   const fields = ['kind','metric','target','tolerance','deadline','note'];
   const byId = name => global.document.getElementById('ef322-' + name);
   const text = name => String(byId(name)?.value ?? '').trim();
+
+  const metricLabels = Object.freeze({peso:'Peso (kg)',gordura:'Gordura corporal (%)',massa_magra:'Massa magra (kg)',cintura:'Cintura (cm)',imc:'IMC'});
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function renderSummary(plan, context = 'screen') {
+    if (!plan || !Object.prototype.hasOwnProperty.call(definitions,plan.kind)) return '';
+    const details = [];
+    if (plan.metric) details.push('Indicador: ' + (metricLabels[plan.metric] || String(plan.metric)));
+    if (String(plan.target ?? '').trim()) details.push('Meta: ' + String(plan.target).trim());
+    if (String(plan.tolerance ?? '').trim()) details.push('Tolerância: ' + String(plan.tolerance).trim());
+    if (plan.deadline) details.push('Prazo: ' + String(plan.deadline));
+    if (plan.note) details.push('Observações: ' + String(plan.note));
+    const compact = context === 'print' ? ' ef322-plan-print' : '';
+    return '<section class="ef322-plan-summary' + compact + '" aria-label="Objetivo do aluno"><strong>Objetivo do aluno:</strong> ' +
+      escapeHtml(definitions[plan.kind].label) +
+      (details.length ? '<span class="ef322-plan-details"> · ' + details.map(escapeHtml).join(' · ') + '</span>' : '') +
+      '</section>';
+  }
   function collect() {
     const kind = text('kind');
     if (!kind || !Object.prototype.hasOwnProperty.call(definitions,kind)) return null;
@@ -62,7 +79,7 @@
     global.document.getElementById('data_avaliacao')?.addEventListener('change',sync);
     sync();
   }
-  global.EFDesktopObjectives = Object.freeze({definitions,collect,readyForTracking,restore,sync});
+  global.EFDesktopObjectives = Object.freeze({definitions,collect,readyForTracking,restore,sync,renderSummary});
   if (global.document.readyState === 'loading') global.document.addEventListener('DOMContentLoaded',init);
   else init();
 })(window);
