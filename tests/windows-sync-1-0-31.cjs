@@ -107,6 +107,6 @@ test('Version remains 1.0.x and native data/installer identity are preserved',()
  assert.match(install,/AppId=\{\{C89493D0-1C8B-4717-A6C8-42F45B3FBD0B\}/);
  assert.ok(native.includes('CurrentVersion = "1.0.12"'));
  assert.ok(nav.includes("version:'1.0.12'"));
- assert.ok(html.includes('<title>EvoluFísico Desktop</title>')&&!html.includes('brand-version'));
+ assert.ok(html.includes('<title>EvoluFísico Desktop RC-9 — Avaliação Física &amp; Composição Corporal</title>')&&!html.includes('brand-version'));
 });
 console.log('TOTAL',pass,'regressions 1.0.31 Desktop 1.0.12');
