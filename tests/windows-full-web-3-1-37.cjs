@@ -18,7 +18,7 @@ assert(native.includes('CurrentVersion = "3.1.37"'));
 assert(native.includes('StartsWith("desktop-v3.")'));
 assert(iss.includes('#define MyAppVersion "3.1.37"'));
 assert(proj.includes('<Version>3.1.37</Version>'));
-assert(build.includes('desktop-v3.1.37-$revision')&&build.includes("version = '3.1.37'"));
+assert(build.includes('desktop-v$webVersion-$revision')&&build.includes('version = $webVersion'));
 assert(html.includes('<script src="./assets/js/28-native-storage.js"></script>'));
 for(const needle of ['EF_NATIVE_EVAL_PREFIX','window.EFNativeStorage.readJSON(key)','window.EFNativeStorage.writeJSON(EF_NATIVE_EVAL_PREFIX+registro.id,registroPersistido)','window.EFNativeStorage.deleteEvaluation(EF_NATIVE_EVAL_PREFIX+target.id,updates)','await storage.replaceEvaluations(encoded)','window.EFNativeStorage.health()'])
  assert(html.includes(needle),'Lost native data operation: '+needle);
