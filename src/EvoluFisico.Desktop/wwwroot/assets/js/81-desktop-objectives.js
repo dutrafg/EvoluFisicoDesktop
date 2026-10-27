@@ -22,6 +22,22 @@
       tolerance:text('tolerance'), deadline:text('deadline'), note:text('note')
     };
   }
+  const metrics = Object.freeze({peso:'Peso (kg)',gordura:'Gordura corporal (%)',massa_magra:'Massa magra (kg)',cintura:'Cintura (cm)',imc:'IMC'});
+  function describe(plan) {
+    if (!plan || typeof plan !== 'object') return '';
+    const kind = String(plan.kind ?? '');
+    if (!Object.prototype.hasOwnProperty.call(definitions,kind)) return '';
+    const parts = [definitions[kind].label];
+    const metric=String(plan.metric??'').trim(),target=String(plan.target??'').trim();
+    const tolerance=String(plan.tolerance??'').trim(),deadline=String(plan.deadline??'').trim();
+    const note=String(plan.note??'').trim().slice(0,200);
+    if(metric)parts.push('Indicador: '+(Object.prototype.hasOwnProperty.call(metrics,metric)?metrics[metric]:metric.slice(0,50)));
+    if(target)parts.push('Meta: '+target.slice(0,24));
+    if(tolerance)parts.push('Tolerância: '+tolerance.slice(0,24));
+    if(/^\d{4}-\d{2}-\d{2}$/.test(deadline))parts.push('Prazo: '+deadline.slice(8,10)+'/'+deadline.slice(5,7)+'/'+deadline.slice(0,4));
+    if(note)parts.push('Observações: '+note);
+    return parts.join(' · ');
+  }
   function readyForTracking(plan) {
     if (!plan || !plan.kind || !plan.metric || !plan.deadline) return false;
     const raw = String(plan.target ?? '').trim();
@@ -62,7 +78,7 @@
     global.document.getElementById('data_avaliacao')?.addEventListener('change',sync);
     sync();
   }
-  global.EFDesktopObjectives = Object.freeze({definitions,collect,readyForTracking,restore,sync});
+  global.EFDesktopObjectives = Object.freeze({definitions,collect,describe,readyForTracking,restore,sync});
   if (global.document.readyState === 'loading') global.document.addEventListener('DOMContentLoaded',init);
   else init();
 })(window);

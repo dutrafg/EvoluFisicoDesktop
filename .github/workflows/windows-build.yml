@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6]
+    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6, windows-goals-reports-3-1-22-rc7]
   workflow_dispatch:
 
 concurrency:
@@ -55,6 +55,9 @@ jobs:
 
       - name: Validate Windows 3.1.22 RC-6 objectives, assessment, PDF, UI, sidebar and backup
         run: node tests/windows-web-3-1-22-rc6.cjs
+
+      - name: Validate saved assessment goals in details and individual PDF
+        run: node tests/windows-goals-reports-rc7.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -171,7 +174,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.22-RC6-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.22-RC7-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -232,7 +235,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.22-RC6-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.22-RC7-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14

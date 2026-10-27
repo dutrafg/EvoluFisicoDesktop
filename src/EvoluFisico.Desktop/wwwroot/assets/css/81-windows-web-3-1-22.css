@@ -65,3 +65,7 @@
   }
 }
 @media print{#tab-novo-checkin .ef322-objectives,#tab-novo-checkin #success-screen{display:none!important}}
+
+/* RC-7: objetivo persistido aparece também em detalhes e no laudo individual. */
+@media screen {#modal-body-content .ef-desktop-goal-summary{padding:13px 16px;margin:0 0 16px;border:1px solid var(--ef-line,#cddcd5);border-radius:12px;background:var(--ef-surface,#fff);color:var(--ef-ink,#1b332a)}#modal-body-content .ef-desktop-goal-summary h3{font-size:14px;font-weight:750;margin:0 0 7px;color:inherit}#modal-body-content .ef-desktop-goal-summary p{font-size:13px;line-height:1.55;white-space:normal;overflow-wrap:anywhere;margin:0;color:inherit}}
+@media print {.print-meta-grid .ef-desktop-goal-pdf{grid-column:1/-1;overflow-wrap:anywhere;break-inside:avoid;page-break-inside:avoid;color:#172b38}}
