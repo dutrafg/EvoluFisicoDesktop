@@ -18,8 +18,8 @@ for(const token of ['pointerdown','pointermove','pointerup','pointercancel','tou
 assert.ok(code.includes('EFHomeCardLayout?.mount?.()')===false,'editor should not depend on itself');
 assert.ok(read('assets/js/52-home-dashboard.js').includes('window.EFHomeCardLayout?.mount?.()'));
 assert.ok(!read('assets/js/52-home-dashboard.js').includes('EvoluFísico2 1.0.4 estável'),'obsolete footer removed');
-assert.ok(!html.includes('ef-splash-version-pill')&&!html.includes('brand-version'),'no redundant version pills');
-assert.ok(html.includes('<title>EvoluFísico Desktop</title>'));
+assert.ok(html.includes('Windows RC-9 · Base Web 3.1.37')&&!html.includes('brand-version'),'no redundant version pills');
+assert.ok(html.includes('<title>EvoluFísico Desktop RC-9 — Avaliação Física &amp; Composição Corporal</title>'));
 assert.ok(!html.includes('assets/js/53-custom-cards.js'),'old editor remains disabled');
 assert.ok(css.includes('grid-template-columns:repeat(12,minmax(0,1fr))'),'dense 12-column grid');
 assert.ok(css.includes('max-width:1040px')&&css.includes('max-width:580px'),'tablet and smartphone responsive');
