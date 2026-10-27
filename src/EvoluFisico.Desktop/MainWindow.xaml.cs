@@ -14,7 +14,7 @@ public partial class MainWindow : Window
 {
     private const string AppUrl = "https://evolufisico.local/index.html";
     private bool _ready;
-    private const string CurrentVersion = "1.0.12";
+    private const string CurrentVersion = "3.1.37";
     private static string InstalledTag()
     {
         try
@@ -348,7 +348,7 @@ public partial class MainWindow : Window
             using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
             var latest = doc.RootElement.EnumerateArray()
                 .Where(r => !r.GetProperty("draft").GetBoolean()
-                    && r.GetProperty("tag_name").GetString()?.StartsWith("desktop-v1.0-") == true)
+                    && r.GetProperty("tag_name").GetString()?.StartsWith("desktop-v3.") == true)
                 .OrderByDescending(r => r.GetProperty("published_at").GetString())
                 .FirstOrDefault();
             if (latest.ValueKind == JsonValueKind.Undefined)
