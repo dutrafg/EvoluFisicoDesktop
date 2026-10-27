@@ -1,5 +1,5 @@
 {
-  "name": "EvoluFísico Desktop 1.0.12 estável",
+  "name": "EvoluFísico Desktop 3.1.37",
   "short_name": "EvoluFísico",
   "description": "Avaliação Física & Bioimpedância, Composição Corporal, Antropometria e Gestão Clínica.",
   "start_url": "./",
@@ -29,5 +29,6 @@
       "purpose": "any maskable"
     }
   ],
-  "id": "./"
+  "id": "./",
+  "version": "3.1.37"
 }
