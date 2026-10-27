@@ -1,0 +1,22 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync('src/EvoluFisico.Desktop/wwwroot/index.html','utf8');
+const at=html.indexOf('async function loadBilling()');
+const end=html.indexOf('    function esc(v)',at);
+const startW=html.indexOf('async function writeBilling(',end);
+const endW=html.indexOf('    async function salvarCobrancasDb',startW);
+assert(at>0&&end>at&&startW>end&&endW>startW);
+const legacy=[{id:'cob-qa-001',valor:100,estado:'pendente'}];
+let stored=null;
+const storage={readJSON:async id=>{assert.equal(id,'ef-billing-main');return legacy;},writeJSON:async(id,data)=>{assert.equal(id,'ef-billing-main');stored=data;}};
+const context={window:{EFNativeStorage:storage},EF_Security:{key:null,isConfigured:()=>false},DB_KEY:'evolufisico_cobrancas_db',EF_NATIVE_BILLING_KEY:'ef-billing-main',billingCache:null,billingRaw:null,structuredClone,JSON,localStorage:{getItem(){throw Error('Financeiro nao pode ler LocalStorage');},setItem(){throw Error('Financeiro nao pode gravar LocalStorage');}}};
+const load=vm.runInNewContext('('+html.slice(at,end).trim()+')',context);
+const write=vm.runInNewContext('('+html.slice(startW,endW).trim()+')',context);
+(async()=>{
+ const restored=await load();
+ assert.equal(restored[0].id,'cob-qa-001');
+ await write([{id:'cob-qa-001',valor:115,estado:'recebido'}]);
+ assert.equal(stored[0].valor,115);
+ assert.equal(stored[0].estado,'recebido');
+ console.log('PASS: cobrancas antigas lidas e novas gravadas exclusivamente no SQLite criptografado.');
+})().catch(e=>{console.error(e);process.exitCode=1});

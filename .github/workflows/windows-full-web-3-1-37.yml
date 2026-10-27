@@ -25,6 +25,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Chromium nao instalado' }
       - name: Validar Dashboard, Perfil Unificado e EvoStore no Chromium
         run: node tests/windows-full-web-browser-3-1-37.cjs
+      - name: Testar compatibilidade financeira com SQLite nativo
+        run: node tests/windows-billing-sqlite-3-1-37.cjs
       - name: Testar cliente de armazenamento nativo
         run: node tests/native-storage-client.cjs
       - name: Testar banco SQLite criptografado

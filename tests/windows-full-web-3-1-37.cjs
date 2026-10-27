@@ -37,3 +37,7 @@ Promise.resolve(promise).then(()=>{
 }).catch(error=>{console.error(error);process.exitCode=1});
 assert(sqlite.includes('ProtectedVault.Encrypt')&&sqlite.includes('BeginTransaction()'));
 assert(read('assets/js/28-native-storage.js').includes('replaceEvaluations'));
+
+assert(html.includes("const EF_NATIVE_BILLING_KEY = 'ef-billing-main';"));
+assert(html.includes('window.EFNativeStorage.readJSON(EF_NATIVE_BILLING_KEY)'));
+assert(html.includes('window.EFNativeStorage.writeJSON(EF_NATIVE_BILLING_KEY,packet)'));

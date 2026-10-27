@@ -10283,8 +10283,18 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     'use strict';
 
     const DB_KEY = 'evolufisico_cobrancas_db';
+    const EF_NATIVE_BILLING_KEY = 'ef-billing-main';
     let billingCache = null, billingRaw = null;
     async function loadBilling() {
+        if(window.EFNativeStorage) {
+            const packet=await window.EFNativeStorage.readJSON(EF_NATIVE_BILLING_KEY);
+            if(packet===null){billingCache=[];billingRaw=null;return [];}
+            const list=packet&&packet.__efEncrypted?await EF_Security.decryptObject(packet.payload):packet;
+            if(!Array.isArray(list))throw new Error('Histórico financeiro inválido no SQLite.');
+            billingCache=structuredClone(list);
+            billingRaw=JSON.stringify(packet);
+            return structuredClone(list);
+        }
         const raw=localStorage.getItem(DB_KEY);
         if (billingCache && raw===billingRaw) return structuredClone(billingCache);
         if (!raw) { billingCache=[]; billingRaw=raw; return []; }
@@ -10374,7 +10384,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
         if (!Array.isArray(lista)) throw new Error('Histórico financeiro inválido');
         const packet=protectedMode?{__efEncrypted:true,payload:await EF_Security.encryptObject(lista,key)}:lista;
         const raw=JSON.stringify(packet);
-        localStorage.setItem(DB_KEY,raw);
+        if(window.EFNativeStorage)await window.EFNativeStorage.writeJSON(EF_NATIVE_BILLING_KEY,packet);
+        else localStorage.setItem(DB_KEY,raw);
         billingRaw=raw;billingCache=structuredClone(lista);
         return true;
     }
