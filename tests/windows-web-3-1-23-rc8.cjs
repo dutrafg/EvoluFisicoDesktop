@@ -30,7 +30,7 @@ assert.equal(fields.avaliador_clinica.value,'Estúdio QA');
 assert.equal(bia.open,true,'Bioimpedance should be accessible after reset');
 for(const k of Object.keys(fields))fields[k].value='';
 for(const k of Object.keys(prefs))delete prefs[k];
-vm.runInNewContext(profileCode,context);
+vm.runInNewContext(profileCode,{...context});
 assert.equal(fields.avaliador_nome.value,'','No configured profile must remain optional');
 assert(ui.includes('d.open=true;title.remove()'),'Both measurement groups must open on new assessment');
 assert(ui.includes('if(bia)bia.open=true;return r'),'Editing must not close empty bioimpedance');
