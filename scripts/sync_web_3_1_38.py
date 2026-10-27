@@ -42,9 +42,10 @@ def apply_published_hunks(windows, patch):
             else:
                 if 'id="ef-rebrand-138"' not in new or 'id="ef-large-monitor-card-density-139"' not in new:
                     raise RuntimeError("Unexpected Web insertion; refused to alter native HTML")
-                if windows.count("</body>") != 1:
-                    raise RuntimeError("Cannot locate unique closing body for published CSS")
-                windows = windows.replace("</body>", new + "</body>", 1)
+                position = windows.rfind("\\n</body>")
+                if position < int(len(windows) * 0.90):
+                    raise RuntimeError("Cannot locate final closing body for published CSS")
+                windows = windows[:position] + "\\n" + new + windows[position:]
             count += 1
             removed.clear()
             added.clear()
