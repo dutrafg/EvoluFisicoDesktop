@@ -54,6 +54,40 @@
   margin-left:var(--ef-sidebar)!important;
   width:calc(100% - var(--ef-sidebar))!important;max-width:none!important;
  }
+ /* RC-8 hotfix: o trilho compacto deve permanecer uma superfície visível,
+    mesmo sem data-ef-palette e ao alternar entre temas claro/escuro. */
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar {
+  position:fixed!important;inset:0 auto 0 0!important;
+  display:flex!important;visibility:visible!important;opacity:1!important;
+  transform:none!important;z-index:100!important;
+  background:#20283b!important;border-right:1px solid #39455d!important;
+  color:#f4f6ff!important;
+  --ef-ink:#f4f6ff;--ef-muted:#d4d9e8;
+  --ef-soft:rgba(255,255,255,.16);--ef-line:rgba(255,255,255,.20);
+ }
+ html.ef-dark-mode body.ef-simple-ui.ef-sidebar-hidden .top-navbar,
+ body.ef-simple-ui.dark-mode.ef-sidebar-hidden .top-navbar {
+  background:#151d2e!important;border-right-color:#343e55!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn {
+  color:#f4f6ff!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn > .ef-local-nav-icon svg {
+  color:color-mix(in srgb,var(--ef-selected-color,#918ce4) 35%,white 65%)!important;
+  stroke:currentColor!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn:hover {
+  background:rgba(255,255,255,.12)!important;
+  border-color:rgba(255,255,255,.20)!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn.active {
+  background:rgba(255,255,255,.20)!important;
+  border-color:rgba(255,255,255,.23)!important;
+  box-shadow:inset 3px 0 #ffffff!important;color:#fff!important;
+ }
+ body.ef-simple-ui.ef-sidebar-hidden .top-navbar > .nav-tabs > .nav-tab-btn.active > .ef-local-nav-icon svg {
+  color:#ffffff!important;
+ }
 }
 @media print {
  body.ef-simple-ui.ef-sidebar-hidden .top-navbar {display:none!important;}
