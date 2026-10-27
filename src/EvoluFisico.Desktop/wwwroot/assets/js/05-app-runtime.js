@@ -2370,6 +2370,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                         observacoes: formData.get('observacoes') || '',
                         parecer_profissional: formData.get('parecer_profissional') || '',
                         parecer_v6: window.EF6 ? EF6.coletar(formData) : undefined,
+                        objetivo_planejamento: window.EFDesktopObjectives?.collect?.() || null,
 
                         fotos: {
                             frente: (await blobToBase64(fotosTemporariasBlob.frente)) || fotosTemporarias.frente || '',
@@ -2448,6 +2449,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
 
             const resetFormulario = window.resetFormulario = function() {
                 form.reset();
+                window.EFDesktopObjectives?.restore?.(null);
                 ['bia_imc','bia_gordura_kg','bia_mme'].forEach(i => { const e = document.getElementById(i); if (e) delete e.dataset.manual; });
                 document.getElementById('avaliacao_id').value = '';
                 document.getElementById('edit-mode-alert').classList.add('hidden');
@@ -2617,6 +2619,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                 document.getElementById('observacoes').value = aval.observacoes || '';
                 document.getElementById('parecer_profissional').value = aval.parecer_profissional || '';
                 if (window.EF6) EF6.carregar(aval);
+                window.EFDesktopObjectives?.restore?.(aval.objetivo_planejamento || null);
 
                 currentStepIndex = 0;
                 steps.forEach(step => step.classList.remove('hidden'));

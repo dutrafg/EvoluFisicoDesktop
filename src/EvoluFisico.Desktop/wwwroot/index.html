@@ -622,6 +622,50 @@
 <div class="ef6-acoes"><button class="btn btn-secondary btn-sm" id="ef6-btn-rascunho" type="button">✨ Gerar rascunho com os dados</button><button class="btn btn-secondary btn-sm" id="ef6-btn-copiar" type="button">📋 Copiar resumo (WhatsApp)</button></div>
 <div style="margin-top:.6rem"><span class="help-text">Frases rápidas (clique para inserir):</span><div class="ef6-chips" id="ef6-frases" style="margin-top:.3rem"></div></div>
 </div>
+
+<section class="ef322-objectives" aria-labelledby="ef322-heading">
+  <h3 id="ef322-heading">Objetivos e planejamento (opcional)</h3>
+  <p>Escolha o objetivo do aluno. Indicador, valor-alvo, tolerância e prazo são opcionais. O objetivo será salvo com a avaliação no SQLite criptografado.</p>
+  <div class="ef322-objective-grid">
+    <label for="ef322-kind">Objetivo do aluno
+      <select id="ef322-kind" name="ef322_kind">
+        <option value="">Não definir</option>
+        <option value="emagrecimento">Emagrecimento</option>
+        <option value="perda_peso">Perda de peso</option>
+        <option value="hipertrofia">Hipertrofia</option>
+        <option value="definicao_muscular">Definição muscular</option>
+        <option value="recomposicao">Recomposição corporal</option>
+        <option value="condicionamento">Condicionamento físico</option>
+        <option value="manutencao">Manutenção</option>
+        <option value="personalizado">Personalizado</option>
+      </select>
+    </label>
+    <label for="ef322-metric">Indicador (opcional)
+      <select id="ef322-metric" name="ef322_metric">
+        <option value="">Sem indicador</option>
+        <option value="peso">Peso (kg)</option>
+        <option value="gordura">Gordura corporal (%)</option>
+        <option value="massa_magra">Massa magra (kg)</option>
+        <option value="cintura">Cintura (cm)</option>
+        <option value="imc">IMC</option>
+      </select>
+    </label>
+    <label for="ef322-target">Valor-alvo (opcional)
+      <input id="ef322-target" name="ef322_target" inputmode="decimal" maxlength="16" placeholder="Ex.: 18,5" autocomplete="off">
+    </label>
+    <label for="ef322-tolerance">Tolerância (opcional)
+      <input id="ef322-tolerance" name="ef322_tolerance" inputmode="decimal" maxlength="16" placeholder="Ex.: 0,5" autocomplete="off">
+    </label>
+    <label for="ef322-deadline">Prazo (opcional)
+      <input id="ef322-deadline" name="ef322_deadline" type="date">
+    </label>
+    <label for="ef322-note">Observações (opcional)
+      <input id="ef322-note" name="ef322_note" maxlength="200" placeholder="Planejamento do aluno">
+    </label>
+  </div>
+  <p id="ef322-status" role="status" aria-live="polite">Sem objetivo definido.</p>
+  <small>RC-6: registro e reedição do objetivo implementados. Metas e alertas automáticos ainda não estão integrados ao motor Windows.</small>
+</section>
 </div>
 <!-- Botões de Ação do Wizard -->
 <div class="form-actions" id="form-actions">
@@ -1988,5 +2032,7 @@
 <link rel="stylesheet" href="./assets/css/79-desktop-themes.css">
 <script src="./assets/js/70-desktop-themes.js"></script>
 <link rel="stylesheet" href="./assets/css/80-desktop-sidebar-compact.css">
+<link rel="stylesheet" href="./assets/css/81-windows-web-3-1-22.css">
+<script src="./assets/js/81-desktop-objectives.js"></script>
 </body>
 </html>

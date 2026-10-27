@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-sidebar-compact-3-1-19-rc5]
+    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6]
   workflow_dispatch:
 
 concurrency:
@@ -52,6 +52,9 @@ jobs:
 
       - name: Validate compact Windows sidebar layout and navigation labels
         run: node tests/windows-compact-sidebar-rc5.cjs
+
+      - name: Validate Windows 3.1.22 RC-6 objectives, assessment, PDF, UI, sidebar and backup
+        run: node tests/windows-web-3-1-22-rc6.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -168,7 +171,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC5-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.22-RC6-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -229,7 +232,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.19-RC5-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.22-RC6-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14
