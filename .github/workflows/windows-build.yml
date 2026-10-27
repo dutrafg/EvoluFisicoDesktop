@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6, windows-sync-3-1-22-rc7]
+    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6, windows-sync-3-1-22-rc7, windows-sync-3-1-23-rc8]
   workflow_dispatch:
 
 concurrency:
@@ -58,6 +58,9 @@ jobs:
 
       - name: Validate Windows RC-7 objective visibility, HTML escaping and installer identity
         run: node tests/windows-web-3-1-22-rc7.cjs
+
+      - name: Validate Windows 3.1.23 RC-8 professional profile, BIA, folders and native storage guards
+        run: node tests/windows-web-3-1-23-rc8.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -174,7 +177,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.22-RC7-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.23-RC8-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -235,7 +238,7 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.22-RC7-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.23-RC8-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14
