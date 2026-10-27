@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6, windows-sync-3-1-22-rc7, windows-sync-3-1-23-rc8]
+    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6, windows-sync-3-1-22-rc7, windows-sync-3-1-23-rc8, windows-sync-3-1-37-rc9]
   workflow_dispatch:
 
 concurrency:
@@ -61,6 +61,9 @@ jobs:
 
       - name: Validate Windows 3.1.23 RC-8 professional profile, BIA, folders and native storage guards
         run: node tests/windows-web-3-1-23-rc8.cjs
+
+      - name: Validate Windows Web 3.1.37 RC-9 KPIs, UI reset, native storage
+        run: node tests/windows-web-3-1-37-rc9.cjs
 
       - name: Build Windows executable
         shell: pwsh
@@ -177,7 +180,7 @@ jobs:
       - name: Upload portable Windows application
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.23-RC8-Windows-Portable
+          name: EvoluFisicoDesktop-3.1.37-RC9-Windows-Portable
           path: publish/win-x64/
           if-no-files-found: error
           retention-days: 14
@@ -238,13 +241,31 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: EvoluFisicoDesktop-3.1.23-RC8-Windows-Setup
+          name: EvoluFisicoDesktop-3.1.37-RC9-Windows-Setup
           path: installer-output/*.exe
           if-no-files-found: error
           retention-days: 14
 
-      - name: Publish stable 1.0.12 Windows release
+      - name: Publish tested RC-9 pre-release
         if: github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $short = '${{ github.sha }}'.Substring(0,7)
+          $tag = "desktop-rc9-3.1.37-$short"
+          $setup = Get-ChildItem installer-output -Filter 'EvoluFisicoDesktop-3.1.37-RC9-Setup.exe' -File | Select-Object -First 1
+          if (-not $setup) { throw 'RC-9 setup EXE missing' }
+          gh release view $tag --repo ${{ github.repository }} *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --repo ${{ github.repository }} --target ${{ github.sha }} --title 'EvoluFísico Desktop RC-9 (base Web 3.1.37)' --notes 'Pré-versão Windows. Consolida RC-8 e integração parcial Web 3.1.37: painel de resultados recolhível, navegação acessível, interface responsiva e Novo Check-in; SQLite nativo preservado. Perfil Unificado e EvoStore ainda não possuem paridade completa. Faça backup antes de atualizar.' --prerelease --latest=false
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to create RC-9 GitHub pre-release' }
+          }
+          gh release upload $tag $setup.FullName --repo ${{ github.repository }} --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to upload RC-9 installer' }
+
+      - name: Publish stable 1.0.12 Windows release
+        if: github.ref == 'refs/heads/main' && vars.ENABLE_STABLE_RELEASE == 'true'
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
