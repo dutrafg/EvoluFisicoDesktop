@@ -18,7 +18,7 @@ assert.ok(app.includes('window.EFDesktopObjectives?.renderSummary?.(aval.objetiv
 assert.ok(css.includes('#single-print-wrapper .ef322-plan-summary'));
 assert.ok(css.includes('#modal-body-content .ef322-plan-summary'));
 assert.ok(sw.includes('web-3-1-22-rc7'));
-assert.ok(/channel = 'RC-[78]'/.test(build)&&/source_web_version = '3.1.(?:2[23]|37)'/.test(build));
+assert.ok(/channel = 'RC-[789]'/.test(build)&&/source_web_version = '3.1.(?:2[23]|37)'/.test(build));
 assert.ok(/OutputBaseFilename=EvoluFisicoDesktop-3\.1\.(?:2[23]|37)-RC[789]-Setup/.test(installer));
 assert.ok(workflow.includes('tests/windows-web-3-1-22-rc7.cjs'));
 assert.ok(/EvoluFisicoDesktop-3\.1\.(?:2[23]|37)-RC[789]-Windows-Setup/.test(workflow));
