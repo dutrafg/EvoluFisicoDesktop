@@ -49,7 +49,7 @@ handler();assert(opened.has('student-1'),'Opening folder must persist through re
 folder.open=false;handler();assert(!opened.has('student-1'),'Closing folder must persist through render');
 const searchState={pasta:folder,termo:'nome',grupo:{chave:'student-1'},efHistoryOpenFolders:opened};
 vm.runInNewContext(app.slice(toggleStart,toggleEnd),searchState);
-folder.open=true;handler=()=>{}; // Search must not mutate the real folder state.
+folder.open=true;handler(); // Search must not mutate the real folder state.
 assert(!opened.has('student-1'));
 assert(app.includes('objetivo_planejamento: window.EFDesktopObjectives?.collect?.() || null'),'Optional objective persistence lost');
 assert(app.includes('window.EFDesktopObjectives?.renderSummary?.(aval.objetivo_planejamento, "print")'),'Objective PDF lost');
