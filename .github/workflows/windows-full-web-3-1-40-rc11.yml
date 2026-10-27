@@ -1,0 +1,105 @@
+name: EvoluFisico Desktop Web Completa 3.1.40 RC-11
+on:
+  push:
+    branches: [windows-full-web-3-1-40-rc11]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: windows-web-3-1-40-rc11
+  cancel-in-progress: true
+jobs:
+  test-and-build:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar HTML integral Web 3.1.40 e EFNativeStorage
+        shell: pwsh
+        run: |
+          python scripts/verify_web_3_1_40.py
+          if ($LASTEXITCODE -ne 0) { throw 'Falha na verificação do frontend Web 3.1.40' }
+      - name: Validar versão exata, identidade visual e integridade SQLite
+        run: node tests/windows-full-web-3-1-40.cjs
+      - name: Validar ponte nativa e frontend integral
+        run: node tests/windows-full-web-3-1-37.cjs
+      - name: Preparar Chromium
+        shell: pwsh
+        run: |
+          npm install --no-save --no-package-lock playwright@1.58.2
+          if ($LASTEXITCODE -ne 0) { throw 'Playwright não instalado' }
+          npx playwright install chromium
+          if ($LASTEXITCODE -ne 0) { throw 'Chromium não instalado' }
+      - name: Testar Dashboard Perfil Unificado EvoStore e navegação
+        run: node tests/windows-full-web-browser-3-1-37.cjs
+      - name: Testar 4 alunos x 4 avaliações, edição exclusão e cobranças
+        run: node tests/windows-native-data-browser-3-1-37.cjs
+      - name: Validar cobrança antiga e escrita no SQLite
+        run: node tests/windows-billing-sqlite-3-1-37.cjs
+      - name: Validar cliente WebView2 EFNativeStorage
+        run: node tests/native-storage-client.cjs
+      - name: Testar perfil profissional e migração de alunos no SQLite
+        run: node tests/windows-native-profile-directory-3-1-40.cjs
+      - name: Testar SQLite protegido e migração
+        shell: pwsh
+        run: |
+          dotnet run --project tests/StorageSmoke/StorageSmoke.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Falha na integração SQLite cifrada' }
+      - name: Compilar Windows 3.1.40 RC-11
+        shell: pwsh
+        run: |
+          ./scripts/build-windows.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Falha na compilação do Windows' }
+      - name: Conferir versão e HTML integral empacotados
+        shell: pwsh
+        run: |
+          $dir = 'publish/win-x64/wwwroot'
+          $v = Get-Content (Join-Path $dir 'desktop-version.json') -Raw | ConvertFrom-Json
+          if ($v.version -ne '3.1.40' -or $v.source_web_version -ne '3.1.40' -or $v.channel -ne 'RC') { throw 'Versão do pacote divergente' }
+          if ($v.source_web_commit -ne '47aebc7b9ee29c9222243ce845765859ec10b9a7') { throw 'Fonte Web divergente' }
+          if ((Get-Item (Join-Path $dir 'index.html')).Length -lt 3500000) { throw 'HTML integral ausente' }
+          if (!(Test-Path (Join-Path $dir 'assets/js/28-native-storage.js'))) { throw 'Ponte EFNativeStorage ausente' }
+          if (!(Test-Path 'publish/win-x64/EvoluFisico.Desktop.exe')) { throw 'EXE ausente' }
+      - name: Enviar Windows portátil RC-11
+        uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-3.1.40-RC11-Windows-Portable
+          path: publish/win-x64/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Instalar Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+      - name: Gerar instalador EXE
+        shell: pwsh
+        run: |
+          $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6/ISCC.exe'
+          if (!(Test-Path $iscc)) { throw 'Inno Setup ausente' }
+          & $iscc installer/EvoluFisico.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Falha ao gerar instalador EXE' }
+      - name: Smoke test de instalação e desinstalação
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem installer-output -Filter '*.exe' -File | Select-Object -First 1).FullName
+          if (-not $setup) { throw 'Instalador EXE ausente' }
+          $target = Join-Path $env:RUNNER_TEMP 'EF_340_RC11_Test'
+          $installed = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/DIR=$target") -Wait -PassThru
+          if ($installed.ExitCode -ne 0) { throw "Instalação falhou: $($installed.ExitCode)" }
+          $v = Get-Content (Join-Path $target 'wwwroot/desktop-version.json') -Raw | ConvertFrom-Json
+          if ($v.version -ne '3.1.40') { throw 'Versão instalada incorreta' }
+          if (!(Test-Path (Join-Path $target 'wwwroot/assets/js/28-native-storage.js'))) { throw 'Ponte nativa não instalada' }
+          $un = Start-Process -FilePath (Join-Path $target 'unins000.exe') -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
+          if ($un.ExitCode -ne 0) { throw 'Desinstalação falhou' }
+      - name: Enviar instalador RC-11
+        uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-3.1.40-RC11-Windows-Setup
+          path: installer-output/*.exe
+          if-no-files-found: error
+          retention-days: 14
