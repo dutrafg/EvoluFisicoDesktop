@@ -25,11 +25,11 @@
   function readyForTracking(plan) {
     if (!plan || !plan.kind || !plan.metric || !plan.deadline) return false;
     const raw = String(plan.target ?? '').trim();
-    if (!/^\\d+(?:[.,]\\d+)?$/.test(raw)) return false;
+    if (!/^\d+(?:[.,]\d+)?$/.test(raw)) return false;
     const number = Number(raw.replace(',','.'));
     const evaluationDate = String(global.document.getElementById('data_avaliacao')?.value || '');
     return Number.isFinite(number) && number > 0 &&
-      /^\\d{4}-\\d{2}-\\d{2}$/.test(plan.deadline) &&
+      /^\d{4}-\d{2}-\d{2}$/.test(plan.deadline) &&
       (!evaluationDate || plan.deadline >= evaluationDate);
   }
   function sync() {
