@@ -9,7 +9,7 @@ SOURCE='9754061d42879e10c9bebd32b3c9cb1eb9cbc615'
 html=(WWW/'index.html').read_text(encoding='utf-8')
 version=json.loads((WWW/'version.json').read_text(encoding='utf-8'))
 manifest=json.loads((WWW/'manifest.webmanifest').read_text(encoding='utf-8'))
-patch=(ROOT/'scripts/web-3.1.38-to-3.1.41-index.patch').read_text(encoding='utf-8')
+patch=(ROOT/'scripts/web-3.1.40-to-3.1.41-index.patch').read_text(encoding='utf-8')
 assert len(html)>3_600_000 and len(patch)>10_000
 assert version['version']==VERSION and version['source_web_commit']==SOURCE
 assert version['desktop_channel']=='RC' and manifest['version']==VERSION
