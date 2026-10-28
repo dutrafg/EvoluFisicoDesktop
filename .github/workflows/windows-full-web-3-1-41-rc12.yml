@@ -52,7 +52,7 @@ jobs:
       - name: Validar cliente WebView2 EFNativeStorage
         run: node tests/native-storage-client.cjs
       - name: Testar perfil profissional e migração de alunos no SQLite
-        run: node tests/windows-native-profile-directory-3-1-41.cjs
+        run: node tests/windows-native-profile-directory-3-1-40.cjs
       - name: Testar SQLite protegido e migração
         shell: pwsh
         run: |
