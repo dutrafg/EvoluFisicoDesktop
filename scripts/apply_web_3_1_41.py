@@ -35,9 +35,12 @@ def main():
             flush()
         assert len(blocks)==12,f'Expected 12 Web changes, found {len(blocks)}'
         for old,new in blocks:
-            if not old or html.count(old)!=1:
-                raise RuntimeError(f'Cannot apply Web diff exactly ({html.count(old)} matches): {old[:120]!r}')
-            html=html.replace(old,new,1)
+            if not old: raise RuntimeError('Unexpected pure insertion in published Web diff')
+            count=html.count(old)
+            if count==1: html=html.replace(old,new,1)
+            elif count==0 and new and html.count(new)==1:
+                print('Published Web change already present in native HTML:',new[:90])
+            else: raise RuntimeError(f'Cannot apply Web diff exactly ({count} matches): {old[:120]!r}')
         HTML.write_text(html,encoding='utf-8')
     for marker in NATIVE: assert marker in html,'Native bridge lost: '+marker
     for marker in ('"version":"3.1.41"','Versão 3.1.41 Release',
