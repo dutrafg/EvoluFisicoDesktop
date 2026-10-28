@@ -14,7 +14,7 @@ public partial class MainWindow : Window
 {
     private const string AppUrl = "https://evolufisico.local/index.html";
     private bool _ready;
-    private const string CurrentVersion = "3.1.41";
+    private const string CurrentVersion = "3.1.42";
     private static string InstalledTag()
     {
         try

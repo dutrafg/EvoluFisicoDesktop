@@ -1,7 +1,7 @@
 {
   "application": "EvoluFísico2",
-  "version": "3.1.41",
+  "version": "3.1.42",
   "channel": "Release",
   "desktop_channel": "RC",
-  "source_web_commit": "9754061d42879e10c9bebd32b3c9cb1eb9cbc615"
+  "source_web_commit": "f133ce6cf8db85dbe239615639837c7ec89e4615"
 }
