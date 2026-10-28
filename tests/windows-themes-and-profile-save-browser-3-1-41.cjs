@@ -26,7 +26,7 @@ const server=http.createServer((req,res)=>{
    await p.waitForFunction(()=>document.getElementById('efprof-first-run')?.hidden);
    assert.equal(await p.evaluate(()=>localStorage.getItem('evolufisico_pro_nome')),name,'Primeiro acesso persiste nome');
    await p.reload({waitUntil:'domcontentloaded'});
-   await p.waitForFunction(()=>window.EFProfessionalProfile?.read?.().name===name);
+   await p.waitForFunction(expected=>window.EFProfessionalProfile?.read?.()?.name===expected,name);
    assert.equal(await p.locator('#efprof-first-run').isVisible(),false,'Primeiro acesso não reaparece');
 
    await p.waitForFunction(()=>window.EFStudents?.open&&window.EFUnifiedDirectory?.ready?.());
