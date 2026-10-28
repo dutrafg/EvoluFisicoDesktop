@@ -1,0 +1,64 @@
+@@ -1,11 +1,11 @@
+ <!DOCTYPE html>
+-<!-- EvoluFisico2 3.1.41 Release — correção do salvamento do perfil profissional no primeiro acesso. -->
++<!-- EvoluFisico2 3.1.42 Release — correção do ícone de Análises Completas no menu flutuante. -->
+ 
+ 
+ <html lang="pt-BR">
+ <head>
+ <script id="ef-release-information">
+-(()=>{'use strict';const info={"version":"3.1.41","channel":"Release","summary":"Temas restritos à Dashboard e navegação lateral; correção de cadastros","changes":["Os cinco temas não alteram mais a paleta dos módulos, preservando as cores padrão nos modos claro e escuro.","Corrigida a interceptação de cliques que bloqueava o salvamento do nome no primeiro acesso e o cadastro de alunos.","Testados cadastro, edição e persistência de perfil profissional e alunos em smartphone e desktop."]};info.changes=Object.freeze(info.changes);
++(()=>{'use strict';const info={"version":"3.1.42","channel":"Release","summary":"Ícone de Análises Completas alinhado no menu flutuante","changes":["Ajustado o ícone de Análises Completas para caber integralmente no menu flutuante de smartphones.","Validado o alinhamento nas larguras de 360, 390 e 430 px, preservando os demais ícones e a navegação.","Mantidas as correções anteriores de cadastro de alunos, primeiro acesso e temas restritos à Dashboard e ao painel lateral."]};info.changes=Object.freeze(info.changes);
+  function render(root=document){const card=root.querySelector('#ef-whatsnew-card');if(!card)return;card.querySelector('.efwhatsnew-version').textContent='v'+info.version+' '+info.channel;card.querySelector('.efwhatsnew-summary').textContent=info.summary;let details=card.querySelector('.ef-release-details');if(!details){details=document.createElement('details');details.className='ef-release-details';const summary=document.createElement('summary');summary.textContent='Ver todas as melhorias desta versão';details.append(summary);const list=document.createElement('ul');for(const text of info.changes){const item=document.createElement('li');item.textContent=text;list.append(item)}details.append(list);summary.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();details.open=!details.open;});card.append(details)}}
+  window.EFReleaseInfo=Object.freeze({...info,render});
+ })();
+@@ -151,7 +151,7 @@
+     })();
+ </script>
+ <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+-<title>EvoluFísico2 3.1.41 Release — Avaliação Física &amp; Composição Corporal</title>
++<title>EvoluFísico2 3.1.42 Release — Avaliação Física &amp; Composição Corporal</title>
+ <meta content="#eef1ec" name="theme-color"/>
+ <meta content="telephone=no" name="format-detection"/>
+ <meta content="EvoluFísico — avaliação física e composição corporal." name="description"/>
+@@ -631,7 +631,7 @@
+ <div class="ef-splash-titles">
+ <h1 class="ef-splash-title">EvoluFísico</h1>
+ <p class="ef-splash-subtitle">Avaliação Física &amp; Composição Corporal</p>
+-<div class="ef-splash-version-pill">Versão 3.1.41 Release</div>
++<div class="ef-splash-version-pill">Versão 3.1.42 Release</div>
+ </div>
+ <div class="ef-splash-loader-box">
+ <div class="ef-splash-bar">
+@@ -12518,11 +12518,11 @@ <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-main); margin-bo
+ 
+ <div class="efs-subpage" data-efs-panel="manutencao" hidden=""><div class="efs-section-title"><h3>Manutenção e diagnóstico</h3><p>Verifique a integridade dos módulos e execute autocorreções seguras.</p></div><div class="ef-settings-grid"><article class="ef-settings-card ef-settings-card-wide efup-card" id="efup-card" aria-labelledby="efup-title">
+ <div class="efup-heading"><span class="efup-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M6.2 9A7 7 0 0 1 18.6 7L20 12"/><path d="M4 12l1.4 5A7 7 0 0 0 17.8 15"/></svg></span><div class="efup-headlines"><span class="efup-eyebrow">SISTEMA · ATUALIZAÇÕES</span><h3 id="efup-title">Verificar Atualizações</h3><p>Acompanhe novas versões publicadas a partir do GitHub e disponibilizadas no site oficial.</p></div><span class="efup-state" id="efup-state" data-state="waiting">Aguardando</span></div>
+-<div class="efup-metrics"><div><span>VERSÃO INSTALADA</span><strong id="efup-installed">3.1.41 Release</strong><small>Canal de homologação</small></div><div><span>ÚLTIMA VERIFICAÇÃO</span><strong id="efup-last-check">Ainda não verificado</strong><small>Consulta automática com conexão</small></div></div>
++<div class="efup-metrics"><div><span>VERSÃO INSTALADA</span><strong id="efup-installed">3.1.42 Release</strong><small>Canal de homologação</small></div><div><span>ÚLTIMA VERIFICAÇÃO</span><strong id="efup-last-check">Ainda não verificado</strong><small>Consulta automática com conexão</small></div></div>
+ <div class="efup-actions"><button type="button" id="efup-check" class="efup-button"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 7v5h-5M4 17v-5h5M6 9a7 7 0 0 1 12-2l2 5M4 12l2 5a7 7 0 0 0 12-2"/></svg>Verificar agora</button><a id="efup-open" href="https://evolufisico2.vercel.app/" target="_blank" rel="noopener noreferrer" hidden>Abrir atualização ↗</a></div>
+ <p id="efup-message" class="efup-message" role="status" aria-live="polite">Verificação automática ao abrir o aplicativo e periodicamente durante o uso.</p>
+ </article><article class="ef-settings-card ef-settings-card-wide efwhatsnew-card" id="ef-whatsnew-card" aria-labelledby="ef-whatsnew-title">
+-<div class="efwhatsnew-header"><span class="efwhatsnew-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3Z"/><path d="M19 17v4M17 19h4"/></svg></span><div class="efwhatsnew-text"><span class="efwhatsnew-eyebrow">ÚLTIMAS MELHORIAS</span><h3 id="ef-whatsnew-title">O que há de novidade</h3></div><span class="efwhatsnew-version">v3.1.41 Release</span></div>
++<div class="efwhatsnew-header"><span class="efwhatsnew-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3Z"/><path d="M19 17v4M17 19h4"/></svg></span><div class="efwhatsnew-text"><span class="efwhatsnew-eyebrow">ÚLTIMAS MELHORIAS</span><h3 id="ef-whatsnew-title">O que há de novidade</h3></div><span class="efwhatsnew-version">v3.1.42 Release</span></div>
+ <p class="efwhatsnew-summary">Correção do salvamento do nome profissional no primeiro acesso, com recuperação por IndexedDB quando o armazenamento principal está bloqueado.</p>
+ </article><article class="ef-settings-card ef-settings-card-wide efs-diagnostics-card"><div id="ef-setting-diagnostics"></div></article></div></div>
+  `
+@@ -14465,7 +14465,7 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+ <script id="ef-101-controls">
+ (function(){
+  'use strict';
+- const VERSION='3.1.41 Release';
++ const VERSION='3.1.42 Release';
+  const svg='<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>';
+  function mountSearch(){
+   const host=document.getElementById('ef-workspace-heading');
+@@ -14555,7 +14555,7 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+   trend:'<path d="m3 18 7-7 5 4 6-9"/><path d="M15 6h6v6"/>',
+   calculator:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8v4H8zM8 14h1m3 0h1m3 0h1M8 18h1m3 0h1m3 0h1"/>',
+   forms:'<rect x="6" y="3" width="13" height="18" rx="2"/><path d="M9 8h7M9 12h7M9 16h4"/>',
+-  analysis:'<g transform="translate(10 12) scale(1.8)"><path d="M12 6C10 3 7 3 6 5a5 5 0 0 0-2 7 4 4 0 0 0 3 7c1 2 3 3 5 1V6Zm0 0c2-3 5-3 6-1a5 5 0 0 1 2 7 4 4 0 0 1-3 7c-1 2-3 3-5 1V6Z"/><path d="M8 9c2 .4 3 1.7 3 3m-4 4c2-1 3-1 4 .5m5-8c-2 1-3 2-3 4m4 4c-2-1.2-3-.9-4 .5"/></g>',
++  analysis:'<path d="M12 6a4 4 0 0 0-7.4-1.7A5 5 0 0 0 3.5 12a4 4 0 0 0 3 6.7A4 4 0 0 0 12 20V6Zm0 0a4 4 0 0 1 7.4-1.7A5 5 0 0 1 20.5 12a4 4 0 0 1-3 6.7A4 4 0 0 1 12 20V6Z"/><path d="M8 8c0 2-2 2-2 4M16 8c0 2 2 2 2 4M8 16l4-3 4 3"/>',
+   wallet:'<rect x="3" y="6" width="18" height="15" rx="2"/><path d="M3 9V5a2 2 0 0 1 2-2h12M16 14h5"/>',
+   settings:'<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="none"/><circle cx="15" cy="17" r="2" fill="none"/>',
+   plus:'<path d="M12 4v16M4 12h16"/>',
