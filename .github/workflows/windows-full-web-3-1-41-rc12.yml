@@ -33,7 +33,7 @@ jobs:
       - name: Validar versão exata, identidade visual e integridade SQLite
         run: node tests/windows-full-web-3-1-41.cjs
       - name: Validar ponte nativa e frontend integral
-        run: node tests/windows-full-web-3-1-37.cjs
+        run: node tests/windows-full-web-3-1-41-native.cjs
       - name: Preparar Chromium
         shell: pwsh
         run: |
