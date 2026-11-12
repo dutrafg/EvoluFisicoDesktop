@@ -5,6 +5,7 @@ on:
       - sync/desktop-web-3-1-45-20261112
     paths:
       - 'scripts/sync_web_3_1_45.py'
+      - 'scripts/web-3.1.42-to-3.1.45-*.patch'
       - 'tests/windows-web-3-1-45-rc14.cjs'
       - '.github/workflows/desktop-web-3-1-45.yml'
   workflow_dispatch:
@@ -33,30 +34,19 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Buscar Web 3.1.45 e verificar commit
+      - name: Validar patches fixados do Web privado
         shell: pwsh
         run: |
-          git clone --filter=blob:none https://github.com/dutrafg/Evolufisico2.git "$env:RUNNER_TEMP/ef-web"
-          if ($LASTEXITCODE -ne 0) { throw 'Git clone Web falhou' }
-          git -C "$env:RUNNER_TEMP/ef-web" checkout --detach 2e80aa6220ebaaf9430e387e2f7cbde324f918de
-          if ($LASTEXITCODE -ne 0) { throw 'Commit Web de origem indisponivel' }
-      - name: Testar correcao de historico e fotos no Web de origem
+          foreach ($name in @('index','runtime','print')) {
+            $file = "scripts/web-3.1.42-to-3.1.45-$name.patch"
+            if (!(Test-Path $file)) { throw "Patch nao encontrado: $file" }
+            if ((Get-Item $file).Length -lt 900) { throw "Patch incompleto: $file" }
+          }
+      - name: Aplicar diferencas 3.1.42 -> 3.1.45 preservando SQLite
         shell: pwsh
         run: |
-          Push-Location "$env:RUNNER_TEMP/ef-web"
-          try {
-            npm ci
-            if ($LASTEXITCODE -ne 0) { throw 'Web npm ci falhou' }
-            node tests/pdf-update-history-regression.cjs
-            if ($LASTEXITCODE -ne 0) { throw 'Regressao de pastas Web' }
-            node tests/pdf-preview-photos.cjs
-            if ($LASTEXITCODE -ne 0) { throw 'Regressao de fotos Web' }
-          } finally { Pop-Location }
-      - name: Aplicar a diferenca 3.1.42 -> 3.1.45 sem sobrescrever SQLite
-        shell: pwsh
-        run: |
-          python scripts/sync_web_3_1_45.py "$env:RUNNER_TEMP/ef-web"
-          if ($LASTEXITCODE -ne 0) { throw 'Port do Web falhou; nenhum commit de frontend sera publicado' }
+          python scripts/sync_web_3_1_45.py
+          if ($LASTEXITCODE -ne 0) { throw 'Port do Web falhou; frontend nao sera publicado' }
       - name: Validar estrutura, sintaxe e funcionalidades
         shell: pwsh
         run: |
