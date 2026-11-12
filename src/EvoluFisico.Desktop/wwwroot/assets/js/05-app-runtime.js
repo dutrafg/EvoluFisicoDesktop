@@ -3048,6 +3048,36 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             return true;
         }
 
+        async function aguardarFotosDaImpressao(wrapper) {
+            const imagens = Array.from(wrapper.querySelectorAll('.print-photo-panel .print-photo-frame img'));
+            if (!imagens.length) return true;
+            const resultado = await Promise.all(imagens.map(img => new Promise(resolve => {
+                let finalizado = false;
+                let limite;
+                const finalizar = ok => {
+                    if (finalizado) return;
+                    finalizado = true;
+                    clearTimeout(limite);
+                    img.removeEventListener('load', verificar);
+                    img.removeEventListener('error', falhou);
+                    resolve(Boolean(ok));
+                };
+                const falhou = () => finalizar(false);
+                const verificar = () => {
+                    if (!img.complete) return;
+                    if (!(img.naturalWidth > 0 && img.naturalHeight > 0)) return finalizar(false);
+                    if (typeof img.decode !== 'function') return finalizar(true);
+                    Promise.resolve().then(() => img.decode())
+                      .then(() => finalizar(true), () => finalizar(img.complete && img.naturalWidth > 0 && img.naturalHeight > 0));
+                };
+                img.addEventListener('load', verificar);
+                img.addEventListener('error', falhou);
+                limite = setTimeout(() => finalizar(false), 12000);
+                if (img.complete) verificar();
+            })));
+            return resultado.every(Boolean);
+        }
+
         function imprimirAvaliacaoIndividualPDF(id) {
             const aval = (typeof encontrarAvaliacaoPorId === 'function' ? encontrarAvaliacaoPorId(id) : null) || avaliacoes.find(a => a.id === id || String(a.id) === String(id));
             if (!aval) return;
@@ -3177,6 +3207,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                                 <tr><td style="padding:1.5px 0;">Braço Direito:</td><td style="font-weight:700; text-align:right;">${p.braco_dir || '-'} cm</td></tr>
                                 <tr><td style="padding:1.5px 0;">Braço Esquerdo:</td><td style="font-weight:700; text-align:right;">${p.braco_esq || '-'} cm</td></tr>
                                 <tr><td style="padding:1.5px 0;">Coxa Direita:</td><td style="font-weight:700; text-align:right;">${p.coxa_dir || '-'} cm</td></tr>
+                                <tr><td style="padding:1.5px 0;">Coxa Esquerda:</td><td style="font-weight:700; text-align:right;">${p.coxa_esq || '-'} cm</td></tr>
                                 <tr><td style="padding:1.5px 0;">Panturrilha:</td><td style="font-weight:700; text-align:right;">${p.panturrilha || '-'} cm</td></tr>
                                 <tr><td style="padding:1.5px 0;">RCQ:</td><td style="font-weight:700; text-align:right;">${b.rcq || ((parseFloat(p.cintura) > 0 && parseFloat(p.quadril) > 0) ? (parseFloat(p.cintura)/parseFloat(p.quadril)).toFixed(2) : '-')}</td></tr>
                             </table>
@@ -3293,7 +3324,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
             `;
 
             // Cancelar (botão ou Esc) preserva os dados e não chama o spooler Windows.
-            abrirPreviaPDFDesktop(wrapper, aval, () => {
+            abrirPreviaPDFDesktop(wrapper, aval, async () => {
                 const oldDocTitle = document.title;
                 document.title = window.EF2PdfBaseName(aval.nome);
                 const cleanupIndPrint = () => {
@@ -3302,6 +3333,13 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                     if (typeof window.removeEventListener === 'function') window.removeEventListener('afterprint', cleanupIndPrint);
                 };
                 window.addEventListener('afterprint', cleanupIndPrint, { once: true });
+                // Verifica fotos antes de solicitar impressao ao Windows.
+                const fotosProntas = await aguardarFotosDaImpressao(wrapper);
+                if (!fotosProntas) {
+                    cleanupIndPrint();
+                    (window.efToast || window.alert)('Uma fotografia nao carregou. Impressao cancelada para evitar PDF incompleto.', 'warn');
+                    return;
+                }
                 document.body.classList.add('print-mode-single');
                 document.body.dataset.efPrintTarget = 'report';
                 clearTimeout(window.__efPrintGuardTimer);
@@ -4057,6 +4095,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
                             <tr><td style="padding:2px 0;">Braço Direito:</td><td style="font-weight:700; text-align:right;">${p.braco_dir || '-'} cm</td></tr>
                             <tr><td style="padding:2px 0;">Braço Esquerdo:</td><td style="font-weight:700; text-align:right;">${p.braco_esq || '-'} cm</td></tr>
                             <tr><td style="padding:2px 0;">Coxa Direita:</td><td style="font-weight:700; text-align:right;">${p.coxa_dir || '-'} cm</td></tr>
+                            <tr><td style="padding:2px 0;">Coxa Esquerda:</td><td style="font-weight:700; text-align:right;">${p.coxa_esq || '-'} cm</td></tr>
                             <tr><td style="padding:2px 0;">Panturrilha:</td><td style="font-weight:700; text-align:right;">${p.panturrilha || '-'} cm</td></tr>
                             <tr><td style="padding:2px 0;">RCQ:</td><td style="font-weight:700; text-align:right;">${b.rcq || ((parseFloat(p.cintura) > 0 && parseFloat(p.quadril) > 0) ? (parseFloat(p.cintura)/parseFloat(p.quadril)).toFixed(2) : '-')}</td></tr>
                         </table>
