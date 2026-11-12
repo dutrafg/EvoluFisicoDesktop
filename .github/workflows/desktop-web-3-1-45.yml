@@ -5,6 +5,7 @@ on:
       - sync/desktop-web-3-1-45-20261112
     paths:
       - 'scripts/sync_web_3_1_45.py'
+      - 'scripts/verify_web_3_1_45.py'
       - 'scripts/web-3.1.42-to-3.1.45-*.patch'
       - 'tests/windows-web-3-1-45-rc14.cjs'
       - '.github/workflows/desktop-web-3-1-45.yml'
@@ -30,10 +31,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Configurar .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
       - name: Validar patches fixados do Web privado
         shell: pwsh
         run: |
@@ -50,7 +47,7 @@ jobs:
       - name: Validar estrutura, sintaxe e funcionalidades
         shell: pwsh
         run: |
-          python scripts/verify_frontend.py
+          python scripts/verify_web_3_1_45.py
           if ($LASTEXITCODE -ne 0) { throw 'Referencias de frontend invalidas' }
           node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
           if ($LASTEXITCODE -ne 0) { throw 'JavaScript nativo invalido' }
@@ -60,6 +57,10 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Regressao do SQLite bridge' }
           git diff --check
           if ($LASTEXITCODE -ne 0) { throw 'Problemas de whitespace no patch' }
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
       - name: Testar SQLite protegido nativo
         shell: pwsh
         run: |
