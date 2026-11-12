@@ -56,6 +56,25 @@ def apply_patch(content,patch,name):
                 content=content.replace(before,after,1);done+=1
             elif found==0 and after and content.count(after)==1:
                 print('Already applied',name,total)
+            elif found>1:
+                # Ex.: window.print() aparece em mais de um relatorio.
+                # Aplicar apenas na ocorrencia com contexto vizinho exato.
+                candidates=[]
+                start=0
+                while True:
+                    pos=content.find(before,start)
+                    if pos<0:break
+                    ptxt=''.join(prior)
+                    ntxt=''.join(later)
+                    left=(not ptxt or content[:pos].endswith(ptxt))
+                    right=(not ntxt or content[pos+len(before):].startswith(ntxt))
+                    if left and right:candidates.append(pos)
+                    start=pos+1
+                if len(candidates)!=1:
+                    raise RuntimeError(f'{name}: unresolved repeated edit #{total}, candidates={len(candidates)}')
+                pos=candidates[0]
+                content=content[:pos]+after+content[pos+len(before):]
+                done+=1
             else:
                 raise RuntimeError(f'{name}: conflicting change #{total}; old={found}, new={content.count(after)}, excerpt={before[:120]!r}')
         elif after:
