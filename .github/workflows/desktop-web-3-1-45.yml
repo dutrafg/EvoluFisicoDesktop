@@ -1,0 +1,113 @@
+name: Desktop RC-14 - sincronizar Web 3.1.45 e compilar Windows
+on:
+  push:
+    branches:
+      - sync/desktop-web-3-1-45-20261112
+    paths:
+      - 'scripts/sync_web_3_1_45.py'
+      - 'tests/windows-web-3-1-45-rc14.cjs'
+      - '.github/workflows/desktop-web-3-1-45.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: evolufisico-desktop-rc14
+  cancel-in-progress: false
+
+jobs:
+  sync-build:
+    runs-on: windows-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout da RC-13 Desktop
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Buscar Web 3.1.45 e verificar commit
+        shell: pwsh
+        run: |
+          git clone --filter=blob:none https://github.com/dutrafg/Evolufisico2.git "$env:RUNNER_TEMP/ef-web"
+          if ($LASTEXITCODE -ne 0) { throw 'Git clone Web falhou' }
+          git -C "$env:RUNNER_TEMP/ef-web" checkout --detach 2e80aa6220ebaaf9430e387e2f7cbde324f918de
+          if ($LASTEXITCODE -ne 0) { throw 'Commit Web de origem indisponivel' }
+      - name: Testar correcao de historico e fotos no Web de origem
+        shell: pwsh
+        run: |
+          Push-Location "$env:RUNNER_TEMP/ef-web"
+          try {
+            npm ci
+            if ($LASTEXITCODE -ne 0) { throw 'Web npm ci falhou' }
+            node tests/pdf-update-history-regression.cjs
+            if ($LASTEXITCODE -ne 0) { throw 'Regressao de pastas Web' }
+            node tests/pdf-preview-photos.cjs
+            if ($LASTEXITCODE -ne 0) { throw 'Regressao de fotos Web' }
+          } finally { Pop-Location }
+      - name: Aplicar a diferenca 3.1.42 -> 3.1.45 sem sobrescrever SQLite
+        shell: pwsh
+        run: |
+          python scripts/sync_web_3_1_45.py "$env:RUNNER_TEMP/ef-web"
+          if ($LASTEXITCODE -ne 0) { throw 'Port do Web falhou; nenhum commit de frontend sera publicado' }
+      - name: Validar estrutura, sintaxe e funcionalidades
+        shell: pwsh
+        run: |
+          python scripts/verify_frontend.py
+          if ($LASTEXITCODE -ne 0) { throw 'Referencias de frontend invalidas' }
+          node --check src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js
+          if ($LASTEXITCODE -ne 0) { throw 'JavaScript nativo invalido' }
+          node tests/windows-web-3-1-45-rc14.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Regressao da RC14' }
+          node tests/desktop-integration.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Regressao de integracao desktop' }
+          node tests/native-storage-client.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Regressao do SQLite bridge' }
+          git diff --check
+          if ($LASTEXITCODE -ne 0) { throw 'Problemas de whitespace no patch' }
+      - name: Testar SQLite protegido nativo
+        shell: pwsh
+        run: |
+          dotnet run --project tests/StorageSmoke/StorageSmoke.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Teste de persistencia nativa falhou' }
+      - name: Registrar versao integrada na branch de homologacao
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/EvoluFisico.Desktop/wwwroot/index.html src/EvoluFisico.Desktop/wwwroot/assets/js/05-app-runtime.js src/EvoluFisico.Desktop/wwwroot/assets/css/36-print-restore.css src/EvoluFisico.Desktop/wwwroot/manifest.webmanifest src/EvoluFisico.Desktop/wwwroot/version.json src/EvoluFisico.Desktop/wwwroot/sw.js src/EvoluFisico.Desktop/MainWindow.xaml.cs src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj installer/EvoluFisico.iss
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) { throw 'Port nao produziu alteracoes no Desktop' }
+          git commit -m "feat(rc14): sync Evolufisico2 3.1.45 with native SQLite preserved"
+          if ($LASTEXITCODE -ne 0) { throw 'Falha ao registrar sincronizacao' }
+          git push origin HEAD:sync/desktop-web-3-1-45-20261112
+          if ($LASTEXITCODE -ne 0) { throw 'Falha ao publicar branch de homologacao' }
+      - name: Compilar aplicativo Windows x64
+        shell: pwsh
+        run: |
+          $env:GITHUB_SHA = (git rev-parse HEAD).Trim()
+          ./scripts/build-windows.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'dotnet publish falhou' }
+      - name: Montar instalador Windows
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          if ($LASTEXITCODE -ne 0) { throw 'Inno Setup indisponivel' }
+          $iscc = Join-Path ([Environment]::GetFolderPath('ProgramFilesX86')) 'Inno Setup 6\ISCC.exe'
+          & $iscc installer/EvoluFisico.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Compilacao do instalador falhou' }
+          if (!(Test-Path 'installer-output/EvoluFisicoDesktop-3.1.45-FrontendCompleto-Setup.exe')) { throw 'Setup EXE nao foi encontrado' }
+      - name: Disponibilizar instalador RC-14 para homologacao
+        uses: actions/upload-artifact@v4
+        with:
+          name: EvoluFisicoDesktop-3.1.45-RC14-Setup
+          path: installer-output/*.exe
+          if-no-files-found: error
+          retention-days: 30
