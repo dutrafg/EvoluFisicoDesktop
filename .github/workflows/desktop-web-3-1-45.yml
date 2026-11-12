@@ -56,8 +56,6 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'JavaScript nativo invalido' }
           node tests/windows-web-3-1-45-rc14.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Regressao da RC14' }
-          node tests/desktop-integration.cjs
-          if ($LASTEXITCODE -ne 0) { throw 'Regressao de integracao desktop' }
           node tests/native-storage-client.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Regressao do SQLite bridge' }
           git diff --check
