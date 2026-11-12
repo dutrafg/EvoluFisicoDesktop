@@ -1,7 +1,7 @@
 name: Windows Desktop Build
 on:
   push:
-    branches: [main, windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6, windows-sync-3-1-22-rc7, windows-sync-3-1-23-rc8, windows-sync-3-1-37-rc9]
+    branches: [windows-sidebar-compact-3-1-19-rc5, windows-sync-3-1-22-rc6, windows-sync-3-1-22-rc7, windows-sync-3-1-23-rc8, windows-sync-3-1-37-rc9]
   workflow_dispatch:
 
 concurrency:
@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   build:
+    if: github.ref != 'refs/heads/main'
     runs-on: windows-latest
     timeout-minutes: 30
     steps:
