@@ -91,19 +91,60 @@ def apply_patch(content,patch,name):
     print(f'{name}: {done}/{total} patch blocks applied')
     return content
 
+
+def port_native_runtime(content,patch):
+    """Integra o PDF 3.1.45 sem descartar a previa cancelavel do WebView2."""
+    added=''.join(line[1:] for line in patch.splitlines(keepends=True)
+                  if line.startswith('+') and not line.startswith('+++'))
+    start='        async function aguardarFotosDaImpressao(wrapper) {'
+    stop='        async function imprimirAvaliacaoIndividualPDF(id) {'
+    assert start in added and stop in added, 'Missing source image preloader'
+    loader=added[added.index(start):added.index(stop)]
+    marker='        function imprimirAvaliacaoIndividualPDF(id) {'
+    assert content.count(marker)==1
+    content=content.replace(marker,loader+marker,1)
+    rows=[line[1:] for line in patch.splitlines(keepends=True)
+          if line.startswith('+') and 'Coxa Esquerda:</td>' in line]
+    assert len(rows)==2, f'Expected both left thigh measures: {len(rows)}'
+    for row in rows:
+        right=row.replace('Coxa Esquerda','Coxa Direita').replace('p.coxa_esq','p.coxa_dir')
+        if content.count(right)!=1:raise RuntimeError('Missing/duplicated right thigh row in native PDF')
+        if row not in content:content=content.replace(right,right+row,1)
+    callback='abrirPreviaPDFDesktop(wrapper, aval, () => {'
+    assert content.count(callback)==1, 'Native cancelable PDF preview missing'
+    content=content.replace(callback,'abrirPreviaPDFDesktop(wrapper, aval, async () => {',1)
+    location="                window.addEventListener('afterprint', cleanupIndPrint, { once: true });\n"
+    assert content.count(location)==1, 'Native individual print callback changed unexpectedly'
+    guard=(
+        "                // Verifica fotos antes de solicitar impressao ao Windows.\n"
+        "                const fotosProntas = await aguardarFotosDaImpressao(wrapper);\n"
+        "                if (!fotosProntas) {\n"
+        "                    cleanupIndPrint();\n"
+        "                    (window.efToast || window.alert)('Uma fotografia nao carregou. Impressao cancelada para evitar PDF incompleto.', 'warn');\n"
+        "                    return;\n"
+        "                }\n"
+    )
+    content=content.replace(location,location+guard,1)
+    assert "document.body.dataset.efPrintTarget = 'report';" in content
+    assert "clearTimeout(window.__efPrintGuardTimer);" in content
+    assert "window.print();" in content
+    print('Native Windows PDF: 2 perimetry rows, photo preloader and cancelable preview preserved')
+    return content
+
 def main():
     html=WWW/'index.html'
     original=html.read_text(encoding='utf-8')
     assert len(original)>3_600_000 and '"version":"'+OLD+'"' in original,'Unexpected Desktop base'
     for marker in NATIVE:assert marker in original,'Missing native marker: '+marker
-    for patch_name,dest in (
-      ('scripts/web-3.1.42-to-3.1.45-index.patch',html),
-      ('scripts/web-3.1.42-to-3.1.45-runtime.patch',WWW/'assets/js/05-app-runtime.js')):
-        patch=(ROOT/patch_name).read_text(encoding='utf-8')
-        old=dest.read_text(encoding='utf-8')
-        new=apply_patch(old,patch,patch_name)
-        assert new!=old, 'No Web changes applied: '+patch_name
-        dest.write_text(new,encoding='utf-8')
+    patch_name='scripts/web-3.1.42-to-3.1.45-index.patch'
+    patch=(ROOT/patch_name).read_text(encoding='utf-8')
+    new=apply_patch(original,patch,patch_name)
+    assert new!=original,'No Web HTML changes'
+    html.write_text(new,encoding='utf-8')
+    native=WWW/'assets/js/05-app-runtime.js'
+    patch=(ROOT/'scripts/web-3.1.42-to-3.1.45-runtime.patch').read_text(encoding='utf-8')
+    previous=native.read_text(encoding='utf-8')
+    native.write_text(port_native_runtime(previous,patch),encoding='utf-8')
     css_patch=(ROOT/'scripts/web-3.1.42-to-3.1.45-print.patch').read_text(encoding='utf-8')
     css_extra=''.join(line[1:] for line in css_patch.splitlines(keepends=True)
                       if line.startswith('+') and not line.startswith('+++'))
