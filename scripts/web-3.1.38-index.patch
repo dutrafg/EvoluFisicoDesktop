@@ -1,0 +1,237 @@
+@@ -1,11 +1,11 @@
+ <!DOCTYPE html>
+-<!-- EvoluFisico2 3.1.37 Release — painel de resultados com expansão acessível. -->
++<!-- EvoluFisico2 3.1.38 Release — painel de resultados com expansão acessível. -->
+ 
+ 
+ <html lang="pt-BR">
+ <head>
+ <script id="ef-release-information">
+-(()=>{'use strict';const info={"version":"3.1.37","channel":"Release","summary":"Painel de resultados da avaliação com expansão acessível e confiável","changes":["Avaliação: expansão e recolhimento explícitos do painel Resultados em tempo real, com estado acessível e suporte a toque e teclado." ,"Perfil Unificado: exportar e importar com alternativas de copiar e colar quando o navegador móvel não oferece download ou seletor de arquivo." ,"Início: filtros e buscas de calendário e alunos com alinhamento responsivo e controles estilizados." ,"Avaliação: cabeçalho de resultados legível sobre cartões claros e escuros." ,"Temas: paletas com contraste reforçado, hierarquia tipográfica, cartões, controles e fundos reorganizados para desktop, tablet e celular." ,"Perfil Unificado: exportação de todos os alunos com compatibilidade para salvar ou compartilhar no Android; importação com seletor visível e leitura compatível com navegadores antigos.","Perfil Unificado: botão Novo Check-in encerra o editor salvo e reabre a avaliação vinculada ao aluno selecionado, sem navegar para uma tela vazia.","Início: indicadores clicáveis, busca e expansão da lista de alunos, prazos vencidos em destaque e atalhos nas rotinas da secretária." ,"Início: calendário e agenda com busca por aluno ou compromisso, filtros por tipo, visão de 30 dias e carregamento progressivo dos resultados.","Modo Avançado: fundo em camadas azul-cinza e verde-sálvia, textura discreta e sombras com relevo; papéis de parede pessoais mantêm prioridade.","Primeiro acesso: concluir identificação mesmo quando o navegador bloqueia armazenamento local; aviso claro e continuidade da sessão.","Identificação inicial mais robusta no Android e em arquivos locais; temas e paletas integrados aos módulos.","Confirmação: tema claro/escuro e botões corrigidos; barra de navegação oculta depois de salvar.","Cópia física pendente informada sem ocultar o sucesso do salvamento.","Avaliações podem ser salvas com metas incompletas sem validação obrigatória.","Botões do assistente integrados às cores, cantos e tamanhos do aplicativo.","A etapa Objetivos e planejamento permite escolher apenas um objetivo, sem exigir indicador, valor-alvo, tolerância ou prazo. Metas completas continuam alimentando o acompanhamento.", "Definição muscular incorporada ao catálogo unificado de objetivos, sem déficit calórico presumido.", "Avaliações: removido o fundo opaco do contêiner do Histórico sem alterar pastas, PDFs ou ações; cabeçalho e barra de organização mantêm cartões próprios.","Início e Análises: o wallpaper aparece nos vãos entre os componentes, sem escurecimento sólido aplicado ao fundo dos módulos.","Cartões e áreas de conteúdo seguem opacos; correção aplicada aos modos claro e escuro sem alterar motores ou impressão.","Perfil Unificado e Análises Completas: retirada a largura máxima dos painéis, mantendo os controles e a adaptação a desktop e tablet.","20 papéis de parede em todos os módulos, com adaptação ao tema e funcionamento offline.","Dock moderna redesenhada em branco/grafite; tablets em pé iniciam com painel lateral de ícones, com opção Maximizar.","Percentuais energéticos automáticos: emagrecimento e perda de peso −20%, hipertrofia +10% e manutenção 0%.","Carregamento do objetivo e da meta de gordura da avaliação selecionada, com identificação da fonte.","Recarregamento das medidas da fonte e correção da largura do seletor de avaliações.","EvoStore com 50 mini aplicativos, consultas aos dados dos módulos e cards com altura adaptável; leitura de medidas e nascimentos no formato atual do banco.","Comparação de avaliações com escolha de dois registros e medidas lado a lado.","Busca global abre o Perfil Unificado por identificador; versões, backups, entradas do aplicativo e cache são conferidos na publicação.","Avaliações: restaurados a moldura arredondada e o espaçamento do painel, mantendo os cartões e o wallpaper nos vãos.","Modo claro: cores do wallpaper reforçadas e camada de fundo visível nos módulos.","Contraste: textos fora dos cartões ficam claros sobre wallpapers escuros no modo claro; cartões preservam suas cores.","Dock Moderna: ícone de Análises redimensionado e centralizado no espaço do botão.","EvoStore: calendário mensal navegável no mini app Aniversariantes, com busca, filtros e seleção do dia.","Datas de nascimento aceitam formatos ISO e DD/MM/AAAA e são validadas nos relatórios.","EvoStore: superfícies escuras consistentes, cores do tema, botões com contraste e foco visível; ajuda clínica removida da busca da loja."]};info.changes=Object.freeze(info.changes);
++(()=>{'use strict';const info={"version":"3.1.38","channel":"Release","summary":"Rebranding visual da dashboard e dos módulos","changes":["Nova identidade visual aplicada aos módulos, com paleta, tipografia, contraste e cartões mais consistentes.","Dashboard responsiva em monitores grandes: cartões compactos conforme o conteúdo, sem cortes ou recursos ocultos."]};info.changes=Object.freeze(info.changes);
+  function render(root=document){const card=root.querySelector('#ef-whatsnew-card');if(!card)return;card.querySelector('.efwhatsnew-version').textContent='v'+info.version+' '+info.channel;card.querySelector('.efwhatsnew-summary').textContent=info.summary;let details=card.querySelector('.ef-release-details');if(!details){details=document.createElement('details');details.className='ef-release-details';const summary=document.createElement('summary');summary.textContent='Ver todas as melhorias desta versão';details.append(summary);const list=document.createElement('ul');for(const text of info.changes){const item=document.createElement('li');item.textContent=text;list.append(item)}details.append(list);summary.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();details.open=!details.open;});card.append(details)}}
+  window.EFReleaseInfo=Object.freeze({...info,render});
+ })();
+@@ -151,7 +151,7 @@
+     })();
+ </script>
+ <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+-<title>EvoluFísico2 3.1.37 Release — Avaliação Física &amp; Composição Corporal</title>
++<title>EvoluFísico2 3.1.38 Release — Avaliação Física &amp; Composição Corporal</title>
+ <meta content="#eef1ec" name="theme-color"/>
+ <meta content="telephone=no" name="format-detection"/>
+ <meta content="EvoluFísico — avaliação física e composição corporal." name="description"/>
+@@ -631,7 +631,7 @@
+ <div class="ef-splash-titles">
+ <h1 class="ef-splash-title">EvoluFísico</h1>
+ <p class="ef-splash-subtitle">Avaliação Física &amp; Composição Corporal</p>
+-<div class="ef-splash-version-pill">Versão 3.1.37 Release</div>
++<div class="ef-splash-version-pill">Versão 3.1.38 Release</div>
+ </div>
+ <div class="ef-splash-loader-box">
+ <div class="ef-splash-bar">
+@@ -12518,11 +12518,11 @@ <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-main); margin-bo
+ 
+ <div class="efs-subpage" data-efs-panel="manutencao" hidden=""><div class="efs-section-title"><h3>Manutenção e diagnóstico</h3><p>Verifique a integridade dos módulos e execute autocorreções seguras.</p></div><div class="ef-settings-grid"><article class="ef-settings-card ef-settings-card-wide efup-card" id="efup-card" aria-labelledby="efup-title">
+ <div class="efup-heading"><span class="efup-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M6.2 9A7 7 0 0 1 18.6 7L20 12"/><path d="M4 12l1.4 5A7 7 0 0 0 17.8 15"/></svg></span><div class="efup-headlines"><span class="efup-eyebrow">SISTEMA · ATUALIZAÇÕES</span><h3 id="efup-title">Verificar Atualizações</h3><p>Acompanhe novas versões publicadas a partir do GitHub e disponibilizadas no site oficial.</p></div><span class="efup-state" id="efup-state" data-state="waiting">Aguardando</span></div>
+-<div class="efup-metrics"><div><span>VERSÃO INSTALADA</span><strong id="efup-installed">3.1.37 Preview</strong><small>Canal de homologação</small></div><div><span>ÚLTIMA VERIFICAÇÃO</span><strong id="efup-last-check">Ainda não verificado</strong><small>Consulta automática com conexão</small></div></div>
++<div class="efup-metrics"><div><span>VERSÃO INSTALADA</span><strong id="efup-installed">3.1.38 Release</strong><small>Canal de homologação</small></div><div><span>ÚLTIMA VERIFICAÇÃO</span><strong id="efup-last-check">Ainda não verificado</strong><small>Consulta automática com conexão</small></div></div>
+ <div class="efup-actions"><button type="button" id="efup-check" class="efup-button"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 7v5h-5M4 17v-5h5M6 9a7 7 0 0 1 12-2l2 5M4 12l2 5a7 7 0 0 0 12-2"/></svg>Verificar agora</button><a id="efup-open" href="https://evolufisico2.vercel.app/" target="_blank" rel="noopener noreferrer" hidden>Abrir atualização ↗</a></div>
+ <p id="efup-message" class="efup-message" role="status" aria-live="polite">Verificação automática ao abrir o aplicativo e periodicamente durante o uso.</p>
+ </article><article class="ef-settings-card ef-settings-card-wide efwhatsnew-card" id="ef-whatsnew-card" aria-labelledby="ef-whatsnew-title">
+-<div class="efwhatsnew-header"><span class="efwhatsnew-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3Z"/><path d="M19 17v4M17 19h4"/></svg></span><div class="efwhatsnew-text"><span class="efwhatsnew-eyebrow">ÚLTIMAS MELHORIAS</span><h3 id="ef-whatsnew-title">O que há de novidade</h3></div><span class="efwhatsnew-version">v3.1.37 Preview</span></div>
++<div class="efwhatsnew-header"><span class="efwhatsnew-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3Z"/><path d="M19 17v4M17 19h4"/></svg></span><div class="efwhatsnew-text"><span class="efwhatsnew-eyebrow">ÚLTIMAS MELHORIAS</span><h3 id="ef-whatsnew-title">O que há de novidade</h3></div><span class="efwhatsnew-version">v3.1.38 Release</span></div>
+ <p class="efwhatsnew-summary">Release: refatoração de CSS e otimização do sistema de temas, preservando a largura total das Análises Completas e os ícones exclusivos. Mantida a correção dos ícones temáticos exclusivos na dock e no painel.</p>
+ </article><article class="ef-settings-card ef-settings-card-wide efs-diagnostics-card"><div id="ef-setting-diagnostics"></div></article></div></div>
+  `
+@@ -14455,7 +14455,7 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+ <script id="ef-101-controls">
+ (function(){
+  'use strict';
+- const VERSION='3.1.37 Preview';
++ const VERSION='3.1.38 Release';
+  const svg='<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>';
+  function mountSearch(){
+   const host=document.getElementById('ef-workspace-heading');
+@@ -18868,6 +18868,181 @@ <h3>Notificações</h3><p>Personalize os avisos de avaliações agendadas e reav
+ @media(max-width:430px){#efi-dashboard .efi-calendar-filters{gap:5px}#efi-dashboard .efi-calendar-filters button{padding:6px 8px;font-size:10px}#efi-dashboard .panel-head:has([data-period]){align-items:flex-start;flex-direction:column}#efi-dashboard .panel-head:has([data-period]) .pill-switch{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}#efi-dashboard .panel-head:has([data-period]) .pill-switch button{padding-inline:5px}}
+ </style>\n\n<style id="efi-dashboard-functional-cards-132">\n#efi-dashboard [data-kpi-action]{cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}\n#efi-dashboard [data-kpi-action]:focus-visible{outline:3px solid rgba(var(--accent-rgb),.42);outline-offset:3px}\n#efi-dashboard .efi-student-search{display:flex;align-items:center;gap:8px;margin:0 0 6px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);color:var(--muted)}\n#efi-dashboard .efi-student-search svg{width:15px;height:15px}\n#efi-dashboard .efi-student-search input{width:100%;min-width:0;height:36px;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:12px}\n#efi-dashboard #efiStudentSummary{display:block;color:var(--muted);font-size:10px;margin:0 0 6px}\n#efi-dashboard .reeval-row .day-box.efi-mini-overdue{background:var(--danger-soft);color:var(--danger)}\n@media(hover:hover) and (pointer:fine){#efi-dashboard [data-kpi-action]:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(20,47,59,.12);border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}}\n@media(prefers-reduced-motion:reduce){#efi-dashboard [data-kpi-action]{transition:none}}\n</style>\n
+ <style id="efa-portable-backup-134">#tab-alunos .efa-import-label{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-align:center}#tab-alunos .efa-import-label:focus-visible{outline:3px solid var(--efa-accent,#82b5ff);outline-offset:3px}#tab-alunos .efa-import-input{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
++
++<!-- Rebranding visual only; feature code remains from the current main release. -->
++<style id="ef-rebrand-138">
++@media screen {
++  :root {
++    --ef-brand-ink:#14263a;
++    --ef-brand-accent:#2568d8;
++    --ef-brand-aqua:#18a8a0;
++    --eft-radius-card:20px;
++    --eft-radius-control:13px;
++    --eft-font-ui:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
++    --eft-shadow-card:0 5px 18px rgba(17,39,62,.065),0 1px 2px rgba(17,39,62,.04);
++    --eft-shadow-raised:0 12px 28px rgba(17,39,62,.12),0 2px 5px rgba(17,39,62,.05);
++  }
++  body.ef-simple-ui[data-ef-palette] {
++    --ef-rebrand-canvas:color-mix(in srgb,var(--ef-theme-main,#2568d8) 3%,#f3f7fb);
++    --ef-rebrand-surface:#fff;
++    --ef-rebrand-raised:color-mix(in srgb,var(--ef-theme-main,#2568d8) 5%,#fff);
++    --ef-rebrand-line:color-mix(in srgb,var(--ef-theme-main,#2568d8) 18%,#d9e2ed);
++    --ef-rebrand-ink:#172b40;
++    --ef-rebrand-muted:#5b6f83;
++    --ef-brand-accent:var(--ef-theme-main,#2568d8);
++    --ef-brand-action:var(--ef-theme-deep,#184b9a);
++    --ef-brand-wash:color-mix(in srgb,var(--ef-theme-main,#2568d8) 10%,#fff);
++    --ef233-canvas:var(--ef-rebrand-canvas);
++    --ef233-surface:var(--ef-rebrand-surface);
++    --ef233-raised:var(--ef-rebrand-raised);
++    --ef233-soft:var(--ef-brand-wash);
++    --ef233-input:color-mix(in srgb,var(--ef-theme-main,#2568d8) 3%,#fff);
++    --ef233-border:var(--ef-rebrand-line);
++    --ef233-text:var(--ef-rebrand-ink);
++    --ef233-muted:var(--ef-rebrand-muted);
++    --ef233-accent:var(--ef-brand-action);
++    --ef233-action:var(--ef-brand-action);
++    --eft-focus-ring:color-mix(in srgb,var(--ef-theme-main,#2568d8) 64%,white);
++    font-family:var(--eft-font-ui)!important;
++    color:var(--ef-rebrand-ink);
++    letter-spacing:.002em;
++    text-rendering:optimizeLegibility;
++    -webkit-font-smoothing:antialiased;
++  }
++  :is(html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode)[data-ef-palette] {
++    --ef-rebrand-canvas:color-mix(in srgb,var(--ef-theme-main,#5794f0) 5%,#0c1723);
++    --ef-rebrand-surface:color-mix(in srgb,var(--ef-theme-main,#5794f0) 7%,#142231);
++    --ef-rebrand-raised:color-mix(in srgb,var(--ef-theme-main,#5794f0) 12%,#1a2a3a);
++    --ef-rebrand-line:color-mix(in srgb,var(--ef-theme-main,#5794f0) 24%,#34485c);
++    --ef-rebrand-ink:#edf4fb;
++    --ef-rebrand-muted:#b1c1d0;
++    --ef-brand-action:var(--ef-theme-main,#5794f0);
++    --ef-brand-wash:color-mix(in srgb,var(--ef-theme-main,#5794f0) 17%,#182738);
++    --ef233-canvas:var(--ef-rebrand-canvas);
++    --ef233-surface:var(--ef-rebrand-surface);
++    --ef233-raised:var(--ef-rebrand-raised);
++    --ef233-soft:var(--ef-brand-wash);
++    --ef233-input:color-mix(in srgb,var(--ef-theme-main,#5794f0) 8%,#101d2a);
++    --ef233-border:var(--ef-rebrand-line);
++    --ef233-text:var(--ef-rebrand-ink);
++    --ef233-muted:var(--ef-rebrand-muted);
++    --ef233-accent:color-mix(in srgb,var(--ef-theme-main,#5794f0) 54%,#f3f7fb);
++    --ef233-action:var(--ef-theme-main,#5794f0);
++    --eft-shadow-card:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(236,246,255,.035);
++    --eft-shadow-raised:0 14px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(236,246,255,.055);
++    --eft-focus-ring:color-mix(in srgb,var(--ef-theme-main,#5794f0) 70%,white);
++    color:var(--ef-rebrand-ink);
++  }
++  body.ef-simple-ui[data-ef-palette]:not(.efwp-viewport-on) {background-color:var(--ef-rebrand-canvas,#f3f7fb)!important}
++  body.ef-simple-ui[data-ef-palette] .top-navbar {
++    background:color-mix(in srgb,var(--ef-rebrand-surface,#fff) 91%,transparent)!important;
++    border-bottom:1px solid var(--ef-rebrand-line,#d9e2ed)!important;
++    box-shadow:0 8px 24px rgba(20,42,66,.055)!important;
++    backdrop-filter:blur(18px) saturate(145%);
++    -webkit-backdrop-filter:blur(18px) saturate(145%);
++  }
++  :is(html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode) .top-navbar {
++    background:color-mix(in srgb,var(--ef-rebrand-surface,#142231) 92%,transparent)!important;
++    border-color:var(--ef-rebrand-line,#34485c)!important;
++    box-shadow:0 8px 28px rgba(0,0,0,.22)!important;
++  }
++  .brand-wrapper {gap:12px!important}
++  .brand-icon-box {
++    width:44px!important;height:44px!important;border-radius:15px!important;
++    background:linear-gradient(145deg,color-mix(in srgb,var(--ef-brand-accent,#2568d8) 82%,white),var(--ef-brand-action,#184b9a))!important;
++    color:#fff!important;box-shadow:0 8px 18px color-mix(in srgb,var(--ef-brand-accent,#2568d8) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.3)!important;
++    position:relative;overflow:hidden;
++  }
++  .brand-icon-box::after {content:"";position:absolute;inset:1px;border:1px solid rgba(255,255,255,.22);border-radius:14px;pointer-events:none}
++  .brand-icon-box svg {width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;position:relative;z-index:1}
++  .brand-title {font-size:1.18rem!important;font-weight:780!important;letter-spacing:-.035em!important;color:var(--ef-rebrand-ink,#172b40)!important}
++  :is(html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode) .brand-title {color:var(--ef-rebrand-ink,#edf4fb)!important}
++  .brand-subtitle {font-size:.74rem!important;letter-spacing:.012em;color:var(--ef-rebrand-muted,#5b6f83)!important}
++  .nav-tabs {gap:5px!important;padding:5px!important;border-radius:15px!important;background:var(--ef-brand-wash,#edf3fa)!important;border:1px solid var(--ef-rebrand-line,#d9e2ed)!important}
++  .nav-tab-btn {min-height:42px;padding:.55rem .9rem!important;border-radius:11px!important;color:var(--ef-rebrand-muted,#5b6f83)!important;font-weight:650!important;transition:background .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease!important}
++  .nav-tab-btn:hover {color:var(--ef-brand-action,#184b9a)!important;background:color-mix(in srgb,var(--ef-brand-accent,#2568d8) 8%,transparent)!important}
++  .nav-tab-btn.active {color:var(--ef-brand-action,#184b9a)!important;background:var(--ef-rebrand-surface,#fff)!important;box-shadow:0 2px 8px rgba(17,39,62,.10),inset 0 0 0 1px color-mix(in srgb,var(--ef-brand-accent,#2568d8) 12%,transparent)!important}
++  :is(html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode) .nav-tabs {background:color-mix(in srgb,var(--ef-rebrand-raised,#1a2a3a) 85%,#0c1723)!important}
++  :is(html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode) .nav-tab-btn.active {background:var(--ef-rebrand-raised,#1a2a3a)!important;color:var(--ef233-accent,#bcd6fa)!important}
++  .main-wrapper {width:min(100% - 28px,1480px)!important;max-width:1480px!important;margin:clamp(18px,2.5vw,34px) auto 56px!important;padding:0!important}
++  body.ef-simple-ui[data-ef-palette] :is(h1,h2,h3,h4) {font-family:var(--eft-font-ui)!important;letter-spacing:-.032em!important;text-wrap:balance}
++  body.ef-simple-ui[data-ef-palette] :is(h1,h2) {line-height:1.16!important;font-weight:770!important;color:var(--ef-rebrand-ink,#172b40)}
++  body.ef-simple-ui[data-ef-palette] :is(h3,h4) {line-height:1.25!important;font-weight:720!important}
++  body.ef-simple-ui[data-ef-palette] :is(p,small,label,li,td,th) {text-wrap:pretty}
++  body.ef-simple-ui[data-ef-palette] .tab-panel.active {animation:efRebrandEnter .24s cubic-bezier(.2,.75,.25,1) both!important}
++  @keyframes efRebrandEnter {from{opacity:.72;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
++  body.ef-simple-ui[data-ef-palette] :is(.wizard-header-card,.efh-card,.efh-panel,.efh-stat,.efa-section,.efa-card,.efa-profile,.efa-panel,.history-card,.ef-history-folder,.kpi-card,.stat-card,.chart-box,.ef77-card,.ef2forms-card,.cob-card,.cob-kpi-card,.ef-fin-block,.ef-settings-card,.efu-section,.efu-panel,.efu-card,.efu-summary,.efia-card,.ef219-view,.ef219-pane,.ef217-card,.ef220-panel,.ef220-goal,.ef220-note,.ef220-empty,.ef220-create,.ef220-portfolio,.efw-tile,.patient-view-container,.module-card,.ef-card) {
++    border-color:var(--ef-rebrand-line,#d9e2ed)!important;border-radius:var(--eft-radius-card)!important;box-shadow:var(--eft-shadow-card)!important;
++  }
++  body.ef-simple-ui[data-ef-palette] :is(.btn,.btn-primary,.btn-secondary,.btn-outline,.btn-success,.btn-pro-pill,.efh-action,.ef-action-btn,.ef-primary-action,.ef-secondary-action) {font-family:var(--eft-font-ui)!important;font-weight:680!important;letter-spacing:-.01em;border-radius:12px!important;transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,border-color .16s ease!important}
++  body.ef-simple-ui[data-ef-palette] :is(.btn-primary,.ef-primary-action) {background:linear-gradient(135deg,var(--ef-theme-main,#2568d8),var(--ef-brand-action,#184b9a))!important;color:var(--ef-theme-on-main,#fff)!important;box-shadow:0 6px 15px color-mix(in srgb,var(--ef-theme-main,#2568d8) 22%,transparent)!important}
++  body.ef-simple-ui[data-ef-palette] :is(.btn-secondary,.btn-outline) {border-color:var(--ef-rebrand-line,#d9e2ed)!important}
++  body.ef-simple-ui[data-ef-palette] :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),select,textarea) {font-family:var(--eft-font-ui)!important;border-color:var(--ef-rebrand-line,#d9e2ed)!important;background-color:var(--ef233-input,#fff)!important;color:var(--ef-rebrand-ink,#172b40)!important;border-radius:var(--eft-radius-control)!important;min-height:42px}
++  body.ef-simple-ui[data-ef-palette] :is(input,select,textarea)::placeholder {color:color-mix(in srgb,var(--ef-rebrand-muted,#5b6f83) 78%,transparent)!important}
++  body.ef-simple-ui[data-ef-palette] :is(button,a,input,select,textarea,[tabindex]):focus-visible {outline:3px solid var(--eft-focus-ring)!important;outline-offset:2px!important}
++  body.ef-simple-ui[data-ef-palette] :is(.top-navbar,.nav-tabs,#efm-float-nav,#ef-tools-content .nav-tabs) {font-family:var(--eft-font-ui)!important}
++  @media (hover:hover) and (pointer:fine) {
++    body.ef-simple-ui[data-ef-palette] :is(.efh-card,.efh-stat,.efa-card,.history-card,.ef77-card,.ef2forms-card,.cob-card,.cob-kpi-card,.ef-settings-card,.efu-card,.efia-card,.efw-tile,.module-card,.ef-card):hover {transform:translateY(-2px);box-shadow:var(--eft-shadow-raised)!important}
++    body.ef-simple-ui[data-ef-palette] :is(.btn,.efh-action,.ef-action-btn):hover {transform:translateY(-1px)}
++  }
++  body.ef-simple-ui[data-efx-visual="advanced"]:not(.efwp-viewport-on) {background-color:#eaf1f7!important;background-image:radial-gradient(circle at 1px 1px,rgba(26,62,102,.05) .7px,transparent 1px),radial-gradient(ellipse 55% 42% at 4% 0%,rgba(255,255,255,.82),transparent 75%),radial-gradient(ellipse 52% 48% at 96% 95%,rgba(58,148,166,.14),transparent 76%),linear-gradient(155deg,#f2f6fa 0%,#e3ebf3 56%,#d9e6ed 100%)!important;background-size:24px 24px,auto,auto,auto!important;background-attachment:fixed!important}
++  :is(html.ef-dark-mode body.ef-simple-ui,body.ef-simple-ui.dark-mode)[data-efx-visual="advanced"]:not(.efwp-viewport-on) {background-color:#101c2a!important;background-image:radial-gradient(circle at 1px 1px,rgba(196,219,241,.035) .7px,transparent 1px),radial-gradient(ellipse 58% 42% at 6% 0%,rgba(58,111,169,.24),transparent 76%),radial-gradient(ellipse 56% 48% at 96% 94%,rgba(25,144,143,.15),transparent 78%),linear-gradient(155deg,#1a2b3e 0%,#122234 55%,#102d32 100%)!important;background-size:24px 24px,auto,auto,auto!important;background-attachment:fixed!important}
++  body.ef-simple-ui[data-ef-palette] .ef-splash-card {border:1px solid color-mix(in srgb,var(--ef-brand-accent,#2568d8) 26%,white)!important;border-radius:28px!important;box-shadow:0 28px 90px rgba(8,28,50,.22),inset 0 1px 0 rgba(255,255,255,.7)!important}
++  body.ef-simple-ui[data-ef-palette] .ef-splash-icon {border-radius:22px!important;background:linear-gradient(145deg,var(--ef-brand-accent,#2568d8),var(--ef-brand-action,#184b9a))!important;box-shadow:0 16px 32px color-mix(in srgb,var(--ef-brand-accent,#2568d8) 28%,transparent)!important}
++  #ef-sidebar-toggle,#efm-float-nav .efm-trigger {border-radius:14px!important;box-shadow:0 8px 22px rgba(12,34,57,.14)!important}
++  @media(max-width:760px) {
++    .main-wrapper {width:calc(100% - 24px)!important;margin:14px auto 38px!important}
++    .top-navbar {padding:10px 14px!important;gap:10px!important;flex-wrap:wrap}
++    .brand-icon-box {width:40px!important;height:40px!important;border-radius:13px!important}
++    .brand-subtitle {font-size:.68rem!important}
++    .nav-tabs {max-width:100%;overflow-x:auto;scrollbar-width:none}
++    .nav-tabs::-webkit-scrollbar {display:none}
++    .nav-tab-btn {flex:0 0 auto;min-height:44px!important;padding:.55rem .7rem!important}
++    .nav-actions {max-width:100%;flex-wrap:wrap}
++  }
++  @media(prefers-reduced-motion:reduce) {
++    body.ef-simple-ui[data-ef-palette] *,body.ef-simple-ui[data-ef-palette] *::before,body.ef-simple-ui[data-ef-palette] *::after {scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
++  }
++}
++</style>
++<style id="ef-large-monitor-card-density-139">
++@media screen and (min-width:1500px){
++  /* Let cards follow their content instead of stretching to the tallest card. */
++  #efi-dashboard #section-day .section-day-layout,
++  #efi-dashboard #section-day .section-day-layout>.section-columns,
++  #efi-dashboard #section-students .lower-grid{align-items:start!important}
++  #efi-dashboard #section-day .section-day-layout>.section-columns>.card,
++  #efi-dashboard #section-students .lower-grid>.card{align-self:start!important;height:auto!important;min-height:0}
++  #efi-dashboard .kpis{gap:clamp(10px,.75vw,15px)!important;margin-bottom:20px!important}
++  #efi-dashboard .kpi{min-height:118px!important;padding:14px 16px!important}
++  #efi-dashboard .kpi-title{font-size:11.5px!important;line-height:1.35}
++  #efi-dashboard .kpi-symbol{width:31px;height:31px}
++  #efi-dashboard .kpi-value{font-size:clamp(22px,1.45vw,27px)!important;margin-top:8px!important}
++  #efi-dashboard .kpi-caption{margin-top:5px!important;font-size:10.5px;line-height:1.4}
++  #efi-dashboard #section-day .section-day-layout{gap:12px!important}
++  #efi-dashboard #section-day .section-day-layout>.section-columns{gap:12px!important}
++  #efi-dashboard #section-day .panel,
++  #efi-dashboard #section-students .panel{padding:15px 16px 11px!important}
++  #efi-dashboard .panel-head{gap:10px;margin-bottom:11px}
++  #efi-dashboard .efi-calendar-card{padding:14px 13px!important}
++  #efi-dashboard .efi-calendar-toolbar{margin:7px 0 9px}
++  #efi-dashboard .efi-calendar-day{height:38px}
++  #efi-dashboard .efi-calendar-number{font-size:11.5px}
++  #efi-dashboard .agenda-item,
++  #efi-dashboard .reeval-row{padding-block:9px}
++  #efi-dashboard .data-table td{padding-top:10px;padding-bottom:10px}
++  #efi-dashboard .student b,
++  #efi-dashboard .agenda-desc b,
++  #efi-dashboard .reeval-row strong{overflow-wrap:anywhere}
++}
++@media screen and (min-width:1900px){
++  #efi-dashboard #section-day .section-day-layout{gap:10px!important}
++  #efi-dashboard #section-day .section-day-layout>.section-columns{gap:10px!important}
++  #efi-dashboard #section-day .panel,
++  #efi-dashboard #section-students .panel{padding:13px 14px 10px!important}
++  #efi-dashboard .efi-calendar-day{height:36px}
++}
++</style>
+ </body>
+ 
+ <style id="eft-rc2-light-welcome-contrast" media="screen">html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) #tab-painel #efi-dashboard .welcome{--ink:#1b2b34!important;--muted:#516773!important;}html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) #tab-painel #efi-dashboard .welcome :is(h1,.welcome-heading){color:#1b2b34!important;-webkit-text-fill-color:#1b2b34!important;text-shadow:none!important;}html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) #tab-painel #efi-dashboard .welcome p{color:#4e6570!important;-webkit-text-fill-color:#4e6570!important;text-shadow:none!important;}html:not(.ef-dark-mode) body.ef-simple-ui:not(.dark-mode) #tab-painel #efi-dashboard .welcome .eyebrow{color:var(--eft-current,#126b55)!important;-webkit-text-fill-color:var(--eft-current,#126b55)!important;text-shadow:none!important;}</style>

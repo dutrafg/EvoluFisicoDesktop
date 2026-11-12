@@ -3,6 +3,14 @@ $root = Split-Path -Parent $PSScriptRoot
 $project = Join-Path $root 'src/EvoluFisico.Desktop/EvoluFisico.Desktop.csproj'
 $web = Join-Path $root 'src/EvoluFisico.Desktop/wwwroot'
 if (!(Test-Path (Join-Path $web 'index.html'))) { throw 'Frontend ausente: wwwroot/index.html' }
+$sourceManifest = Get-Content (Join-Path $web 'version.json') -Raw | ConvertFrom-Json
+$webVersion = [string]$sourceManifest.version
+$sourceCommit = [string]$sourceManifest.source_web_commit
+if ($webVersion -notmatch '^\d+\.\d+\.\d+$') { throw 'Versao Web invalida' }
+if ($sourceCommit -notmatch '^[0-9a-f]{40}$') { throw 'Commit Web invalido' }
+$html = [IO.File]::ReadAllText((Join-Path $web 'index.html'))
+if (!$html.Contains(('"version":"' + $webVersion + '"'))) { throw 'HTML e manifesto divergentes' }
+
 foreach ($size in @('192','512')) {
   $encoded = Join-Path $root "installer/resources/icon-$size.png.base64"
   $output = Join-Path $web "icon-$size.png"
@@ -65,12 +73,12 @@ if ((Get-Item $iconPath).Length -lt 1024) { throw 'Windows icon generation faile
 Write-Host "Windows icon generated: $iconPath"
 # Identify each release build so the updater can distinguish installed and published releases.
 $revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0,7).ToLowerInvariant() } else { 'local' }
-$tag = "desktop-v1.0-$revision"
-$versionInfo = @{ tag = $tag; version = '1.0.12'; channel = 'RC-9'; source_web_version = '3.1.37'; source_web_commit = '486ef975f97aff52388624c7edcd95089b66e9e7'; revision = $revision; built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
+$tag = "desktop-v$webVersion-$revision"
+$versionInfo = @{ tag = $tag; version = $webVersion; channel = 'RC'; source_web_version = $webVersion; source_web_commit = $sourceCommit; revision = $revision; built_at = [DateTimeOffset]::UtcNow.ToString('o') } | ConvertTo-Json -Compress
 [System.IO.File]::WriteAllText((Join-Path $web 'desktop-version.json'), $versionInfo, [System.Text.UTF8Encoding]::new($false))
 dotnet restore $project
 if ($LASTEXITCODE -ne 0) { throw 'Falha no restore' }
-dotnet publish $project -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o (Join-Path $root 'publish/win-x64')
+dotnet publish $project -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false "-p:Version=$webVersion" "-p:AssemblyVersion=${webVersion}.0" "-p:FileVersion=${webVersion}.0" -o (Join-Path $root 'publish/win-x64')
 if ($LASTEXITCODE -ne 0) { throw 'Falha no publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/EvoluFisico.Desktop.exe'))) { throw 'Executavel nao encontrado apos publish' }
 if (!(Test-Path (Join-Path $root 'publish/win-x64/wwwroot/desktop-version.json'))) { throw 'Version manifest not included in Windows publish' }

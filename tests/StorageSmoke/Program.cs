@@ -32,6 +32,25 @@ try
 {
     var store = new EncryptedSqliteStore(Path.Combine(dir, "test.sqlite"));
     Check(store.VerifyIntegrity(), "New SQLite database integrity");
+    // Carga sintética de regressão: quatro alunos x quatro avaliações sequenciais.
+    var fixtureStore = new EncryptedSqliteStore(Path.Combine(dir, "fixture-16.sqlite"));
+    for (var student = 1; student <= 4; student++)
+    {
+        for (var attempt = 1; attempt <= 4; attempt++)
+        {
+            var id = $"aluno-{student}-avaliacao-{attempt}";
+            var date = new DateTime(2026, 1, 1).AddDays((attempt - 1) * 30).ToString("yyyy-MM-dd");
+            var payload = Encoding.UTF8.GetBytes(
+                $"{{\"id\":\"{id}\",\"cliente_id\":\"student-{student}\",\"nome\":\"Aluno ficticio {student}\",\"data_avaliacao\":\"{date}\",\"peso\":{70 + student + attempt}}}");
+            fixtureStore.Save("ef-eval-" + id, payload);
+            Check(payload.SequenceEqual(fixtureStore.Load("ef-eval-" + id)!),
+                $"Round trip SQLite aluno {student} avaliação {attempt}");
+        }
+    }
+    Check(fixtureStore.ListRecordIds().Count(k => k.StartsWith("ef-eval-", StringComparison.Ordinal)) == 16,
+        "16 avaliações de quatro alunos persistidas com IDs nativos");
+    Check(fixtureStore.VerifyIntegrity(), "Integridade SQLite após 16 avaliações");
+
     store.Save("patient-001", sample);
     Check(sample.SequenceEqual(store.Load("patient-001")!), "SQLite encrypted record round trip");
     store.Save("patient-001", Encoding.UTF8.GetBytes("updated"));

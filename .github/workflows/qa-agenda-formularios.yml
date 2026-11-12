@@ -29,6 +29,7 @@ permissions:
 
 jobs:
   frontend-qa:
+    if: github.head_ref != 'windows-full-web-3-1-37'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -76,3 +77,17 @@ jobs:
         run: node tests/windows-card-resize.cjs
       - name: Verify form integration
         run: node tests/forms-windows-integration.cjs
+
+  full-web-parity-qa:
+    if: github.head_ref == 'windows-full-web-3-1-37'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar interface Web 3.1.37 e SQLite nativo sem testes legados
+        run: node tests/windows-full-web-3-1-37.cjs
+      - name: Validar cliente SQLite do Desktop
+        run: node tests/native-storage-client.cjs
