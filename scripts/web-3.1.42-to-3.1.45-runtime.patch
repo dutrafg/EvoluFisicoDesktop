@@ -1,0 +1,82 @@
+# Web 3.1.42 (f133ce6cf8db85dbe239615639837c7ec89e4615) -> Web 3.1.45 (2e80aa6) | assets/js/05-app-runtime.js
+@@ -2718,7 +2718,37 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
+ 
+ /* 1.0.28: laudos individuais/comparativos usam o diálogo nativo.
+    O HTML e o CSS da área de impressão original permanecem preservados. */
+-        function imprimirAvaliacaoIndividualPDF(id) {
++        async function aguardarFotosDaImpressao(wrapper) {
++            const imagens = Array.from(wrapper.querySelectorAll('.print-photo-panel .print-photo-frame img'));
++            if (!imagens.length) return true;
++            const resultado = await Promise.all(imagens.map(img => new Promise(resolve => {
++                let finalizado = false;
++                let limite;
++                const finalizar = ok => {
++                    if (finalizado) return;
++                    finalizado = true;
++                    clearTimeout(limite);
++                    img.removeEventListener('load', verificar);
++                    img.removeEventListener('error', falhou);
++                    resolve(Boolean(ok));
++                };
++                const falhou = () => finalizar(false);
++                const verificar = () => {
++                    if (!img.complete) return;
++                    if (!(img.naturalWidth > 0 && img.naturalHeight > 0)) return finalizar(false);
++                    if (typeof img.decode !== 'function') return finalizar(true);
++                    Promise.resolve().then(() => img.decode())
++                      .then(() => finalizar(true), () => finalizar(img.complete && img.naturalWidth > 0 && img.naturalHeight > 0));
++                };
++                img.addEventListener('load', verificar);
++                img.addEventListener('error', falhou);
++                limite = setTimeout(() => finalizar(false), 12000);
++                if (img.complete) verificar();
++            })));
++            return resultado.every(Boolean);
++        }
++
++        async function imprimirAvaliacaoIndividualPDF(id) {
+             const aval = (typeof encontrarAvaliacaoPorId === 'function' ? encontrarAvaliacaoPorId(id) : null) || avaliacoes.find(a => a.id === id || String(a.id) === String(id));
+             if (!aval) return;
+ 
+@@ -2846,6 +2876,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
+                                 <tr><td style="padding:1.5px 0;">Braço Direito:</td><td style="font-weight:700; text-align:right;">${p.braco_dir || '-'} cm</td></tr>
+                                 <tr><td style="padding:1.5px 0;">Braço Esquerdo:</td><td style="font-weight:700; text-align:right;">${p.braco_esq || '-'} cm</td></tr>
+                                 <tr><td style="padding:1.5px 0;">Coxa Direita:</td><td style="font-weight:700; text-align:right;">${p.coxa_dir || '-'} cm</td></tr>
++                                <tr><td style="padding:1.5px 0;">Coxa Esquerda:</td><td style="font-weight:700; text-align:right;">${p.coxa_esq || '-'} cm</td></tr>
+                                 <tr><td style="padding:1.5px 0;">Panturrilha:</td><td style="font-weight:700; text-align:right;">${p.panturrilha || '-'} cm</td></tr>
+                                 <tr><td style="padding:1.5px 0;">RCQ:</td><td style="font-weight:700; text-align:right;">${b.rcq || ((parseFloat(p.cintura) > 0 && parseFloat(p.quadril) > 0) ? (parseFloat(p.cintura)/parseFloat(p.quadril)).toFixed(2) : '-')}</td></tr>
+                             </table>
+@@ -2969,8 +3000,24 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
+                 if (typeof window.removeEventListener === 'function') window.removeEventListener('afterprint', cleanupIndPrint);
+             };
+             window.addEventListener('afterprint', cleanupIndPrint, { once: true });
++            // Aguarda as imagens reais antes de abrir a pré-impressão do Android.
++            const fotosProntas = await aguardarFotosDaImpressao(wrapper);
++            if (!fotosProntas) {
++                cleanupIndPrint();
++                (window.efToast || window.alert)('Alguma fotografia não carregou corretamente. A impressão foi interrompida para evitar um PDF incompleto. Confira as fotos e tente novamente.', 'warn');
++                return;
++            }
+             document.body.classList.add('print-mode-single');
+-            window.print();
++            try {
++                if (typeof requestAnimationFrame === 'function') {
++                    await new Promise(resolve => requestAnimationFrame(resolve));
++                }
++                window.print();
++            } catch (erro) {
++                cleanupIndPrint();
++                (window.efToast || window.alert)('Não foi possível abrir a impressão: ' + (erro?.message || erro), 'warn');
++                return;
++            }
+             setTimeout(cleanupIndPrint, 120000);
+         }
+ 
+@@ -3714,6 +3761,7 @@ Próximos passos: ${registro.parecer_v6?.proximos_passos || '-'}`;
+                             <tr><td style="padding:2px 0;">Braço Direito:</td><td style="font-weight:700; text-align:right;">${p.braco_dir || '-'} cm</td></tr>
+                             <tr><td style="padding:2px 0;">Braço Esquerdo:</td><td style="font-weight:700; text-align:right;">${p.braco_esq || '-'} cm</td></tr>
+                             <tr><td style="padding:2px 0;">Coxa Direita:</td><td style="font-weight:700; text-align:right;">${p.coxa_dir || '-'} cm</td></tr>
++                            <tr><td style="padding:2px 0;">Coxa Esquerda:</td><td style="font-weight:700; text-align:right;">${p.coxa_esq || '-'} cm</td></tr>
+                             <tr><td style="padding:2px 0;">Panturrilha:</td><td style="font-weight:700; text-align:right;">${p.panturrilha || '-'} cm</td></tr>
+                             <tr><td style="padding:2px 0;">RCQ:</td><td style="font-weight:700; text-align:right;">${b.rcq || ((parseFloat(p.cintura) > 0 && parseFloat(p.quadril) > 0) ? (parseFloat(p.cintura)/parseFloat(p.quadril)).toFixed(2) : '-')}</td></tr>
+                         </table>
