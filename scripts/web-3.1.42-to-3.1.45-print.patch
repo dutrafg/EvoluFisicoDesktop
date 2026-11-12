@@ -1,0 +1,55 @@
+# Web 3.1.42 (f133ce6cf8db85dbe239615639837c7ec89e4615) -> Web 3.1.45 (2e80aa6) | assets/css/30-print-restore.css
+@@ -10,3 +10,53 @@
+  }
+ }
+ 
++/* EF2 PDF A4 Android — 2026-11-09
++   No laudo individual, imagens com tamanho intrinseco grande e
++   break-inside:avoid deslocavam todo o painel para a pagina seguinte,
++   deixando a pagina do cabecalho praticamente vazia.
++   Isolado do layout de tela, da comparacao e de outros tipos de PDF. */
++@media print {
++  body.print-mode-single #single-print-wrapper .print-page-2 {
++    min-height: 0 !important;
++    height: auto !important;
++  }
++  body.print-mode-single #single-print-wrapper .print-page-2 .print-photo-panel {
++    break-inside: avoid !important;
++    page-break-inside: avoid !important;
++  }
++  body.print-mode-single #single-print-wrapper .print-page-2 .print-photo-card {
++    min-width: 0;
++    break-inside: avoid;
++    page-break-inside: avoid;
++  }
++  body.print-mode-single #single-print-wrapper .print-page-2 .print-photo-lbl {
++    display: block;
++    font-size: 8pt;
++    line-height: 1.2;
++    margin-bottom: 1.5mm;
++  }
++  body.print-mode-single #single-print-wrapper .print-page-2 .print-photo-frame {
++    display: flex;
++    align-items: center;
++    justify-content: center;
++    width: 100%;
++    height: 70mm;
++    max-height: 70mm;
++    overflow: hidden;
++    border: 1px solid #e2e8f0;
++    background: #f8fafc;
++  }
++  body.print-mode-single #single-print-wrapper .print-page-2 .print-photo-panel > div:last-child .print-photo-frame {
++    height: 80mm;
++    max-height: 80mm;
++  }
++  body.print-mode-single #single-print-wrapper .print-page-2 .print-photo-frame img {
++    display: block;
++    width: 100%;
++    height: 100%;
++    max-width: 100%;
++    max-height: 100%;
++    object-fit: contain;
++    object-position: center;
++  }
++}
